@@ -55,7 +55,7 @@ export default function NavBar() {
                 {
                     pages.map((page) => {
                     return <li className="menuitem" key={page.path}>
-                        <NavLink 
+                        <NavLink
                             to={page.path}
                             className={({ isActive }) => isActive ? 'selected' : ''}
                         >

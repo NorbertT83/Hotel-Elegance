@@ -26,7 +26,7 @@ const rooms = [
         status: "READY"
     },
     {
-        number: 311,
+        number: 305,
         type: "STANDARD",
         status: "READY"
     }
@@ -40,18 +40,17 @@ function App() {
         <Header></Header>
         <BrowserRouter>
             <NavBar />
-            <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/housekeeping" element={<HouseKeeping rooms={rooms}/>} />
-
-            </Routes>
+            <main>
+                <div id="content-wrapper">
+                    <TopBar loggedInUser={loggedInUser}></TopBar>
+                    <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/housekeeping" element={<HouseKeeping rooms={rooms}/>} />
+                    </Routes>
+                </div>
+            </main>
         </BrowserRouter>
-        <main>
-            <div id="content-wrapper">
-                <TopBar loggedInUser={loggedInUser}></TopBar>
-            </div>
-        </main>
         <Footer></Footer>
     </>
     )
