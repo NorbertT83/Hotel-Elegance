@@ -1,0 +1,62 @@
+#hk-content {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+
+.room-card {
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    height: 16rem;
+    width: 12rem;
+    background-color: var(--light-color);
+    box-shadow: 3px 6px 10px rgba(0,0,0,0.3);
+    border-radius: 1rem;
+    padding: 1rem
+}
+
+.row1 {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+.row1 i {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: green;
+    filter: drop-shadow(0 0 3px var(--activeColor));
+}
+
+.row2 {
+    justify-items: center;
+    margin-top: 1rem;
+    margin-bottom: auto;
+}
+
+.row3 {
+    margin: 0 auto;
+}
+
+.room-number {
+    font-family: "Montserrat";
+    font-size: 2rem;
+    background-color: hsl(120, 60%, 88%);
+    color: var(--activeColor);
+    border-radius: .5rem;
+    padding: .5rem 1rem;
+    margin: 0;
+}
+
+.room-type {
+    text-transform: uppercase;
+    font-size: small;
+    align-self: flex-end;
+    color: gray;
+    padding-bottom: .5rem;
+}
