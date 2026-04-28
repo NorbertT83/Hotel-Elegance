@@ -11,7 +11,8 @@ import HouseKeeping from './pages/HouseKeeping.jsx';
 
 const loggedInUser = {
     name: "Kovács Áron",
-    title: "General Manager"
+    title: "General Manager",
+    lang: "en"
 }
 
 const rooms = [
@@ -39,14 +40,13 @@ function App() {
     <>
         <Header></Header>
         <BrowserRouter>
-            <NavBar />
+            <NavBar loggedInUser={loggedInUser} />
             <main>
                 <div id="content-wrapper">
-                    <TopBar loggedInUser={loggedInUser}></TopBar>
                     <Routes>
-                        <Route path="/" element={<Dashboard />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/housekeeping" element={<HouseKeeping rooms={rooms}/>} />
+                        <Route path="/" element={<Dashboard loggedInUser={loggedInUser} />} />
+                        <Route path="/dashboard" element={<Dashboard loggedInUser={loggedInUser} />} />
+                        <Route path="/housekeeping" element={<HouseKeeping loggedInUser={loggedInUser} rooms={rooms}/>} />
                     </Routes>
                 </div>
             </main>

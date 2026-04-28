@@ -5,46 +5,70 @@ const pages = [
     {
         path: "dashboard",
         icon: "tachometer-alt",
-        label: "Irányítópult"
+        label: {
+            en: "Dashboard",
+            hu: "Irányítópult"
+        }
     },
     {
         path: "reception",
         icon: "bell",
-        label: "Recepció"
+        label: {
+            en: "Reception",
+            hu: "Recepció"
+        }
     },
     {
         path: "housekeeping",
         icon: "bed",
-        label: "Housekeeping"
+        label: {
+            en: "Housekeeping",
+            hu: "Szobagazdálkodás"
+        }
     },
     {
         path: "foodbev",
         icon: "utensils",
-        label: "Étel/ital"
+        label: {
+            en: "Food & Beverage",
+            hu: "Étel & Ital"
+        }
     },
     {
         path: "roomservice",
         icon: "bell-concierge",
-        label: "Szobaszerviz"
+        label: {
+            en: "Room Service",
+            hu: "Szobaszerviz"
+        }
     },
     {
         path: "services",
         icon: "spa",
-        label: "Szolgáltatások"
+        label: {
+            en: "Services",
+            hu: "Szolgáltatások"
+        }
     },
     {
         path: "settings",
         icon: "user",
-        label: "Beállítások"
+        label: {
+            en: "Settings",
+            hu: "Beállítások"
+        }
     },
     {
         path: "logout",
         icon: "right-from-bracket",
-        label: "Kijelentkezés"
+        label: {
+            en: "Logout",
+            hu: "Kijelentkezés"
+        }
     }
 ];
 
-export default function NavBar() {
+export default function NavBar({ loggedInUser }) {
     return (
         <nav>
             <div className="nav-header">
@@ -60,7 +84,7 @@ export default function NavBar() {
                             className={({ isActive }) => isActive ? 'selected' : ''}
                         >
                             <i className={`fa-solid fa-${page.icon}`}></i>
-                            <span>{page.label}</span>
+                            <span>{page.label[loggedInUser.lang]}</span>
                         </NavLink>
                     </li>
                     })
