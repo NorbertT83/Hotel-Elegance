@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { UserProvider, useUser } from './context/UserContext.jsx';
+import { RoomProvider } from './context/RoomContext.jsx';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import './App.css'
 import Header from './components/Header.jsx'
@@ -7,53 +9,39 @@ import TopBar from './components/TopBar.jsx'
 import Footer from './components/Footer.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import HouseKeeping from './pages/HouseKeeping.jsx';
+import LoginScreen from './pages/LoginScreen.jsx';
 
 
-const loggedInUser = {
-    name: "Kovács Áron",
-    title: "General Manager",
-    lang: "en"
-}
+function AppRouter() {
+    const { loggedInUser } = useUser();
 
-const rooms = [
-    {
-        number: 113,
-        type: "DELUXE",
-        status: "READY"
-    },
-    {
-        number: 211,
-        type: "SUITE",
-        status: "READY"
-    },
-    {
-        number: 305,
-        type: "STANDARD",
-        status: "READY"
+    if (!loggedInUser) {
+        return <LoginScreen />;
     }
-]
-
-
-function App() {
 
     return (
-    <>
-        <Header></Header>
-        <BrowserRouter>
-            <NavBar loggedInUser={loggedInUser} />
-            <main>
-                <div id="content-wrapper">
-                    <Routes>
-                        <Route path="/" element={<Dashboard loggedInUser={loggedInUser} />} />
-                        <Route path="/dashboard" element={<Dashboard loggedInUser={loggedInUser} />} />
-                        <Route path="/housekeeping" element={<HouseKeeping loggedInUser={loggedInUser} rooms={rooms}/>} />
-                    </Routes>
-                </div>
-            </main>
-        </BrowserRouter>
-        <Footer></Footer>
-    </>
-    )
+        <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/housekeeping" element={<HouseKeeping />} />
+            <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+    );
+};
+
+function App() {
+    return (
+        <UserProvider>
+            <RoomProvider>
+                <Header />
+                <BrowserRouter>
+                    <NavBar />
+                    <AppRouter />
+                </BrowserRouter>
+                <Footer />
+            </RoomProvider>
+        </UserProvider>
+    );
 }
 
-export default App
+export default App;

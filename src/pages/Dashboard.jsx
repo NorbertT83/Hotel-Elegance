@@ -1,5 +1,8 @@
+import React from 'react';
 import TopBar from "../components/TopBar";
-const text = { 
+import { useUser } from '../context/UserContext';
+
+const labels = { 
     en: {
         header: "Dashboard",
         subtitle: "Global statistics",
@@ -14,23 +17,26 @@ const text = {
     }
 }
 
-export default function Dashboard({loggedInUser}) {
-    return ( <>
-        <TopBar loggedInUser={loggedInUser}></TopBar>
+export default function Dashboard() {
+    const { loggedInUser } = useUser();
+    const userLang = loggedInUser?.lang || 'hu';
+
+    return ( <main>
+        <TopBar></TopBar>
         <div id="content-header">
             <div>
-                <h2>{text[loggedInUser.lang].header}</h2>
-                <p>{text[loggedInUser.lang].subtitle}</p>
+                <h2>{labels[userLang].header}</h2>
+                <p>{labels[userLang].subtitle}</p>
             </div>
             <div>
-                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {text[loggedInUser.lang].buttonPrimary}</button>
-                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {text[loggedInUser.lang].buttonSecondary}</button>
+                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[userLang].buttonPrimary}</button>
+                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[userLang].buttonSecondary}</button>
             </div>
         </div>
         <div id="hk-content">
             <div>Dashboard</div>
         </div>
         <div id="content-footer"></div>
-        </>
+    </main>
     )
 }

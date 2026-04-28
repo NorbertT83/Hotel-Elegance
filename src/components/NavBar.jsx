@@ -1,5 +1,7 @@
-import Logo from '../assets/Logo-horizontal.png';
+import React from 'react';
+import { useUser } from '../context/UserContext';
 import { NavLink } from 'react-router-dom';
+import Logo from '../assets/Logo-horizontal.png';
 
 const pages = [
     {
@@ -51,14 +53,6 @@ const pages = [
         }
     },
     {
-        path: "settings",
-        icon: "user",
-        label: {
-            en: "Settings",
-            hu: "Beállítások"
-        }
-    },
-    {
         path: "logout",
         icon: "right-from-bracket",
         label: {
@@ -68,7 +62,10 @@ const pages = [
     }
 ];
 
-export default function NavBar({ loggedInUser }) {
+export default function NavBar() {
+    const { loggedInUser } = useUser();
+    const userLang = loggedInUser?.lang || 'hu';
+
     return (
         <nav>
             <div className="nav-header">
@@ -84,7 +81,7 @@ export default function NavBar({ loggedInUser }) {
                             className={({ isActive }) => isActive ? 'selected' : ''}
                         >
                             <i className={`fa-solid fa-${page.icon}`}></i>
-                            <span>{page.label[loggedInUser.lang]}</span>
+                            <span>{page.label[userLang]}</span>
                         </NavLink>
                     </li>
                     })

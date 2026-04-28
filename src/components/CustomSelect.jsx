@@ -23,27 +23,29 @@ export default function CustomSelect({ options, label, onChange }) {
         }
     };
 
-    return (
+    return (<>
         <div className={`custom-select ${isOpen ? 'open' : ''}`} ref={selectRef} tabIndex={0} onBlur={handleBlur}>
-        <div className="select-trigger" onClick={toggleSelect}>
-            <i className="fa-solid fa-sort-amount-down"></i>
-            <span>{selectedLabel}</span>
-            <i className={`fa-solid fa-chevron-${isOpen ? 'up' : 'down'}`}></i>
-        </div>
-
-        {isOpen && (
-            <div className="custom-options">
-            {options.map((option) => (
-                <div 
-                key={option.value} 
-                className="custom-option"
-                onClick={() => handleOptionClick(option)}
-                >
-                {option.label}
-                </div>
-            ))}
+            <div className="select-trigger" onClick={toggleSelect}>
+                <i className="fa-solid fa-sort-amount-down"></i>
+                <span>{selectedLabel}</span>
+                <i className={`fa-solid fa-chevron-${isOpen ? 'up' : 'down'}`}></i>
             </div>
-        )}
+
+            {isOpen && (
+                <div className="custom-options">
+                {options.map((option) => (
+                    <div 
+                    key={option.value} 
+                    className="custom-option"
+                    onClick={() => handleOptionClick(option)}
+                    >
+                    {option.label}
+                    </div>
+                ))}
+                </div>
+            )}
         </div>
+        <div className='separator'></div>
+        </>
     );
 }

@@ -1,28 +1,36 @@
-import './HouseKeeping.css'
+import React from 'react';
+import { useUser } from '../context/UserContext.jsx'
+import { useRooms } from '../context/RoomContext.jsx'
 import TopBar from '../components/TopBar.jsx'
 import RoomCard from '../components/RoomCard.jsx'
 
-const text = { 
+import './HouseKeeping.css'
+
+
+export default function HouseKeeping() {
+    const { loggedInUser } = useUser();
+    const { rooms, refreshRooms } = useRooms();
+
+    const text = { 
     en: {
         header: "Room Management",
-        subtitle: "Tracking 48 issued rooms",
+        subtitle: `Tracking all the ${rooms.length} rooms`,
         buttonPrimary: "Add",
         buttonSecondary: "Add"
     },
     hu: {
         header: "Szobák menedzselése",
-        subtitle: "48 kiadott szoba követése",
+        subtitle: `${rooms.length} szoba követése`,
         buttonPrimary: "Hozzáad",
         buttonSecondary: "Hozzáad"
     }
 }
 
-export default function HouseKeeping({loggedInUser, rooms}) {
-    return ( <>
-        <TopBar loggedInUser={loggedInUser}></TopBar>
+    return ( <main>
+        <TopBar></TopBar>
         <div id="content-header">
             <div>
-                <h2>{text[loggedInUser.lang].header}</h2>
+                <h2 onClick={() => refreshRooms()}>{text[loggedInUser.lang].header}</h2>
                 <p>{text[loggedInUser.lang].subtitle}</p>
             </div>
             <div>
@@ -32,10 +40,10 @@ export default function HouseKeeping({loggedInUser, rooms}) {
         </div>
         <div id="hk-content">
             {rooms.map((room) => (
-                <RoomCard key={room.number} room={room}></RoomCard>
+                <RoomCard key={room.room_number} room={room}></RoomCard>
             ))}
         </div>
         <div id="content-footer"></div>
-        </>
+    </main>
     )
 }
