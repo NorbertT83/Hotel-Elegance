@@ -1,6 +1,5 @@
-import React from 'react';
+import { useGlobal } from '../context/GlobalContext';
 import TopBar from "../components/TopBar";
-import { useUser } from '../context/UserContext';
 
 const labels = { 
     en: {
@@ -18,19 +17,18 @@ const labels = {
 }
 
 export default function Dashboard() {
-    const { loggedInUser } = useUser();
-    const userLang = loggedInUser?.lang || 'hu';
+    const { language } = useGlobal();
 
     return ( <main>
         <TopBar></TopBar>
         <div id="content-header">
             <div>
-                <h2>{labels[userLang].header}</h2>
-                <p>{labels[userLang].subtitle}</p>
+                <h2>{labels[language].header}</h2>
+                <p>{labels[language].subtitle}</p>
             </div>
             <div>
-                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[userLang].buttonPrimary}</button>
-                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[userLang].buttonSecondary}</button>
+                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[language].buttonPrimary}</button>
+                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[language].buttonSecondary}</button>
             </div>
         </div>
         <div id="hk-content">

@@ -1,0 +1,37 @@
+.container {
+    display: grid;
+    width: 100%;
+    justify-content: center;
+    grid-template-columns: 1fr;
+    margin-top: 1rem;
+    place-items: center;
+}
+
+.container > div {
+    justify-self: right;
+    margin-bottom: 5rem;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    gap: 2rem;
+    margin: 0 auto;
+    background-color: var(--light-color);
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.h1Text {
+    margin: 3rem;
+    color: var(--light-color);
+}
+
+.inputField {
+    border: none;
+    outline: 1px solid var(--dark-color);
+    padding: .625rem 1rem;
+}

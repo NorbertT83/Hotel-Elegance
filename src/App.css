@@ -1,5 +1,3 @@
-@import url('./components/login.module.css');
-
 :root {
     --light-bg: #fff6f6;
     --light-color: #f7f2ee;
@@ -19,7 +17,6 @@
 body {
     width: 100%;
     min-height: 100vh;
-    padding-right: 1rem;
     margin: 0;
     font-family: "Manrope", sans-serif;
     /* font-family: "Montserrat", sans-serif; */
@@ -27,10 +24,16 @@ body {
 }
 
 #root {
+    display: flex;
+    padding-right: 1rem;
+}
+
+#content {
+    width: 100%;
     min-height: 100dvh;
     background-color: var(--accentColor);
     display: grid;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 226px 1fr;
     grid-template-rows: 1.5rem 1fr 1.5rem;
     grid-template-areas:
         "nav header"
@@ -81,7 +84,7 @@ nav {
 nav #menu {
     position: relative;
     list-style: none;
-    padding: 2rem 0 .25rem .75rem;
+    padding: 2.5rem 0 .5rem 0.75rem;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -158,6 +161,10 @@ nav .menuitem {
     color: var(--warningColor);
 }
 
+#language-selector {
+    background-color: var(--light-bg);
+    border-radius: .5rem;
+}
 
 main {
     grid-area: main;

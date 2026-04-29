@@ -1,5 +1,4 @@
-import React from 'react';
-import { useUser } from '../context/UserContext';
+import { useGlobal } from '../context/GlobalContext';
 import { NavLink } from 'react-router-dom';
 import Logo from '../assets/Logo-horizontal.png';
 
@@ -63,8 +62,8 @@ const pages = [
 ];
 
 export default function NavBar() {
-    const { loggedInUser } = useUser();
-    const userLang = loggedInUser?.lang || 'hu';
+    const { language } = useGlobal();
+
 
     return (
         <nav>
@@ -81,7 +80,7 @@ export default function NavBar() {
                             className={({ isActive }) => isActive ? 'selected' : ''}
                         >
                             <i className={`fa-solid fa-${page.icon}`}></i>
-                            <span>{page.label[userLang]}</span>
+                            <span>{page.label[language]}</span>
                         </NavLink>
                     </li>
                     })

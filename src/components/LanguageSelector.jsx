@@ -1,19 +1,14 @@
-import React from 'react'
-import { useUser } from '../context/UserContext'
+import { useGlobal } from '../context/GlobalContext';
 
 export default function LanguageSelector() {
-    const { loggedInUser, setLoggedInUser } = useUser();
-
-    function handleLangChange(newLang) {
-        setLoggedInUser({ ...loggedInUser, lang: newLang });
-    };
+    const { language, setLanguage } = useGlobal();
 
     return (
         <div id="language-selector">
             <button 
-                className={`btn-subtle ${loggedInUser.lang === 'hu' ? 'active' : ''}`} 
+                className={`btn-subtle ${language === 'hu' ? 'active' : ''}`} 
                 id="lang-hu" 
-                onClick={() => handleLangChange('hu')}
+                onClick={() => setLanguage('hu')}
             >
                 HU
             </button>
@@ -21,9 +16,9 @@ export default function LanguageSelector() {
             <span style={{ color: 'lightgray' }}>|</span>
             
             <button 
-                className={`btn-subtle ${loggedInUser.lang === 'en' ? 'active' : ''}`} 
+                className={`btn-subtle ${language === 'en' ? 'active' : ''}`} 
                 id="lang-en" 
-                onClick={() => handleLangChange('en')}
+                onClick={() => setLanguage('en')}
             >
                 EN
             </button>

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useUser } from '../context/UserContext.jsx'
+import { useGlobal } from '../context/GlobalContext.jsx'
 import { useRooms } from '../context/RoomContext.jsx'
 import TopBar from '../components/TopBar.jsx'
 import RoomCard from '../components/RoomCard.jsx'
@@ -8,10 +7,10 @@ import './HouseKeeping.css'
 
 
 export default function HouseKeeping() {
-    const { loggedInUser } = useUser();
+    const { language } = useGlobal();
     const { rooms, refreshRooms } = useRooms();
 
-    const text = { 
+    const labels = { 
     en: {
         header: "Room Management",
         subtitle: `Tracking all the ${rooms.length} rooms`,
@@ -30,12 +29,12 @@ export default function HouseKeeping() {
         <TopBar></TopBar>
         <div id="content-header">
             <div>
-                <h2 onClick={() => refreshRooms()}>{text[loggedInUser.lang].header}</h2>
-                <p>{text[loggedInUser.lang].subtitle}</p>
+                <h2 onClick={() => refreshRooms()}>{labels[language].header}</h2>
+                <p>{labels[language].subtitle}</p>
             </div>
             <div>
-                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {text[loggedInUser.lang].buttonPrimary}</button>
-                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {text[loggedInUser.lang].buttonSecondary}</button>
+                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[language].buttonPrimary}</button>
+                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[language].buttonSecondary}</button>
             </div>
         </div>
         <div id="hk-content">
