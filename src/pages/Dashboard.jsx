@@ -1,40 +1,26 @@
-import { useGlobal } from '../context/GlobalContext';
+import labels from '../const/Labels';
 import TopBar from "../components/TopBar";
+import { useGlobal } from '../context/GlobalContext';
 
-const labels = { 
-    en: {
-        header: "Dashboard",
-        subtitle: "Global statistics",
-        buttonPrimary: "Add",
-        buttonSecondary: "Add"
-    },
-    hu: {
-        header: "Irányítópult",
-        subtitle: "Globális statisztikák",
-        buttonPrimary: "Hozzáad",
-        buttonSecondary: "Hozzáad"
-    }
-}
 
 export default function Dashboard() {
     const { language } = useGlobal();
 
     return ( <main>
-        <TopBar></TopBar>
-        <div id="content-header">
-            <div>
-                <h2>{labels[language].header}</h2>
-                <p>{labels[language].subtitle}</p>
-            </div>
+        <TopBar page={"dashboard"}></TopBar>
+
+        <div className="contentHeader">
             <div>
                 <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[language].buttonPrimary}</button>
                 <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[language].buttonSecondary}</button>
             </div>
         </div>
-        <div id="hk-content">
+
+        <div className="hkContent">
             <div>Dashboard</div>
         </div>
-        <div id="content-footer"></div>
+
+        <div className="contentFooter"></div>
     </main>
     )
 }

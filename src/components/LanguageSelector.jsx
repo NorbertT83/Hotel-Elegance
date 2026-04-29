@@ -1,12 +1,13 @@
+import s from '../styles/LanguageSelector.module.css'
 import { useGlobal } from '../context/GlobalContext';
 
 export default function LanguageSelector() {
     const { language, setLanguage } = useGlobal();
 
     return (
-        <div id="language-selector">
+        <div className={s.languageSelector}>
             <button 
-                className={`btn-subtle ${language === 'hu' ? 'active' : ''}`} 
+                className={`btn-subtle ${language === 'hu' ? s.active : ''}`} 
                 id="lang-hu" 
                 onClick={() => setLanguage('hu')}
             >
@@ -16,7 +17,7 @@ export default function LanguageSelector() {
             <span style={{ color: 'lightgray' }}>|</span>
             
             <button 
-                className={`btn-subtle ${language === 'en' ? 'active' : ''}`} 
+                className={`btn-subtle ${language === 'en' ? s.active : ''}`} 
                 id="lang-en" 
                 onClick={() => setLanguage('en')}
             >

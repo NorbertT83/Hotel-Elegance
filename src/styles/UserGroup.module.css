@@ -1,0 +1,35 @@
+.userGroup {
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    gap: 1rem;
+    text-align: right;
+    cursor: pointer;
+    min-width: fit-content;
+}
+
+.userName {
+    font-weight: bold;
+    margin: 0 0 .25rem 0;
+    padding: 0;
+}
+
+.userTitle {
+    margin: 0;
+    padding: 0;
+    color: gray;
+    font-weight: 100;
+    font-size: .625rem;
+    text-transform: uppercase;
+}
+
+.profilePic i {
+    scale: 1.5;
+}
+
+.userGroup img {
+    display: block;
+    border-radius: .75rem;
+    height: 3rem;
+    width: auto;
+}

@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import s from '../styles/CustomSelect.module.css'
 
 export default function CustomSelect({ options, label, onChange }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -24,19 +25,24 @@ export default function CustomSelect({ options, label, onChange }) {
     };
 
     return (<>
-        <div className={`custom-select ${isOpen ? 'open' : ''}`} ref={selectRef} tabIndex={0} onBlur={handleBlur}>
-            <div className="select-trigger" onClick={toggleSelect}>
+        <div 
+            className={`${s.customSelect} ${isOpen ? s.open : ''}`}
+            ref={selectRef}
+            tabIndex={0}
+            onBlur={handleBlur}
+        >
+            <div className={s.selectTrigger} onClick={toggleSelect}>
                 <i className="fa-solid fa-sort-amount-down"></i>
-                <span>{selectedLabel}</span>
+                <span className={s.selectedText}>{selectedLabel}</span>
                 <i className={`fa-solid fa-chevron-${isOpen ? 'up' : 'down'}`}></i>
             </div>
 
             {isOpen && (
-                <div className="custom-options">
+                <div className={s.customOptions}>
                 {options.map((option) => (
                     <div 
                     key={option.value} 
-                    className="custom-option"
+                    className={s.customOption}
                     onClick={() => handleOptionClick(option)}
                     >
                     {option.label}

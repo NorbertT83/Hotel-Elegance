@@ -1,14 +1,18 @@
-export default function UserGroup({ user }) {
-return (
-    <div id="user-wrapper">
-        <div className="separator"></div>
-        <div>
-            <p className="user-name">{user.name}</p>
-            <p className="user-title">{user.title}</p>
+import s from '../styles/UserGroup.module.css'
+import { useUser } from "../context/UserContext"
+
+export default function UserGroup() {
+    const { loggedInUser: user } = useUser();
+    return (
+        <div className={s.userGroup}>
+            <div className="separator"></div>
+            <div>
+                <p className={s.userName}>{user.name}</p>
+                <p className={s.userTitle}>{user.title}</p>
+            </div>
+            <div className={s.profilePic}>
+                <i className="fa-regular fa-user"></i>
+            </div>
         </div>
-        <div className="profile-pic">
-            <i className="fa-regular fa-user"></i>
-        </div>
-    </div>
     )
 }

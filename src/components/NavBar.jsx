@@ -1,3 +1,5 @@
+import s from '../styles/NavBar.module.css'
+
 import { useGlobal } from '../context/GlobalContext';
 import { NavLink } from 'react-router-dom';
 import Logo from '../assets/Logo-horizontal.png';
@@ -64,20 +66,18 @@ const pages = [
 export default function NavBar() {
     const { language } = useGlobal();
 
-
     return (
         <nav>
-            <div className="nav-header">
+            <div className={s.navHeader}>
                 <img src={Logo} alt="logo"></img>
             </div>
-            <ul id="menu">
-                <div id="menu-indicator"></div>
+            <ul className={s.menu}>
                 {
                     pages.map((page) => {
-                    return <li className="menuitem" key={page.path}>
+                    return <li className={s.menuitem} key={page.path}>
                         <NavLink
                             to={page.path}
-                            className={({ isActive }) => isActive ? 'selected' : ''}
+                            className={({ isActive }) => isActive ? s.selected : ''}
                         >
                             <i className={`fa-solid fa-${page.icon}`}></i>
                             <span>{page.label[language]}</span>

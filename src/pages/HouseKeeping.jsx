@@ -1,48 +1,45 @@
 import { useGlobal } from '../context/GlobalContext.jsx'
 import { useRooms } from '../context/RoomContext.jsx'
+import labels from '../const/Labels.js'
 import TopBar from '../components/TopBar.jsx'
+import SearchInput from '../components/SearchInput.jsx'
+import CustomSelect from '../components/CustomSelect.jsx'
 import RoomCard from '../components/RoomCard.jsx'
-
-import './HouseKeeping.css'
-
 
 export default function HouseKeeping() {
     const { language } = useGlobal();
     const { rooms, refreshRooms } = useRooms();
 
-    const labels = { 
-    en: {
-        header: "Room Management",
-        subtitle: `Tracking all the ${rooms.length} rooms`,
-        buttonPrimary: "Add",
-        buttonSecondary: "Add"
-    },
-    hu: {
-        header: "Szobák menedzselése",
-        subtitle: `${rooms.length} szoba követése`,
-        buttonPrimary: "Hozzáad",
-        buttonSecondary: "Hozzáad"
-    }
-}
-
     return ( <main>
-        <TopBar></TopBar>
-        <div id="content-header">
+        <TopBar page={"housekeeping"}></TopBar>
+        <div className="contentHeader">
+            <SearchInput placeholder={language == "en" ? "Search..." : "Keresés..."}></SearchInput>                
+            <CustomSelect 
+                options={
+                    language == "en" ? [
+                        { label: "Name", value: "lname" },
+                        { label: "Price", value: "price_per_night" },
+                        { label: "Room number", value: "room_number" }
+                    ] : [
+                        { label: "Név szerint", value: "lname" },
+                        { label: "Ár szerint", value: "price_per_night" },
+                        { label: "Szobaszám", value: "room_number" }
+                    ]
+                } 
+                label={language == "en" ? "Sort by..." : "Rendezés..."}
+                onChange={(val) => console.log("Új sorrend:", val)}
+            />
             <div>
-                <h2 onClick={() => refreshRooms()}>{labels[language].header}</h2>
-                <p>{labels[language].subtitle}</p>
-            </div>
-            <div>
-                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[language].buttonPrimary}</button>
-                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[language].buttonSecondary}</button>
+                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[language]["housekeeping"].buttonPrimary}</button>
+                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[language]["housekeeping"].buttonSecondary}</button>
             </div>
         </div>
-        <div id="hk-content">
+        <div className="hkContent">
             {rooms.map((room) => (
                 <RoomCard key={room.room_number} room={room}></RoomCard>
             ))}
         </div>
-        <div id="content-footer"></div>
+        <div className="contentFooter"></div>
     </main>
     )
 }

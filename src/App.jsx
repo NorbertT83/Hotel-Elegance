@@ -3,7 +3,7 @@ import { UserProvider, useUser } from './context/UserContext.jsx';
 import { RoomProvider } from './context/RoomContext.jsx';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import './App.css'
+import './styles/App.css'
 import Header from './components/Header.jsx'
 import NavBar from './components/NavBar.jsx'
 import Footer from './components/Footer.jsx'
@@ -24,7 +24,7 @@ function AppRouter() {
         );
     }
 
-    return (<div id='content'>
+    return (<div className='content'>
         <Header />
         <NavBar />
             <RoomProvider>

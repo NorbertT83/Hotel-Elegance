@@ -1,7 +1,7 @@
-import styles from './LoginScreen.module.css'
+import s from '../styles/LoginScreen.module.css'
 
-import { useGlobal } from '../context/GlobalContext';
 import { useState } from 'react';
+import { useGlobal } from '../context/GlobalContext';
 import { useUser } from '../context/UserContext';
 import LanguangeSelector from '../components/LanguageSelector';
 
@@ -34,12 +34,12 @@ const LoginScreen = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <div className={s.container}>
             <LanguangeSelector />
-            <h1 className={styles.h1Text}>{labels[language].h1Text}</h1>
-            <form className={styles.loginForm} onSubmit={handleLogin}>
+            <h1 className={s.h1Text}>{labels[language].h1Text}</h1>
+            <form className={s.loginForm} onSubmit={handleLogin}>
                 <input 
-                    className={styles.inputField}
+                    className={s.inputField}
                     type="text" 
                     autoFocus
                     value={name} 
@@ -47,7 +47,7 @@ const LoginScreen = () => {
                     placeholder={labels[language].userPlaceholder}
                 />
                 <input 
-                    className={styles.inputField}
+                    className={s.inputField}
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

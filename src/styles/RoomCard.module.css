@@ -1,10 +1,4 @@
-#hk-content {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-}
-
-.room-card {
+.roomCard {
     position: relative;
     display: flex;
     flex-flow: column nowrap;
@@ -16,7 +10,7 @@
     padding: 1rem
 }
 
-.row1 {
+.cardRow1 {
     display: flex;
     justify-content: left;
     align-items: center;
@@ -25,7 +19,7 @@
     padding: 0;
 }
 
-.row1 i {
+.cardRow1 i {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -33,17 +27,17 @@
     filter: drop-shadow(0 0 3px var(--activeColor));
 }
 
-.row2 {
+.cardRow2 {
     justify-items: center;
     margin-top: 1rem;
     margin-bottom: auto;
 }
 
-.row3 {
+.cardRow3 {
     margin: 0 auto;
 }
 
-.room-number {
+.roomNumber {
     font-family: "Montserrat";
     font-size: 2rem;
     background-color: hsl(120, 60%, 88%);
@@ -53,7 +47,7 @@
     margin: 0;
 }
 
-.room-type {
+.roomType {
     text-transform: uppercase;
     font-size: small;
     align-self: flex-end;
