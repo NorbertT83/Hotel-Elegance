@@ -8,8 +8,9 @@ import Header from './components/Header.jsx'
 import NavBar from './components/NavBar.jsx'
 import Footer from './components/Footer.jsx'
 import Dashboard from './pages/Dashboard.jsx'
-import HouseKeeping from './pages/HouseKeeping.jsx';
-import LoginScreen from './pages/LoginScreen.jsx';
+import HouseKeeping from './pages/HouseKeeping.jsx'
+import Reception from './pages/Reception.jsx'
+import LoginScreen from './pages/LoginScreen.jsx'
 
 
 function AppRouter() {
@@ -31,6 +32,7 @@ function AppRouter() {
                 <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/reception" element={<Reception />} />
                     <Route path="/housekeeping" element={<HouseKeeping />} />
                     <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>

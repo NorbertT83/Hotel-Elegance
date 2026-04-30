@@ -30,8 +30,8 @@ export default function HouseKeeping() {
                 onChange={(val) => console.log("Új sorrend:", val)}
             />
             <div>
-                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[language]["housekeeping"].buttonPrimary}</button>
-                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[language]["housekeeping"].buttonSecondary}</button>
+                <button className="btn-primary"><i className="fa-solid fa-plus"></i> {labels[language]["housekeeping"].button1}</button>
+                <button className="btn-secondary"><i className="fa-solid fa-plus"></i> {labels[language]["housekeeping"].button2}</button>
             </div>
         </div>
         <div className="hkContent">

@@ -3,14 +3,20 @@ const labels = {
         dashboard: {
             header: "Dashboard",
             subtitle: "Global statistics",
-            buttonPrimary: "Add",
-            buttonSecondary: "Add"
+            button1: "Add",
+            button2: "Add"
+        },
+        reception: {
+            header: "Check-in / check-out",
+            subtitle: `Billing`,
+            button1: "New",
+            button2: "Edit"
         },
         housekeeping: {
             header: "Room Management",
             subtitle: `Keep track of # rooms`,
-            buttonPrimary: "Add",
-            buttonSecondary: "Add"
+            button1: "Add",
+            button2: "Add"
         }
     },
 
@@ -18,14 +24,20 @@ const labels = {
         dashboard: {
             header: "Irányítópult",
             subtitle: "Globális statisztikák",
-            buttonPrimary: "Hozzáad",
-            buttonSecondary: "Hozzáad"
+            button1: "Hozzáad",
+            button2: "Hozzáad"
+        },
+        reception: {
+            header: "Ki- és beléptetés",
+            subtitle: `Számlakiállítás`,
+            button1: "Új",
+            button2: "Szerkeszt"
         },
         housekeeping: {
             header: "Szobák menedzselése",
             subtitle: `# szoba követése`,
-            buttonPrimary: "Hozzáad",
-            buttonSecondary: "Hozzáad"
+            button1: "Hozzáad",
+            button2: "Hozzáad"
         }
     }
 }
