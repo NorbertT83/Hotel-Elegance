@@ -10,7 +10,11 @@ import Footer from './components/Footer.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import HouseKeeping from './pages/HouseKeeping.jsx'
 import Reception from './pages/Reception.jsx'
+import FoodBev from './pages/FoodBev.jsx'
+import RoomService from './pages/RoomService.jsx'
+import Services from './pages/Services.jsx'
 import LoginScreen from './pages/LoginScreen.jsx'
+import LogoutScreen from './pages/LogoutScreen.jsx'
 
 
 function AppRouter() {
@@ -34,6 +38,10 @@ function AppRouter() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/reception" element={<Reception />} />
                     <Route path="/housekeeping" element={<HouseKeeping />} />
+                    <Route path="/foodbev" element={<FoodBev />} />
+                    <Route path="/roomservice" element={<RoomService />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/logout" element={<LogoutScreen />} />
                     <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
             </RoomProvider>

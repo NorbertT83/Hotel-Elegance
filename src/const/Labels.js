@@ -17,6 +17,24 @@ const labels = {
             subtitle: `Keep track of # rooms`,
             button1: "Add",
             button2: "Add"
+        },
+        foodbev: {
+            header: "Food & Beverages",
+            subtitle: `Best quality served`,
+            button1: "Add",
+            button2: "Add"
+        },
+        roomservice: {
+            header: "Room Service",
+            subtitle: `Order from the comfort of your room`,
+            button1: "Add",
+            button2: "Remove"
+        },
+        services: {
+            header: "Services",
+            subtitle: `Choose from our wide range of services`,
+            button1: "Add",
+            button2: "Remove"
         }
     },
 
@@ -38,6 +56,24 @@ const labels = {
             subtitle: `# szoba követése`,
             button1: "Hozzáad",
             button2: "Hozzáad"
+        },
+        foodbev: {
+            header: "Étel- és italkínálat",
+            subtitle: `A legjobb minőség`,
+            button1: "Hozzáad",
+            button2: "Hozzáad"
+        },
+        roomservice: {
+            header: "Szobaszerviz",
+            subtitle: `Rendeljen szobája kényelméből`,
+            button1: "Hozzáad",
+            button2: "Töröl"
+        },
+        services: {
+            header: "Szolgáltatásaink",
+            subtitle: `Válasszon széleskörű szolgáltatásaink közül`,
+            button1: "Hozzáad",
+            button2: "Eltávolít"
         }
     }
 }

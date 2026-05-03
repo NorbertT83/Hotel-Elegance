@@ -10,7 +10,6 @@ export const UserProvider = ({ children }) => {
     const login = async (username, password) => {
         setIsLoading(true);
         
-        // Szimulálunk egy 1.5 másodperces API hívást
         setTimeout(() => {
         const mockUser = {
             id: "u123",
@@ -21,7 +20,7 @@ export const UserProvider = ({ children }) => {
         };
         setLoggedInUser(mockUser);
         setIsLoading(false);
-        }, 1500);
+        }, 1000);
     };
 
     const logout = () => {

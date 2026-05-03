@@ -8,7 +8,7 @@ export default function UserGroup() {
             <div className="separator"></div>
             <div>
                 <p className={s.userName}>{user.name}</p>
-                <p className={s.userTitle}>{user.title}</p>
+                <p className={s.userRole}>{user.role}</p>
             </div>
             <div className={s.profilePic}>
                 <i className="fa-regular fa-user"></i>
