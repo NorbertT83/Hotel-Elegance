@@ -18,9 +18,9 @@ import LogoutScreen from './pages/LogoutScreen.jsx'
 
 
 function AppRouter() {
-    const { loggedInUser } = useUser();
+    const { user } = useUser();
 
-    if (!loggedInUser) {
+    if (!user) {
         return (
             <Routes>
                 <Route path="/login" element={<LoginScreen />} />

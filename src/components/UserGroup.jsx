@@ -2,7 +2,7 @@ import s from '../styles/UserGroup.module.css'
 import { useUser } from "../context/UserContext"
 
 export default function UserGroup() {
-    const { loggedInUser: user } = useUser();
+    const { user } = useUser();
     return (
         <div className={s.userGroup}>
             <div className="separator"></div>

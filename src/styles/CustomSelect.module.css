@@ -5,7 +5,7 @@
     display: flex;
     justify-content: left;
     align-items: center;
-    background-color: var(--light-color);
+    background-color: var(--lightColor);
     font-family: "Montserrat", sans-serif;
     border-radius: 1rem;
     font-size: smaller;
@@ -43,7 +43,7 @@
     top: 110%;
     left: 0;
     right: 0;
-    background-color: var(--light-color);
+    background-color: var(--lightColor);
     border-radius: 0.5rem;
     display: none;
     z-index: 100;

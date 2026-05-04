@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     height: 2rem;
-    background-color: var(--light-bg);
+    background-color: var(--lightBg);
     border-radius: .5rem;
 }
 

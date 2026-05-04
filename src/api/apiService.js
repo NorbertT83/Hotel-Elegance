@@ -1,4 +1,5 @@
-const apiURL = "https://nrbrt-codes.hu/hotelmanager/api/";
+// const apiURL = "https://nrbrt-codes.hu/hotelmanager/api/";
+const apiURL = "http://localhost/api/";
 
 export async function getData(endpoint="" , params=[], timeout = 5000) {
     
@@ -19,6 +20,40 @@ export async function getData(endpoint="" , params=[], timeout = 5000) {
         }
 
         return await response.json();
+
+    } catch (error) {
+        clearTimeout(id);
+        if (error.name === "AbortError") {
+            throw new Error("Időtúllépés történt");
+        }
+        throw error;
+    }
+}
+
+export async function putData(endpoint="" , data=[], timeout = 5000) {
+    
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const url = `${apiURL}${endpoint}`;
+
+        const response = await fetch(url, {
+            method: "PUT",
+            signal: controller.signal,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data)
+        });
+
+        clearTimeout(id);
+
+        if (!response.ok) {
+            throw new Error(`HTTP hiba: ${response.status}`);
+        }
+
+        return await response.status;
 
     } catch (error) {
         clearTimeout(id);

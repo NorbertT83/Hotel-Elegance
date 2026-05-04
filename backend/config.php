@@ -1,0 +1,8 @@
+<?php
+return [
+    'db_host' => 'localhost',
+    'db_name' => 'c82533nrbrt',
+    'db_user' => 'NrBrT',
+    'db_pass' => 'Titkos-11',
+    'db_char' => 'utf8mb4'
+];

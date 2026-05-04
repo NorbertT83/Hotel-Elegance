@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext } from 'react';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [loggedInUser, setLoggedInUser] = useState(null);
+    const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     // Szimulált bejelentkezési folyamat
@@ -18,17 +18,17 @@ export const UserProvider = ({ children }) => {
             role: "admin",
             lang: "hu"
         };
-        setLoggedInUser(mockUser);
+        setUser(mockUser);
         setIsLoading(false);
         }, 1000);
     };
 
     const logout = () => {
-        setLoggedInUser(null);
+        setUser(null);
     };
 
     return (
-        <UserContext.Provider value={{ loggedInUser, setLoggedInUser, login, logout, isLoading }}>
+        <UserContext.Provider value={{ user, setUser, login, logout, isLoading }}>
             {children}
         </UserContext.Provider>
     );

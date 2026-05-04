@@ -1,8 +1,8 @@
 :root {
-    --light-bg: #fff6f6;
-    --light-color: #f7f2ee;
-    --dark-bg: #1a1a1a;
-    --dark-color: #312e2e;
+    --lightBg: #fff6f6;
+    --lightColor: #f7f2ee;
+    --darkBg: #1a1a1a;
+    --darkColor: #312e2e;
 
     --activeColor: #006D5B;
     --accentColor: #131B2E;
@@ -55,7 +55,7 @@ header {
 }
 
 header h1 {
-    color: var(--dark-color);
+    color: var(--darkColor);
     margin: 0 auto;
     padding: 0;
 }
@@ -64,7 +64,7 @@ header h1 {
 main {
     grid-area: main;
     height: 100%;
-    background-color: var(--light-bg);
+    background-color: var(--lightBg);
     border-radius: 1rem;
     padding-right: 1rem;
     padding: 2rem;
@@ -75,7 +75,7 @@ main {
     flex: 1 0 100%;
     justify-content: space-between;
     align-items: first baseline;
-    background-color: var(--light-bg);
+    background-color: var(--lightBg);
     padding: 0;
     gap: 1rem;
 }
@@ -109,21 +109,21 @@ button {
 
 button:hover {
     cursor: pointer;
-    border-color: var(--light-bg);
+    border-color: var(--lightBg);
 }
 
 .btn-primary {
     background-color: var(--activeColor);
-    color: var(--light-bg);
+    color: var(--lightBg);
 }
 
 .btn-secondary {
     background-color: lightgray;
-    color: var(--dark-bg);
+    color: var(--darkBg);
 }
 .btn-subtle {
     background-color: transparent;
-    color: var(--dark-bg);
+    color: var(--darkBg);
     margin: 0;
     padding: .25em .5rem;
 }
@@ -131,7 +131,10 @@ button:hover {
     color: var(--accentColor);
     font-weight: 600;
 }
-
+.btn-warning {
+    color: var(--lightColor);
+    background-color: var(--warningColor);
+}
 
 footer {
     grid-area: footer;

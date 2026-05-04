@@ -54,7 +54,7 @@ nav .menuitem {
     transition: transform 0.4s cubic-bezier(.25,.8,.25,1);
 }
 .menuitem:has(a.selected) {
-    background-color: var(--light-bg);
+    background-color: var(--lightBg);
     border-top-left-radius: 1.25rem;
     border-bottom-left-radius: 1.25rem;
     z-index: 1;
@@ -71,12 +71,12 @@ nav .menuitem {
 .menuitem:has(a.selected)::before {
     top: -20px;
     border-bottom-right-radius: 1.25rem;
-    box-shadow: 8px 8px 0px 8px var(--light-bg);
+    box-shadow: 8px 8px 0px 8px var(--lightBg);
 }
 .menuitem:has(a.selected)::after {
     bottom: -20px;
     border-top-right-radius: 1.25rem;
-    box-shadow: 8px -8px 0px 8px var(--light-bg);
+    box-shadow: 8px -8px 0px 8px var(--lightBg);
 }
 
 .menuitem:has(a.selected) i, .menuitem:has(a.selected) span {
