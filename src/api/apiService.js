@@ -4,7 +4,7 @@ const apiURL = "http://localhost/api/";
 export async function getData(endpoint="" , params=[], timeout = 5000) {
     
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
+    const controllerID = setTimeout(() => controller.abort(), timeout);
 
     try {
         const url = new URL(apiURL+endpoint);
@@ -13,7 +13,7 @@ export async function getData(endpoint="" , params=[], timeout = 5000) {
             signal: controller.signal
         });
 
-        clearTimeout(id);
+        clearTimeout(controllerID);
 
         if (!response.ok) {
             throw new Error(`HTTP hiba: ${response.status}`);
@@ -22,7 +22,7 @@ export async function getData(endpoint="" , params=[], timeout = 5000) {
         return await response.json();
 
     } catch (error) {
-        clearTimeout(id);
+        clearTimeout(controllerID);
         if (error.name === "AbortError") {
             throw new Error("Időtúllépés történt");
         }
@@ -30,13 +30,13 @@ export async function getData(endpoint="" , params=[], timeout = 5000) {
     }
 }
 
-export async function putData(endpoint="" , data=[], timeout = 5000) {
+export async function putData(endpoint="", id="" , data=[], timeout = 5000) {
     
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
+    const controllerID = setTimeout(() => controller.abort(), timeout);
 
     try {
-        const url = `${apiURL}${endpoint}`;
+        const url = `${apiURL}${endpoint}${id}`;
 
         const response = await fetch(url, {
             method: "PUT",
@@ -47,16 +47,16 @@ export async function putData(endpoint="" , data=[], timeout = 5000) {
             body: JSON.stringify(data)
         });
 
-        clearTimeout(id);
+        clearTimeout(controllerID);
 
         if (!response.ok) {
             throw new Error(`HTTP hiba: ${response.status}`);
         }
 
-        return await response.status;
+        return response;
 
     } catch (error) {
-        clearTimeout(id);
+        clearTimeout(controllerID);
         if (error.name === "AbortError") {
             throw new Error("Időtúllépés történt");
         }

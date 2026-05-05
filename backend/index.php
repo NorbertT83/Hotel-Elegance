@@ -7,35 +7,45 @@ $user = $config['db_user'];
 $pass = $config['db_pass'];
 $charset = $config['db_char'];
 
+// Fejlécek kiegészítése a CORS és a támogatott metódusok miatt
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+// Preflight kérés (OPTIONS) lekezelése azonnal
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_EMULATE_PREPARES   => false,
+    // PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION sql_mode='STRICT_ALL_TABLES'" szigorú mód
 ];
 
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+} catch (\PDOException $e) {
+    http_response_code(500);
+    echo json_encode(["error" => "Adatbázis hiba: " . $e->getMessage()]);
+    exit;
+}
 
-/**
- * Univerzális erőforrás lekérdező
- * * @param PDO $pdo Az adatbázis kapcsolat
- * @param string $table A tábla neve
- * @param string $idOrAll Az ID vagy az 'all' kulcsszó
- * @param string $idColumn A tábla azonosító oszlopa (pl. 'id' vagy 'room_number')
- * @param array $allowedFilters Azok az oszlopok, amikre engedünk szűrni
+/** 
+ * GET: Univerzális erőforrás lekérdező 
  */
 function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], $allowedSorts = []) {
     $params = [];
     $sql = "SELECT * FROM `$table`";
 
     if ($idOrAll !== 'all') {
-        // Egy konkrét rekord
         $sql .= " WHERE `$idColumn` = ?";
         $params[] = $idOrAll;
     } else {
-        // --- 1. WHERE szűrés ---
         $whereConditions = [];
         foreach ($_GET as $key => $value) {
             if (in_array($key, $allowedFilters) && $value !== '') {
@@ -47,16 +57,12 @@ function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], 
             $sql .= " WHERE " . implode(" AND ", $whereConditions);
         }
 
-        // --- 2. ORDER BY (Rendezés) ---
-        // Használat: ?sort=price&order=desc
         if (!empty($_GET['sort']) && in_array($_GET['sort'], $allowedSorts)) {
             $sortColumn = $_GET['sort'];
             $direction = (isset($_GET['order']) && strtolower($_GET['order']) === 'desc') ? 'DESC' : 'ASC';
             $sql .= " ORDER BY `$sortColumn` $direction";
         }
 
-        // --- 3. LIMIT & OFFSET (Lapozás) ---
-        // Használat: ?limit=10&offset=0
         if (!empty($_GET['limit']) && is_numeric($_GET['limit'])) {
             $limit = (int)$_GET['limit'];
             $sql .= " LIMIT $limit";
@@ -74,15 +80,61 @@ function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], 
     return ($idOrAll === 'all') ? $stmt->fetchAll() : $stmt->fetch();
 }
 
+/** 
+ * POST: Univerzális erőforrás létrehozó 
+ */
+function createResource($pdo, $table, $data) {
+    if (empty($data)) return false;
 
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-    http_response_code(500);
-    echo json_encode(["error" => "Adatbázis hiba: " . $e->getMessage()]);
-    exit;
+    $columns = array_keys($data);
+    $placeholders = array_fill(0, count($data), '?');
+    
+    $sql = "INSERT INTO `$table` (`" . implode("`, `", $columns) . "`) VALUES (" . implode(", ", $placeholders) . ")";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array_values($data));
+    
+    return true; // Siker esetén true. (Ha auto-increment az ID, itt lehetne $pdo->lastInsertId())
 }
 
+/** 
+ * PUT: Univerzális erőforrás frissítő 
+ */
+function updateResource($pdo, $table, $idColumn, $id, $data) {
+    if (empty($data)) return 0;
+
+    $setClause = [];
+    $params = [];
+    
+    foreach ($data as $key => $value) {
+        $setClause[] = "`$key` = ?";
+        $params[] = $value;
+    }
+    
+    // Az ID-t adjuk hozzá utoljára a WHERE feltételhez
+    $params[] = $id; 
+    
+    $sql = "UPDATE `$table` SET " . implode(", ", $setClause) . " WHERE `$idColumn` = ?";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    
+    return $stmt->rowCount(); // Visszaadja a módosított sorok számát
+}
+
+/** 
+ * DELETE: Univerzális erőforrás törlő 
+ */
+function deleteResource($pdo, $table, $idColumn, $id) {
+    $sql = "DELETE FROM `$table` WHERE `$idColumn` = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$id]);
+    
+    return $stmt->rowCount(); // Visszaadja a törölt sorok számát
+}
+
+
+// --- ROUTING ÉS KÉRÉS FELDOLGOZÁSA ---
 
 $requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $scriptPath = dirname($_SERVER['SCRIPT_NAME']); 
@@ -92,7 +144,8 @@ $requestUri = trim($requestUri, '/');
 $parts = explode('/', $requestUri);
 
 $resource = $parts[0] ?? null;
-$id = $parts[1] ?? null;
+$id = $parts[1] ?? 'all'; // Alapértelmezettként 'all', ha nincs ID megadva
+$method = $_SERVER['REQUEST_METHOD']; // Metódus lekérése
 
 if (!$resource) {
     http_response_code(400);
@@ -100,28 +153,32 @@ if (!$resource) {
     exit;
 }
 
-$sql = "";
-$params = [];
+// Bemeneti JSON adat beolvasása POST és PUT kérésekhez
+$inputData = json_decode(file_get_contents("php://input"), true);
 
-
-// Definíciók: Melyik végponthoz melyik tábla és melyik szűrhető oszlopok tartoznak
+// Definíciók[cite: 1]
 $endpoints = [
     'room' => [
         'table'   => 'rooms',
         'id'      => 'room_number',
         'filters' => ['room_type', 'status', 'bed_type', 'has_balcony'],
-        'sorts'   => ['room_number', 'price_per_night', 'floorspace']
+        'sorts'   => ['room_number', 'price_per_night', 'floorspace'],
+        'enums'   => [
+            'status' => ['available','occupied','dont_disturb','needs_cleaning','cleaning','under_maintenence','unavailable'],
+            'room_type' => ['STANDARD','SUITE','DELUXE'],
+            'bed_type' => ['single', 'twin', 'queen', 'kingsize'],
+        ]
     ],
     'guest' => [
         'table'   => 'guests',
-        'id'      => 'id_card_number',
+        'id'      => 'email',
         'filters' => ['country', 'loyalty_level'],
         'sorts'   => ['fname', 'lname', 'country']
     ],
     'employee' => [
         'table'   => 'employees',
         'id'      => 'id',
-        'filters' => ['job_title'],
+        'filters' => ['role'],
         'sorts'   => ['fname', 'lname', 'salary', 'date_of_birth', 'date_of_hiring']
     ],
     'service' => [
@@ -129,27 +186,130 @@ $endpoints = [
         'id'      => 'id',
         'filters' => ['service_type'],
         'sorts'   => ['name', 'price', 'service_type']
+    ],
+    'booking' => [
+        'table'   => 'bookings',
+        'id'      => 'id',
+        'filters' => ['room_number', 'guest1_email'],
+        'sorts'   => ['beginning_of_stay', 'room_number', 'guest1_email']
     ]
 ];
 
 if (array_key_exists($resource, $endpoints)) {
     $config = $endpoints[$resource];
+    $table = $config['table'];
+    $idCol = $config['id'];
     
-    $result = fetchResource(
-        $pdo, 
-        $config['table'], 
-        $id, 
-        $config['id'], 
-        $config['filters'],
-        $config['sorts']
-    );
+    switch ($method) {
+        case 'GET':
+            $result = fetchResource($pdo, $table, $id, $idCol, $config['filters'], $config['sorts']);
+            if ($result) {
+                echo json_encode($result);
+            } else {
+                http_response_code(404);
+                echo json_encode(["error" => "Nincs találat: $resource #$id"]);
+            }
+            break;
 
-    if ($result) {
-        echo json_encode($result);
-    } else {
-        http_response_code(404);
-        echo json_encode(["error" => "Nincs találat: $resource #$id"]);
+        case 'POST':
+            if (empty($inputData)) {
+                http_response_code(400);
+                echo json_encode(["error" => "Érvénytelen vagy hiányzó JSON adat."]);
+                break;
+            }
+            // Validáció az ENUM mezőkre
+            if (isset($config['enums'])) {
+                foreach ($config['enums'] as $column => $allowedValues) {
+                    // Ha küldtek be adatot ehhez az oszlophoz
+                    if (array_key_exists($column, $inputData)) {
+                        if (!in_array($inputData[$column], $allowedValues)) {
+                            http_response_code(400);
+                            echo json_encode([
+                                "error" => "Érvénytelen érték a(z) '$column' mezőben.",
+                            ]);
+                            exit;
+                        }
+                    }
+                }
+            }
+
+            try {
+                createResource($pdo, $table, $inputData);
+                http_response_code(201); // 201 Created
+                echo json_encode(["message" => "Sikeresen létrehozva."]);
+            } catch (\PDOException $e) {
+                http_response_code(400);
+                echo json_encode(["error" => "Hiba a létrehozás során: " . $e->getMessage()]);
+            }
+            break;
+
+        case 'PUT':
+            if ($id === 'all') {
+                http_response_code(400);
+                echo json_encode(["error" => "Frissítéshez kötelező megadni az azonosítót (ID/kulcs)."]);
+                break;
+            }
+            if (empty($inputData)) {
+                http_response_code(400);
+                echo json_encode(["error" => "Érvénytelen vagy hiányzó JSON adat."]);
+                break;
+            }
+            // Validáció az ENUM mezőkre
+            if (isset($config['enums'])) {
+                foreach ($config['enums'] as $column => $allowedValues) {
+                    // Ha küldtek be adatot ehhez az oszlophoz
+                    if (array_key_exists($column, $inputData)) {
+                        if (!in_array($inputData[$column], $allowedValues)) {
+                            http_response_code(400);
+                            echo json_encode([
+                                "error" => "Érvénytelen érték a(z) '$column' mezőben.",
+                            ]);
+                            exit;
+                        }
+                    }
+                }
+            }
+
+            try {
+                $affected = updateResource($pdo, $table, $idCol, $id, $inputData);
+                if ($affected > 0) {
+                    echo json_encode(["message" => "Sikeresen frissítve.", "affected_rows" => $affected]);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["message" => "A rekord nem található, vagy az adatok megegyeznek a jelenlegiekkel."]);
+                }
+            } catch (\PDOException $e) {
+                http_response_code(400);
+                echo json_encode(["error" => "Hiba a frissítés során: " . $e->getMessage()]);
+            }
+            break;
+
+        case 'DELETE':
+            if ($id === 'all') {
+                http_response_code(400);
+                echo json_encode(["error" => "Törléshez kötelező megadni az azonosítót."]);
+                break;
+            }
+            try {
+                $affected = deleteResource($pdo, $table, $idCol, $id);
+                if ($affected > 0) {
+                    echo json_encode(["message" => "Sikeresen törölve.", "affected_rows" => $affected]);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["error" => "A törölni kívánt rekord nem található."]);
+                }
+            } catch (\PDOException $e) {
+                http_response_code(400);
+                echo json_encode(["error" => "Hiba a törlés során (pl. kapcsolódó adatok): " . $e->getMessage()]);
+            }
+            break;
+
+        default:
+            http_response_code(405); // 405 Method Not Allowed
+            echo json_encode(["error" => "Nem engedélyezett metódus: $method"]);
+            break;
     }
+
 } else {
     http_response_code(404);
     echo json_encode(["error" => "Ismeretlen végpont: $resource"]);

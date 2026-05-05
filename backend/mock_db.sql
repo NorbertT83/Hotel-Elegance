@@ -32,14 +32,14 @@ USE `c82533nrbrt`;
 CREATE TABLE `bookings` (
   `id` int(11) NOT NULL,
   `room_number` smallint(5) UNSIGNED DEFAULT NULL,
-  `guest_id1` varchar(20) NOT NULL,
+  `guest1_email` varchar(64) NOT NULL,
   `beginning_of_stay` date NOT NULL,
   `end_of_stay` date NOT NULL CHECK (`end_of_stay` > `beginning_of_stay`),
   `checkin` datetime DEFAULT NULL,
   `checkout` datetime DEFAULT NULL,
-  `guest_id2` varchar(20) DEFAULT NULL,
-  `guest_id3` varchar(20) DEFAULT NULL,
-  `guest_id4` varchar(20) DEFAULT NULL,
+  `guest2_email` varchar(64) DEFAULT NULL,
+  `guest3_email` varchar(64) DEFAULT NULL,
+  `guest4_email` varchar(64) DEFAULT NULL,
   `level_of_service` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
@@ -47,18 +47,17 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `room_number`, `guest_id1`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest_id2`, `guest_id3`, `guest_id4`, `level_of_service`) VALUES
-(1, 101, 'ID100002', '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 'ID100008', NULL, NULL, 'standard'),
-(2, 102, 'ID100003', '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'business'),
-(3, 201, 'ID100005', '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 'ID100011', NULL, NULL, 'deluxe'),
-(4, 202, 'ID100008', '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'wellness'),
-(5, 103, 'ID100010', '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'standard'),
-(6, 301, 'ID100001', '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 'ID100007', 'ID100014', NULL, 'family'),
-(7, 302, 'ID100004', '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 'ID100012', NULL, NULL, 'premium'),
-(8, 203, 'ID100007', '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 'ID100010', NULL, NULL, 'standard'),
-(9, 303, 'ID100009', '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 'ID100003', 'ID100006', NULL, 'premium'),
-(10, 402, 'ID100006', '2026-04-10', '2026-04-12', '2026-04-10 12:45:00', '2026-04-12 09:30:00', NULL, NULL, NULL, 'business');
-
+INSERT INTO `bookings` (`id`, `room_number`, `guest1_email`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_email`, `guest3_email`, `guest4_email`, `level_of_service`) VALUES
+(1, 101, 'szabo.anna.debrecen@freemail.hu', '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 'nagy.david95@gmail.com', NULL, NULL, 'standard'),
+(2, 102, 'john.smith85@outlook.com', '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'business'),
+(3, 201, 'luca.rossi2001@libero.it', '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 'oliver.brown.manchester@yahoo.co.uk', NULL, NULL, 'deluxe'),
+(4, 202, 'nagy.david95@gmail.com', '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'wellness'),
+(5, 103, 'horvath.matej.2010@citromail.hu', '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'standard'),
+(6, 301, 'kovacs.bence2015@gmail.com', '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 'mia.novak.sk@atlas.sk', 'ella.williams2016@aol.com', NULL, 'family'),
+(7, 302, 'emma.j.ny@icloud.com', '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 'isabella.garcia92@hotmail.es', NULL, NULL, 'premium'),
+(8, 203, 'mia.novak.sk@atlas.sk', '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 'horvath.matej.2010@citromail.hu', NULL, NULL, 'standard'),
+(9, 303, 'sophie.dubois.paris@orange.fr', '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 'john.smith85@outlook.com', 'noah.muller78@t-online.de', NULL, 'premium'),
+(10, 402, 'noah.muller78@t-online.de', '2026-04-10', '2026-04-12', '2026-04-10 12:45:00', '2026-04-12 09:30:00', NULL, NULL, NULL, 'business');
 --
 -- Triggers `bookings`
 --
@@ -87,7 +86,7 @@ CREATE TABLE `employees` (
   `address` text DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
   `date_of_hiring` date NOT NULL,
-  `job_title` varchar(50) DEFAULT NULL,
+  `role` varchar(50) DEFAULT NULL,
   `salary` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -97,7 +96,7 @@ CREATE TABLE `employees` (
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`id`, `fname`, `lname`, `tax_number`, `paid_holidays_left`, `address`, `date_of_birth`, `date_of_hiring`, `job_title`, `salary`, `created_at`, `updated_at`) VALUES
+INSERT INTO `employees` (`id`, `fname`, `lname`, `tax_number`, `paid_holidays_left`, `address`, `date_of_birth`, `date_of_hiring`, `role`, `salary`, `created_at`, `updated_at`) VALUES
 (1, 'Gábor', 'Nagy', 'TX100001', 18, 'Budapest, Andrássy út 10.', '1985-03-12', '2015-06-01', 'HK Manager', 950000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
 (2, 'Eszter', 'Kovács', 'TX100002', 20, 'Budapest, Bartók Béla út 22.', '1988-07-25', '2018-09-15', 'F&B Manager', 880000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
 (3, 'Anna', 'Szabó', 'TX100003', 12, 'Budapest, Váci út 45.', '1995-11-02', '2021-03-10', 'Receptionist', 420000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
@@ -147,55 +146,56 @@ DELIMITER ;
 --
 
 CREATE TABLE `guests` (
-  `id_card_number` varchar(20) NOT NULL,
-  `fname` varchar(50) NOT NULL,
-  `lname` varchar(50) NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `country` varchar(50) DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `car_plate_number` varchar(10) DEFAULT NULL,
-  `loyalty_level` tinyint(3) UNSIGNED DEFAULT 0
+    `email` varchar(64) NOT NULL,
+    `id_card_number` varchar(20) NOT NULL,
+    `fname` varchar(50) NOT NULL,
+    `lname` varchar(50) NOT NULL,
+    `date_of_birth` date NOT NULL,
+    `country` varchar(50) DEFAULT NULL,
+    `address` text DEFAULT NULL,
+    `car_plate_number` varchar(10) DEFAULT NULL,
+    `cumulative_nights` int DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `guests`
 --
 
-INSERT INTO `guests` (`id_card_number`, `fname`, `lname`, `date_of_birth`, `country`, `address`, `car_plate_number`, `loyalty_level`) VALUES
-('ID100001', 'Bence', 'Kovács', '2015-06-12', 'Hungary', 'Budapest, Váci út 12.', NULL, 0),
-('ID100002', 'Anna', 'Szabó', '1990-03-25', 'Hungary', 'Debrecen, Kossuth tér 5.', 'ABC123', 2),
-('ID100003', 'John', 'Smith', '1985-11-02', 'United Kingdom', 'London, Baker Street 221B', NULL, 3),
-('ID100004', 'Emma', 'Johnson', '2018-09-14', 'United States', 'New York, 5th Avenue 10.', NULL, 0),
-('ID100005', 'Luca', 'Rossi', '2001-07-30', 'Italy', 'Rome, Via Milano 45.', 'XYZ789', 1),
-('ID100006', 'Noah', 'Müller', '1978-01-19', 'Germany', 'Berlin, Alexanderplatz 3.', 'BER456', 4),
-('ID100007', 'Mia', 'Novák', '2012-12-05', 'Slovakia', 'Bratislava, Main Street 8.', NULL, 0),
-('ID100008', 'David', 'Nagy', '1995-05-21', 'Hungary', 'Szeged, Tisza Lajos krt. 22.', 'SZG234', 2),
-('ID100009', 'Sophie', 'Dubois', '1988-08-17', 'France', 'Paris, Rue de Rivoli 15.', NULL, 3),
-('ID100010', 'Matej', 'Horváth', '2010-04-11', 'Hungary', 'Gyor, Baross út 9.', NULL, 1),
-('ID100011', 'Oliver', 'Brown', '2003-02-09', 'United Kingdom', 'Manchester, King St 44.', 'UK1234', 1),
-('ID100012', 'Isabella', 'Garcia', '1992-10-28', 'Spain', 'Madrid, Gran Via 18.', 'ESP567', 2),
-('ID100013', 'Levente', 'Tóth', '1980-06-06', 'Hungary', 'Pécs, Király utca 33.', NULL, 5),
-('ID100014', 'Ella', 'Williams', '2016-01-03', 'United States', 'Los Angeles, Sunset Blvd 77.', NULL, 0),
-('ID100015', 'Dániel', 'Varga', '1999-09-09', 'Hungary', 'Miskolc, Széchenyi utca 1.', 'MIS999', 2);
+INSERT INTO `guests` (`email`, `id_card_number`, `fname`, `lname`, `date_of_birth`, `country`, `address`, `car_plate_number`, `cumulative_nights`) VALUES
+("kovacs.bence2015@gmail.com","ID100001","Bence","Kovács","2015-06-12","Hungary","Budapest, Váci út 12.",NULL,"0"),
+("szabo.anna.debrecen@freemail.hu","ID100002","Anna","Szabó","1990-03-25","Hungary","Debrecen, Kossuth tér 5.","ABC123","2"),
+("john.smith85@outlook.com","ID100003","John","Smith","1985-11-02","United Kingdom","London, Baker Street 221B",NULL,"3"),
+("emma.j.ny@icloud.com","ID100004","Emma","Johnson","2018-09-14","United States","New York, 5th Avenue 10.",NULL,"0"),
+("luca.rossi2001@libero.it","ID100005","Luca","Rossi","2001-07-30","Italy","Rome, Via Milano 45.","XYZ789","1"),
+("noah.muller78@t-online.de","ID100006","Noah","Müller","1978-01-19","Germany","Berlin, Alexanderplatz 3.","BER456","4"),
+("mia.novak.sk@atlas.sk","ID100007","Mia","Novák","2012-12-05","Slovakia","Bratislava, Main Street 8.",NULL,"0"),
+("nagy.david95@gmail.com","ID100008","David","Nagy","1995-05-21","Hungary","Szeged, Tisza Lajos krt. 22.","SZG234","2"),
+("sophie.dubois.paris@orange.fr","ID100009","Sophie","Dubois","1988-08-17","France","Paris, Rue de Rivoli 15.",NULL,"3"),
+("horvath.matej.2010@citromail.hu","ID100010","Matej","Horváth","2010-04-11","Hungary","Gyor, Baross út 9.",NULL,"1"),
+("oliver.brown.manchester@yahoo.co.uk","ID100011","Oliver","Brown","2003-02-09","United Kingdom","Manchester, King St 44.","UK1234","1"),
+("isabella.garcia92@hotmail.es","ID100012","Isabella","Garcia","1992-10-28","Spain","Madrid, Gran Via 18.","ESP567","2"),
+("toth.levente80@gmail.com","ID100013","Levente","Tóth","1980-06-06","Hungary","Pécs, Király utca 33.",NULL,"5"),
+("ella.williams2016@aol.com","ID100014","Ella","Williams","2016-01-03","United States","Los Angeles, Sunset Blvd 77.",NULL,"0"),
+("varga.daniel.miskolc@freemail.hu","ID100015","Dániel","Varga","1999-09-09","Hungary","Miskolc, Széchenyi utca 1.","MIS999","2");
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `guestservices`
+-- Table structure for table `services`
 --
 
-CREATE TABLE `guestservices` (
-  `service_id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `description` text DEFAULT NULL,
-  `price` int(10) UNSIGNED NOT NULL
+CREATE TABLE `services` (
+    `id` int(11) NOT NULL,
+    `name` varchar(50) NOT NULL,
+    `description` text DEFAULT NULL,
+    `price` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `guestservices`
 --
 
-INSERT INTO `guestservices` (`service_id`, `name`, `description`, `price`) VALUES
+INSERT INTO `services` (`id`, `name`, `description`, `price`) VALUES
 (1, 'Testmasszázs', 'Svédmasszázs 60 perc', 12000),
 (2, 'Parkolás', 'Zárt parkoló napi díj', 3000),
 (3, 'Transzfer', 'Reptéri transzfer egy irányba', 10000),
@@ -303,10 +303,10 @@ INSERT INTO `servicebookings` (`booking_id`, `service_id`, `timestamp`, `quantit
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_bookings_room` (`room_number`),
-  ADD KEY `fk_bookings_guest1` (`guest_id1`),
-  ADD KEY `fk_bookings_guest2` (`guest_id2`),
-  ADD KEY `fk_bookings_guest3` (`guest_id3`),
-  ADD KEY `fk_bookings_guest4` (`guest_id4`);
+  ADD KEY `fk_bookings_guest1` (`guest1_email`),
+  ADD KEY `fk_bookings_guest2` (`guest2_email`),
+  ADD KEY `fk_bookings_guest3` (`guest3_email`),
+  ADD KEY `fk_bookings_guest4` (`guest4_email`);
 
 --
 -- Indexes for table `employees`
@@ -320,13 +320,23 @@ ALTER TABLE `employees`
 -- Indexes for table `guests`
 --
 ALTER TABLE `guests`
-  ADD PRIMARY KEY (`id_card_number`);
+    ADD PRIMARY KEY (`email`),
+    ADD COLUMN loyalty_level INT GENERATED ALWAYS AS (
+    LEAST(FLOOR(cumulative_nights / 5), 10)
+) STORED;
 
 --
 -- Indexes for table `guestservices`
 --
-ALTER TABLE `guestservices`
-  ADD PRIMARY KEY (`service_id`);
+ALTER TABLE `services`
+  ADD PRIMARY KEY (`id`),
+  ADD COLUMN `service_type` VARCHAR(20) GENERATED ALWAYS AS (
+    CASE 
+        WHEN `name` LIKE '%masszázs%' OR `name` LIKE '%kezelés%' THEN 'Wellness'
+        WHEN `name` LIKE '%bérlés%' OR `name` LIKE '%roller%' OR `name` LIKE '%Transzfer%' OR `name` LIKE '%Parkolás%' THEN 'Logisztika'
+        ELSE 'Kényelmi'
+    END
+) STORED;
 
 --
 -- Indexes for table `rooms`
@@ -358,10 +368,10 @@ ALTER TABLE `employees`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `guestservices`
+-- AUTO_INCREMENT for table `services`
 --
-ALTER TABLE `guestservices`
-  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+ALTER TABLE `services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Constraints for dumped tables
@@ -371,10 +381,10 @@ ALTER TABLE `guestservices`
 -- Constraints for table `bookings`
 --
 ALTER TABLE `bookings`
-  ADD CONSTRAINT `fk_bookings_guest1` FOREIGN KEY (`guest_id1`) REFERENCES `guests` (`id_card_number`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_bookings_guest2` FOREIGN KEY (`guest_id2`) REFERENCES `guests` (`id_card_number`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_bookings_guest3` FOREIGN KEY (`guest_id3`) REFERENCES `guests` (`id_card_number`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_bookings_guest4` FOREIGN KEY (`guest_id4`) REFERENCES `guests` (`id_card_number`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_bookings_guest1` FOREIGN KEY (`guest1_email`) REFERENCES `guests` (`email`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_bookings_guest2` FOREIGN KEY (`guest2_email`) REFERENCES `guests` (`email`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_bookings_guest3` FOREIGN KEY (`guest3_email`) REFERENCES `guests` (`email`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_bookings_guest4` FOREIGN KEY (`guest4_email`) REFERENCES `guests` (`email`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_bookings_room` FOREIGN KEY (`room_number`) REFERENCES `rooms` (`room_number`) ON UPDATE CASCADE;
 
 --
@@ -382,7 +392,7 @@ ALTER TABLE `bookings`
 --
 ALTER TABLE `servicebookings`
   ADD CONSTRAINT `fk_servicebookings_booking` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_servicebookings_service` FOREIGN KEY (`service_id`) REFERENCES `guestservices` (`service_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_servicebookings_service` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
