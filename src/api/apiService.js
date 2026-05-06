@@ -13,8 +13,6 @@ export async function getData(endpoint="" , params=[], timeout = 5000) {
             signal: controller.signal
         });
 
-        clearTimeout(controllerID);
-
         if (!response.ok) {
             throw new Error(`HTTP hiba: ${response.status}`);
         }
@@ -22,21 +20,59 @@ export async function getData(endpoint="" , params=[], timeout = 5000) {
         return await response.json();
 
     } catch (error) {
-        clearTimeout(controllerID);
         if (error.name === "AbortError") {
             throw new Error("Időtúllépés történt");
         }
         throw error;
+    } finally {
+        clearTimeout(controllerID);
     }
 }
 
-export async function putData(endpoint="", id="" , data=[], timeout = 5000) {
+
+export async function createData(endpoint = "", data = {}, timeout = 5000) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const url = `${apiURL}${endpoint}`;
+
+        const response = await fetch(url, {
+            method: "POST",
+            signal: controller.signal,
+            headers: {
+                "Content-Type": "application/json",
+                // Szükség esetén: "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text().catch(() => "Ismeretlen hiba");
+            throw new Error(`HTTP hiba: ${response.status} - ${errorBody}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        if (error.name === "AbortError") {
+            throw new Error("Időtúllépés: A szerver nem mentette el az adatokat időben.");
+        }
+        console.error("Create hiba:", error);
+        throw error;
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+
+export async function updateData(endpoint="", id="" , data={}, timeout = 5000) {
     
     const controller = new AbortController();
     const controllerID = setTimeout(() => controller.abort(), timeout);
 
     try {
-        const url = `${apiURL}${endpoint}${id}`;
+        const url = `${apiURL}${endpoint}/${id}`;
 
         const response = await fetch(url, {
             method: "PUT",
@@ -47,8 +83,6 @@ export async function putData(endpoint="", id="" , data=[], timeout = 5000) {
             body: JSON.stringify(data)
         });
 
-        clearTimeout(controllerID);
-
         if (!response.ok) {
             throw new Error(`HTTP hiba: ${response.status}`);
         }
@@ -56,10 +90,48 @@ export async function putData(endpoint="", id="" , data=[], timeout = 5000) {
         return response;
 
     } catch (error) {
-        clearTimeout(controllerID);
+
         if (error.name === "AbortError") {
             throw new Error("Időtúllépés történt");
         }
         throw error;
+    } finally {
+        clearTimeout(controllerID);
+    }
+}
+
+
+export async function deleteData(endpoint="", id="", timeout = 5000) {
+    
+    const controller = new AbortController();
+    const controllerID = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const url = `${apiURL}${endpoint}/${id}`;
+
+        const response = await fetch(url, {
+            method: "DELETE",
+            signal: controller.signal,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text().catch(() => "Ismeretlen hiba");
+            throw new Error(`HTTP hiba: ${response.status} - ${errorBody}`);
+        }
+        if (response.status === 204) {
+            return { success: true };
+        }
+        return await response.json();
+
+    } catch (error) {
+        if (error.name === "AbortError") {
+            throw new Error("Időtúllépés történt");
+        }
+        throw error;
+    } finally {
+        clearTimeout(controllerID);
     }
 }
