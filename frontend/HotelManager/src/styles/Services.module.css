@@ -3,6 +3,10 @@
     place-items: center;
 }
 
+.btnCell {
+    display: flex;
+    gap: .5rem;
+}
 .btnCell button {
     width: 100%;
 }
@@ -49,4 +53,20 @@ td:nth-of-type(3), td:nth-of-type(4) {
 th span {
     font-size: .625rem;
     font-weight: 100;
+}
+
+.editInput, select{
+    padding: .5rem 1rem;
+    border-radius: .25rem;
+    border: 1px solid black;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+input[type="number"] {
+    width: 7rem;
+}
+
+select {
+    width: 8rem;
 }

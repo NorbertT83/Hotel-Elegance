@@ -3,8 +3,8 @@ import labels from '../const/Labels';
 import TopBar from "../components/TopBar";
 import { useGlobal } from '../context/GlobalContext';
 import { useUser } from '../context/UserContext';
-import { useState, useEffect, useCallback } from 'react';
-import { getData, putData } from '../api/apiService';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { getData, updateData } from '../api/apiService';
 
 
 export default function Services() {
@@ -34,6 +34,9 @@ export default function Services() {
         fetchServices()
     }, [fetchServices]);
 
+    const serviceTypeEnums = useMemo(() => {
+        return [...new Set(services.map(s => s.service_type))].filter(Boolean);
+    }, [services]);
 
     function handleEditClick(service) {
         setEditedRowId(service.id);
@@ -50,7 +53,7 @@ export default function Services() {
 
     async function handleSave() {
         try {
-            const result = await putData(`service/${editedRowId}`, editedRowData); // TODO Folytatni backenden a PUT metódust
+            const result = await updateData(`service/${editedRowId}`, editedRowData); // TODO Folytatni backenden a PUT metódust
             console.log("Sikeres mentés:", result);
         } catch (error) {
             alert("Nem sikerült a mentés: " + error.message);
@@ -99,15 +102,22 @@ export default function Services() {
                                     <td><input name="name" value={editedRowData.name} onChange={handleInputChange} className={s.editInput} /></td>
                                     <td><input name="description" value={editedRowData.description} onChange={handleInputChange} className={s.editInput} /></td>
                                     <td>
-                                        <select name="service_type" value={editedRowData.service_type} onChange={handleInputChange}>
-                                            <option value="Cleaning">Cleaning</option>
-                                            <option value="Wellness">Wellness</option>
+                                        <select 
+                                            name="service_type" 
+                                            value={editedRowData.service_type || ""} 
+                                            onChange={handleInputChange}
+                                        >
+                                            {serviceTypeEnums.map(type => (
+                                                <option key={type} value={type}>
+                                                    {type}
+                                                </option>
+                                            ))}
                                         </select>
                                     </td>
                                     <td><input type="number" name="price" value={editedRowData.price} onChange={handleInputChange} className={s.editInput} /></td>
                                     <td className={s.btnCell}>
-                                        <button className="btn-primary" onClick={() => handleSave(service.id)}>OK</button>
-                                        <button className="btn-warning" onClick={handleCancelClick}>Mégse</button>
+                                        <button className="btn-primary" onClick={() => handleSave(service.id)}>✓</button>
+                                        <button className="btn-warning" onClick={handleCancelClick}>✗</button>
                                     </td>
                                 </>
                             ) : (
