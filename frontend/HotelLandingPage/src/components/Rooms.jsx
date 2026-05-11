@@ -1,42 +1,46 @@
 import EliteImg from '../assets/elite_room.png';
 import SuiteImg from '../assets/suite_room.png';
-
+import { useLanguage } from '../context/LanguageContext';
+import { landingPageText } from '../translations.js';
 
 export default function Rooms() {
+    const { language } = useLanguage();
+    const text = landingPageText[language].rooms;
+
     return (
         <section className="rooms-section">
             <div className="section-header">
-                <h2>Lakosztályaink</h2>
-                <p>Gondosan kialakított terek a tökéletes kikapcsolódásért és a kifinomult kényelemért.</p>
+                <h2>{text.sectionTitle}</h2>
+                <p>{text.sectionDescription}</p>
             </div>
             <div className="rooms-grid">
                 <div className="room-card">
                     <div className="room-img-container">
-                        <img src={EliteImg} alt="A Grand Ivory lakosztály" />
+                        <img src={EliteImg} alt={text.cards[0].imageAlt} />
                     </div>
                     <div className="room-content">
                         <div className="room-header">
-                            <h3>The Grand Ivory</h3>
-                            <span className="price">$850<span>/éjszaka</span></span>
+                            <h3>{text.cards[0].title}</h3>
+                            <span className="price">{text.cards[0].price}<span>{text.cards[0].priceSuffix}</span></span>
                         </div>
-                        <p className="room-desc">Tágas saroklakosztály panorámás kilátással, privát terasszal és egyedi készítésű bútorokkal, lágy pezsgő színekben.</p>
+                        <p className="room-desc">{text.cards[0].description}</p>
                         <a className="link-with-icon" href="#">
-                            Lakosztály megtekintése <span className="material-symbols-outlined">arrow_forward</span>
+                            {text.cards[0].linkText} <span className="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
                 </div>
                 <div className="room-card">
                     <div className="room-img-container">
-                        <img src={SuiteImg} alt="A Teraszos Penthouse" />
+                        <img src={SuiteImg} alt={text.cards[1].imageAlt} />
                     </div>
                     <div className="room-content">
                         <div className="room-header">
-                            <h3>The Terrace Penthouse</h3>
-                            <span className="price">$1,200<span>/éjszaka</span></span>
+                            <h3>{text.cards[1].title}</h3>
+                            <span className="price">{text.cards[1].price}<span>{text.cards[1].priceSuffix}</span></span>
                         </div>
-                        <p className="room-desc">Magas szintű kényelem körbefutó erkéllyel, külön étkezővel és a visszafogott luxus iránti kivételes figyelemmel.</p>
+                        <p className="room-desc">{text.cards[1].description}</p>
                         <a className="link-with-icon" href="#">
-                            Lakosztály megtekintése <span className="material-symbols-outlined">arrow_forward</span>
+                            {text.cards[1].linkText} <span className="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
                 </div>

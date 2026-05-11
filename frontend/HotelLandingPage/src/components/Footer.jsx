@@ -1,33 +1,39 @@
+import { useLanguage } from '../context/LanguageContext';
+import { landingPageText } from '../translations.js';
+
 export default function Footer() {
+    const { language } = useLanguage();
+    const text = landingPageText[language].footer;
+
     return (
         <footer className="footer">
             <div className="footer-container">
                 <div className="footer-brand">
                     <div className="footer-logo">Hotel Elegance</div>
-                    <p>A csendes luxus menedéke, amely kifogástalan kiszolgálást és időtlen élményeket nyújt az igényes utazók számára.</p>
+                    <p>{text.brandDescription}</p>
                 </div>
                 <div className="footer-links-grid">
                     <div className="footer-col">
-                        <h4>Jogi tudnivalók</h4>
-                        <a href="#">Adatvédelmi irányelvek</a>
-                        <a href="#">Felhasználási feltételek</a>
+                        <h4>{text.legalTitle}</h4>
+                        <a href="#">{text.privacyPolicy}</a>
+                        <a href="#">{text.terms}</a>
                     </div>
                     <div className="footer-col">
-                        <h4>Kapcsolat</h4>
-                        <a href="#">Kapcsolatfelvétel</a>
-                        <a href="#">Sajtóanyagok</a>
+                        <h4>{text.contactTitle}</h4>
+                        <a href="#">{text.contact}</a>
+                        <a href="#">{text.press}</a>
                     </div>
                     <div className="footer-col footer-address">
-                        <h4>Helyszín</h4>
+                        <h4>{text.locationTitle}</h4>
                         <address>
-                            <span>123 Serenity Lane</span><br/>
-                            <span>Metropolis, NY 10001</span><br/>
-                            <a href="mailto:info@hotelelegance.hu" className="email-link">info@hotelelegance.hu</a>
+                            <span>{text.addressLine1}</span><br/>
+                            <span>{text.addressLine2}</span><br/>
+                            <a href="mailto:info@hotelelegance.hu" className="email-link">{text.email}</a>
                         </address>
                     </div>
                 </div>
                 <div className="footer-bottom">
-                    <span>© 2026 Hotel Elegance. Minden jog fenntartva.</span>
+                    <span>{text.copyright}</span>
                 </div>
             </div>
         </footer>

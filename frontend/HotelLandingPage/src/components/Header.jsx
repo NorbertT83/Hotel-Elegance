@@ -1,22 +1,23 @@
-import Logo from '../assets/HE-logo.png'
 import LanguageSelector from './LanguageSelector.jsx';
+import { useLanguage } from '../context/LanguageContext';
+import { landingPageText } from '../translations.js';
 
 export default function Header() {
+    const { language } = useLanguage();
+    const text = landingPageText[language].header;
+
     return (
             <header className="header">
             <div className="header-container">
-                <div className='logo-img'><img src={Logo} alt="Logo" /></div>
-
                 <div className="logo">Hotel Elegance</div>
                 <nav className="nav-links">
-                    <a href="#">Szobák</a>
-                    <a href="#">Szolgáltatások</a>
-                    <a href="#">Galéria</a>
-                    <a href="#">Rólunk</a>
+                    <a href="#">{text.navLinks[0]}</a>
+                    <a href="#">{text.navLinks[1]}</a>
+                    <a href="#">{text.navLinks[2]}</a>
+                    <a href="#">{text.navLinks[3]}</a>
                 </nav>
-                <button className="btn btn-primary">Foglalás most</button>
-                <LanguageSelector></LanguageSelector>
-                
+                <button className="btn btn-primary">{text.bookNow}</button>
+                <LanguageSelector></LanguageSelector>                
             </div>
         </header>
     )
