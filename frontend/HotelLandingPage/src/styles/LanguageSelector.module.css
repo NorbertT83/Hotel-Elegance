@@ -1,0 +1,28 @@
+.languageSelector {
+    position: absolute;
+    top: 1.75rem;
+    right: 1rem;
+    display: flex;
+    align-self: flex-start;
+    justify-content: center;
+    align-items: center;
+    height: 2rem;
+    background-color: transparent;
+    border-radius: .5rem;
+}
+
+button {
+    background-color: transparent;
+    padding: .25rem;
+    border: none;
+    cursor: pointer;
+}
+
+.languageSelector button.active {
+    color: var(--primary-container);
+    font-weight: bold;
+}
+
+.languageSelector button:not(.active) {
+    color: gray;
+}

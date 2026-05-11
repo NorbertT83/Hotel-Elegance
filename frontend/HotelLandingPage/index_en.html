@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Hotel Elegance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">Hotel Elegance</div>
+            <nav class="nav-links">
+                <a href="#">Rooms</a>
+                <a href="#">Amenities</a>
+                <a href="#">Gallery</a>
+                <a href="#">About</a>
+            </nav>
+            <button class="btn btn-primary">Book Now</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-bg">
+                <img src="./assets/hero_photo.png" alt="Luxury hotel room interior">
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="hero-content">
+                <h1 class="hero-title">Elegance in Every Detail</h1>
+                <p class="hero-subtitle">Experience a sanctuary of calm and quiet luxury, where impeccable service meets timeless design.</p>
+            </div>
+        </section>
+
+        <section class="booking-section">
+            <div class="booking-bar">
+                <div class="input-group">
+                    <label>Check In</label>
+                    <input type="date"/>
+                </div>
+                <div class="input-group">
+                    <label>Check Out</label>
+                    <input type="date"/>
+                </div>
+                <div class="input-group">
+                    <label>Guests</label>
+                    <select>
+                        <option>2 Adults, 0 Children</option>
+                        <option>1 Adult, 0 Children</option>
+                        <option>2 Adults, 1 Child</option>
+                    </select>
+                </div>
+                <div class="submit-group">
+                    <button class="btn btn-primary btn-large">Book Your Stay</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="rooms-section">
+            <div class="section-header">
+                <h2>Our rooms</h2>
+                <p>Curated spaces designed for ultimate relaxation and refined comfort.</p>
+            </div>
+            <div class="rooms-grid">
+                <div class="room-card">
+                    <div class="room-img-container">
+                        <img src="./assets/elite_room.png" alt="The Grand Ivory room">
+                    </div>
+                    <div class="room-content">
+                        <div class="room-header">
+                            <h3>The Grand Ivory</h3>
+                            <span class="price">$850<span>/night</span></span>
+                        </div>
+                        <p class="room-desc">A sprawling corner room offering panoramic views, a private terrace, and bespoke furnishings in soft champagne tones.</p>
+                        <a class="link-with-icon" href="#">
+                            Explore room <span class="material-symbols-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="room-card">
+                    <div class="room-img-container">
+                        <img src="./assets/suite_room.png" alt="The Terrace Penthouse">
+                    </div>
+                    <div class="room-content">
+                        <div class="room-header">
+                            <h3>The Terrace Penthouse</h3>
+                            <span class="price">$1,200<span>/night</span></span>
+                        </div>
+                        <p class="room-desc">Elevated living with a wrap-around balcony, dedicated dining area, and exquisite attention to quiet luxury details.</p>
+                        <a class="link-with-icon" href="#">
+                            Explore room <span class="material-symbols-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">Hotel Elegance</div>
+                <p>A sanctuary of quiet luxury, providing impeccable service and timeless experiences for the discerning traveler.</p>
+            </div>
+            <div class="footer-links-grid">
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Press Kit</a>
+                </div>
+                <div class="footer-col footer-address">
+                    <h4>Location</h4>
+                    <address>
+                        <span>123 Serenity Lane</span>
+                        <span>Metropolis, NY 10001</span>
+                        <a href="mailto:info@hotelelegance.hu" class="email-link">info@hotelelegance.hu</a>
+                    </address>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Hotel Elegance. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

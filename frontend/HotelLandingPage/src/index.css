@@ -1,6 +1,4 @@
-/* --- Változók (Theme konfiguráció) --- */
 :root {
-    /* Színek */
     --bg-background: #131313;
     --text-on-background: #e5e2e1;
     --primary: #ffb77b;
@@ -16,22 +14,23 @@
     --secondary-container: #4c4844;
     --tertiary: #ffb783;
     
-    /* Betűtípusok */
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Manrope', sans-serif;
     
-    /* Térközök & Méretek */
     --container-max: 1280px;
     --section-gap: 120px;
     --margin-mobile: 20px;
     --margin-desktop: 64px;
 }
 
-/* --- Alap beállítások (Reset & Base) --- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -52,7 +51,6 @@ a {
     text-decoration: none;
 }
 
-/* --- Tipográfia --- */
 h1, h2, h3, .logo, .footer-logo {
     font-family: var(--font-heading);
     font-weight: 500;
@@ -65,7 +63,6 @@ h1, h2, h3, .logo, .footer-logo {
     font-weight: 600;
 }
 
-/* --- Gombok --- */
 .btn {
     font-family: var(--font-body);
     font-size: 12px;
@@ -95,7 +92,6 @@ h1, h2, h3, .logo, .footer-logo {
     white-space: nowrap;
 }
 
-/* --- Header --- */
 .header {
     position: fixed;
     top: 0;
@@ -122,8 +118,15 @@ h1, h2, h3, .logo, .footer-logo {
     letter-spacing: -0.02em;
 }
 
+.logo-img img {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    height: 4rem;
+}
+
 .nav-links {
-    display: none; /* Mobilon rejtett */
+    display: none;
     align-items: center;
     gap: 24px;
 }
@@ -142,7 +145,6 @@ h1, h2, h3, .logo, .footer-logo {
     opacity: 0.7;
 }
 
-/* --- Hero Section --- */
 .hero {
     position: relative;
     width: 100%;
@@ -199,7 +201,6 @@ h1, h2, h3, .logo, .footer-logo {
     max-width: 672px;
 }
 
-/* --- Booking Bar --- */
 .booking-section {
     position: relative;
     z-index: 20;
@@ -260,7 +261,6 @@ h1, h2, h3, .logo, .footer-logo {
     width: 100%;
 }
 
-/* --- rooms Section --- */
 .rooms-section {
     padding: var(--section-gap) var(--margin-mobile);
     max-width: var(--container-max);
@@ -385,7 +385,6 @@ h1, h2, h3, .logo, .footer-logo {
     color: var(--tertiary);
 }
 
-/* --- Footer --- */
 .footer {
     background-color: var(--surface-container-lowest);
     color: var(--primary);
@@ -476,11 +475,9 @@ h1, h2, h3, .logo, .footer-logo {
     color: var(--on-surface-variant);
 }
 
-/* --- Reszponzív (Asztali nézet) --- */
 @media (min-width: 768px) {
     .header {
-        padding-left: var(--margin-desktop);
-        padding-right: var(--margin-desktop);
+        padding-inline: var(--margin-desktop);
     }
 
     .nav-links {
@@ -517,8 +514,7 @@ h1, h2, h3, .logo, .footer-logo {
     }
 
     .rooms-section {
-        padding-left: var(--margin-desktop);
-        padding-right: var(--margin-desktop);
+        padding-inline: var(--margin-desktop);
     }
 
     .rooms-grid {
@@ -527,8 +523,7 @@ h1, h2, h3, .logo, .footer-logo {
 
     .footer-container {
         grid-template-columns: 4fr 8fr;
-        padding-left: var(--margin-desktop);
-        padding-right: var(--margin-desktop);
+        padding-inline: var(--margin-desktop);
     }
 
     .footer-links-grid {
