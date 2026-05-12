@@ -205,6 +205,7 @@ h1, h2, h3, .logo, .footer-logo {
     position: relative;
     z-index: 20;
     margin-top: -64px;
+    scroll-margin-top: 90px;
     padding: 0 var(--margin-mobile);
     max-width: var(--container-max);
     margin-left: auto;
@@ -518,7 +519,15 @@ h1, h2, h3, .logo, .footer-logo {
     }
 
     .rooms-grid {
-        grid-template-columns: 1fr 1fr;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .room-card {
+        flex: 0 1 calc(50% - 10px);
+        min-width: 300px;
     }
 
     .footer-container {

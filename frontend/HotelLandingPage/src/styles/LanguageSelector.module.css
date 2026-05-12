@@ -1,14 +1,16 @@
 .languageSelector {
-    position: absolute;
-    top: 1.75rem;
+    position: fixed;
+    bottom: 1rem;
     right: 1rem;
     display: flex;
     align-self: flex-start;
     justify-content: center;
     align-items: center;
     height: 2rem;
+    padding: .5rem;
     background-color: transparent;
     border-radius: .5rem;
+    background-color: var(--secondary-container);
 }
 
 button {

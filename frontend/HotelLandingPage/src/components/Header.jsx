@@ -1,4 +1,4 @@
-import LanguageSelector from './LanguageSelector.jsx';
+import { HashLink } from 'react-router-hash-link';
 import { useLanguage } from '../context/LanguageContext';
 import { landingPageText } from '../translations.js';
 
@@ -7,19 +7,17 @@ export default function Header() {
     const text = landingPageText[language].header;
 
     return (
-            <header className="header">
+        <header className="header">
             <div className="header-container">
                 <div className="logo">Hotel Elegance</div>
                 <nav className="nav-links">
-                    <a href="#">{text.navLinks[0]}</a>
-                    <a href="#">{text.navLinks[1]}</a>
-                    <a href="#">{text.navLinks[2]}</a>
-                    <a href="#">{text.navLinks[3]}</a>
+                    <HashLink smooth to="#rooms"> {text.navLinks[0]} </HashLink>
+                    <HashLink smooth to="#services"> {text.navLinks[1]} </HashLink>
+                    <HashLink smooth to="#gallery"> {text.navLinks[2]} </HashLink>
+                    <HashLink smooth to="#aboutus"> {text.navLinks[3]} </HashLink>
                 </nav>
-                <button className="btn btn-primary">{text.bookNow}</button>
-                <LanguageSelector></LanguageSelector>                
+                <HashLink smooth to="#booking" className="btn btn-primary"> {text.bookNow} </HashLink>
             </div>
         </header>
     )
 }
-

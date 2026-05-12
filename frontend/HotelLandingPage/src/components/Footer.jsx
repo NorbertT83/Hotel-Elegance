@@ -1,5 +1,6 @@
 import { useLanguage } from '../context/LanguageContext';
 import { landingPageText } from '../translations.js';
+import LanguageSelector from './LanguageSelector.jsx';
 
 export default function Footer() {
     const { language } = useLanguage();
@@ -36,6 +37,7 @@ export default function Footer() {
                     <span>{text.copyright}</span>
                 </div>
             </div>
+            <LanguageSelector />
         </footer>
     )
 }
