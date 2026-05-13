@@ -11,6 +11,7 @@ export default function Rooms() {
                 <h2>{text.sectionTitle}</h2>
                 <p>{text.sectionDescription}</p>
             </div>
+
             <div className="rooms-grid">
                 <div className="room-card">
                     <div className="room-img-container">

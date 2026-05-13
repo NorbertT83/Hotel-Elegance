@@ -1,12 +1,11 @@
 import './App.css'
-import { BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext.jsx';
 import Header from './components/Header.jsx';
-import Hero from './components/Hero.jsx';
-import Booking from './components/Booking.jsx';
-import Rooms from './components/Rooms.jsx';
-import Services from './components/Services.jsx';
+import HomePage from './pages/HomePage.jsx';
+import BookingPage from './pages/BookingPage.jsx';
 import Footer from './components/Footer.jsx';
+
 
 function App() {
     return (
@@ -14,10 +13,11 @@ function App() {
         <LanguageProvider>
             <BrowserRouter>
                 <Header />
-                <Hero />
-                <Booking />
-                <Rooms />
-                <Services />
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/booking" element={<BookingPage />} />
+                    <Route path="*" element={<HomePage />} />
+                </Routes>
                 <Footer />
             </BrowserRouter>
         </LanguageProvider>

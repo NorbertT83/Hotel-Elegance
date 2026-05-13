@@ -58,6 +58,11 @@ export const landingPageText = {
                 },
             ],
         },
+        services: {
+            sectionTitle: 'Szolgáltatásaink',
+            sectionDescription:
+                'Fedezze fel a gondtalanság új dimenzióját, ahol minden szolgáltatásunk az Ön kényelmét és testi-lelki felfrissülését szolgálja.',
+        },
         footer: {
             brandDescription:
                 'A csendes luxus menedéke, amely kifogástalan kiszolgálást és időtlen élményeket nyújt az igényes utazók számára.',
@@ -68,8 +73,8 @@ export const landingPageText = {
             contact: 'Kapcsolatfelvétel',
             press: 'Sajtóanyagok',
             locationTitle: 'Helyszín',
-            addressLine1: '123 Serenity Lane',
-            addressLine2: 'Metropolis, NY 10001',
+            addressLine1: 'Üteg u. 123.',
+            addressLine2: 'Budapest, HU 1135',
             email: 'info@hotelelegance.hu',
             copyright: '© 2026 Hotel Elegance. Minden jog fenntartva.',
         },
@@ -132,6 +137,11 @@ export const landingPageText = {
                     },
             ],
         },
+        services: {
+            sectionTitle: 'Our services',
+            sectionDescription:
+                'Discover a new dimension of serenity, where every service is dedicated to your comfort and the complete renewal of your body and soul.',
+        },
         footer: {
             brandDescription:
                 'A peaceful luxury retreat delivering flawless service and timeless experiences for discerning travelers.',
@@ -142,8 +152,8 @@ export const landingPageText = {
             contact: 'Contact Us',
             press: 'Press',
             locationTitle: 'Location',
-            addressLine1: '123 Serenity Lane',
-            addressLine2: 'Metropolis, NY 10001',
+            addressLine1: '123 Üteg str.',
+            addressLine2: 'Budapest, HU 1135',
             email: 'info@hotelelegance.hu',
             copyright: '© 2026 Hotel Elegance. All rights reserved.',
         },

@@ -253,9 +253,17 @@ h1, h2, h3, .logo, .footer-logo {
     transition: border-color 0.3s;
 }
 
+.input-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0.7);
+}
+
 .input-group input:focus,
 .input-group select:focus {
     border-bottom-color: var(--primary);
+}
+
+.input-group option {
+    background-color: var(--bg-background);
 }
 
 .submit-group {
