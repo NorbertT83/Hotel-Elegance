@@ -11,12 +11,12 @@ export default function Header() {
             <div className="header-container">
                 <div className="logo">Hotel Elegance</div>
                 <nav className="nav-links">
-                    <HashLink smooth to="#rooms"> {text.navLinks[0]} </HashLink>
-                    <HashLink smooth to="#services"> {text.navLinks[1]} </HashLink>
-                    <HashLink smooth to="#gallery"> {text.navLinks[2]} </HashLink>
-                    <HashLink smooth to="#aboutus"> {text.navLinks[3]} </HashLink>
+                    <HashLink smooth to="/#rooms"> {text.navLinks[0]} </HashLink>
+                    <HashLink smooth to="/#services"> {text.navLinks[1]} </HashLink>
+                    <HashLink smooth to="/#gallery"> {text.navLinks[2]} </HashLink>
+                    <HashLink smooth to="/#aboutus"> {text.navLinks[3]} </HashLink>
                 </nav>
-                <HashLink smooth to="#booking" className="btn btn-primary"> {text.bookNow} </HashLink>
+                <HashLink smooth to="/#booking" className="btn btn-primary"> {text.bookNow} </HashLink>
             </div>
         </header>
     )
