@@ -92,6 +92,16 @@ h1, h2, h3, .logo, .footer-logo {
     white-space: nowrap;
 }
 
+.btn-secondary {
+    background-color: var(--secondary-container);
+    color: var(--primary);
+    padding: 12px 32px;
+}
+
+.btn-secondary:hover {
+    color: var(--text-on-background);
+}
+
 .header {
     position: fixed;
     top: 0;

@@ -1,7 +1,75 @@
 .bookingSection {
-    margin-top: 128px;
-    height: 70vh;
+    margin: 10rem auto 8rem auto;
+    min-height: 50vh;
+    width: var(--container-max);
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    width: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cardContainer {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.card {
+    background-color: var(--surface-container);
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    width: 90%;
+    max-width: 600px;
+    min-height: 50vh;
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(82, 68, 57, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all .3s ease-in;
+}
+
+.card:hover {
+    border-color: rgba(82, 68, 57, 0.5);
+}
+
+.bookingSection h2 {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.bookingSection p {
+    display: flex;
+    padding: .25rem 1rem;
+    color: var(--primary);
+}
+
+.bookingDetails p span:first-of-type {
+    width: 100px;
+}
+
+.buttonContainer {
+    margin-top: auto;
+    display: flex;
+    flex-flow: row wrap;
+    text-align: center;
+    align-self: center;
+    gap: 2rem;
+}
+
+.bookingSection button {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    gap: 1rem;
+    padding: .625rem 1.5rem;
+    min-width: 10rem;
 }
