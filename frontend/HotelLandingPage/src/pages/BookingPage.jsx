@@ -10,6 +10,14 @@ export default function BookingPage() {
     const location = useLocation();
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [formData, setFormData] = useState({
+        lname: "",
+        fname: "",
+        email: "",
+        city: "",
+        street: ""
+    });
     
     useEffect(() => {
         if (!location.state) {
@@ -22,6 +30,23 @@ export default function BookingPage() {
     const { guests, arrivalDate, departureDate } = location.state;
 
     const sliderStyle = {transform: `translateX(-${(step - 1) * 100}%)`};
+
+    function validateInput(e) {
+        const { name, value } = e.target;
+        
+        const updatedFormData = { ...formData, [name]: value.trim() };
+        setFormData(updatedFormData);
+        
+        const isLnameValid = updatedFormData.lname.length > 2 && updatedFormData.lname.length <= 30 && /^\p{L}+$/u.test(updatedFormData.lname);
+        const isFnameValid = updatedFormData.fname.length > 2 && updatedFormData.fname.length <= 30 && /^\p{L}+$/u.test(updatedFormData.fname);
+        const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updatedFormData.email);
+        const isCityValid = updatedFormData.city.length > 0;
+        const isStreetValid = updatedFormData.street.length > 0;
+        
+        const isValid = isLnameValid && isFnameValid && isEmailValid && isCityValid && isStreetValid;
+        setIsFormValid(isValid);
+    }
+
 
     return (
         <section className={s.bookingSection}>
@@ -61,32 +86,78 @@ export default function BookingPage() {
                 </div>
 
                 <div className={s.cardContainer}>
-                    <div className={`${s.card} ${s.chooseExtras}`}>
+                    <div className={s.card}>
                         <h2>Extra igények</h2>
-                        <div className="radioGroup">
-                            <p>Étkezés</p>
-                            <input type="radio" id="catering" name="catering" defaultChecked />
-                            <label htmlFor="catering" value="breakfast">Reggeli</label><br />
-                            <input type="radio" id="catering" name="catering"/>
-                            <label htmlFor="catering" value="halfboard">Félpanzió</label><br />
-                            <input type="radio" id="catering" name="catering"/>
-                            <label htmlFor="catering" value="fullboard">Teljes ellátás</label><br />
-                        </div>
+                        <h3>Válasszon igényei szerint extra szolgáltatásainkból</h3>
 
-                        <div>
-                            <p>Egyebek</p>
-                            <input type="checkbox" id="transfer" name="exras"/>
-                            <label htmlFor="transfer">Reptéri transzfer</label>
-                            <input type="checkbox" id="view" name="extras"/>
-                            <label htmlFor="view">Udvarra néző szoba</label>
-                            <input type="checkbox" id="jacuzzi" name="extras"/>
-                            <label htmlFor="jacuzzi">Jacuzzi a teraszon</label>
+                        <div  className={s.chooseExtras}>
+                            <div className={s.radioGroup}>
+                                <p>Étkezés</p>
+                                
+                                <label htmlFor="breakfast" value="breakfast">
+                                    <input type="radio" id="breakfast" name="catering" defaultChecked />Reggeli <span>(+0%)</span>
+                                </label>
+
+                                <label htmlFor="halfboard" value="halfboard">
+                                    <input type="radio" id="halfboard" name="catering"/>Félpanzió <span>(+10%)</span>
+                                </label>
+
+                                <label htmlFor="fullboard" value="fullboard">
+                                    <input type="radio" id="fullboard" name="catering"/>
+                                    Teljes ellátás <span>(+20%)</span>
+                                </label>
+                            </div>
+
+                            <div className={s.selectGroup}>
+                                <p>Egyebek</p>
+
+                                <label htmlFor="view">
+                                    <input type="checkbox" id="view" name="extras"/>Udvarra néző szoba
+                                </label>
+
+                                <label htmlFor="jacuzzi">
+                                    <input type="checkbox" id="jacuzzi" name="extras"/>Jacuzzi a teraszon
+                                </label>
+
+                                <label htmlFor="kitchen">
+                                    <input type="checkbox" id="latecheckout" name="extras"/>Késői kijelentkezés
+                                </label>
+
+                                <label htmlFor="transfer">
+                                    <input type="checkbox" id="transfer" name="extras"/>Reptéri transzfer
+                                </label>
+                            </div>
                         </div>
 
                         <div className={s.buttonContainer}>
                             <button className="btn btn-secondary" onClick={() => setStep(2)}>Vissza</button>
                             <button className="btn btn-primary" onClick={() => setStep(4)}>
                                 <span>Tovább</span><span className="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={s.cardContainer}>
+                    <div className={`${s.card} ${s.personalData}`}>
+                        <h2>Személyes adatok</h2>
+                        <div className={s.inputGroup}>
+                            <span>Vezetéknév:</span>
+                            <input type="text" name="lname" value={formData.lname} maxLength={30} onChange={validateInput}/>
+                            <span>Keresztnév:</span>
+                            <input type="text" name="fname" value={formData.fname} maxLength={30} onChange={validateInput}/>
+                            <span>E-mail cím:</span>
+                            <input type="email" name="email" value={formData.email} onChange={validateInput}/>
+                            <span>Lakcím:</span>
+                            <input type="text" name="city" value={formData.city} placeholder="Város" onChange={validateInput}/>
+                            <span></span>
+                            <input type="text" name="street" value={formData.street} placeholder="Utca / házszám" onChange={validateInput}/>
+                        </div>
+
+                        <div className={s.buttonContainer}>
+                            <button className="btn btn-secondary" onClick={() => setStep(3)}>Vissza</button>
+                            <button className={`btn btn-primary ${isFormValid ? "" : "btn-inactive"}`} onClick={() => setStep(5)}>
+                                <span>Befejezés</span><span className="material-symbols-outlined">arrow_forward</span>
                             </button>
                         </div>
                     </div>

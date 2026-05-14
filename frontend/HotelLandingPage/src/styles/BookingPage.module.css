@@ -43,7 +43,16 @@
 .bookingSection h2 {
     text-align: center;
     width: 100%;
+    margin-bottom: .75rem;
+}
+
+.bookingSection h3 {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
     margin-bottom: 2rem;
+    color: var(--on-surface-variant);
 }
 
 .bookingSection p {
@@ -72,4 +81,72 @@
     gap: 1rem;
     padding: .625rem 1.5rem;
     min-width: 10rem;
+}
+
+.chooseExtras {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.radioGroup {
+    display: flex;
+    flex-flow: column;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+.radioGroup p, .selectGroup p {
+    text-align: center;
+    padding-inline: 0;
+    margin-bottom: .5rem;
+}
+
+.radioGroup label, .selectGroup label{
+    display: flex;
+    gap: 1rem;
+    user-select: none;
+    cursor: pointer;
+}
+
+.radioGroup span {
+    align-self: center;
+    margin-left: auto;
+    font-size: .75rem;
+}
+
+.selectGroup {
+    display: flex;
+    flex-flow: column;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+.personalData {
+    align-items: center;
+    gap: 2rem;
+}
+
+.inputGroup {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem 2rem;
+    align-items: center;
+}
+
+.inputGroup span {
+    color: var(--primary);
+}
+
+.inputGroup input {
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    padding: .5rem 1rem;
+}
+
+.inputGroup input:focus-within {
+    outline: none;
+    border: 1px solid var(--primary);
 }
