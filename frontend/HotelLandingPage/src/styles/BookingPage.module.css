@@ -25,7 +25,7 @@
     background-color: var(--surface-container);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 90%;
     max-width: 600px;
     min-height: 50vh;
@@ -44,6 +44,7 @@
     text-align: center;
     width: 100%;
     margin-bottom: .75rem;
+    font-size: 1.75rem;
 }
 
 .bookingSection h3 {
@@ -58,10 +59,17 @@
 .bookingSection p {
     display: flex;
     padding: .25rem 1rem;
-    color: var(--primary);
+    
+}
+
+.bookingDetails {
+    border: 1px solid rgb(53, 53, 53);
+    padding: 1.5rem 3rem;
+    justify-content: center;
 }
 
 .bookingDetails p span:first-of-type {
+    color: var(--primary);
     width: 100px;
 }
 
@@ -93,19 +101,21 @@
 .radioGroup {
     display: flex;
     flex-flow: column;
+    flex-shrink: 0;
     gap: .5rem;
     margin-bottom: 1rem;
 }
 
-.radioGroup p, .selectGroup p {
+.radioGroup p, .checkboxGroup p {
     text-align: center;
     padding-inline: 0;
     margin-bottom: .5rem;
 }
 
-.radioGroup label, .selectGroup label{
+.radioGroup label, .checkboxGroup label{
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: .5rem;
     user-select: none;
     cursor: pointer;
 }
@@ -116,14 +126,31 @@
     font-size: .75rem;
 }
 
-.selectGroup {
+.radioGroup input[type="radio"], .checkboxGroup input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--primary);
+}
+
+.radioGroup label:has(input[type="radio"]:checked) {
+    color: var(--primary);
+}
+
+.checkboxGroup {
     display: flex;
     flex-flow: column;
     gap: .5rem;
     margin-bottom: 1rem;
 }
 
+.checkboxGroup label:has(input[type="checkbox"]:checked) {
+    color: var(--primary);
+}
+
 .personalData {
+    display: flex;
+    width: 100%;
+    justify-content: center;
     align-items: center;
     gap: 2rem;
 }
@@ -131,9 +158,10 @@
 .inputGroup {
     display: grid;
     justify-content: center;
-    grid-template-columns: 1fr 2fr;
-    gap: 1rem 2rem;
     align-items: center;
+    grid-template-columns: 1fr 3fr;
+    gap: 1rem 2rem;
+
 }
 
 .inputGroup span {

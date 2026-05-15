@@ -1,5 +1,5 @@
-// const apiURL = "https://nrbrt-codes.hu/hotelmanager/api/";
-const apiURL = "http://localhost/api/";
+
+const apiURL = import.meta.env.VITE_API_URL;
 
 export async function getData(endpoint="" , params=[], timeout = 5000) {
     

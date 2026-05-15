@@ -34,7 +34,15 @@ const labels = {
             header: "Services",
             subtitle: `Choose from our wide range of services`,
             button1: "Add",
-            button2: "Remove"
+            button2: "Remove",
+            tableHead: {
+                name: "Name",
+                description: "Description",
+                category: "Category",
+                price: "Price",
+                action: "Actions",
+                editButton: "Edit"
+            }
         }
     },
 
@@ -73,7 +81,15 @@ const labels = {
             header: "Szolgáltatásaink",
             subtitle: `Válasszon széleskörű szolgáltatásaink közül`,
             button1: "Hozzáad",
-            button2: "Eltávolít"
+            button2: "Eltávolít",
+            tableHead: {
+                name: "Megnevezés",
+                description: "Leírás",
+                category: "Kategória",
+                price: "Ár",
+                action: "Művelet",
+                editButton: "Szerkeszt"
+            }
         }
     }
 }

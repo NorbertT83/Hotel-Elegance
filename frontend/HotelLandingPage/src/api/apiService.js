@@ -1,5 +1,5 @@
-// const apiURL = "https://nrbrt-codes.hu/hotelmanager/api/";
-const apiURL = "http://localhost/api/";
+const apiURL = "https://nrbrt-codes.hu/hotelmanager/api/";
+// const apiURL = "http://localhost/api/";
 
 export async function getData(endpoint="" , params=[], timeout = 5000) {
     

@@ -128,16 +128,17 @@ h1, h2, h3, .logo, .footer-logo {
 }
 
 .logo {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
     font-size: 24px;
     color: var(--primary);
     letter-spacing: -0.02em;
 }
 
-.logo-img img {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    height: 4rem;
+.logo img {
+    height: 2.5rem; 
+    filter: drop-shadow(0px 0px 8px var(--primary-container));
 }
 
 .nav-links {

@@ -20,7 +20,7 @@ export default function Services() {
         setLoading(true);
         setError(null);
         try {
-            const data = await getData(`service/${serviceId ? serviceId : "all"}?sort=name`);
+            const data = await getData(`service/${serviceId ? serviceId : "all"}?sort=name_${language}`);
             setServices(data);
         } catch (err) {
             setError(err.message);
@@ -85,12 +85,12 @@ export default function Services() {
             <table>
                 <thead>
                     <tr>
-                        <th>Megnevezés</th>
-                        <th>Leírás</th>
-                        <th>Kategória</th>
-                        <th>Ár <span>(HUF)</span></th>
+                        <th>{t.tableHead.name}</th>
+                        <th>{t.tableHead.description}</th>
+                        <th>{t.tableHead.category}</th>
+                        <th>{t.tableHead.price} <span>(HUF)</span></th>
                         {user.role === 'admin' && (
-                            <th>Művelet</th>
+                            <th>{t.tableHead.action}</th>
                         )}
                     </tr>
                 </thead>
@@ -99,8 +99,8 @@ export default function Services() {
                         <tr key={service.id}>
                             {editedRowId === service.id ? (
                                 <>
-                                    <td><input name="name" value={editedRowData.name} onChange={handleInputChange} className={s.editInput} /></td>
-                                    <td><input name="description" value={editedRowData.description} onChange={handleInputChange} className={s.editInput} /></td>
+                                    <td><input name="name" value={editedRowData[`name_${language}`]} onChange={handleInputChange} className={s.editInput} /></td>
+                                    <td><input name="description" value={editedRowData[`description_${language}`]} onChange={handleInputChange} className={s.editInput} /></td>
                                     <td>
                                         <select 
                                             name="service_type" 
@@ -122,13 +122,13 @@ export default function Services() {
                                 </>
                             ) : (
                                 <>
-                                    <td>{service.name}</td>
-                                    <td>{service.description}</td>
+                                    <td>{service[`name_${language}`]}</td>
+                                    <td>{service[`description_${language}`]}</td>
                                     <td>{service.service_type}</td>
                                     <td>{service.price},- Ft</td>
                                     {user.role === 'admin' && (
                                         <td className={s.btnCell}>
-                                            <button className='btn-primary' onClick={() => handleEditClick(service)}>Szerkeszt</button>
+                                            <button className='btn-primary' onClick={() => handleEditClick(service)}>{t.tableHead.editButton}</button>
                                         </td>
                                     )}
                                 </>

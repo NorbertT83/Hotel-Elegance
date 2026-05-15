@@ -1,6 +1,7 @@
 import { HashLink } from 'react-router-hash-link';
 import { useLanguage } from '../context/LanguageContext';
 import { landingPageText } from '../translations.js';
+import Logo from '../assets/HE-logo.png'
 
 export default function Header() {
     const { language } = useLanguage();
@@ -9,7 +10,7 @@ export default function Header() {
     return (
         <header className="header">
             <div className="header-container">
-                <div className="logo">Hotel Elegance</div>
+                <div className="logo"><img src={Logo} alt="Logo" />Hotel Elegance</div>
                 <nav className="nav-links">
                     <HashLink smooth to="/#rooms"> {text.navLinks[0]} </HashLink>
                     <HashLink smooth to="/#services"> {text.navLinks[1]} </HashLink>
