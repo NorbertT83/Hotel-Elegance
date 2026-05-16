@@ -410,6 +410,10 @@ h1, h2, h3, .logo, .footer-logo {
     color: var(--tertiary);
 }
 
+#gallery {
+    scroll-margin-top: 160px;
+}
+
 .footer {
     background-color: var(--surface-container-lowest);
     color: var(--primary);

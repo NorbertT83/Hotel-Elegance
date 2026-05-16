@@ -5,7 +5,7 @@ import Header from './components/Header.jsx';
 import HomePage from './pages/HomePage.jsx';
 import BookingPage from './pages/BookingPage.jsx';
 import Footer from './components/Footer.jsx';
-import Teszt from './components/Teszt.jsx';
+import HotelWelcome from './components/HotelWelcome.jsx';
 
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/booking" element={<BookingPage />} />
-                    <Route path="/teszt" element={<Teszt />} />
+                    <Route path="/welcome" element={<HotelWelcome />} />
                     <Route path="*" element={<HomePage />} />
                 </Routes>
                 <Footer />

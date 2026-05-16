@@ -4,8 +4,8 @@ const HotelWelcome = () => {
     const [isAtHotel, setIsAtHotel] = useState(false);
 
     useEffect(() => {
-        // fetch('http://localhost/api/check_ip.php')
-        fetch('https://nrbrt-codes.hu/hotelmanager/api/check_ip.php')
+        fetch('http://localhost/api/check_ip.php')
+        //fetch('https://nrbrt-codes.hu/hotelmanager/api/check_ip.php')
         .then(response => response.json())
         .then(data => {
             console.log(data);
