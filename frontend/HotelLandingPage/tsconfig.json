@@ -35,12 +35,11 @@
         // Recommended Options  
         "strict": true,
         "jsx": "react-jsx",
-        "verbatimModuleSyntax": false, //AI
+        "verbatimModuleSyntax": false,
         "isolatedModules": true,
         "noUncheckedSideEffectImports": true,
         "moduleDetection": "force",
         "skipLibCheck": true,
-        "allowJs": true
     },
     "include": ["src"]
 }

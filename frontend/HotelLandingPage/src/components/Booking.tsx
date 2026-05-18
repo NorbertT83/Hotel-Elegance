@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { landingPageText } from '../translations.js';
+import { landingPageText } from '../translations';
 import { addDays } from '../utils/utils';
 
 export default function Booking() {
     const navigate = useNavigate();
     const today = new Date().toISOString().split('T')[0];
-    const guestRef = useRef<HTMLInputElement | null>(null);
+    const [selectedGuestIndex, setSelectedGuestIndex] = useState<number>(0);
     const { language } = useLanguage();
     const [ arrivalDate, setArrivalDate ] = useState(today);
     const [ departureDate, setDepartureDate ] = useState(addDays(today, 2));
@@ -76,7 +76,10 @@ export default function Booking() {
                 </div>
                 <div className="input-group">
                     <label>{text.guests}</label>
-                    <select ref={guestRef}>
+                    <select 
+                        value={selectedGuestIndex} 
+                        onChange={(e) => setSelectedGuestIndex(Number(e.target.value))}
+                    >
                         <option value={0}>{text.guestOptions[0]}</option>
                         <option value={1}>{text.guestOptions[1]}</option>
                         <option value={2}>{text.guestOptions[2]}</option>
@@ -84,12 +87,12 @@ export default function Booking() {
                 </div>
                 <div className="submit-group">
                     <button className="btn btn-primary btn-large"
-                        onClick={() => ( 
+                        onClick={() => (
                             navigate("/booking", {
                                 state: {
                                     arrivalDate,
                                     departureDate,
-                                    guests: guestOptionsValue[guestRef.current.value]
+                                    guests: guestOptionsValue[selectedGuestIndex]
                                 }
                             })
                         )}

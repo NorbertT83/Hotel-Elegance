@@ -1,6 +1,6 @@
 import { HashLink } from 'react-router-hash-link';
 import { useLanguage } from '../context/LanguageContext';
-import { landingPageText } from '../translations.js';
+import { landingPageText } from '../translations';
 import Logo from '../assets/HE-logo.png'
 
 export default function Header() {

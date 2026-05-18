@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import s from '../styles/ScrollBasedAnimation.module.css'
 
+type Props = {
+    children: React.ReactNode;
+};
 
-export default function ScrollBasedAnimation({ children }) {
+export default function ScrollBasedAnimation({ children }: Props) {
     const [ isVisible, setIsVisible ] = useState(false);
 
-    const domRef = useRef();
+    const domRef =  useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {

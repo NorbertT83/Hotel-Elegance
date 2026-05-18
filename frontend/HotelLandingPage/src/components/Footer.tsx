@@ -1,6 +1,6 @@
 import { useLanguage } from '../context/LanguageContext';
-import { landingPageText } from '../translations.js';
-import LanguageSelector from './LanguageSelector.jsx';
+import { landingPageText } from '../translations';
+import LanguageSelector from './LanguageSelector';
 
 export default function Footer() {
     const { language } = useLanguage();

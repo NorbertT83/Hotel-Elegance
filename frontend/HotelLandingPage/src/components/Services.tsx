@@ -1,21 +1,32 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { getData } from '../api/apiService.js';
+import { getData } from '../api/apiService';
 import s from '../styles/Services.module.css';
-import { landingPageText } from '../translations.js';
+import { landingPageText } from '../translations';
+
+interface HotelService {
+    id: string | number;
+    service_type: string;
+    name_hu: string;
+    name_en: string;
+    description_hu: string;
+    description_en: string;
+    price: number;
+    [key: string]: any;
+}
 
 export default function Services() {
     const { language } = useLanguage();
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [services, setServices] = useState([]);
+    const [error, setError] = useState<string | null>(null);
+    const [services, setServices] = useState<HotelService[]>([]);
     const text = landingPageText[language].services;
 
-    const fetchServices = useCallback(async (serviceId = "") => {
+    const fetchServices = useCallback(async (serviceId: string = "") => {
         setLoading(true);
         setError(null);
         try {
-            const data = await getData(
+            const data = await await getData<HotelService[]>(
                 `service/${serviceId || "all"}`,
                 {
                     sort: `name_${language}`
@@ -23,7 +34,7 @@ export default function Services() {
             );
 
             setServices(data);
-        } catch (err) {
+        } catch (err: any) {
             setError(err.message);
             throw err;
         } finally {

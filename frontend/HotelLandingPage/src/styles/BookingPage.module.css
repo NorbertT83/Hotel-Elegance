@@ -168,13 +168,64 @@
     color: var(--primary);
 }
 
-.inputGroup input {
+.inputGroup input, .inputGroup select{
+    font-family: var(--font-body);
     border: 1px solid transparent;
     border-radius: .25rem;
     padding: .5rem 1rem;
 }
 
-.inputGroup input:focus-within {
+.inputGroup input:focus-within, .inputGroup select:focus-within{
     outline: none;
     border: 1px solid var(--primary);
+}
+
+
+.successCard {
+    text-align: center;
+}
+.successIconContainer {
+    margin-bottom: 1rem;
+}
+
+.successDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.successDetails > p:first-child {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0rem 1.5rem;
+}
+
+.successDetails > p:nth-child(2) {
+    display: flex;
+    flex-flow: row wrap;
+    text-align: left;
+    text-overflow: ellipsis;
+    text-wrap: wrap;
+    gap: 0rem 1rem;
+}
+.highlighted {
+    font-weight: 600;
+    color: var(--primary-container);
+}
+
+.bookingId {
+    color: var(--primary);
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+}
+
+.infoText {
+    margin: 1rem 0;
+}
+
+.spamNotice {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+    margin-bottom: 1.5rem;
 }

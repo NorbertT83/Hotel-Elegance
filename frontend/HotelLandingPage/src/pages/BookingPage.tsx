@@ -1,204 +1,109 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { HashLink } from "react-router-hash-link";
 import { useLanguage } from '../context/LanguageContext';
-import { getNameOfDay } from '../utils/utils';
 import s from '../styles/BookingPage.module.css';
+import countries from "../utils/countries";
+import { BookingState, RoomType, CateringType, FormData, ExtraOption } from '../types/booking';
+
+import Step1BookingDetails from "../components/booking/Step1BookingDetails";
+import Step2RoomSelection from "../components/booking/Step2RoomSelection";
+import Step3ExtraOptions from "../components/booking/Step3ExtraOptions";
+import Step4PersonalData from "../components/booking/Step4PersonalData";
+import Step5SuccessCard from "../components/booking/Step5SuccessCard";
+
+const EXTRA_OPTIONS: ExtraOption[] = [
+    { id: "view", label: "Udvarra néző szoba" },
+    { id: "jacuzzi", label: "Jacuzzi a teraszon" },
+    { id: "champagne", label: "Pezsgő bekészítés" },
+    { id: "latecheckout", label: "Késői kijelentkezés" },
+    { id: "transfer", label: "Reptéri transzfer" },
+];
+
+const CATERING_OPTIONS = [
+    { id: "breakfast", label: "Reggeli", info: "(Az ár tartalmazza)" },
+    { id: "halfboard", label: "Félpanzió", info: "(+10% felár)" },
+    { id: "fullboard", label: "Teljes ellátás", info: "(+20% felár)" },
+];
+
+const validate = {
+    name: (val: string) => val.length > 2 && val.length <= 30 && /^[\p{L}\s-]+$/u.test(val),
+    email: (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+    zip: (val: string) => /^[a-zA-Z0-9\s-]{4,10}$/.test(val),
+    city: (val: string) => val.length > 1 && /^[\p{L}\s-]+$/u.test(val),
+    street: (val: string) => val.length > 4 && /^(?=.*\d).+$/.test(val)
+};
 
 export default function BookingPage() {
     const { language } = useLanguage();
     const location = useLocation();
     const navigate = useNavigate();
+    
     const [step, setStep] = useState(1);
     const [isFormValid, setIsFormValid] = useState(false);
-    const [formData, setFormData] = useState({
-        lname: "",
-        fname: "",
-        email: "",
-        city: "",
-        street: ""
+    const [roomType, setRoomType] = useState<RoomType>("standard"); // <--- ÚJ szoba state!
+    const [catering, setCatering] = useState<CateringType>("breakfast");
+    const [extras, setExtras] = useState<Record<string, boolean>>({});
+    const [formData, setFormData] = useState<FormData>({
+        lname: "", fname: "", email: "", country: "HU", zip: "", city: "", street: ""
     });
 
-    const cateringOptions = [
-    {
-        id: "breakfast",
-        label: "Reggeli",
-        info: "(Az ár tartalmazza)",
-    },
-    {
-        id: "halfboard",
-        label: "Félpanzió",
-        info: "(+10% felár)",
-    },
-    {
-        id: "fullboard",
-        label: "Teljes ellátás",
-        info: "(+20% felár)",
-    },
-    ];
-
-    const [catering, setCatering] = useState("breakfast");
+    useEffect(() => {
+        if (!location.state) navigate("/");
+    }, [location, navigate]);
 
     useEffect(() => {
-        if (!location.state) {
-            navigate("/");
-        }
-    }, [location, navigate]);
-    
-    if (!location.state) return null;
-
-    const { guests, arrivalDate, departureDate } = location.state;
-
-    const sliderStyle = {transform: `translateX(-${(step - 1) * 100}%)`};
-
-    function validateInput(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = e.target;
-        
-        const updatedFormData = { ...formData, [name]: value };
-        setFormData(updatedFormData);
-        
-        const isLnameValid = updatedFormData.lname.length > 2 && updatedFormData.lname.length <= 30 && /^[\p{L}\s-]+$/u.test(updatedFormData.lname);
-        const isFnameValid = updatedFormData.fname.length > 2 && updatedFormData.fname.length <= 30 && /^[\p{L}\s-]+$/u.test(updatedFormData.fname);
-        const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updatedFormData.email);
-        const isCityValid = updatedFormData.city.length > 1 && /^[\p{L}\s-]+$/u.test(updatedFormData.city);
-        const isStreetValid = updatedFormData.street.length > 4 && /^(?=.*\d).+$/.test(updatedFormData.street);
-        
-        const isValid = isLnameValid && isFnameValid && isEmailValid && isCityValid && isStreetValid;
+        const { lname, fname, email, zip, city, street } = formData;
+        const isValid = validate.name(lname) && validate.name(fname) && validate.email(email) && validate.zip(zip) && validate.city(city) && validate.street(street);
         setIsFormValid(isValid);
-    }
+    }, [formData]);
 
+    if (!location.state) return null;
+    const { guests, arrivalDate, departureDate } = location.state as BookingState;
+    const sliderStyle = { transform: `translateX(-${(step - 1) * 100}%)` };
 
-    // TODO: országlista az address formban, irányítószám: 4-10 karakter, szám-szöveg-space-kötőjel lehet csak
+    // Handler függvények
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, checked } = e.target;
+        setExtras(prev => ({ ...prev, [id]: checked }));
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleBookingFinish = () => {
+        // Itt fogod majd meghívni a korábban megírt `createData` API-t!
+        console.log("Foglalás elküldése:", { formData, roomType, catering, extras, guests, arrivalDate, departureDate });
+        setStep(5); // Pl. egy sikeres visszaigazoló kártyára lépés
+    };
 
     return (
         <section className={s.bookingSection}>
             <div className={s.slider} style={sliderStyle}>
+                
+                <Step1BookingDetails 
+                    arrivalDate={arrivalDate} departureDate={departureDate} language={language} guests={guests} 
+                    onNext={() => setStep(2)} 
+                />
 
-                <div className={s.cardContainer}>
-                    <div className={s.card}>
-                        <h2>Foglalási adatok</h2>
-                        <h3>Az Ön által eddig rögzített adatok</h3>
+                <Step2RoomSelection 
+                    roomType={roomType} setRoomType={setRoomType} 
+                    onBack={() => setStep(1)} onNext={() => setStep(3)} 
+                />
 
-                        <div className={s.bookingDetails}>
-                            <p><span>Érkezés:</span><span>{arrivalDate}. - {getNameOfDay(arrivalDate, language)}</span></p>
-                            <p><span>Távozás:</span><span>{departureDate}. - {getNameOfDay(departureDate, language)}</span></p>
-                            <p><span>Felnőttek:</span><span>{guests.adult} fő</span></p>
-                            <p><span>Gyerekek:</span><span>{guests.child} fő</span></p>
-                        </div>
+                <Step3ExtraOptions 
+                    catering={catering} setCatering={setCatering} extras={extras} handleCheckboxChange={handleCheckboxChange} 
+                    cateringOptions={CATERING_OPTIONS} extraOptions={EXTRA_OPTIONS} 
+                    onBack={() => setStep(2)} onNext={() => setStep(4)} 
+                />
 
-                        <div className={s.buttonContainer}>
-                            <HashLink smooth to="/#booking" className={`btn btn-secondary`}>Módosít</HashLink>
-                            <button className="btn btn-primary" onClick={() => setStep(2)}><span>Tovább</span><span className="material-symbols-outlined">arrow_forward</span></button>
-                        </div>
-                    </div>
-                </div>
+                <Step4PersonalData 
+                    formData={formData} isFormValid={isFormValid} countries={countries} handleInputChange={handleInputChange} 
+                    onBack={() => setStep(3)} onFinish={handleBookingFinish} 
+                />
 
-                <div className={s.cardContainer}>
-                    <div className={s.card}>
-                        <h2>Lakosztály</h2>
-                        <h3>Válassza ki az Önnek megfelelő lakosztályunk egyikét</h3>
-
-                        <div className= {s.chooseRoom}>
-                            <p>Standard</p>
-                            <p>Elite</p>
-                            <p>Suite</p>
-                        </div>
-
-                        <div className={s.buttonContainer}>
-                            <button className="btn btn-secondary" onClick={() => setStep(1)}>Vissza</button>
-                            <button className="btn btn-primary" onClick={() => setStep(3)}>
-                                <span>Tovább</span><span className="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={s.cardContainer}>
-                    <div className={s.card}>
-                        <h2>Extra igények</h2>
-                        <h3>Válasszon igényei szerint extra szolgáltatásainkból</h3>
-
-                        <div className={s.chooseExtras}>
-                        <div className={s.radioGroup}>
-                            <p>Étkezés</p>
-
-                            {cateringOptions.map((option) => (
-                                <label key={option.id} htmlFor={option.id}>
-                                    <input
-                                        type="radio"
-                                        id={option.id}
-                                        name="catering"
-                                        value={option.id}
-                                        checked={catering === option.id}
-                                        onChange={(e) => setCatering(e.target.value)}
-                                    />
-                                    {option.label} <span>{option.info}</span>
-                                </label>
-                            ))}
-                        </div>
-
-                            <div className={s.checkboxGroup}>
-                                <p>Egyebek</p>
-
-                                <label htmlFor="view">
-                                    <input type="checkbox" id="view" name="extras"/>Udvarra néző szoba
-                                </label>
-
-                                <label htmlFor="jacuzzi">
-                                    <input type="checkbox" id="jacuzzi" name="extras"/>Jacuzzi a teraszon
-                                </label>
-
-                                <label htmlFor="champagne">
-                                    <input type="checkbox" id="champagne" name="extras"/>Pezsgő bekészítés
-                                </label>
-
-                                <label htmlFor="latecheckout">
-                                    <input type="checkbox" id="latecheckout" name="extras"/>Késői kijelentkezés
-                                </label>
-
-                                <label htmlFor="transfer">
-                                    <input type="checkbox" id="transfer" name="extras"/>Reptéri transzfer
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className={s.buttonContainer}>
-                            <button className="btn btn-secondary" onClick={() => setStep(2)}>Vissza</button>
-                            <button className="btn btn-primary" onClick={() => setStep(4)}>
-                                <span>Tovább</span><span className="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={s.cardContainer}>
-                    <div className={s.card}>
-                        <h2>Személyes adatok</h2>
-                        <h3>A foglalás rögzítéséhez szükséges személyes adatok</h3>
-
-                        <div className={s.personalData}>
-                            <div className={s.inputGroup}>
-                                <span>Vezetéknév:</span>
-                                <input type="text" name="lname" value={formData.lname} maxLength={30} onChange={validateInput}/>
-                                <span>Keresztnév:</span>
-                                <input type="text" name="fname" value={formData.fname} maxLength={30} onChange={validateInput}/>
-                                <span>E-mail cím:</span>
-                                <input type="email" name="email" value={formData.email} onChange={validateInput}/>
-                                <span>Lakcím:</span>
-                                <input type="text" name="city" value={formData.city} placeholder="Város" onChange={validateInput}/>
-                                <span></span>
-                                <input type="text" name="street" value={formData.street} placeholder="Utca / házszám" onChange={validateInput}/>
-                            </div>
-                        </div>
-
-                        <div className={s.buttonContainer}>
-                            <button className="btn btn-secondary" onClick={() => setStep(3)}>Vissza</button>
-                            <button className={`btn btn-primary ${isFormValid ? "" : "btn-inactive"}`} onClick={() => setStep(5)}>
-                                <span>Befejezés</span><span className="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <Step5SuccessCard email={formData.email} />
 
             </div>
         </section>
