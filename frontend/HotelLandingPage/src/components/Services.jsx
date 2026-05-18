@@ -15,7 +15,13 @@ export default function Services() {
         setLoading(true);
         setError(null);
         try {
-            const data = await getData(`service/${serviceId ? serviceId : "all"}?sort=name_${language}`);
+            const data = await getData(
+                `service/${serviceId || "all"}`,
+                {
+                    sort: `name_${language}`
+                }
+            );
+
             setServices(data);
         } catch (err) {
             setError(err.message);

@@ -18,7 +18,27 @@ export default function BookingPage() {
         city: "",
         street: ""
     });
-    
+
+    const cateringOptions = [
+    {
+        id: "breakfast",
+        label: "Reggeli",
+        info: "(Az ár tartalmazza)",
+    },
+    {
+        id: "halfboard",
+        label: "Félpanzió",
+        info: "(+10% felár)",
+    },
+    {
+        id: "fullboard",
+        label: "Teljes ellátás",
+        info: "(+20% felár)",
+    },
+    ];
+
+    const [catering, setCatering] = useState("breakfast");
+
     useEffect(() => {
         if (!location.state) {
             navigate("/");
@@ -31,7 +51,7 @@ export default function BookingPage() {
 
     const sliderStyle = {transform: `translateX(-${(step - 1) * 100}%)`};
 
-    function validateInput(e) {
+    function validateInput(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
         
         const updatedFormData = { ...formData, [name]: value };
@@ -47,6 +67,8 @@ export default function BookingPage() {
         setIsFormValid(isValid);
     }
 
+
+    // TODO: országlista az address formban, irányítószám: 4-10 karakter, szám-szöveg-space-kötőjel lehet csak
 
     return (
         <section className={s.bookingSection}>
@@ -97,22 +119,23 @@ export default function BookingPage() {
                         <h3>Válasszon igényei szerint extra szolgáltatásainkból</h3>
 
                         <div className={s.chooseExtras}>
-                            <div className={s.radioGroup}>
-                                <p>Étkezés</p>
-                                
-                                <label htmlFor="breakfast" value="breakfast">
-                                    <input type="radio" id="breakfast" name="catering" defaultChecked />Reggeli <span>(Az ár tartalmazza)</span>
-                                </label>
+                        <div className={s.radioGroup}>
+                            <p>Étkezés</p>
 
-                                <label htmlFor="halfboard" value="halfboard">
-                                    <input type="radio" id="halfboard" name="catering"/>Félpanzió <span>(+10% felár)</span>
+                            {cateringOptions.map((option) => (
+                                <label key={option.id} htmlFor={option.id}>
+                                    <input
+                                        type="radio"
+                                        id={option.id}
+                                        name="catering"
+                                        value={option.id}
+                                        checked={catering === option.id}
+                                        onChange={(e) => setCatering(e.target.value)}
+                                    />
+                                    {option.label} <span>{option.info}</span>
                                 </label>
-
-                                <label htmlFor="fullboard" value="fullboard">
-                                    <input type="radio" id="fullboard" name="catering"/>
-                                    Teljes ellátás <span>(+20% felár)</span>
-                                </label>
-                            </div>
+                            ))}
+                        </div>
 
                             <div className={s.checkboxGroup}>
                                 <p>Egyebek</p>

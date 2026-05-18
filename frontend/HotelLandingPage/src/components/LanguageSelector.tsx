@@ -1,4 +1,4 @@
-import s from '../styles/LanguageSelector.module.css'
+import s from '../styles/LanguageSelector.module.css';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function LanguageSelector() {

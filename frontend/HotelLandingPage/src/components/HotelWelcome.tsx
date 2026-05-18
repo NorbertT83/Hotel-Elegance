@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, CSSProperties } from 'react';
 
 const HotelWelcome = () => {
     const [isAtHotel, setIsAtHotel] = useState(false);
@@ -28,7 +28,7 @@ const HotelWelcome = () => {
     );
 };
 
-const popupStyle = {
+const popupStyle: CSSProperties = {
     position: 'fixed',
     bottom: '3.5rem',
     right: '1.5rem',

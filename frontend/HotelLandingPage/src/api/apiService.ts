@@ -1,14 +1,15 @@
-const apiURL = "https://nrbrt-codes.hu/hotelmanager/api/";
-// const apiURL = "http://localhost/api/";
+const apiURL:string = "https://nrbrt-codes.hu/hotelmanager/api/";
+// const apiURL:string = "http://localhost/api/";
 
-export async function getData(endpoint="" , params=[], timeout = 5000) {
+
+export async function getData(endpoint="" , params: Record<string, string> = {}, timeout = 5000) {
     
     const controller = new AbortController();
     const controllerID = setTimeout(() => controller.abort(), timeout);
 
     try {
         const url = new URL(apiURL+endpoint);
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        Object.keys(params).forEach(([key, value]) => url.searchParams.append(key, value));
         const response = await fetch(url, {
             signal: controller.signal
         });
@@ -20,8 +21,8 @@ export async function getData(endpoint="" , params=[], timeout = 5000) {
         return await response.json();
 
     } catch (error) {
-        if (error.name === "AbortError") {
-            throw new Error("Időtúllépés történt");
+        if (error instanceof Error && error.name == "AbortError") {
+            throw new Error("Időtúllépés történt", { cause: error });
         }
         throw error;
     } finally {
@@ -55,8 +56,8 @@ export async function createData(endpoint = "", data = {}, timeout = 5000) {
         return await response.json();
 
     } catch (error) {
-        if (error.name === "AbortError") {
-            throw new Error("Időtúllépés: A szerver nem mentette el az adatokat időben.");
+        if (error instanceof Error && error.name === "AbortError") {
+            throw new Error("Időtúllépés: A szerver nem mentette el az adatokat időben.", { cause: error });
         }
         console.error("Create hiba:", error);
         throw error;
@@ -91,8 +92,8 @@ export async function updateData(endpoint="", id="" , data={}, timeout = 5000) {
 
     } catch (error) {
 
-        if (error.name === "AbortError") {
-            throw new Error("Időtúllépés történt");
+        if (error instanceof Error && error.name === "AbortError") {
+            throw new Error("Időtúllépés történt", { cause: error });
         }
         throw error;
     } finally {
@@ -127,8 +128,8 @@ export async function deleteData(endpoint="", id="", timeout = 5000) {
         return await response.json();
 
     } catch (error) {
-        if (error.name === "AbortError") {
-            throw new Error("Időtúllépés történt");
+        if (error instanceof Error && error.name === "AbortError") {
+            throw new Error("Időtúllépés történt", { cause: error });
         }
         throw error;
     } finally {

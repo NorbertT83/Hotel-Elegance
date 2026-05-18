@@ -1,11 +1,10 @@
-import './App.css'
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import { LanguageProvider } from './context/LanguageContext.jsx';
-import Header from './components/Header.jsx';
+import { LanguageProvider } from './context/LanguageContext.js';
+import Header from './components/Header.js';
 import HomePage from './pages/HomePage.jsx';
 import BookingPage from './pages/BookingPage.jsx';
-import Footer from './components/Footer.jsx';
-import HotelWelcome from './components/HotelWelcome.jsx';
+import Footer from './components/Footer.js';
+import HotelWelcome from './components/HotelWelcome.js';
 
 
 function App() {

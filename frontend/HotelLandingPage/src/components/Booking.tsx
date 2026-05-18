@@ -2,11 +2,12 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { landingPageText } from '../translations.js';
+import { addDays } from '../utils/utils';
 
 export default function Booking() {
     const navigate = useNavigate();
     const today = new Date().toISOString().split('T')[0];
-    const guestRef = useRef();
+    const guestRef = useRef<HTMLInputElement | null>(null);
     const { language } = useLanguage();
     const [ arrivalDate, setArrivalDate ] = useState(today);
     const [ departureDate, setDepartureDate ] = useState(addDays(today, 2));
@@ -18,22 +19,7 @@ export default function Booking() {
         {adult: 2, child: 1}
     ]
 
-    function addDays(dateString, days) {
-        if (!dateString) return "";
-
-        const [year, month, day] = dateString.split("-").map(Number);
-        const date = new Date(year, month - 1, day);
-
-        date.setDate(date.getDate() + days);
-
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, "0");
-        const dd = String(date.getDate()).padStart(2, "0");
-
-        return `${yyyy}-${mm}-${dd}`;
-    }
-
-    function handleArrivalChange(e) {
+    function handleArrivalChange(e: React.ChangeEvent<HTMLInputElement>) {
         const newArrival = e.target.value;
 
         const minDeparture = addDays(newArrival, 1);
@@ -50,14 +36,14 @@ export default function Booking() {
         }
     }
 
-    function handleArrivalBlur(e) {
+    function handleArrivalBlur(e: React.ChangeEvent<HTMLInputElement>) {
         const newArrival = e.target.value;
         if (newArrival < today) {
             setArrivalDate(today);
         }
     }
 
-    function handleDepartureBlur(e) {
+    function handleDepartureBlur(e: React.ChangeEvent<HTMLInputElement>) {
         const newDeparture = e.target.value;
         if (newDeparture < arrivalDate) {
             setDepartureDate(addDays(arrivalDate, 1));
