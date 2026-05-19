@@ -1,10 +1,8 @@
 .bookingSection {
     margin: 10rem auto 8rem auto;
-    min-height: 50vh;
     width: var(--container-max);
     display: flex;
     justify-content: center;
-    gap: 4rem;
     overflow: hidden;
 }
 
@@ -15,10 +13,10 @@
 }
 
 .cardContainer {
-    min-width: 100%;
     display: flex;
+    min-width: 100%;
     justify-content: center;
-    align-items: flex-start;
+    overflow: hidden;
 }
 
 .card {
@@ -26,9 +24,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90%;
-    max-width: 600px;
-    min-height: 50vh;
+    width: 50%;
+    min-height: 600px;
     padding: 2rem;
     border-radius: 1rem;
     border: 1px solid rgba(82, 68, 57, 0.2);
@@ -103,13 +100,11 @@
     flex-flow: column;
     flex-shrink: 0;
     gap: .5rem;
-    margin-bottom: 1rem;
 }
 
 .radioGroup p, .checkboxGroup p {
     text-align: center;
     padding-inline: 0;
-    margin-bottom: .5rem;
 }
 
 .radioGroup label, .checkboxGroup label{
@@ -140,7 +135,6 @@
     display: flex;
     flex-flow: column;
     gap: .5rem;
-    margin-bottom: 1rem;
 }
 
 .checkboxGroup label:has(input[type="checkbox"]:checked) {
@@ -149,37 +143,54 @@
 
 .personalData {
     display: flex;
-    width: 100%;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 75%;
     gap: 2rem;
+}
+
+.personalData span {
+    color: var(--primary);
+    text-align: right;
+}
+
+.personalData input, .personalData select{
+    width: 100%;
+    font-family: var(--font-body);
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    padding: .5rem .75rem;
+}
+
+.personalData input:focus-within, .personalData select:focus-within{
+    outline: none;
+    border: 1px solid var(--primary);
 }
 
 .inputGroup {
     display: grid;
     justify-content: center;
-    align-items: center;
-    grid-template-columns: 1fr 3fr;
-    gap: 1rem 2rem;
-
+    width: 100%;
+    grid-template-columns: 1.5fr 2fr 1fr;
+    gap: 1rem;
 }
 
-.inputGroup span {
-    color: var(--primary);
+.addressGroup {
+    display: grid;
+    width: 100%;
+    align-items: center; 
+    grid-template-columns: 1.5fr 2fr 1fr; 
+    gap: 1rem;
 }
 
-.inputGroup input, .inputGroup select{
-    font-family: var(--font-body);
-    border: 1px solid transparent;
-    border-radius: .25rem;
-    padding: .5rem 1rem;
+.addressGroup input, .addressGroup select {
+    width: 100%;
 }
 
-.inputGroup input:focus-within, .inputGroup select:focus-within{
-    outline: none;
-    border: 1px solid var(--primary);
+.colSpan2 {
+    grid-column: span 2;
 }
-
 
 .successCard {
     text-align: center;
@@ -192,21 +203,18 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
-.successDetails > p:first-child {
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
+}
+.successDetails p:first-child {
+    display: flex;
+    align-items: center;
     gap: 0rem 1.5rem;
 }
 
-.successDetails > p:nth-child(2) {
-    display: flex;
-    flex-flow: row wrap;
+.successDetails p:nth-child(2) {
+    display: block;
+    width: 100%;
     text-align: left;
-    text-overflow: ellipsis;
-    text-wrap: wrap;
-    gap: 0rem 1rem;
 }
 .highlighted {
     font-weight: 600;
@@ -214,6 +222,9 @@
 }
 
 .bookingId {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: var(--primary);
     font-size: 1.3rem;
     letter-spacing: 1px;
@@ -228,4 +239,15 @@
     color: #666;
     font-style: italic;
     margin-bottom: 1.5rem;
+}
+
+.bookingId button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: 1.25rem;
+    padding: 0;
+    margin-right: auto;
+    min-width: 4rem;
 }

@@ -1,5 +1,5 @@
-const apiURL:string = "https://nrbrt-codes.hu/hotelmanager/api/";
-// const apiURL:string = "http://localhost/api/";
+//const apiURL:string = "https://nrbrt-codes.hu/hotelmanager/api/";
+const apiURL:string = "http://localhost/api/";
 
 
 export async function getData<T>(endpoint="" , params: Record<string, string> = {}, timeout = 5000):Promise<T> {
@@ -10,7 +10,7 @@ export async function getData<T>(endpoint="" , params: Record<string, string> = 
     try {
         const url = new URL(apiURL+endpoint);
         Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined) url.searchParams.append(key, String(value));
+            if (value !== undefined) url.searchParams.append(key, value);
         });
         const response = await fetch(url, {
             signal: controller.signal

@@ -12,17 +12,17 @@ import Step4PersonalData from "../components/booking/Step4PersonalData";
 import Step5SuccessCard from "../components/booking/Step5SuccessCard";
 
 const EXTRA_OPTIONS: ExtraOption[] = [
-    { id: "view", label: "Udvarra néző szoba" },
-    { id: "jacuzzi", label: "Jacuzzi a teraszon" },
-    { id: "champagne", label: "Pezsgő bekészítés" },
-    { id: "latecheckout", label: "Késői kijelentkezés" },
-    { id: "transfer", label: "Reptéri transzfer" },
+    { id: "garden"},
+    { id: "jacuzzi"},
+    { id: "champagne"},
+    { id: "latecheckout"},
+    { id: "transfer" },
 ];
 
 const CATERING_OPTIONS = [
-    { id: "breakfast", label: "Reggeli", info: "(Az ár tartalmazza)" },
-    { id: "halfboard", label: "Félpanzió", info: "(+10% felár)" },
-    { id: "fullboard", label: "Teljes ellátás", info: "(+20% felár)" },
+    { id: "breakfast" },
+    { id: "halfboard" },
+    { id: "fullboard" },
 ];
 
 const validate = {
@@ -40,7 +40,7 @@ export default function BookingPage() {
     
     const [step, setStep] = useState(1);
     const [isFormValid, setIsFormValid] = useState(false);
-    const [roomType, setRoomType] = useState<RoomType>("standard"); // <--- ÚJ szoba state!
+    const [roomType, setRoomType] = useState<RoomType>("standard");
     const [catering, setCatering] = useState<CateringType>("breakfast");
     const [extras, setExtras] = useState<Record<string, boolean>>({});
     const [formData, setFormData] = useState<FormData>({
@@ -61,7 +61,7 @@ export default function BookingPage() {
     const { guests, arrivalDate, departureDate } = location.state as BookingState;
     const sliderStyle = { transform: `translateX(-${(step - 1) * 100}%)` };
 
-    // Handler függvények
+
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, checked } = e.target;
         setExtras(prev => ({ ...prev, [id]: checked }));
@@ -75,8 +75,9 @@ export default function BookingPage() {
     const handleBookingFinish = () => {
         // Itt fogod majd meghívni a korábban megírt `createData` API-t!
         console.log("Foglalás elküldése:", { formData, roomType, catering, extras, guests, arrivalDate, departureDate });
-        setStep(5); // Pl. egy sikeres visszaigazoló kártyára lépés
+        setStep(5);
     };
+
 
     return (
         <section className={s.bookingSection}>
@@ -88,22 +89,23 @@ export default function BookingPage() {
                 />
 
                 <Step2RoomSelection 
-                    roomType={roomType} setRoomType={setRoomType} 
+                    roomType={roomType} setRoomType={setRoomType} language={language}
                     onBack={() => setStep(1)} onNext={() => setStep(3)} 
                 />
 
                 <Step3ExtraOptions 
                     catering={catering} setCatering={setCatering} extras={extras} handleCheckboxChange={handleCheckboxChange} 
                     cateringOptions={CATERING_OPTIONS} extraOptions={EXTRA_OPTIONS} 
+                    language={language}
                     onBack={() => setStep(2)} onNext={() => setStep(4)} 
                 />
 
                 <Step4PersonalData 
-                    formData={formData} isFormValid={isFormValid} countries={countries} handleInputChange={handleInputChange} 
+                    formData={formData} isFormValid={isFormValid} language={language} countries={countries} handleInputChange={handleInputChange} 
                     onBack={() => setStep(3)} onFinish={handleBookingFinish} 
                 />
 
-                <Step5SuccessCard email={formData.email} />
+                <Step5SuccessCard email={formData.email} language={language} />
 
             </div>
         </section>

@@ -165,8 +165,9 @@ $endpoints = [
         'sorts'   => ['room_number', 'price_per_night', 'floorspace'],
         'enums'   => [
             'status' => ['available','occupied','dont_disturb','needs_cleaning','cleaning','under_maintenence','unavailable'],
-            'room_type' => ['STANDARD','SUITE','DELUXE'],
+            'room_type' => ['standard','deluxe','suite'],
             'bed_type' => ['single', 'twin', 'queen', 'kingsize'],
+            'has_view' => ['city', 'garden', 'panorama']
         ]
     ],
     'guest' => [
@@ -184,8 +185,8 @@ $endpoints = [
     'service' => [
         'table'   => 'services',
         'id'      => 'id',
-        'filters' => ['service_type'],
-        'sorts'   => ['name', 'price', 'service_type']
+        'filters' => ['service_type_hu', 'service_type_en'],
+        'sorts'   => ['name_hu', 'name_en', 'price', 'service_type_hu', 'service_type_en']
     ],
     'booking' => [
         'table'   => 'bookings',

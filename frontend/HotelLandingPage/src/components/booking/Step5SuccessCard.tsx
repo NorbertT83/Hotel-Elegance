@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import s from '../../styles/BookingPage.module.css';
+import { bookingPageText } from "../../translations";
+import { Language } from "../../context/LanguageContext";
 
 interface Step5Props {
-    email: string; // Átadjuk a megadott emailt, hogy személyesebb legyen
+    email: string;
+    language: Language;
 }
 
-export default function Step5SuccessCard({ email }: Step5Props) {
+export default function Step5SuccessCard({ email, language }: Step5Props) {
     const navigate = useNavigate();
     const [bookingId, setBookingId] = useState("");
+    const step5Text = bookingPageText[language].step5;
 
     // Foglalási szám generálása a komponens betöltődésekor (pl: HE-2026-A1B2)
     useEffect(() => {
@@ -26,26 +30,32 @@ export default function Step5SuccessCard({ email }: Step5Props) {
                     </span>
                 </div>
 
-                <h2>Sikeres foglalás!</h2>
-                <h3>Köszönjük, hogy a <strong>Hotel Elegance</strong>-t választotta.</h3>
+                <h2>{step5Text.header}</h2>
+                <h3>{step5Text.description}</h3>
 
                 <div className={s.successDetails}>
                     <p>
-                        Foglalási száma: <span className={s.bookingId}> {bookingId}</span>
+                        <span>{step5Text.bookingId}</span>
+                        <span className={s.bookingId}>
+                            {bookingId}
+                            <button className="material-symbols-outlined">content_copy</button>
+                        </span>
+                        
                     </p>
                     <p className={s.infoText}>
-                        A visszaigazoló dokumentumokat és a részletes tájékoztatót elküldtük a megadott 
-                        <span className={s.highlighted}>{email}</span> e-mail címre.
+                        {step5Text.emailInfo}
+                        <span className={s.highlighted}>{` ${email} `}</span>
+                        {step5Text.emailInfo2}
                     </p>
                     <p className={s.spamNotice}>
-                        *Amennyiben pár percen belül nem érkezik meg a levél, kérjük, ellenőrizze a Spam/Promóciók mappát is.
+                        {step5Text.spamNotice}
                     </p>
                 </div>
 
 
                 <div className={s.buttonContainer}>
                     <button className="btn btn-primary" onClick={() => navigate("/")}>
-                        <span>Vissza a főoldalra</span>
+                        <span>{step5Text.backButton}</span>
                         <span className="material-symbols-outlined">home</span>
                     </button>
                 </div>

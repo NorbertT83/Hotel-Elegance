@@ -6,7 +6,8 @@ import { landingPageText } from '../translations';
 
 interface HotelService {
     id: string | number;
-    service_type: string;
+    service_type_hu: string;
+    service_type_en: string;
     name_hu: string;
     name_en: string;
     description_hu: string;
@@ -26,7 +27,7 @@ export default function Services() {
         setLoading(true);
         setError(null);
         try {
-            const data = await await getData<HotelService[]>(
+            const data = await getData<HotelService[]>(
                 `service/${serviceId || "all"}`,
                 {
                     sort: `name_${language}`
@@ -57,7 +58,7 @@ export default function Services() {
             ) : (
             <div className={s.servicesContainer}>
 
-                {[...new Set(services.map(ser => ser.service_type))].map((type) => (
+                {[...new Set(services.map(ser => ser[`service_type_${language}`]))].map((type) => (
                     
                     <div className={s.serviceCard} key={type}>
                         <h2 className={s.cardTitle}>
@@ -66,7 +67,7 @@ export default function Services() {
                         
                         <div className={s.serviceList}>
                             {services
-                                .filter((service) => service.service_type === type)
+                                .filter((service) => service[`service_type_${language}`] === type)
                                 .map((service) => (
                                     <div key={service.id} className={s.serviceItem}>
                                         {service[`name_${language}`]}
