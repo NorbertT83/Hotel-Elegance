@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import s from '../styles/RoomModal.module.css'
 import { RoomType } from '../types/booking';
-import { landingPageText } from '../translations';
+import { landingPageText } from '../utils/translations';
 import { Language, useLanguage } from '../context/LanguageContext';
 
 interface Props {
@@ -40,7 +40,9 @@ export default function RoomModal({roomType, isOpen, onClose }:Props) {
     return (
         <div className={s.modalBackground} onClick={handleBgClick}>
             <div className={s.modalContainer}>
-
+                <div className={s.closeButton} onClick={onClose}>
+                    <span className="material-symbols-outlined">close</span>
+                </div>
                 <div className={s.imgContainer}>
                     <img src={roomData.imageURL} alt={roomData.imageAlt} />
                 </div>

@@ -1,7 +1,7 @@
 import { HashLink } from "react-router-hash-link";
 import { getNameOfDay } from '../../utils/utils';
 import s from '../../styles/BookingPage.module.css';
-import { bookingPageText } from '../../translations';
+import { bookingPageText } from '../../utils/translations';
 import { Language } from "../../context/LanguageContext";
 
 interface Step1Props {

@@ -1,6 +1,6 @@
 import { Language } from '../../context/LanguageContext';
 import s from '../../styles/BookingPage.module.css';
-import { bookingPageText } from '../../translations';
+import { bookingPageText } from '../../utils/translations';
 import { RoomType } from '../../types/booking';
 
 interface Step2Props {

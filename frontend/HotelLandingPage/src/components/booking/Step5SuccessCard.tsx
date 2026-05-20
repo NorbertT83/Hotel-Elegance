@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import s from '../../styles/BookingPage.module.css';
-import { bookingPageText } from "../../translations";
+import { bookingPageText } from "../../utils/translations";
 import { Language } from "../../context/LanguageContext";
 
 interface Step5Props {

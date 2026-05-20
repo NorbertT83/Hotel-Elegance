@@ -1,6 +1,6 @@
-import StandardRoomImage from './assets/standard_room.png';
-import EliteRoomImage from './assets/elite_room.png';
-import SuiteRoomImage from './assets/suite_room.png';
+import StandardRoomImage from '../assets/standard_room.png';
+import EliteRoomImage from '../assets/elite_room.png';
+import SuiteRoomImage from '../assets/suite_room.png';
 
 export const landingPageText = {
     hu: {

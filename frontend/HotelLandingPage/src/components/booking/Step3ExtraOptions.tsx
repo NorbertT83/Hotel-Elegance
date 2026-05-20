@@ -1,6 +1,6 @@
 import s from '../../styles/BookingPage.module.css';
 import { CateringType, ExtraOption } from '../../types/booking';
-import { bookingPageText } from '../../translations';
+import { bookingPageText } from '../../utils/translations';
 import { Language } from '../../context/LanguageContext';
 
 interface Step3Props {

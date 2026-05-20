@@ -1,5 +1,5 @@
 import { useLanguage } from '../context/LanguageContext';
-import { landingPageText } from '../translations';
+import { landingPageText } from '../utils/translations';
 import LanguageSelector from './LanguageSelector';
 
 export default function Footer() {

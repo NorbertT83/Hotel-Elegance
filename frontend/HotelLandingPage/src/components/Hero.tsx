@@ -1,6 +1,6 @@
 import HeroImg from '../assets/hero_photo.png'
 import { useLanguage } from '../context/LanguageContext'
-import { landingPageText } from '../translations'
+import { landingPageText } from '../utils/translations'
 
 
 export default function Hero() {

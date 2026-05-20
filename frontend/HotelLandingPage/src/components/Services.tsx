@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { getData } from '../api/apiService';
 import s from '../styles/Services.module.css';
-import { landingPageText } from '../translations';
+import { landingPageText } from '../utils/translations';
 
 interface HotelService {
     id: string | number;

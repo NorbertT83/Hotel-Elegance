@@ -1,5 +1,5 @@
 import { useLanguage } from '../context/LanguageContext';
-import { landingPageText } from '../translations';
+import { landingPageText } from '../utils/translations';
 import { RoomType } from '../types/booking';
 
 export default function Rooms({ openRoomModal }: { openRoomModal: (roomType: RoomType) => void }) {
