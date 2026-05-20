@@ -25,9 +25,10 @@ export const landingPageText = {
             sectionTitle: 'Lakosztályaink',
             sectionDescription:
                 'Gondosan kialakított terek a tökéletes kikapcsolódásért és a kifinomult kényelemért.',
-            cards: [
-                {
-                    title: 'The Standard Elegance',
+            types: {
+                standard: {
+                    roomType: 'standard',
+                    title: 'Standard Elegance',
                     price: '$440',
                     priceSuffix: '/éjszaka',
                     description:
@@ -35,9 +36,18 @@ export const landingPageText = {
                     linkText: 'Szoba megtekintése',
                     imageURL: StandardRoomImage,
                     imageAlt: 'A Standard Elegance szoba',
+                    features: [
+                        'Mini bár',
+                        'Kávé- és teafőző',
+                        'Szobaszéf',
+                        'Nagy sebességű Wi-Fi',
+                        'Luxus piperecikkek',
+                        '24 órás szobaszerviz',
+                    ],
                 },
-                {
-                    title: 'The Grand Ivory',
+                deluxe: {
+                    roomType: 'deluxe',
+                    title: 'Grand Ivory',
                     price: '$510',
                     priceSuffix: '/éjszaka',
                     description:
@@ -45,18 +55,30 @@ export const landingPageText = {
                     linkText: 'Lakosztály megtekintése',
                     imageURL: EliteRoomImage,
                     imageAlt: 'A Grand Ivory lakosztály',
+                    features: [
+                        'Privát terasz',
+                        'Egyedi készítésű bútorok',
+                        'Lágy pezsgő színek',
+                    ],
                 },
-                {
-                    title: 'The Terrace Penthouse',
+                suite: {
+                    roomType: 'suite',
+                    title: 'Terrace Penthouse',
                     price: '$720',
                     priceSuffix: '/éjszaka',
                     description:
                     'Magas szintű kényelem körbefutó erkéllyel, külön étkezővel és a visszafogott luxus iránti kivételes figyelemmel.',
                     linkText: 'Lakosztály megtekintése',
                     imageURL: SuiteRoomImage,
-                    imageAlt: 'A Teraszos Penthouse',
+                    imageAlt: 'A Teraszos Penthouse lakosztály',
+                    features: [
+                        'Körbefutó erkély',
+                        'Egyedi készítésű bútorok',
+                        'Külön étkező',
+                        'Luxus iránti kivételes figyelem',
+                    ],
                 },
-            ],
+            },
         },
         services: {
             sectionTitle: 'Szolgáltatásaink',
@@ -103,9 +125,9 @@ export const landingPageText = {
             sectionTitle: 'Our Suites',
             sectionDescription:
                 'Thoughtfully designed spaces for perfect relaxation and refined comfort.',
-            cards: [
-                    {
-                        title: 'The Standard Elegance',
+            types: {
+                    standard: {
+                        title: 'Standard Elegance',
                         price: '$440',
                         priceSuffix: '/night',
                         description:
@@ -113,9 +135,17 @@ export const landingPageText = {
                         linkText: 'View room',
                         imageURL: StandardRoomImage,
                         imageAlt: 'The Standard Elegance room',
+                        features: [
+                            'Mini bar',
+                            'Coffee and tea maker',
+                            'In-room safe',
+                            'High-speed Wi-Fi',
+                            'Luxury toiletries',
+                            '24-hour room service',
+                        ],
                     },
-                    {
-                        title: 'The Grand Ivory',
+                    deluxe: {
+                        title: 'Grand Ivory',
                         image: '../assets/',
                         price: '$850',
                         priceSuffix: '/night',
@@ -124,18 +154,29 @@ export const landingPageText = {
                         linkText: 'View suite',
                         imageURL: EliteRoomImage,
                         imageAlt: 'The Grand Ivory suite',
+                        features: [
+                            'Private terrace',
+                            'Bespoke furnishings',
+                            'Soft champagne tones',
+                        ],
                     },
-                    {
-                        title: 'The Terrace Penthouse',
+                    suite: {
+                        title: 'Terrace Penthouse',
                         price: '$1,200',
                         priceSuffix: '/night',
                         description:
                             'High-level comfort with wrap-around balcony, separate dining area, and exceptional attention to understated luxury.',
                         linkText: 'View suite',
                         imageURL: SuiteRoomImage,
-                        imageAlt: 'The Terrace Penthouse',
+                        imageAlt: 'The Terrace Penthouse suite',
+                        features: [
+                            'Wrap-around balcony',
+                            'Bespoke furnishings',
+                            'Separate dining area',
+                            'Exceptional attention to understated luxury',
+                        ],
                     },
-            ],
+                },
         },
         services: {
             sectionTitle: 'Our services',

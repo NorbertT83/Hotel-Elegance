@@ -397,6 +397,7 @@ h1, h2, h3, .logo, .footer-logo {
     align-items: center;
     gap: 8px;
     width: fit-content;
+    cursor: pointer;
     transition: color 0.3s;
 }
 

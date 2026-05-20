@@ -4,17 +4,37 @@ import Rooms from '../components/Rooms';
 import Services from '../components/Services';
 import Carousel from '../components/Carousel';
 import ScrollBasedAnimation from '../components/ScrollBasedAnimation';
+import RoomModal from '../components/RoomModal';
+import { useState } from 'react';
+import { RoomType } from '../types/booking';
 
 export default function HomePage() {
-return <>
-    <Hero />
-    <Booking />
-    <ScrollBasedAnimation>
-        <Rooms />
-    </ScrollBasedAnimation>
-    <ScrollBasedAnimation>
-        <Services />
-    </ScrollBasedAnimation>
-    <Carousel />
-</>
+    const [selectedRoomType, setSelectedRoomType] = useState<RoomType | null>(null);
+
+    function openRoomModal(roomType: RoomType) {
+        setSelectedRoomType(roomType);
+    }
+
+    function closeRoomModal() {
+        setSelectedRoomType(null);
+    }
+
+    return <>
+        <Hero />
+        <Booking />
+        <ScrollBasedAnimation>
+            <Rooms openRoomModal={openRoomModal} />
+        </ScrollBasedAnimation>
+        <ScrollBasedAnimation>
+            <Services />
+        </ScrollBasedAnimation>
+        <Carousel />
+        {selectedRoomType && (
+            <RoomModal 
+                roomType={selectedRoomType} 
+                isOpen={!!selectedRoomType} 
+                onClose={closeRoomModal}
+            />
+        )}
+    </>
 }
