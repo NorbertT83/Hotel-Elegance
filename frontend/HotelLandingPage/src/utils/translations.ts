@@ -63,7 +63,7 @@ export const landingPageText = {
                 },
                 suite: {
                     roomType: 'suite',
-                    title: 'Terrace Penthouse',
+                    title: 'Panorama Penthouse',
                     price: '$720',
                     priceSuffix: '/éjszaka',
                     description:
@@ -161,7 +161,7 @@ export const landingPageText = {
                         ],
                     },
                     suite: {
-                        title: 'Terrace Penthouse',
+                        title: 'Panorama Penthouse',
                         price: '$1,200',
                         priceSuffix: '/night',
                         description:
@@ -247,6 +247,7 @@ export const bookingPageText = {
             fname: 'Keresztnév',
             email: 'E-mail cím',
             address: 'Lakcím',
+            countryPlaceholder: 'Válasszon országot...',
             cityPlaceholder: 'Város',
             streetPlaceholder: 'Utca / házszám',
             zipPlaceholder: 'Irányítószám',
@@ -308,6 +309,7 @@ export const bookingPageText = {
             fname: 'First Name',
             email: 'Email Address',
             address: 'Address',
+            countryPlaceholder: 'Select a country...',
             cityPlaceholder: 'City',
             streetPlaceholder: 'Street / Number',
             zipPlaceholder: 'ZIP Code',

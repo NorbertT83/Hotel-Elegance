@@ -1,30 +1,26 @@
-import { Language } from '../../context/LanguageContext';
-import s from '../../styles/BookingPage.module.css';
+import { useLanguage } from '../../context/LanguageContext';
+import { useBooking } from '../../context/BookingContext';
 import { bookingPageText } from '../../utils/translations';
-import { Room, RoomType } from '../../types/booking';
-import { useMemo, useState } from 'react';
-
-interface Step2Props {
-    roomType: RoomType;
-    setRoomType: (type: RoomType) => void;
-    language: Language;
-    onBack: () => void;
-    onNext: () => void;
-    freeRooms: Room[];
-}
-
-const ROOM_OPTIONS: { id: RoomType; label: string }[] = [
-    { id: "standard", label: "Standard Elegance" },
-    { id: "deluxe", label: "Grand Ivory" },
-    { id: "suite", label: "Terrace Penthouse" },
-];
+import { useMemo } from 'react';
+import s from '../../styles/BookingPage.module.css';
+import { RoomType } from '../../types/booking';
 
 
-export default function Step2RoomSelection({ roomType, setRoomType, language, onBack, onNext, freeRooms }: Step2Props) {
+export default function Step2RoomSelection()  {
+    const { freeRooms, roomTypeChosen, setFreeRooms, setRoomTypeChosen, nextStep, prevStep } = useBooking();
+    const { language } = useLanguage();
     const availableRoomTypes = [...new Set(freeRooms.map(room => room.room_type))];
-    const filteredRooms = freeRooms.filter(r => r.room_type === roomType);
+    const filteredRooms = freeRooms.filter(r => r.room_type === roomTypeChosen);
+
+    const roomOptions = [
+        { value: 'standard', label: "Standard Elegance" },
+        { value: 'deluxe', label: "Grand Ivory" },
+        { value: 'suite', label: "Panorama Penthouse" }
+    ];
+
+    
     const availableExtras = useMemo(() => {
-        if (!roomType) return {};
+        if (!roomTypeChosen) return {};
         
         return {
             has_balcony: filteredRooms.some(r => r.has_balcony === 1),
@@ -33,7 +29,7 @@ export default function Step2RoomSelection({ roomType, setRoomType, language, on
             jacuzzi: filteredRooms.some(r => r.extras?.includes("jacuzzi")),
             kitchen: filteredRooms.some(r => r.extras?.includes("kitchen")),
         };
-    }, [roomType, freeRooms]);
+    }, [roomTypeChosen, freeRooms]);
 
     console.log(availableExtras);
 
@@ -44,24 +40,27 @@ export default function Step2RoomSelection({ roomType, setRoomType, language, on
                 <h3>{bookingPageText[language].step2.description}</h3>
                 
                 <div className={s.chooseRoom}>
-                    {ROOM_OPTIONS.filter(room => availableRoomTypes.includes(room.id)).map((room) => (
+                    {availableRoomTypes.map((availRoom) => (
                         <div 
-                            key={room.id}
-                            className={`${s.roomOption} ${roomType === room.id ? s.active : ''}`}
+                            key={availRoom}
+                            className={`${s.roomOption} ${roomTypeChosen === availRoom ? s.active : ''}`}
                             onClick={() => {
-                                setRoomType(room.id);
+                                setRoomTypeChosen(roomOptions.find(r => r.value === availRoom)?.value as RoomType);
                             }}
                         >
-                            {room.label}
+                            {roomOptions.find(r => r.value === availRoom)?.label}
                         </div>
                     ))}
                 </div>
 
                 <div className={s.buttonContainer}>
-                    <button className="btn btn-secondary" onClick={onBack}>
+                    <button className="btn btn-secondary" onClick={prevStep}>
                         {bookingPageText[language].step2.prevButton}
                     </button>
-                    <button className="btn btn-primary" onClick={onNext}>
+                    <button className="btn btn-primary" onClick={() => {
+                        setFreeRooms(filteredRooms);
+                        nextStep()}
+                    }>
                         <span>{bookingPageText[language].step2.nextButton}</span><span className="material-symbols-outlined">arrow_forward</span>
                     </button>
                 </div>

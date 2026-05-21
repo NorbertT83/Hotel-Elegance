@@ -1,22 +1,14 @@
-import s from '../../styles/BookingPage.module.css';
-import { FormData } from '../../types/booking';
+import { useBooking } from '../../context/BookingContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { bookingPageText } from '../../utils/translations';
-import { Language } from '../../context/LanguageContext';
+import countries from '../../utils/countries';
+import s from '../../styles/BookingPage.module.css';
 
-interface Step4Props {
-    formData: FormData;
-    isFormValid: boolean;
-    language: Language;
-    countries: Array<{ code: string; name: string }>;
-    handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-    onBack: () => void;
-    onFinish: () => void;
-}
 
-export default function Step4PersonalData({ formData, isFormValid, language, countries, handleInputChange, onBack, onFinish }: Step4Props) {
+export default function Step4PersonalData() {
+    const { language } = useLanguage();
+    const { formData, handleInputChange, isFormValid, prevStep, finishBooking } = useBooking();
     const step4Text = bookingPageText[language].step4;
-
-    type step4TextType = typeof step4Text;
 
     return (
         <div className={s.cardContainer}>
@@ -37,7 +29,7 @@ export default function Step4PersonalData({ formData, isFormValid, language, cou
                     <div className={s.addressGroup}>
                         <span>{step4Text.address}:</span>
                         <select name="country" id="countrySelect" value={formData.country} onChange={handleInputChange}>
-                            <option value="" disabled>Válasszon országot...</option>
+                            <option value="" disabled>{step4Text.countryPlaceholder}</option>
                             {countries.map(country => (
                                 <option key={country.code} value={country.code}>{country.name}</option>
                             ))}
@@ -53,8 +45,10 @@ export default function Step4PersonalData({ formData, isFormValid, language, cou
                     </div>
                 </div>
                 <div className={s.buttonContainer}>
-                    <button className="btn btn-secondary" onClick={onBack}>Vissza</button>
-                    <button className={`btn btn-primary ${isFormValid ? "" : "btn-inactive"}`} onClick={onFinish}>
+                    <button className="btn btn-secondary" onClick={prevStep}>
+                        {step4Text.prevButton}
+                    </button>
+                    <button className={`btn btn-primary ${isFormValid ? "" : "btn-inactive"}`} onClick={finishBooking}>
                         <span>{step4Text.finishButton}</span><span className="material-symbols-outlined">arrow_forward</span>
                     </button>
                 </div>

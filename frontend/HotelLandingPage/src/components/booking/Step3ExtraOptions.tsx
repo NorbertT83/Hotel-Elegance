@@ -1,27 +1,27 @@
 import s from '../../styles/BookingPage.module.css';
 import { CateringType, ExtraOption, Room } from '../../types/booking';
 import { bookingPageText } from '../../utils/translations';
-import { Language } from '../../context/LanguageContext';
+import { useLanguage } from '../../context/LanguageContext';
+import { useBooking } from '../../context/BookingContext';
 
-interface Step3Props {
-    catering: CateringType;
-    setCatering: (type: CateringType) => void;
-    extras: Record<string, boolean>;
-    handleCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    cateringOptions: Array<{ id: string }>;
-    extraOptions: ExtraOption[];
-    language: Language;
-    freeRooms: Room[];
-    onBack: () => void;
-    onNext: () => void;
-}
 
-export default function Step3ExtraOptions({
-    catering, setCatering, extras, handleCheckboxChange, cateringOptions, extraOptions, language, freeRooms, onBack, onNext
-}: Step3Props) {
-
+export default function Step3ExtraOptions() {
+    const { language } = useLanguage();
     const step3Text = bookingPageText[language].step3;
+    const { cateringChosen , setCateringChosen, extrasChosen, handleCheckboxChange, freeRooms, prevStep, nextStep } = useBooking();
+    
     type Step3Keys = keyof typeof step3Text;
+
+    const cateringOptions = ['breakfast', 'halfboard', 'fullboard'] as CateringType[];
+    const extraOptions: ExtraOption[] = ['jacuzzi', 'kitchen'];
+    const availableExtras = {
+            has_balcony: freeRooms.some(r => r.has_balcony === 1),
+            garden: freeRooms.some(r => r.has_view === 'garden'),
+            panorama: freeRooms.some(r => r.has_view === 'panorama'),
+            jacuzzi: freeRooms.some(r => r.extras?.includes("jacuzzi")),
+            kitchen: freeRooms.some(r => r.extras?.includes("kitchen")),
+        };
+
     return (
         <div className={s.cardContainer}>
             <div className={s.card}>
@@ -31,41 +31,41 @@ export default function Step3ExtraOptions({
                     <div className={s.radioGroup}>
                         <p>{step3Text.catering}</p>
                         {cateringOptions.map((option) => (
-                            <label key={option.id} htmlFor={option.id}>
+                            <label key={option} htmlFor={option}>
                                 <input
                                     type="radio"
-                                    id={option.id}
+                                    id={option}
                                     name="catering"
-                                    value={option.id}
-                                    checked={catering === option.id}
-                                    onChange={(e) => setCatering(e.target.value as CateringType)}
+                                    value={option}
+                                    checked={cateringChosen === option}
+                                    onChange={(e) => setCateringChosen(e.target.value as CateringType)}
                                 />
-                                {step3Text[option.id as Step3Keys]} <span>{step3Text[`${option.id}Note` as Step3Keys]}</span>
+                                {step3Text[option as Step3Keys]} <span>{step3Text[`${option}Note` as Step3Keys]}</span>
                             </label>
                         ))}
                     </div>
                     <div className={s.checkboxGroup}>
                         <p>{step3Text.extras}</p>
                         {extraOptions.map((option) => (
-                            <label key={option.id} htmlFor={option.id}>
+                            <label key={option} htmlFor={option}>
                                 <input 
                                     type="checkbox" 
-                                    id={option.id} 
+                                    id={option} 
                                     name="extras"
-                                    checked={!!extras[option.id]}
+                                    checked={!!extrasChosen[option]}
                                     onChange={handleCheckboxChange}
                                 />
-                                {step3Text[option.id as Step3Keys]}
+                                {step3Text[option as Step3Keys]}
                             </label>
                         ))}
                     </div>
                 </div>
                 <div className={s.extraInfo}>{step3Text.extraInfo}</div>
                 <div className={s.buttonContainer}>
-                    <button className="btn btn-secondary" onClick={onBack}>
+                    <button className="btn btn-secondary" onClick={prevStep}>
                         {step3Text.prevButton}
                     </button>
-                    <button className="btn btn-primary" onClick={onNext}>
+                    <button className="btn btn-primary" onClick={nextStep}>
                         <span>{step3Text.nextButton}</span><span className="material-symbols-outlined">arrow_forward</span>
                     </button>
                 </div>
