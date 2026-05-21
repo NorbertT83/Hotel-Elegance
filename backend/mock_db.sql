@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1deb1+deb12u1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: localhost
--- Létrehozás ideje: 2026. Máj 15. 08:04
--- Kiszolgáló verziója: 10.11.14-MariaDB-0+deb12u2
--- PHP verzió: 8.2.31
+-- Gép: 127.0.0.1
+-- Létrehozás ideje: 2026. Máj 21. 10:56
+-- Kiszolgáló verziója: 10.4.32-MariaDB
+-- PHP verzió: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,6 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `bookings` (
   `id` int(11) NOT NULL,
   `room_number` smallint(5) UNSIGNED DEFAULT NULL,
+  `room_type` enum('standard','deluxe','suite','') NOT NULL,
+  `needs_view` enum('city','garden','panorama','') NOT NULL,
   `guest1_id` int(11) NOT NULL,
   `beginning_of_stay` date NOT NULL,
   `end_of_stay` date NOT NULL CHECK (`end_of_stay` > `beginning_of_stay`),
@@ -39,23 +41,23 @@ CREATE TABLE `bookings` (
   `guest3_id` int(11) DEFAULT NULL,
   `guest4_id` int(11) DEFAULT NULL,
   `catering_level` enum('breakfast','halfboard','fullboard','') NOT NULL DEFAULT 'breakfast'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `room_number`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`) VALUES
-(1, 101, 8, '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 1, NULL, NULL, 'breakfast'),
-(2, 102, 7, '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'breakfast'),
-(3, 201, 3, '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 9, NULL, NULL, 'breakfast'),
-(4, 202, 2, '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'breakfast'),
-(5, 103, 4, '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'breakfast'),
-(6, 301, 6, '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 5, NULL, NULL, 'breakfast'),
-(7, 302, 11, '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 10, NULL, NULL, 'breakfast'),
-(8, 203, 15, '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 12, NULL, NULL, 'breakfast'),
-(9, 303, 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast'),
-(10, 402, 16, '2026-04-10', '2026-04-12', '2026-04-10 12:45:00', '2026-04-12 09:30:00', NULL, NULL, NULL, 'breakfast');
+INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `needs_view`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`) VALUES
+(1, 101, '', 'city', 8, '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 1, NULL, NULL, 'breakfast'),
+(2, 102, '', 'city', 7, '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'breakfast'),
+(3, 201, '', 'city', 3, '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 9, NULL, NULL, 'breakfast'),
+(4, 202, '', 'city', 2, '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'breakfast'),
+(5, 103, '', 'city', 4, '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'breakfast'),
+(6, 301, '', 'city', 6, '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 5, NULL, NULL, 'breakfast'),
+(7, 302, '', 'city', 11, '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 10, NULL, NULL, 'breakfast'),
+(8, 203, '', 'city', 15, '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 12, NULL, NULL, 'breakfast'),
+(9, 303, 'deluxe', 'city', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast'),
+(10, 402, 'suite', 'city', 16, '2026-04-10', '2026-04-12', '2026-04-10 12:45:00', '2026-04-12 09:30:00', NULL, NULL, NULL, 'breakfast');
 
 --
 -- Eseményindítók `bookings`
@@ -89,7 +91,7 @@ CREATE TABLE `employees` (
   `salary` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `employees`
@@ -156,7 +158,7 @@ CREATE TABLE `guests` (
   `car_plate_number` varchar(10) DEFAULT NULL,
   `cumulative_nights` int(11) DEFAULT 0,
   `loyalty_level` int(11) GENERATED ALWAYS AS (least(floor(`cumulative_nights` / 5),10)) STORED
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `guests`
@@ -197,7 +199,7 @@ CREATE TABLE `rooms` (
   `extras` mediumtext DEFAULT NULL,
   `status` enum('available','occupied','dont_disturb','needs_cleaning','cleaning','under_maintenence','unavailable') NOT NULL DEFAULT 'unavailable',
   `price_per_night` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `rooms`
@@ -210,12 +212,12 @@ INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_
 (201, 'deluxe', 28, 'kingsize', 1, 'garden', 3, '', 'available', 38000),
 (202, 'deluxe', 30, 'kingsize', 1, 'city', 3, '', 'occupied', 42000),
 (203, 'deluxe', 27, 'queen', 1, 'city', 2, '', 'cleaning', 36000),
-(301, 'suite', 45, 'kingsize', 1, 'panorama', 4, 'jacuzzi', 'available', 65000),
-(302, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'dont_disturb', 72000),
-(303, 'suite', 48, 'kingsize', 1, 'panorama', 4, 'kitchen', 'occupied', 70000),
-(401, 'standard', 19, 'kingsize', 1, 'garden', 2, NULL, 'available', 24000),
-(402, 'deluxe', 32, 'kingsize', 1, 'garden', 3, '', 'unavailable', 41000),
-(403, 'suite', 55, 'kingsize', 1, 'garden', 4, 'jacuzzi, kitchen', 'needs_cleaning', 80000);
+(301, 'standard', 28, 'twin', 1, 'garden', 2, '', 'available', 34500),
+(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, '', 'dont_disturb', 42000),
+(303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 29900),
+(401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 76000),
+(402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'unavailable', 76000),
+(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'needs_cleaning', 80000);
 
 -- --------------------------------------------------------
 
@@ -228,7 +230,7 @@ CREATE TABLE `servicebookings` (
   `service_id` int(11) NOT NULL,
   `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
   `quantity` int(11) NOT NULL CHECK (`quantity` > 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `servicebookings`
@@ -271,33 +273,35 @@ CREATE TABLE `services` (
   `name_hu` varchar(50) NOT NULL,
   `description_hu` mediumtext DEFAULT NULL,
   `price` int(10) UNSIGNED NOT NULL,
-  `service_type` varchar(20) GENERATED ALWAYS AS (case when `name_hu` like '%masszázs%' or `name_hu` like '%kezelés%' then 'Wellness' when `name_hu` like '%bérlés%' or `name_hu` like '%roller%' or `name_hu` like '%Transzfer%' or `name_hu` like '%Parkolás%' then 'Logisztika' else 'Kényelmi' end) STORED,
+  `service_type_hu` enum('Wellness','Extrák','Logisztika') DEFAULT NULL,
   `name_en` varchar(50) DEFAULT NULL,
-  `description_en` mediumtext DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `description_en` mediumtext DEFAULT NULL,
+  `service_type_en` enum('Wellness','Extras','Logistics') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `services`
 --
 
-INSERT INTO `services` (`id`, `name_hu`, `description_hu`, `price`, `name_en`, `description_en`) VALUES
-(1, 'Testmasszázs', 'Svédmasszázs 60 perc', 12000, 'Body massage', 'Swedish massage 60 minutes'),
-(2, 'Parkolás', 'Zárt parkoló napi díj', 3000, 'Parking', 'Gated parking daily fee'),
-(3, 'Transzfer', 'Reptéri transzfer egy irányba', 10000, 'Transfer', 'Airport transfer one way'),
-(4, 'Autóbérlés', 'Napi autóbérlés alap csomag', 15000, 'Car rental', 'Daily car rental basic package'),
-(5, 'Mosatás', 'Ruhák mosása és vasalása', 5000, 'Laundry', 'Washing and ironing of clothes'),
-(6, 'Szobaszerviz', 'Étel-ital rendelés szobába', 2500, 'Room service', 'Food and beverage room service'),
-(7, 'Extra takarítás', 'Napi extra takarítás kérésre', 4000, 'Extra cleaning', 'Daily extra cleaning upon request'),
-(8, 'Gyerekfelügyelet', 'Szakképzett felügyelet óránként', 3500, 'Babysitting', 'Professional supervision per hour'),
-(9, 'Pótágy', 'Extra ágy biztosítása', 7000, 'Extra bed', 'Provision of an extra bed'),
-(10, 'Kiságy', 'Babaágy biztosítása', 3000, 'Baby cot', 'Provision of a baby cot'),
-(11, 'Aromaterápiás masszázs', 'Illóolajos relaxációs masszázs 60 perc', 13000, 'Aromatherapy massage', 'Essential oil relaxation massage 60 minutes'),
-(12, 'Forró köves masszázs', 'Hot stone masszázs 60 perc', 15000, 'Hot stone massage', 'Hot stone massage 60 minutes'),
-(13, 'Arckezelés', 'Hidratáló és revitalizáló arckezelés', 10000, 'Facial treatment', 'Hydrating and revitalizing facial treatment'),
-(14, 'Testkezelés', 'B?rradírozás és hidratáló kezelés', 11000, 'Body treatment', 'Exfoliation and moisturizing treatment'),
-(15, 'Kerékpár bérlés', 'Kerékpár bérlés napi díj', 4000, 'Bicycle rental', 'Bicycle rental daily fee'),
-(16, 'Elektromos kerékpár bérlés', 'E-bike bérlés napi díj', 8000, 'Electric bicycle rental', 'E-bike rental daily fee'),
-(17, 'E-roller bérlés', 'Elektromos roller bérlés óradíj', 2500, 'E-scooter rental', 'Electric scooter rental hourly fee');
+INSERT INTO `services` (`id`, `name_hu`, `description_hu`, `price`, `service_type_hu`, `name_en`, `description_en`, `service_type_en`) VALUES
+(1, 'Testmasszázs', 'Svédmasszázs 60 perc', 12000, 'Wellness', 'Body massage', 'Swedish massage 60 minutes', 'Wellness'),
+(2, 'Parkolás', 'Zárt parkoló napi díj', 3000, 'Logisztika', 'Parking', 'Gated parking daily fee', 'Logistics'),
+(3, 'Transzfer', 'Reptéri transzfer egy irányba', 10000, 'Logisztika', 'Transfer', 'Airport transfer one way', 'Logistics'),
+(4, 'Autóbérlés', 'Napi autóbérlés alap csomag', 15000, 'Logisztika', 'Car rental', 'Daily car rental basic package', 'Logistics'),
+(5, 'Mosatás', 'Ruhák mosása és vasalása', 5000, 'Extrák', 'Laundry', 'Washing and ironing of clothes', 'Extras'),
+(6, 'Szobaszerviz', 'Étel-ital rendelés szobába', 2500, 'Extrák', 'Room service', 'Food and beverage room service', 'Extras'),
+(7, 'Extra takarítás', 'Napi extra takarítás kérésre', 4000, 'Extrák', 'Extra cleaning', 'Daily extra cleaning upon request', 'Extras'),
+(8, 'Gyerekfelügyelet', 'Szakképzett felügyelet óránként', 3500, 'Extrák', 'Babysitting', 'Professional supervision per hour', 'Extras'),
+(9, 'Pótágy', 'Extra ágy biztosítása', 7000, 'Extrák', 'Extra bed', 'Provision of an extra bed', 'Extras'),
+(10, 'Kiságy', 'Babaágy biztosítása', 3000, 'Extrák', 'Baby cot', 'Provision of a baby cot', 'Extras'),
+(11, 'Aromaterápiás masszázs', 'Illóolajos relaxációs masszázs 60 perc', 13000, 'Wellness', 'Aromatherapy massage', 'Essential oil relaxation massage 60 minutes', 'Wellness'),
+(12, 'Forró köves masszázs', 'Hot stone masszázs 60 perc', 15000, 'Wellness', 'Hot stone massage', 'Hot stone massage 60 minutes', 'Wellness'),
+(13, 'Arckezelés', 'Hidratáló és revitalizáló arckezelés', 10000, 'Wellness', 'Facial treatment', 'Hydrating and revitalizing facial treatment', 'Wellness'),
+(14, 'Testkezelés', 'Bőrradírozás és hidratáló kezelés', 11000, 'Wellness', 'Body treatment', 'Exfoliation and moisturizing treatment', 'Wellness'),
+(15, 'Kerékpár bérlés', 'Kerékpár bérlés napi díj', 4000, 'Logisztika', 'Bicycle rental', 'Bicycle rental daily fee', 'Logistics'),
+(16, 'Elektromos kerékpár bérlés', 'Elektromos kerékpár bérlés napi díj', 8000, 'Logisztika', 'Electric bicycle rental', 'E-bike rental daily fee', 'Logistics'),
+(17, 'E-roller bérlés', 'Elektromos roller bérlés óradíj', 2500, 'Logisztika', 'E-scooter rental', 'Electric scooter rental hourly fee', 'Logistics'),
+(18, 'Szauna szeánsz', 'Vezetett szauna élmény különböző atmoszférákat teremtő felöntésekkel', 4500, 'Wellness', 'Sauna session', 'A guided sauna experience with infusion rituals creating different atmospheres.', 'Wellness');
 
 --
 -- Indexek a kiírt táblákhoz
@@ -375,7 +379,7 @@ ALTER TABLE `guests`
 -- AUTO_INCREMENT a táblához `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Megkötések a kiírt táblákhoz

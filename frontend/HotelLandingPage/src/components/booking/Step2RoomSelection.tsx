@@ -1,7 +1,8 @@
 import { Language } from '../../context/LanguageContext';
 import s from '../../styles/BookingPage.module.css';
 import { bookingPageText } from '../../utils/translations';
-import { RoomType } from '../../types/booking';
+import { Room, RoomType } from '../../types/booking';
+import { useMemo, useState } from 'react';
 
 interface Step2Props {
     roomType: RoomType;
@@ -9,31 +10,49 @@ interface Step2Props {
     language: Language;
     onBack: () => void;
     onNext: () => void;
+    freeRooms: Room[];
 }
 
 const ROOM_OPTIONS: { id: RoomType; label: string }[] = [
-    { id: "standard", label: "The Standard Elegance" },
-    { id: "deluxe", label: "The Grand Ivory" },
-    { id: "suite", label: "The Terrace Penthouse" },
+    { id: "standard", label: "Standard Elegance" },
+    { id: "deluxe", label: "Grand Ivory" },
+    { id: "suite", label: "Terrace Penthouse" },
 ];
 
 
-export default function Step2RoomSelection({ roomType, setRoomType, language, onBack, onNext }: Step2Props) {
+export default function Step2RoomSelection({ roomType, setRoomType, language, onBack, onNext, freeRooms }: Step2Props) {
+    const availableRoomTypes = [...new Set(freeRooms.map(room => room.room_type))];
+    const filteredRooms = freeRooms.filter(r => r.room_type === roomType);
+    const availableExtras = useMemo(() => {
+        if (!roomType) return {};
+        
+        return {
+            has_balcony: filteredRooms.some(r => r.has_balcony === 1),
+            garden: filteredRooms.some(r => r.has_view === 'garden'),
+            panorama: filteredRooms.some(r => r.has_view === 'panorama'),
+            jacuzzi: filteredRooms.some(r => r.extras?.includes("jacuzzi")),
+            kitchen: filteredRooms.some(r => r.extras?.includes("kitchen")),
+        };
+    }, [roomType, freeRooms]);
+
+    console.log(availableExtras);
+
     return (
         <div className={s.cardContainer}>
             <div className={s.card}>
                 <h2>{bookingPageText[language].step2.header}</h2>
                 <h3>{bookingPageText[language].step2.description}</h3>
                 
-                {/* A szobaválasztó most már interaktív és kap egy s.active osztályt a kijelölttől */}
                 <div className={s.chooseRoom}>
-                    {ROOM_OPTIONS.map((room) => (
+                    {ROOM_OPTIONS.filter(room => availableRoomTypes.includes(room.id)).map((room) => (
                         <div 
                             key={room.id}
                             className={`${s.roomOption} ${roomType === room.id ? s.active : ''}`}
-                            onClick={() => setRoomType(room.id)}
+                            onClick={() => {
+                                setRoomType(room.id);
+                            }}
                         >
-                            <p>{room.label}</p>
+                            {room.label}
                         </div>
                     ))}
                 </div>

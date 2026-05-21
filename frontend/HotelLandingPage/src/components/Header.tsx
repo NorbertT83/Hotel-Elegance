@@ -10,7 +10,7 @@ export default function Header() {
     return (
         <header className="header">
             <div className="header-container">
-                <div className="logo"><img src={Logo} alt="Logo" />Hotel Elegance</div>
+                <div className="logo"><img src={Logo} alt="Logo" /><HashLink smooth to="/#">Hotel Elegance</HashLink></div>
                 <nav className="nav-links">
                     <HashLink smooth to="/#rooms"> {text.navLinks[0]} </HashLink>
                     <HashLink smooth to="/#services"> {text.navLinks[1]} </HashLink>

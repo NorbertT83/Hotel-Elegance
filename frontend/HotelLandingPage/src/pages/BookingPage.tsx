@@ -12,11 +12,9 @@ import Step4PersonalData from "../components/booking/Step4PersonalData";
 import Step5SuccessCard from "../components/booking/Step5SuccessCard";
 
 const EXTRA_OPTIONS: ExtraOption[] = [
-    { id: "garden"},
-    { id: "jacuzzi"},
-    { id: "champagne"},
     { id: "latecheckout"},
     { id: "transfer" },
+    { id: "champagne"},
 ];
 
 const CATERING_OPTIONS = [
@@ -38,6 +36,7 @@ export default function BookingPage() {
     const location = useLocation();
     const navigate = useNavigate();
     
+    const [freeRooms, setFreeRooms] = useState(location.state ? (location.state as BookingState).freeRooms : []);
     const [step, setStep] = useState(1);
     const [isFormValid, setIsFormValid] = useState(false);
     const [roomType, setRoomType] = useState<RoomType>("standard");
@@ -59,6 +58,7 @@ export default function BookingPage() {
 
     if (!location.state) return null;
     const { guests, arrivalDate, departureDate } = location.state as BookingState;
+
     const sliderStyle = { transform: `translateX(-${(step - 1) * 100}%)` };
 
 
@@ -89,7 +89,7 @@ export default function BookingPage() {
                 />
 
                 <Step2RoomSelection 
-                    roomType={roomType} setRoomType={setRoomType} language={language}
+                    roomType={roomType} setRoomType={setRoomType} language={language} freeRooms={freeRooms}
                     onBack={() => setStep(1)} onNext={() => setStep(3)} 
                 />
 
@@ -97,6 +97,7 @@ export default function BookingPage() {
                     catering={catering} setCatering={setCatering} extras={extras} handleCheckboxChange={handleCheckboxChange} 
                     cateringOptions={CATERING_OPTIONS} extraOptions={EXTRA_OPTIONS} 
                     language={language}
+                    freeRooms={freeRooms}
                     onBack={() => setStep(2)} onNext={() => setStep(4)} 
                 />
 

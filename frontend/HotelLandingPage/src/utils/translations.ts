@@ -6,7 +6,7 @@ export const landingPageText = {
     hu: {
         header: {
             navLinks: ['Szobák', 'Szolgáltatások', 'Galéria', 'Rólunk'],
-            bookNow: 'Foglalás most',
+            bookNow: 'Foglalás',
         },
         hero: {
             title: 'Elegancia minden részletben',
@@ -223,6 +223,7 @@ export const bookingPageText = {
         step3: {
             header: 'Extra igények',
             description: 'Válasszon igényei szerint extra szolgáltatásainkból',
+            extraInfo: 'További teljeskörű szolgáltatásainkból itt tartózkodása alatt kedvére választhat majd.',
             catering: 'Étkezés',
             breakfast: 'Reggeli',
             breakfastNote: '(Az ár tartalmazza)',
@@ -283,6 +284,7 @@ export const bookingPageText = {
         step3: {
             header: 'Extra options',
             description: 'Choose from our extra services according to your needs',
+            extraInfo: 'You can choose from our additional comprehensive services during your stay.',
             catering: 'Catering',
             breakfast: 'Breakfast',
             breakfastNote: '(Included in price)',

@@ -1,5 +1,5 @@
 import s from '../../styles/BookingPage.module.css';
-import { CateringType, ExtraOption } from '../../types/booking';
+import { CateringType, ExtraOption, Room } from '../../types/booking';
 import { bookingPageText } from '../../utils/translations';
 import { Language } from '../../context/LanguageContext';
 
@@ -11,12 +11,13 @@ interface Step3Props {
     cateringOptions: Array<{ id: string }>;
     extraOptions: ExtraOption[];
     language: Language;
+    freeRooms: Room[];
     onBack: () => void;
     onNext: () => void;
 }
 
 export default function Step3ExtraOptions({
-    catering, setCatering, extras, handleCheckboxChange, cateringOptions, extraOptions, language, onBack, onNext
+    catering, setCatering, extras, handleCheckboxChange, cateringOptions, extraOptions, language, freeRooms, onBack, onNext
 }: Step3Props) {
 
     const step3Text = bookingPageText[language].step3;
@@ -59,6 +60,7 @@ export default function Step3ExtraOptions({
                         ))}
                     </div>
                 </div>
+                <div className={s.extraInfo}>{step3Text.extraInfo}</div>
                 <div className={s.buttonContainer}>
                     <button className="btn btn-secondary" onClick={onBack}>
                         {step3Text.prevButton}

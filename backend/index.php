@@ -49,10 +49,17 @@ function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], 
         $whereConditions = [];
         foreach ($_GET as $key => $value) {
             if (in_array($key, $allowedFilters) && $value !== '') {
-                $whereConditions[] = "`$key` = ?";
-                $params[] = $value;
+                
+                if ($key === 'end_of_stay_after') {
+                    $whereConditions[] = "`end_of_stay` > ?"; 
+                    $params[] = $value;
+                } else {
+                    $whereConditions[] = "`$key` = ?";
+                    $params[] = $value;
+                }
             }
         }
+
         if (count($whereConditions) > 0) {
             $sql .= " WHERE " . implode(" AND ", $whereConditions);
         }
@@ -191,13 +198,77 @@ $endpoints = [
     'booking' => [
         'table'   => 'bookings',
         'id'      => 'id',
-        'filters' => ['room_number', 'guest1_email'],
-        'sorts'   => ['beginning_of_stay', 'room_number', 'guest1_email']
+        'filters' => ['room_number', 'guest1_email','end_of_stay_after'],
+        'sorts'   => ['beginning_of_stay', 'room_number', 'guest1_email'],
+        'enums'   => [
+            'room_type' => ['standard','deluxe','suite'],
+            'needs_view' => ['city', 'garden', 'panorama']
+        ]
+    ],
+    'freerooms' => [
+        'filters' => ['end_of_stay_after']  // Ez egy virtuális végpont lesz, ami egy összetett lekérdezést hajt végre a szabad szobák listázásához.
     ]
 ];
 
 if (array_key_exists($resource, $endpoints)) {
     $config = $endpoints[$resource];
+
+    // --- VIRTUÁLIS VÉGPONT: FREEROOMS KEZELÉSE ---
+    if ($resource === 'freerooms') {
+        if ($method !== 'GET') {
+            http_response_code(405);
+            echo json_encode(["error" => "Nem engedélyezett metódus: $method"]);
+            exit;
+        }
+
+        // Rugalmasan elfogadunk többféle elnevezést a dátumokra
+        $start = $_GET['start_date'] ?? $_GET['beginning_of_stay'] ?? null;
+        $end = $_GET['end_date'] ?? $_GET['end_of_stay'] ?? null;
+
+        if (!$start || !$end) {
+            http_response_code(400);
+            echo json_encode(["error" => "A szabad szobák lekérdezéséhez a kezdő (start_date) és végdátum (end_date) megadása kötelező."]);
+            exit;
+        }
+
+        $sql = "SELECT * FROM `rooms` WHERE `room_number` NOT IN (
+                    SELECT DISTINCT `room_number` FROM `bookings` 
+                    WHERE `room_number` IS NOT NULL 
+                        AND `beginning_of_stay` < ? 
+                        AND `end_of_stay` > ?
+                )";
+        $params = [$end, $start]; 
+
+        // a szabad szobák szűrési lehetősége
+        $allowedRoomFilters = ['room_type', 'status', 'bed_type', 'has_balcony'];
+        foreach ($_GET as $key => $value) {
+            if (in_array($key, $allowedRoomFilters) && $value !== '') {
+                $sql .= " AND `$key` = ?";
+                $params[] = $value;
+            }
+        }
+
+        // a szabad szobák rendezési lehetősége
+        $allowedRoomSorts = ['room_number', 'price_per_night', 'floorspace'];
+        if (!empty($_GET['sort']) && in_array($_GET['sort'], $allowedRoomSorts)) {
+            $sortColumn = $_GET['sort'];
+            $direction = (isset($_GET['order']) && strtolower($_GET['order']) === 'desc') ? 'DESC' : 'ASC';
+            $sql .= " ORDER BY `$sortColumn` $direction";
+        }
+
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            $result = $stmt->fetchAll();
+            echo json_encode($result);
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Adatbázis hiba a szabad szobák lekérésekor: " . $e->getMessage()]);
+        }
+        exit; // ne menjen tovább a normál tábla alapú ágra
+    }
+    // --- VIRTUÁLIS VÉGPONT VÉGE ---
+
     $table = $config['table'];
     $idCol = $config['id'];
     

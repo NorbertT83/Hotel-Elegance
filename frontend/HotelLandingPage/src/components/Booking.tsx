@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { landingPageText } from '../utils/translations';
 import { addDays } from '../utils/utils';
+import { Room } from '../types/booking';
+import { getData } from '../api/apiService';
 
 export default function Booking() {
     const navigate = useNavigate();
@@ -18,6 +20,37 @@ export default function Booking() {
         {adult: 1, child: 0},
         {adult: 2, child: 1}
     ]
+
+    async function handleBookingStart() {
+
+        const result = await getData('freerooms', {
+            beginning_of_stay: arrivalDate,
+            end_of_stay: departureDate
+        });
+
+        if (!result) {
+            alert("Hiba történt a szabad szobák lekérésekor. Kérem próbálja újra később.");
+            return;
+        }
+
+        const freeRooms: Room[]  = result as Room[];
+
+        console.log(freeRooms);
+
+        if (!freeRooms || freeRooms.length === 0) {
+            alert("Sajnos erre a dátumra nincs üres szobánk. Kérem válasszon másik időpontot.");
+            return;
+        }
+
+        navigate("/booking", {
+            state: {
+                arrivalDate,
+                departureDate,
+                guests: guestOptionsValue[selectedGuestIndex],
+                freeRooms
+            }
+        })
+    }
 
     function handleArrivalChange(e: React.ChangeEvent<HTMLInputElement>) {
         const newArrival = e.target.value;
@@ -87,15 +120,7 @@ export default function Booking() {
                 </div>
                 <div className="submit-group">
                     <button className="btn btn-primary btn-large"
-                        onClick={() => (
-                            navigate("/booking", {
-                                state: {
-                                    arrivalDate,
-                                    departureDate,
-                                    guests: guestOptionsValue[selectedGuestIndex]
-                                }
-                            })
-                        )}
+                        onClick={handleBookingStart}
                     >
                         {text.submit}
                     </button>
