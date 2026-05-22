@@ -48,6 +48,11 @@ function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], 
     } else {
         $whereConditions = [];
         foreach ($_GET as $key => $value) {
+            if (!$value) {
+                echo json_encode(["error" => "Nincs megadva paraméter."]);
+                exit;
+            }
+
             if (in_array($key, $allowedFilters) && $value !== '') {
                 
                 if ($key === 'end_of_stay_after') {
@@ -179,9 +184,9 @@ $endpoints = [
     ],
     'guest' => [
         'table'   => 'guests',
-        'id'      => 'email',
-        'filters' => ['country', 'loyalty_level'],
-        'sorts'   => ['fname', 'lname', 'country']
+        'id'      => 'id',
+        'filters' => ['city', 'country', 'loyalty_level', 'email'],
+        'sorts'   => ['fname', 'lname', 'country', 'loyalty_level']
     ],
     'employee' => [
         'table'   => 'employees',
@@ -221,7 +226,7 @@ if (array_key_exists($resource, $endpoints)) {
             exit;
         }
 
-        // Rugalmasan elfogadunk többféle elnevezést a dátumokra
+        // Rugalmasan elfogad többféle elnevezést a dátumokra
         $start = $_GET['start_date'] ?? $_GET['beginning_of_stay'] ?? null;
         $end = $_GET['end_date'] ?? $_GET['end_of_stay'] ?? null;
 
@@ -308,7 +313,7 @@ if (array_key_exists($resource, $endpoints)) {
             try {
                 createResource($pdo, $table, $inputData);
                 http_response_code(201); // 201 Created
-                echo json_encode(["message" => "Sikeresen létrehozva."]);
+                echo json_encode(["id" => $pdo->lastInsertId(), "message" => "Sikeresen létrehozva."]);
             } catch (\PDOException $e) {
                 http_response_code(400);
                 echo json_encode(["error" => "Hiba a létrehozás során: " . $e->getMessage()]);

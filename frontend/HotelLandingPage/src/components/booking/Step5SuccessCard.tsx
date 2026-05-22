@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import s from '../../styles/BookingPage.module.css';
 import { bookingPageText } from "../../utils/translations";
-import { Language, useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { useBooking } from "../../context/BookingContext";
+import s from '../../styles/BookingPage.module.css';
 
 
 
 export default function Step5SuccessCard() {
     const navigate = useNavigate();
     const { language } = useLanguage()
-    const { formData } = useBooking();
+    const { bookingState } = useBooking();
     const [bookingId, setBookingId] = useState("");
     const step5Text = bookingPageText[language].step5;
 
@@ -44,7 +44,7 @@ export default function Step5SuccessCard() {
                     </p>
                     <p className={s.infoText}>
                         {step5Text.emailInfo}
-                        <span className={s.highlighted}>{` ${formData.email} `}</span>
+                        <span className={s.highlighted}>{` ${bookingState.formData.email} `}</span>
                         {step5Text.emailInfo2}
                     </p>
                     <p className={s.spamNotice}>

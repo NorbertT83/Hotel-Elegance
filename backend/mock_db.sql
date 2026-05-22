@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Máj 21. 10:56
+-- Létrehozás ideje: 2026. Máj 22. 13:34
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -31,7 +31,6 @@ CREATE TABLE `bookings` (
   `id` int(11) NOT NULL,
   `room_number` smallint(5) UNSIGNED DEFAULT NULL,
   `room_type` enum('standard','deluxe','suite','') NOT NULL,
-  `needs_view` enum('city','garden','panorama','') NOT NULL,
   `guest1_id` int(11) NOT NULL,
   `beginning_of_stay` date NOT NULL,
   `end_of_stay` date NOT NULL CHECK (`end_of_stay` > `beginning_of_stay`),
@@ -47,17 +46,20 @@ CREATE TABLE `bookings` (
 -- A tábla adatainak kiíratása `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `needs_view`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`) VALUES
-(1, 101, '', 'city', 8, '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 1, NULL, NULL, 'breakfast'),
-(2, 102, '', 'city', 7, '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'breakfast'),
-(3, 201, '', 'city', 3, '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 9, NULL, NULL, 'breakfast'),
-(4, 202, '', 'city', 2, '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'breakfast'),
-(5, 103, '', 'city', 4, '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'breakfast'),
-(6, 301, '', 'city', 6, '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 5, NULL, NULL, 'breakfast'),
-(7, 302, '', 'city', 11, '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 10, NULL, NULL, 'breakfast'),
-(8, 203, '', 'city', 15, '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 12, NULL, NULL, 'breakfast'),
-(9, 303, 'deluxe', 'city', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast'),
-(10, 402, 'suite', 'city', 16, '2026-04-10', '2026-04-12', '2026-04-10 12:45:00', '2026-04-12 09:30:00', NULL, NULL, NULL, 'breakfast');
+INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`) VALUES
+(1, 101, '', 8, '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 1, NULL, NULL, 'breakfast'),
+(2, 102, '', 7, '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'breakfast'),
+(3, 201, '', 3, '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 9, NULL, NULL, 'breakfast'),
+(4, 202, '', 2, '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'breakfast'),
+(5, 103, '', 4, '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'breakfast'),
+(6, 301, '', 6, '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 5, NULL, NULL, 'breakfast'),
+(7, 302, '', 11, '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 10, NULL, NULL, 'breakfast'),
+(8, 203, '', 15, '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 12, NULL, NULL, 'breakfast'),
+(9, 303, 'deluxe', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast'),
+(10, 402, 'suite', 16, '2026-05-20', '2026-05-24', '2026-05-20 12:45:00', '0000-00-00 00:00:00', NULL, NULL, NULL, 'breakfast'),
+(11, 401, 'suite', 1, '2026-05-22', '2026-05-26', NULL, NULL, NULL, NULL, NULL, 'halfboard'),
+(12, 403, 'suite', 2, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'fullboard'),
+(15, 303, 'deluxe', 17, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'halfboard');
 
 --
 -- Eseményindítók `bookings`
@@ -152,35 +154,38 @@ CREATE TABLE `guests` (
   `id_card_number` varchar(20) DEFAULT NULL,
   `fname` varchar(50) NOT NULL,
   `lname` varchar(50) NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `country` varchar(50) DEFAULT NULL,
-  `address` text DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `country` varchar(50) NOT NULL,
+  `zip_code` varchar(10) NOT NULL,
+  `city` varchar(40) NOT NULL,
+  `street` varchar(50) NOT NULL,
   `car_plate_number` varchar(10) DEFAULT NULL,
-  `cumulative_nights` int(11) DEFAULT 0,
-  `loyalty_level` int(11) GENERATED ALWAYS AS (least(floor(`cumulative_nights` / 5),10)) STORED
+  `total_nights` int(11) DEFAULT 0,
+  `loyalty_level` int(11) GENERATED ALWAYS AS (least(floor(`total_nights` / 5),10)) STORED
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `guests`
 --
 
-INSERT INTO `guests` (`id`, `email`, `id_card_number`, `fname`, `lname`, `date_of_birth`, `country`, `address`, `car_plate_number`, `cumulative_nights`) VALUES
-(1, 'kovacs.bence2015@gmail.com', 'ID100001', 'Bence', 'Kovács', '2015-06-12', 'Hungary', 'Budapest, Váci út 12.', NULL, 0),
-(2, 'szabo.anna.debrecen@freemail.hu', 'ID100002', 'Anna', 'Szabó', '1990-03-25', 'Hungary', 'Debrecen, Kossuth tér 5.', 'ABC123', 2),
-(3, 'john.smith85@outlook.com', 'ID100003', 'John', 'Smith', '1985-11-02', 'United Kingdom', 'London, Baker Street 221B', NULL, 3),
-(4, 'emma.j.ny@icloud.com', 'ID100004', 'Emma', 'Johnson', '2018-09-14', 'United States', 'New York, 5th Avenue 10.', NULL, 0),
-(5, 'luca.rossi2001@libero.it', 'ID100005', 'Luca', 'Rossi', '2001-07-30', 'Italy', 'Rome, Via Milano 45.', 'XYZ789', 1),
-(6, 'noah.muller78@t-online.de', 'ID100006', 'Noah', 'Müller', '1978-01-19', 'Germany', 'Berlin, Alexanderplatz 3.', 'BER456', 4),
-(7, 'mia.novak.sk@atlas.sk', 'ID100007', 'Mia', 'Novák', '2012-12-05', 'Slovakia', 'Bratislava, Main Street 8.', NULL, 0),
-(8, 'nagy.david95@gmail.com', 'ID100008', 'David', 'Nagy', '1995-05-21', 'Hungary', 'Szeged, Tisza Lajos krt. 22.', 'SZG234', 2),
-(9, 'sophie.dubois.paris@orange.fr', 'ID100009', 'Sophie', 'Dubois', '1988-08-17', 'France', 'Paris, Rue de Rivoli 15.', NULL, 3),
-(10, 'horvath.matej.2010@citromail.hu', 'ID100010', 'Matej', 'Horváth', '2010-04-11', 'Hungary', 'Győr, Baross út 9.', NULL, 1),
-(11, 'oliver.brown.manchester@yahoo.co.uk', 'ID100011', 'Oliver', 'Brown', '2003-02-09', 'United Kingdom', 'Manchester, King St 44.', 'UK1234', 1),
-(12, 'isabella.garcia92@hotmail.es', 'ID100012', 'Isabella', 'Garcia', '1992-10-28', 'Spain', 'Madrid, Gran Via 18.', 'ESP567', 2),
-(13, 'toth.levente80@gmail.com', 'ID100013', 'Levente', 'Tóth', '1980-06-06', 'Hungary', 'Pécs, Király utca 33.', NULL, 5),
-(14, 'ella.williams2016@aol.com', 'ID100014', 'Ella', 'Williams', '2016-01-03', 'United States', 'Los Angeles, Sunset Blvd 77.', NULL, 0),
-(15, 'varga.daniel.miskolc@freemail.hu', 'ID100015', 'Dániel', 'Varga', '1999-09-09', 'Hungary', 'Miskolc, Széchenyi utca 1.', 'MIS999', 2),
-(16, 'szekeres.nora89@gmail.com', 'ID100321', 'Nóra', 'Szekeres', '1989-07-01', 'Hungary', 'Győr, Bajcsi Zs. utca 12.', NULL, 0);
+INSERT INTO `guests` (`id`, `email`, `id_card_number`, `fname`, `lname`, `date_of_birth`, `country`, `zip_code`, `city`, `street`, `car_plate_number`, `total_nights`) VALUES
+(1, 'kovacs.bence2015@gmail.com', 'ID100001', 'Bence', 'Kovács', '2015-06-12', 'Hungary', '', '', 'Budapest, Váci út 12.', NULL, 0),
+(2, 'szabo.anna.debrecen@freemail.hu', 'ID100002', 'Anna', 'Szabó', '1990-03-25', 'Hungary', '', '', 'Debrecen, Kossuth tér 5.', 'ABC123', 2),
+(3, 'john.smith85@outlook.com', 'ID100003', 'John', 'Smith', '1985-11-02', 'United Kingdom', '', '', 'London, Baker Street 221B', NULL, 3),
+(4, 'emma.j.ny@icloud.com', 'ID100004', 'Emma', 'Johnson', '2018-09-14', 'United States', '', '', 'New York, 5th Avenue 10.', NULL, 0),
+(5, 'luca.rossi2001@libero.it', 'ID100005', 'Luca', 'Rossi', '2001-07-30', 'Italy', '', '', 'Rome, Via Milano 45.', 'XYZ789', 1),
+(6, 'noah.muller78@t-online.de', 'ID100006', 'Noah', 'Müller', '1978-01-19', 'Germany', '', '', 'Berlin, Alexanderplatz 3.', 'BER456', 4),
+(7, 'mia.novak.sk@atlas.sk', 'ID100007', 'Mia', 'Novák', '2012-12-05', 'Slovakia', '', '', 'Bratislava, Main Street 8.', NULL, 0),
+(8, 'nagy.david95@gmail.com', 'ID100008', 'David', 'Nagy', '1995-05-21', 'Hungary', '', '', 'Szeged, Tisza Lajos krt. 22.', 'SZG234', 2),
+(9, 'sophie.dubois.paris@orange.fr', 'ID100009', 'Sophie', 'Dubois', '1988-08-17', 'France', '', '', 'Paris, Rue de Rivoli 15.', NULL, 3),
+(10, 'horvath.matej.2010@citromail.hu', 'ID100010', 'Matej', 'Horváth', '2010-04-11', 'Hungary', '', '', 'Győr, Baross út 9.', NULL, 1),
+(11, 'oliver.brown.manchester@yahoo.co.uk', 'ID100011', 'Oliver', 'Brown', '2003-02-09', 'United Kingdom', '', '', 'Manchester, King St 44.', 'UK1234', 1),
+(12, 'isabella.garcia92@hotmail.es', 'ID100012', 'Isabella', 'Garcia', '1992-10-28', 'Spain', '', '', 'Madrid, Gran Via 18.', 'ESP567', 2),
+(13, 'toth.levente80@gmail.com', 'ID100013', 'Levente', 'Tóth', '1980-06-06', 'Hungary', '', '', 'Pécs, Király utca 33.', NULL, 5),
+(14, 'ella.williams2016@aol.com', 'ID100014', 'Ella', 'Williams', '2016-01-03', 'United States', '', '', 'Los Angeles, Sunset Blvd 77.', NULL, 0),
+(15, 'varga.daniel.miskolc@freemail.hu', 'ID100015', 'Dániel', 'Varga', '1999-09-09', 'Hungary', '', '', 'Miskolc, Széchenyi utca 1.', 'MIS999', 2),
+(16, 'szekeres.nora89@gmail.com', 'ID100321', 'Nóra', 'Szekeres', '1989-07-01', 'Hungary', '', '', 'Győr, Bajcsi Zs. utca 12.', NULL, 0),
+(17, 'nrbrt@nrbrt-codes.hu', NULL, 'Norbert', 'Tóth', NULL, 'HU', '1135', 'Budapest', 'Béke tér 1.', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -207,17 +212,17 @@ CREATE TABLE `rooms` (
 
 INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_balcony`, `has_view`, `max_adults`, `extras`, `status`, `price_per_night`) VALUES
 (101, 'standard', 18, 'queen', 0, 'city', 2, '', 'cleaning', 22000),
-(102, 'standard', 20, 'twin', 0, 'city', 2, '', 'occupied', 21000),
+(102, 'standard', 20, 'twin', 1, 'city', 2, '', 'occupied', 21000),
 (103, 'standard', 22, 'queen', 1, 'garden', 2, '', 'needs_cleaning', 24000),
 (201, 'deluxe', 28, 'kingsize', 1, 'garden', 3, '', 'available', 38000),
 (202, 'deluxe', 30, 'kingsize', 1, 'city', 3, '', 'occupied', 42000),
-(203, 'deluxe', 27, 'queen', 1, 'city', 2, '', 'cleaning', 36000),
-(301, 'standard', 28, 'twin', 1, 'garden', 2, '', 'available', 34500),
-(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, '', 'dont_disturb', 42000),
+(203, 'deluxe', 27, 'queen', 1, 'panorama', 2, '', 'cleaning', 36000),
+(301, 'standard', 28, 'twin', 0, 'garden', 2, '', 'available', 34500),
+(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, 'jacuzzi', 'dont_disturb', 42000),
 (303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 29900),
 (401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 76000),
 (402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'unavailable', 76000),
-(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'needs_cleaning', 80000);
+(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'needs_cleaning', 1);
 
 -- --------------------------------------------------------
 
@@ -361,7 +366,7 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT a táblához `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT a táblához `employees`
@@ -373,7 +378,7 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT a táblához `guests`
 --
 ALTER TABLE `guests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT a táblához `services`

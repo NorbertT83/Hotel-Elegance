@@ -1,80 +1,219 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { RoomType, CateringType, FormData, Room, BookingState } from '../types/booking';
+import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import { Room, BookingState, ExtraOption, Guest } from '../types/booking';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { createData, getData } from '../api/apiService';
 
 interface BookingContextProps {
     step: number;
-    arrivalDate: string;
-    departureDate: string;
-    guests: { adult: number; child: number };
-    freeRooms: Room[];
-    roomTypeChosen: RoomType;
-    cateringChosen: CateringType;
-    extrasChosen: Record<string, boolean>;
-    formData: FormData;
-    isFormValid: boolean;
-    setFreeRooms: (rooms: Room[]) => void;
-    setRoomTypeChosen: (type: RoomType) => void;
-    setCateringChosen: (type: CateringType) => void;
+    bookingState: BookingState;
+    filteredRooms: Room[];
+    roomsForSelectedType: Room[];
+    extraOptions: ExtraOption[];
+    setBookingState: React.Dispatch<React.SetStateAction<BookingState>>;
+    setFilteredRooms: React.Dispatch<React.SetStateAction<Room[]>>;
     handleCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     nextStep: () => void;
     prevStep: () => void;
     finishBooking: () => void;
+    isFormValid: boolean;
 }
 
 const BookingContext = createContext<BookingContextProps | undefined>(undefined);
+
+const validate = {
+    name: (val: string) => val.length > 2 && val.length <= 30 && /^[\p{L}\s-]+$/u.test(val),
+    email: (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+    zip: (val: string) => /^[a-zA-Z0-9\s-]{4,10}$/.test(val),
+    city: (val: string) => val.length > 1 && /^[\p{L}\s-]+$/u.test(val),
+    street: (val: string) => val.length > 4 && /^(?=.*\d).+$/.test(val)
+};
+
+export function roomSupportsExtra(room: Room, option: ExtraOption): boolean {
+    if (['latecheckout', 'transfer', 'champagne'].includes(option)) return true;
+    if (option === 'balcony') return room.has_balcony === 1;
+    if (option === 'garden') return room.has_view === 'garden';
+    if (option === 'panorama') return room.has_view === 'panorama';
+    return room.extras?.includes(option) ?? false;
+};
 
 export function BookingProvider({ children }: { children: ReactNode }) {
     const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!location.state) navigate("/");
-    }, [location, navigate]);
+        if (!location.state) {
+            navigate("/");
+        }
+    }, [location.state, navigate]);
 
-    const state = (location.state as BookingState) || { freeRooms: [], guests: { adult: 2, child: 0 }, arrivalDate: "", departureDate: "" };
+    const [bookingState, setBookingState] = useState<BookingState>(() => {
+        const defaultDefaults = {
+            freeRooms: [],
+            guests: { adult: 2, child: 0 },
+            arrivalDate: "",
+            departureDate: "",
+            roomTypeChosen: "standard",
+            cateringChosen: "breakfast",
+            extrasChosen: [],
+            formData: { lname: "", fname: "", email: "", country: "HU", zip: "", city: "", street: "" }
+        };
 
-    const [step, setStep] = useState(1);
-    const [roomTypeChosen, setRoomTypeChosen] = useState<RoomType>("standard");
-    const [freeRooms, setFreeRooms] = useState<Room[]>(state.freeRooms);
-    const [cateringChosen, setCateringChosen] = useState<CateringType>("breakfast");
-    const [extrasChosen, setExtrasChosen] = useState<Record<string, boolean>>({});
-    const [formData, setFormData] = useState<FormData>({
-        lname: "", fname: "", email: "", country: "HU", zip: "", city: "", street: ""
+        if (!location.state) return defaultDefaults as BookingState;
+
+        const incomingState = location.state as Partial<BookingState>;
+
+        return {
+            ...defaultDefaults,
+            ...incomingState,
+            formData: {
+                ...defaultDefaults.formData,
+                ...(incomingState.formData || {})
+            },
+            guests: {
+                ...defaultDefaults.guests,
+                ...(incomingState.guests || {})
+            }
+        } as BookingState;
     });
-    const [isFormValid, setIsFormValid] = useState(false);
 
-    const validate = {
-        name: (val: string) => val.length > 2 && val.length <= 30 && /^[\p{L}\s-]+$/u.test(val),
-        email: (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-        zip: (val: string) => /^[a-zA-Z0-9\s-]{4,10}$/.test(val),
-        city: (val: string) => val.length > 1 && /^[\p{L}\s-]+$/u.test(val),
-        street: (val: string) => val.length > 4 && /^(?=.*\d).+$/.test(val)
-    };
 
-    useEffect(() => {
-        const { lname, fname, email, zip, city, street } = formData;
-        const isValid = validate.name(lname) && validate.name(fname) && validate.email(email) && validate.zip(zip) && validate.city(city) && validate.street(street);
-        setIsFormValid(isValid);
-    }, [formData]);
+    const [filteredRooms, setFilteredRooms] = useState<Room[]>(bookingState.freeRooms);
+    const [step, setStep] = useState(1);
+
+    const isFormValid = useMemo(() => {
+        const { lname, fname, email, zip, city, street } = bookingState.formData;
+        return (
+            validate.name(lname) &&
+            validate.name(fname) &&
+            validate.email(email) &&
+            validate.zip(zip) &&
+            validate.city(city) &&
+            validate.street(street)
+        );
+    }, [bookingState.formData.lname, bookingState.formData.fname, bookingState.formData.email, bookingState.formData.zip, bookingState.formData.city, bookingState.formData.street]);
     
+    const roomsForSelectedType = useMemo(() => {
+        return bookingState.freeRooms.filter(
+            room => room.room_type === bookingState.roomTypeChosen
+        );
+    }, [bookingState.roomTypeChosen, bookingState.freeRooms]);
+
+    const availableExtras = useMemo(() => {
+        const keys: ExtraOption[] = ['balcony', 'garden', 'panorama', 'jacuzzi', 'kitchen'];
+        const result: Record<string, boolean> = {};
+        
+        keys.forEach(key => {
+            result[key] = roomsForSelectedType.some(r => roomSupportsExtra(r, key));
+        });
+        
+        return result;
+    }, [roomsForSelectedType]);
+
+    const extraOptions = useMemo(() => {
+        const baseOptions = ['latecheckout', 'transfer', 'champagne'] as ExtraOption[];
+        
+        const activeExtras = Object.keys(availableExtras).filter(
+            (key) => availableExtras[key as keyof typeof availableExtras]
+        );
+
+        return [...baseOptions, ...activeExtras] as ExtraOption[];
+    }, [availableExtras]);
+
+
     const nextStep = () => setStep(p => p + 1);
     const prevStep = () => setStep(p => p - 1);
     
-    const finishBooking = () => {
-        console.log("Küldés API-nak...", { formData, roomType: roomTypeChosen, catering: cateringChosen, extrasChosen });
-        setStep(5);
+    const finishBooking = async () => {
+        console.log("Küldés API-nak...", { ...bookingState });
+
+        // guest keresése, ha nincs, új guest létrehozása, majd booking létrehozása a guest ID-val
+        let guestid;
+        try {
+            const existingGuestResponse: any[] = await getData('guest', { email: bookingState.formData.email });
+            if (existingGuestResponse && existingGuestResponse.length > 0) {
+                console.log("Létező vendég megtalálva:", existingGuestResponse[0]);
+                guestid = existingGuestResponse[0].id;
+            }
+        } catch {
+            try {
+                const guestResponse = await createData('guest', {
+                    fname: bookingState.formData.fname,
+                    lname: bookingState.formData.lname,
+                    email: bookingState.formData.email,
+                    country: bookingState.formData.country,
+                    zip_code: bookingState.formData.zip,
+                    city: bookingState.formData.city,
+                    street: bookingState.formData.street
+                });
+                if (!guestResponse || !guestResponse.id) {
+                    console.error("Sikertelen foglalás: vendég létrehozása sikertelen");
+                    return;
+                }
+                guestid = guestResponse.id;
+            } catch (err: any){
+                console.error(err.message);
+                return;
+            }
+        }
+        try {
+            if (guestid && guestid != 0) {
+                const createResponse = await createData('booking', {
+                    room_number: filteredRooms[0]?.room_number || null,
+                    room_type: bookingState.roomTypeChosen,
+                    guest1_id: guestid || null,
+                    beginning_of_stay: bookingState.arrivalDate,
+                    end_of_stay: bookingState.departureDate,
+                    catering_level: bookingState.cateringChosen
+                });
+                if (!createResponse || !createResponse.id) {
+                    console.error("Sikertelen foglalás: foglalás létrehozása sikertelen");
+                    return;
+                }
+                console.log("Sikeres foglalás: ", createResponse.id)
+                // TODO 
+                setStep(5);
+            }
+        } catch (err: any){
+            console.log(err.message);
+        }
     };
 
-    
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBookingState(prev => ({
+            ...prev,
+            extrasChosen: prev.extrasChosen.includes(e.target.id as ExtraOption)
+                ? prev.extrasChosen.filter(id => id !== e.target.id)
+                : [...prev.extrasChosen, e.target.id as ExtraOption]
+        }));
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setBookingState(prev => ({
+            ...prev,
+            formData: {
+                ...prev.formData,
+                [name]: value
+            }
+        }));
+    };
+
     return (
         <BookingContext.Provider value={{
-            step, roomTypeChosen, cateringChosen , extrasChosen, formData, isFormValid,
-            freeRooms: state.freeRooms, arrivalDate: state.arrivalDate, departureDate: state.departureDate, guests: state.guests,
-            setFreeRooms,setRoomTypeChosen,  setCateringChosen, nextStep, prevStep, finishBooking,
-            handleCheckboxChange: (e) => setExtrasChosen(p => ({ ...p, [e.target.id]: e.target.checked })),
-            handleInputChange: (e) => setFormData(p => ({ ...p, [e.target.name]: e.target.value }))
+            step, 
+            bookingState, 
+            filteredRooms,
+            roomsForSelectedType,
+            extraOptions,
+            setBookingState, 
+            setFilteredRooms,
+            nextStep, 
+            prevStep, 
+            finishBooking,
+            isFormValid,
+            handleCheckboxChange,
+            handleInputChange
         }}>
             {children}
         </BookingContext.Provider>

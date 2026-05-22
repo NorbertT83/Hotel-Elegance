@@ -1,10 +1,18 @@
 export type RoomType = "standard" | "deluxe" | "suite";
 export type CateringType = "breakfast" | "halfboard" | "fullboard";
-export type ExtraOption = "jacuzzi" | "kitchen";
-
-export interface BookingState { guests: { adult: number; child: number }; arrivalDate: string; departureDate: string; extrasChosen: Record<string, boolean>; roomTypeChosen: RoomType; cateringChosen: CateringType; freeRooms: Room[]; }
-
+export type ExtraOption = "balcony" | "panorama"| "garden" | "jacuzzi" | "kitchen" | "latecheckout" | "transfer" | "champagne";
 export interface FormData { lname: string; fname: string; email: string; country: string; zip: string; city: string; street: string; }
+
+export interface BookingState {
+    guests: { adult: number; child: number };
+    arrivalDate: string;
+    departureDate: string;
+    roomTypeChosen: RoomType;
+    cateringChosen: CateringType;
+    extrasChosen: ExtraOption[];
+    formData: FormData;
+    freeRooms: Room[];
+}
 
 export interface Room {
     room_number: number;
@@ -17,4 +25,15 @@ export interface Room {
     extras: "jacuzzi"|"kitchen";
     status: "available"|"needs_cleaning"|"cleaning"|"occupied"|"dont_disturb"|"under_maintenance"|"unavailable";
     price_per_night: number;
+}
+
+export interface Guest {
+    id: number;
+    lname: string;
+    fname: string;
+    email: string;
+    country: string;
+    zip_code: string;
+    city: string;
+    street: string;
 }

@@ -1,5 +1,6 @@
-//const apiURL:string = "https://nrbrt-codes.hu/hotelmanager/api/";
-const apiURL:string = "http://localhost/api/";
+const apiURL:string = "https://nrbrt-codes.hu/hotelmanager/api/";
+// const apiURL:string = "http://localhost/api/";
+
 
 
 export async function getData<T>(endpoint="" , params: Record<string, string> = {}, timeout = 5000):Promise<T> {
