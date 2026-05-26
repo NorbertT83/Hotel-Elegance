@@ -22,19 +22,18 @@ export default function Step3ExtraOptions() {
 
         const turnsOn = newExtrasChosen.includes(clickedOption);
 
-        // Csak akkor vizsgáljuk az összekapcsolást, ha BEIKXELTSZ valamit (bekapcsolás történt)
         if (turnsOn && ['jacuzzi', 'kitchen'].includes(clickedOption)) {
             const hasOnlyJacuzziRoom = roomsForSelectedType.some(r => roomSupportsExtra(r, 'jacuzzi') && !roomSupportsExtra(r, 'kitchen'));
             const hasOnlyKitchenRoom = roomsForSelectedType.some(r => !roomSupportsExtra(r, 'jacuzzi') && roomSupportsExtra(r, 'kitchen'));
 
-            // Ha a jacuzzit nyomta meg, de nincs CSAK jacuzzis szoba (de van kombinált) -> csapjuk hozzá a konyhát is
+            // Ha a jacuzzit nyomta meg, de nincs CSAK jacuzzis szoba (de van kombinált)
             if (clickedOption === 'jacuzzi' && !hasOnlyJacuzziRoom) {
                 if (!newExtrasChosen.includes('kitchen')) {
                     newExtrasChosen.push('kitchen');
                 }
             }
             
-            // Ha a konyhát nyomta meg, de nincs CSAK konyhás szoba (de van kombinált) -> csapjuk hozzá a jacuzzit is
+            // Ha a konyhát nyomta meg, de nincs CSAK konyhás szoba (de van kombinált)
             if (clickedOption === 'kitchen' && !hasOnlyKitchenRoom) {
                 if (!newExtrasChosen.includes('jacuzzi')) {
                     newExtrasChosen.push('jacuzzi');
@@ -42,7 +41,6 @@ export default function Step3ExtraOptions() {
             }
         }
 
-        // Frissítjük az állapotot az új (akár kibővített) listával
         setBookingState(prev => ({
             ...prev,
             extrasChosen: newExtrasChosen
@@ -111,46 +109,36 @@ export default function Step3ExtraOptions() {
                     <button 
                         className="btn btn-primary" 
                         onClick={() => {
-                            // Alaphelyzet: az adott szobatípus összes szabad szobája
                             const roomsForSelectedType = bookingState.freeRooms.filter(
                                 room => room.room_type === bookingState.roomTypeChosen
                             );
 
-                            // Aktuálisan kiválasztott extrák másolata, amit szükség esetén módosítani fogunk
                             let finalExtrasChosen = [...bookingState.extrasChosen];
 
                             const hasJacuzziChosen = finalExtrasChosen.includes('jacuzzi');
                             const hasKitchenChosen = finalExtrasChosen.includes('kitchen');
 
-                            // Megvizsgáljuk, hogy létezik-e "szigorúan csak az egyik" szoba
                             const hasOnlyJacuzziRoom = roomsForSelectedType.some(r => roomSupportsExtra(r, 'jacuzzi') && !roomSupportsExtra(r, 'kitchen'));
                             const hasOnlyKitchenRoom = roomsForSelectedType.some(r => !roomSupportsExtra(r, 'jacuzzi') && roomSupportsExtra(r, 'kitchen'));
 
-                            // AUTOMATIKUS KORREKCIÓ/BEPIPÁLÁS:
-                            // 1. Ha bejelölte a jacuzzit, de a konyhát nem, ÉS nincs "csak jacuzzis" szoba (de van kombinált)
                             if (hasJacuzziChosen && !hasKitchenChosen && !hasOnlyJacuzziRoom) {
                                 finalExtrasChosen.push('kitchen');
                             }
                             
-                            // 2. Ha bejelölte a konyhát, de a jacuzzit nem, ÉS nincs "csak konyhás" szoba (de van kombinált)
                             if (hasKitchenChosen && !hasJacuzziChosen && !hasOnlyKitchenRoom) {
                                 finalExtrasChosen.push('jacuzzi');
                             }
 
-                            // Ha történt automatikus pipálás, frissítjük a globális állapotot is, hogy a többi lépésnél is így szerepeljen
                             if (finalExtrasChosen.length !== bookingState.extrasChosen.length) {
                                 setBookingState(p => ({ ...p, extrasChosen: finalExtrasChosen }));
                             }
 
-                            // --- SZŰRÉS ---
-                            // Most már a frissített (esetletesen kiterjesztett) extrák alapján szűrünk egzakt módon
                             let matchingRooms = roomsForSelectedType.filter((room) => {
                                 const matchesSelected = finalExtrasChosen.every((chosenExtra) =>
                                     roomSupportsExtra(room, chosenExtra)
                                 );
                                 if (!matchesSelected) return false;
 
-                                // Kizárjuk azokat a szobaszintű extrákat, amiket a javított listában SEM kértünk
                                 const roomLevelOptions: ExtraOption[] = ['jacuzzi', 'kitchen'];
                                 for (const option of roomLevelOptions) {
                                     const isRequested = finalExtrasChosen.includes(option);
@@ -163,8 +151,6 @@ export default function Step3ExtraOptions() {
                                 return true;
                             });
 
-                            // --- FALLBACK (Végső biztonsági háló) ---
-                            // Ha valamiért a szigorú szűrés üres lenne, az engedékeny szűrést alkalmazzuk
                             if (matchingRooms.length === 0) {
                                 matchingRooms = roomsForSelectedType.filter((room) =>
                                     finalExtrasChosen.every((chosenExtra) =>
@@ -173,7 +159,6 @@ export default function Step3ExtraOptions() {
                                 );
                             }
 
-                            // --- LEGNAGYOBB SZOBASZÁMÚ KIVÁLASZTÁSA ---
                             if (matchingRooms.length > 0) {
                                 const sortedRooms = [...matchingRooms].sort((a, b) => b.room_number - a.room_number);
                                 setFilteredRooms([sortedRooms[0]]);

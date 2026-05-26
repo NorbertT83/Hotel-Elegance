@@ -4,7 +4,7 @@ import Header from './components/Header'
 import HomePage from './pages/HomePage'
 import BookingPage from './pages/BookingPage'
 import Footer from './components/Footer'
-import HotelWelcome from './components/HotelWelcome'
+import WelcomeModal from './components/WelcomeModal'
 
 
 function App() {
@@ -12,11 +12,11 @@ function App() {
     <>
         <LanguageProvider>
             <BrowserRouter>
+                <WelcomeModal />
                 <Header />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/booking" element={<BookingPage />} />
-                    <Route path="/welcome" element={<HotelWelcome />} />
                     <Route path="*" element={<HomePage />} />
                 </Routes>
                 <Footer />

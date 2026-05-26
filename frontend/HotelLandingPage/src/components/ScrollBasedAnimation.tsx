@@ -7,21 +7,20 @@ type Props = {
 
 export default function ScrollBasedAnimation({ children }: Props) {
     const [ isVisible, setIsVisible ] = useState(false);
-
-    const domRef =  useRef<HTMLDivElement>(null);
+    const domRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     setIsVisible(true);
-                    if (currentElement) observer.unobserve(currentElement);
+                    observer.unobserve(entry.target);
                 }
             });
         }, {
-            threshold: 0.2
+            rootMargin: "0px 0px -80px 0px",
+            threshold: 0 
         });
-
 
         const currentElement = domRef.current;
 
@@ -30,11 +29,15 @@ export default function ScrollBasedAnimation({ children }: Props) {
         }
 
         return () => {
-            if (currentElement) observer.unobserve(currentElement);
+            if (currentElement) {
+                observer.unobserve(currentElement);
+            }
         }
     }, []);
 
-    return <div ref={domRef} className={ `${s.slideInRight} ${isVisible ? s.visible : ''}` }>
-        {children}
-    </div>
+    return (
+        <div ref={domRef} className={`${s.slideInRight} ${isVisible ? s.visible : ''}`}>
+            {children}
+        </div>
+    );
 }

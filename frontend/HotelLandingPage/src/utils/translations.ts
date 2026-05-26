@@ -85,6 +85,11 @@ export const landingPageText = {
             sectionDescription:
                 'Fedezze fel a gondtalanság új dimenzióját, ahol minden szolgáltatásunk az Ön kényelmét és testi-lelki felfrissülését szolgálja.',
         },
+        aboutus: {
+            title: 'Rólunk',
+            description1: 'A Hotel Elegance megalkotásakor egyetlen cél vezérelt minket: létrehozni egy olyan teret, ahol az időtlen stílus találkozik a kompromisszumok nélküli kényelemmel. Nálunk a luxus nem a hivalkodásban rejlik, hanem a finom részletekben: a tökéletesen sima lepedőben, a gondosan összeállított menüben és a személyzet észrevétlen, mégis mindig jelenlévő gondoskodásában. Lépj be a rohanó hétköznapokból egy olyan világba, ahol a pihenés valóban művészet.',
+            description2: 'A Hotel Elegance az a hely, ahol a stílus és a kényelem találkozik. Nem hiszünk a felesleges bonyodalmakban, csak a hibátlan vendéglátásban. Akár pihenni, akár dolgozni érkezel, nálunk megtalálod a tökéletes egyensúlyt. Tapasztald meg az eleganciát, amit neked teremtettünk!'
+        },
         footer: {
             brandDescription:
                 'A csendes luxus menedéke, amely kifogástalan kiszolgálást és időtlen élményeket nyújt az igényes utazók számára.',
@@ -182,6 +187,11 @@ export const landingPageText = {
             sectionTitle: 'Our services',
             sectionDescription:
                 'Discover a new dimension of serenity, where every service is dedicated to your comfort and the complete renewal of your body and soul.',
+        },
+        aboutus: {
+            title: 'About us',
+            description1: 'When creating Hotel Elegance, we were guided by a single goal: to create a space where timeless style meets uncompromising comfort. For us, luxury isn\'t about showing off; it\'s found in the fine details: the perfectly crisp linens, the carefully curated menu, and the unobtrusive yet ever-present care of our staff. Step out of the everyday rush and into a world where relaxation is truly an art form.',
+            description2: 'Hotel Elegance is where style meets comfort. We don\'t believe in unnecessary complications, only in flawless hospitality. Whether you\'re arriving to relax or to work, you\'ll find the perfect balance here. Experience the elegance we\'ve created for you.'
         },
         footer: {
             brandDescription:

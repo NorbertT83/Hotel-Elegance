@@ -10,7 +10,16 @@ export default function Header() {
     return (
         <header className="header">
             <div className="header-container">
-                <div className="logo"><img src={Logo} alt="Logo" /><HashLink smooth to="/#">Hotel Elegance</HashLink></div>
+                <div className="logo"><img src={Logo} alt="Logo" />
+                    <HashLink smooth to="/#">Hotel Elegance
+                        <span className='stars'>
+                            <span className="material-symbols-outlined stars">star</span>
+                            <span className="material-symbols-outlined stars">star</span>
+                            <span className="material-symbols-outlined stars">star</span>
+                            <span className="material-symbols-outlined stars">star</span>
+                        </span>
+                    </HashLink>
+                </div>
                 <nav className="nav-links">
                     <HashLink smooth to="/#rooms"> {text.navLinks[0]} </HashLink>
                     <HashLink smooth to="/#services"> {text.navLinks[1]} </HashLink>
@@ -22,3 +31,5 @@ export default function Header() {
         </header>
     )
 }
+
+const fillStyle = { fontVariationSettings: "'FILL' 1" }

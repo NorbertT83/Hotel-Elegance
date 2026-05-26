@@ -1,5 +1,6 @@
 const apiURL:string = "https://nrbrt-codes.hu/hotelmanager/api/";
 // const apiURL:string = "http://localhost/api/";
+// const apiURL:string = "http://192.168.2.162/api/";
 
 
 

@@ -3,6 +3,7 @@ import Booking from '../components/Booking';
 import Rooms from '../components/Rooms';
 import Services from '../components/Services';
 import Carousel from '../components/Carousel';
+import AboutUs from '../components/AboutUs';
 import ScrollBasedAnimation from '../components/ScrollBasedAnimation';
 import RoomModal from '../components/RoomModal';
 import { useState } from 'react';
@@ -29,6 +30,7 @@ export default function HomePage() {
             <Services />
         </ScrollBasedAnimation>
         <Carousel />
+        <AboutUs />
         {selectedRoomType && (
             <RoomModal 
                 roomType={selectedRoomType} 

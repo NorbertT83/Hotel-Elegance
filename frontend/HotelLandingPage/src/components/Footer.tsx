@@ -1,3 +1,4 @@
+import { HashLink } from 'react-router-hash-link';
 import { useLanguage } from '../context/LanguageContext';
 import { landingPageText } from '../utils/translations';
 import LanguageSelector from './LanguageSelector';
@@ -10,7 +11,16 @@ export default function Footer() {
         <footer className="footer">
             <div className="footer-container">
                 <div className="footer-brand">
-                    <div className="footer-logo">Hotel Elegance</div>
+                    <div className="footer-logo">
+                        <HashLink smooth to="/#">Hotel Elegance
+                        <span>
+                            <span className="material-symbols-outlined stars">star</span>
+                            <span className="material-symbols-outlined stars">star</span>
+                            <span className="material-symbols-outlined stars">star</span>
+                            <span className="material-symbols-outlined stars">star</span>
+                        </span>
+                        </HashLink>
+                    </div>
                     <p>{text.brandDescription}</p>
                 </div>
                 <div className="footer-links-grid">

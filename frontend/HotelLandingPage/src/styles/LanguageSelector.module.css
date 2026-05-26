@@ -11,6 +11,13 @@
     background-color: transparent;
     border-radius: .5rem;
     background-color: var(--secondary-container);
+    opacity: .5;
+    z-index: 999;
+    transition: opacity .3s ease-in-out;
+}
+
+.languageSelector:hover {
+    opacity: 1;
 }
 
 .languageSelector button {
