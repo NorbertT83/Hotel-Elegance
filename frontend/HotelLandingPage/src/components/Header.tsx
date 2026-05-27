@@ -11,14 +11,7 @@ export default function Header() {
         <header className="header">
             <div className="header-container">
                 <div className="logo"><img src={Logo} alt="Logo" />
-                    <HashLink smooth to="/#">Hotel Elegance
-                        <span className='stars'>
-                            <span className="material-symbols-outlined stars">star</span>
-                            <span className="material-symbols-outlined stars">star</span>
-                            <span className="material-symbols-outlined stars">star</span>
-                            <span className="material-symbols-outlined stars">star</span>
-                        </span>
-                    </HashLink>
+                    <HashLink smooth to="/#">Hotel Elegance</HashLink>
                 </div>
                 <nav className="nav-links">
                     <HashLink smooth to="/#rooms"> {text.navLinks[0]} </HashLink>

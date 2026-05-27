@@ -352,6 +352,30 @@ export const guestPageText = {
             passPlaceholder: "Jelszó...",
             buttonText: "Belépés"
         },
+        guestPage: {
+            sidebarMenuItems: [ 
+                "Áttekintés",
+                "Szobaszerviz",
+                "Wellness",
+                "Kényelmi",
+                "Logisztika",
+            ],
+            menuOverview: {
+                guestCard: {
+                    headerText: "Az Ön adatai",
+                    nameText: "Név:",
+                    emailText: "E-mail:",
+                    addressText: "Cím:",
+                },
+                roomCard: {
+                    headerText: "Szobája jellemzői",
+                },
+            },
+            menuRoomservice: "",
+            menuWellness: "",
+            menuExtras: "",
+            menuLogistics: "",
+        }
     },
 
     en:{
@@ -361,5 +385,29 @@ export const guestPageText = {
             passPlaceholder: "Password...",
             buttonText: "Login"
         },
+        guestPage: {
+            sidebarMenuItems: [ 
+                "Overview",
+                "Roomservice",
+                "Wellness",
+                "Extras",
+                "Logistics",
+            ],
+            menuOverview: {
+                guestCard: {
+                    headerText: "Your personal data",
+                    nameText: "Name:",
+                    emailText: "E-mail:",
+                    addressText: "Address:",
+                },
+                roomCard: {
+                    headerText: "Your Room\'s preferences",
+                },
+            },
+            menuRoomservice: "",
+            menuWellness: "",
+            menuExtras: "",
+            menuLogistics: "",
+        }
     }
 };
