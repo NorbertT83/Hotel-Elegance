@@ -30,7 +30,9 @@ export default function HomePage() {
             <Services />
         </ScrollBasedAnimation>
         <Carousel />
-        <AboutUs />
+        <ScrollBasedAnimation>
+            <AboutUs />
+        </ScrollBasedAnimation>
         {selectedRoomType && (
             <RoomModal 
                 roomType={selectedRoomType} 

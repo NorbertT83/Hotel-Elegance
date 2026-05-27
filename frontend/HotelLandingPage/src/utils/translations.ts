@@ -342,4 +342,24 @@ export const bookingPageText = {
             backButton: 'Back to Homepage'
         }
     }
-}
+};
+
+export const guestPageText = {
+    hu: {
+        loginPage: {
+            h1Text: "Bejelentkezés",
+            emailPlaceholder: "Email-cím...",
+            passPlaceholder: "Jelszó...",
+            buttonText: "Belépés"
+        },
+    },
+
+    en:{
+        loginPage: {
+            h1Text: "Authentication",
+            emailPlaceholder: "Email...",
+            passPlaceholder: "Password...",
+            buttonText: "Login"
+        },
+    }
+};

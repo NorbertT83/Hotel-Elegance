@@ -1,7 +1,14 @@
 import { useEffect, useState, CSSProperties } from 'react';
+import { Link } from 'react-router-dom';
+import { useLocalStorageExpiry } from "../hooks/useLocalStorageExpiry";
 
-export default function WelcomeModal() {
+export default function WelcomeModal(): React.JSX.Element | null {
     const [isAtHotel, setIsAtHotel] = useState(false);
+    const [showWelcomeModal, setShowWelcomeModal] = useLocalStorageExpiry<boolean>(
+        "showWelcomeModal",
+        true,
+        120_000 // 2 hours
+    );
 
     useEffect(() => {
         //fetch('http://192.168.2.162/api/check_ip.php')
@@ -16,19 +23,27 @@ export default function WelcomeModal() {
         .catch(err => console.error("Hiba az IP ellenőrzésekor:", err));
     }, []);
 
-    if (!isAtHotel) return null;
+
+    if (!isAtHotel || !showWelcomeModal) return null;
 
     return (
-        <div style={popupStyle}>
-            <h2>Üdvözöljük a hotelben!</h2>
-            <p>Észleltük, hogy a hotel hálózatát használja.</p>
-            <p>Szeretne bejelentkezni?</p>
-            <button className='btn btn-primary' style={{margin: '1rem 0rem', alignSelf: 'right'}} onClick={() => window.location.href = '/login'}>Bejelentkezés</button>
+        <div style={modalStyle}>
+            <button style={closeButtonStyle} onClick={() => setShowWelcomeModal(false)} aria-label="Bezárás">
+                <span className="material-symbols-outlined">close</span>
+            </button>
+            <h2 style={{color: 'var(--text-on-background)', marginBottom: '.75rem'}}>Üdvözöljük a hotelben!</h2>
+            <p style={{color: 'var(--on-surface-variant)'}}>Észleltük, hogy a hotel hálózatát használja.</p>
+            <p style={{color: 'var(--on-surface-variant)'}}>Extra funkciókat és felhasználói élményt kínálunk.</p>
+            <p style={{color: 'var(--on-surface-variant)'}}>Szeretne bejelentkezni?</p>
+
+            <div style={{margin: '1rem auto', width: '50%'}}>
+                <Link to="/guest/login" className='btn btn-primary' onClick={() => setShowWelcomeModal(false)}>Bejelentkezés</Link>
+            </div>
         </div>
     );
 };
 
-const popupStyle: CSSProperties = {
+const modalStyle: CSSProperties = {
     position: 'fixed',
     bottom: '3.75rem',
     right: '1rem',
@@ -36,6 +51,18 @@ const popupStyle: CSSProperties = {
     color: 'var(--primary)',
     backgroundColor: 'var(--surface-container)',
     boxShadow: '0 0 10px rgba(0,0,0,0.2)',
+    border: '1px solid var(--outline-variant)',
     zIndex: 1000,
     borderRadius: '.5rem'
+};
+
+const closeButtonStyle: CSSProperties= {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    color: 'var(--primary)',
+    border: 'none',
+    top: '1rem',
+    right: '1rem',
+    fontSize: '1rem',
+    cursor: 'pointer'
 };

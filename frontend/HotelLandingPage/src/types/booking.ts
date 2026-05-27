@@ -1,3 +1,5 @@
+import { Country } from "../utils/countries";
+
 export type RoomType = "standard" | "deluxe" | "suite";
 export type CateringType = "breakfast" | "halfboard" | "fullboard";
 export type ExtraOption = "balcony" | "panorama"| "garden" | "jacuzzi" | "kitchen" | "latecheckout" | "transfer" | "champagne";
@@ -28,12 +30,18 @@ export interface Room {
 }
 
 export interface Guest {
-    id: number;
-    lname: string;
-    fname: string;
-    email: string;
-    country: string;
-    zip_code: string;
-    city: string;
-    street: string;
+    id: number,
+    fname: string,
+    lname: string,
+    email: string,
+    id_card_number: string | null,
+    date_of_birth: Date | null,
+    country: Country['name'],
+    zip_code: string,
+    city: string,
+    street: string,
+    car_plate_number: string | null,
+    total_nights: number,
+    loyalty_level: number,
+    role: string
 }

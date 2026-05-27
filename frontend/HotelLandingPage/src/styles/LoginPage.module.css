@@ -1,0 +1,40 @@
+.loginSection {
+    display: grid;
+    width: 100%;
+    justify-content: center;
+    grid-template-columns: 1fr;
+    margin: 10rem auto;
+    padding-inline: 1rem;
+    place-items: center;
+}
+
+.h1Text {
+    margin: 2rem;
+    color: var(--text-on-background);
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem 3rem;
+    gap: 2rem;
+    margin: 0 auto;
+    background-color: var(--surface-container);
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.inputField {
+    width: 100%;
+    font-family: var(--font-body);
+    border: none;
+    border-radius: .25rem;
+    background-color: var(--text-on-background);
+    padding: .625rem 1rem;
+}
+
+.inputField:focus-within {
+    outline: 1px solid var(--primary-container);
+}

@@ -1,0 +1,20 @@
+.guestSection {
+    margin-top: 8rem;
+    max-width: var(--container-max);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 5fr;
+    margin-inline: auto;
+}
+
+.sidebar{
+    background-color: var(--surface-container);
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+}
+
+.content{
+    background-color: var(--surface-container);
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+}
