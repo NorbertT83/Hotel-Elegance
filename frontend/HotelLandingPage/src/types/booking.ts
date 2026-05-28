@@ -6,6 +6,7 @@ export type ExtraOption = "balcony" | "panorama"| "garden" | "jacuzzi" | "kitche
 export interface FormData { lname: string; fname: string; email: string; country: string; zip: string; city: string; street: string; }
 
 export interface BookingState {
+    bookingId: string;
     guests: { adult: number; child: number };
     arrivalDate: string;
     departureDate: string;
@@ -20,7 +21,7 @@ export interface Room {
     room_number: number;
     room_type: RoomType;
     floorspace: number;
-    bedtype: "single"|"twin"|"queen"|"kingsize";
+    bed_type: "single"|"twin"|"queen"|"kingsize";
     has_balcony: number;
     has_view: "city"|"garden"|"panorama";
     max_adults: number;

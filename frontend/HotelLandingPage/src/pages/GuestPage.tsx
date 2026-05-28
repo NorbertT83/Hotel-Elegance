@@ -51,8 +51,8 @@ export default function GuestPage() {
                                 <td rowSpan={3}>{menuOverviewLabels.guestCard.addressText}</td>
                                 <td>{guest.country} {guest.zip_code}</td>
                             </tr>
-                            <tr><td> {guest.city}</td></tr>
-                            <tr><td> {guest.street}</td></tr>
+                            <tr><td>{guest.city}</td></tr>
+                            <tr><td>{guest.street}</td></tr>
 
                         </tbody>
                         </table>
@@ -64,10 +64,10 @@ export default function GuestPage() {
                         {menuOverviewLabels.roomCard.headerText}
                     </div>
                     <div className={s.content}>
-                        <p>{currentRoom?.room_number}</p>
-                        <p>{currentRoom?.floorspace} m2</p>
-                        <p>{currentRoom?.bedtype}</p>
-                        <p>{currentRoom?.status}</p>
+                        <p>Szobaszám: {currentRoom?.room_number}</p>
+                        <p>Terület: {currentRoom?.floorspace} m2</p>
+                        <p>Ágy: {currentRoom?.bed_type}</p>
+                        <p>Állapot: {currentRoom?.status}</p>
                     </div>
                 </div>
 

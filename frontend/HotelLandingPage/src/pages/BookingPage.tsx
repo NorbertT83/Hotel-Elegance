@@ -1,4 +1,4 @@
-import { BookingProvider, useBooking } from "../context/BookingContext";
+import { BookingProcessProvider, useBooking } from "../context/BookingProcessContext";
 import Step1BookingDetails from "../components/booking/Step1BookingDetails";
 import Step2RoomSelection from "../components/booking/Step2RoomSelection";
 import Step3ExtraOptions from "../components/booking/Step3ExtraOptions";
@@ -8,9 +8,9 @@ import s from '../styles/BookingPage.module.css';
 
 export default function BookingPage() {
     return (
-        <BookingProvider>
+        <BookingProcessProvider>
             <BookingSlider />
-        </BookingProvider>
+        </BookingProcessProvider>
     );
 }
 

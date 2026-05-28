@@ -17,7 +17,7 @@ type GuestContextType = {
 };
 
 type BookingResponseDTO = {
-    id: number;
+    id: string;
     room_number: number;
     room_type: RoomType;
     guest1_id: number;
@@ -29,7 +29,7 @@ type BookingResponseDTO = {
 }
 
 type BookingContextType = {
-    id: number,
+    id: string,
     roomNumber: Room['room_number'],
     roomType: RoomType,
     guestId: Guest['id'],
@@ -62,30 +62,73 @@ export const GuestProvider = ({ children }: Props) => {
     const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     
-    async function fetchGuestById(id: string) {
-        const guest: Guest = await getData(`guest/${id}`);
-        guest.role = "guest";
-        return guest
+    async function fetchBookingAndRoom(password: string) {
+        setIsLoading(true);
+        try {
+            const bookingResponse: BookingResponseDTO = await getData(`booking/${password}`);
+
+            if (bookingResponse) {
+                const activeBooking: BookingContextType = mapBookingDTOToState(bookingResponse);
+
+                if (activeBooking.roomNumber) {
+                    const roomData: Room = await getData(`room/${activeBooking.roomNumber}`);
+                    return [activeBooking, roomData]
+                }
+                return null;
+            }
+        } catch (error) {
+            console.error("Hiba a foglalási adatok lekérése közben:", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    async function fetchGuestByEmail(email: string) {
-        const data: Guest[] = await getData('guest', {email});
-        const guest = data[0];
-        guest.role = "guest";
-        return guest
+    async function checkLoginCredentials(email: string, password: string) {
+        console.log(password);
+        const guestResponse: Guest[] = await getData('guest', {email});
+        if (!guestResponse) {
+            console.log('Nincs Guest');
+            return null;
+        }
+        const guestData = guestResponse[0];
+        guestData.role = "guest";
+
+        const result = await fetchBookingAndRoom(password);
+
+        if (!result) {
+            return null;
+        }
+
+        const [fetchedBooking, fetchedRoom] = result as [BookingContextType, Room];
+
+        if (!fetchedBooking || fetchedBooking.id !== password) {
+            console.log('Nincs Booking');
+            return null;
+        }
+
+        setCurrentBooking(fetchedBooking);
+        localStorage.setItem('booking_id', fetchedBooking.id);
+        setCurrentRoom(fetchedRoom);
+
+        console.log(fetchedBooking);
+        console.log(fetchedRoom);
+
+        return guestData
     }
 
     useEffect(() => {
         const initGuest = async () => {
-            const savedId = localStorage.getItem("guest_id");
+            const savedGuestId = localStorage.getItem("guest_id");
+            const savedBookingId = localStorage.getItem("booking_id");
             
-            if (savedId) {
+            if (savedGuestId && savedBookingId) {
                 try {
-                    const user = await fetchGuestById(savedId);
+                    const user = await checkLoginCredentials(savedGuestId, savedBookingId);
                     setGuest(user);
                 } catch (error) {
                     console.error("Nem sikerült a vendég betöltése:", error);
                     localStorage.removeItem("guest_id");
+                    localStorage.removeItem("booking_id");
                 }
             }
 
@@ -95,45 +138,12 @@ export const GuestProvider = ({ children }: Props) => {
         initGuest();
     }, []);
 
-
-    useEffect(() => {
-        const fetchBookingAndRoom = async () => {
-            if (!guest) {
-                setCurrentBooking(null);
-                setCurrentRoom(null);
-                return;
-            }
-
-            setIsLoading(true);
-            try {
-                const bookingData: BookingResponseDTO[] = await getData('booking', {"guest1_id": String(guest.id) });
-                
-                if (bookingData && bookingData.length > 0) {
-                    const activeBooking: BookingContextType = mapBookingDTOToState(bookingData[0]);
-                    setCurrentBooking(activeBooking);
-                    console.log(activeBooking);
-
-                    if (activeBooking.roomNumber) {
-                        const roomData: Room = await getData(`room/${activeBooking.roomNumber}`);
-                        setCurrentRoom(roomData);
-                        console.log(roomData);
-                    }
-                }
-            } catch (error) {
-                console.error("Hiba a foglalási adatok lekérése közben:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchBookingAndRoom();
-    }, [guest]);
-
-
-    
     async function login(email: string, password: string) {
         setIsLoading(true);
-        const newUser = await fetchGuestByEmail(email);
+        const newUser = await checkLoginCredentials(email, password);
+        if (!newUser) {
+            return
+        }
         setGuest(newUser); 
         localStorage.setItem("guest_id", String(newUser.id));
         setIsLoading(false);
@@ -141,7 +151,10 @@ export const GuestProvider = ({ children }: Props) => {
 
     const logout = () => {
         setGuest(null);
+        setCurrentBooking(null);
+        setCurrentRoom(null);
         localStorage.removeItem("guest_id");
+        localStorage.removeItem("booking_id");
     };
 
     return (

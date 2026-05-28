@@ -1,25 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { bookingPageText } from "../../utils/translations";
 import { useLanguage } from "../../context/LanguageContext";
-import { useBooking } from "../../context/BookingContext";
+import { useBooking } from "../../context/BookingProcessContext";
 import s from '../../styles/BookingPage.module.css';
-
-
 
 export default function Step5SuccessCard() {
     const navigate = useNavigate();
     const { language } = useLanguage()
-    const { bookingState } = useBooking();
-    const [bookingId, setBookingId] = useState("");
+    const { bookingState, setBookingState } = useBooking();
+    const [copied, setCopied] = useState(false);
     const step5Text = bookingPageText[language].step5;
 
-    // Foglalási szám generálása a komponens betöltődésekor (pl: HE-2026-A1B2)
-    useEffect(() => {
-        const year = new Date().getFullYear();
-        const randomHex = Math.random().toString(36).substring(2, 6).toUpperCase();
-        setBookingId(`HE-${year}-${randomHex}`);
-    }, []);
+    async function copyToClipboard() {
+        try {
+            await navigator.clipboard.writeText(bookingState.bookingId);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error("Sikertelen másolás: ", err);
+        }
+    };
 
     return (
         <div className={s.cardContainer}>
@@ -37,8 +38,10 @@ export default function Step5SuccessCard() {
                     <p>
                         <span>{step5Text.bookingId}</span>
                         <span className={s.bookingId}>
-                            {bookingId}
-                            <button className="material-symbols-outlined">content_copy</button>
+                            {bookingState.bookingId}
+                            <button className="material-symbols-outlined" style={{ color: copied ? "green" : "" }} onClick={copyToClipboard}>
+                                {copied ? 'check' : 'content_copy'}
+                            </button>
                         </span>
                         
                     </p>
@@ -51,7 +54,6 @@ export default function Step5SuccessCard() {
                         {step5Text.spamNotice}
                     </p>
                 </div>
-
 
                 <div className={s.buttonContainer}>
                     <button className="btn btn-primary" onClick={() => navigate("/")}>

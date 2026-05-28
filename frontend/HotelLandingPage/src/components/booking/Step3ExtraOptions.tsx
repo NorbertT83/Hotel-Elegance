@@ -2,7 +2,7 @@ import s from '../../styles/BookingPage.module.css';
 import { CateringType, ExtraOption } from '../../types/booking';
 import { bookingPageText } from '../../utils/translations';
 import { useLanguage } from '../../context/LanguageContext';
-import { roomSupportsExtra, useBooking } from '../../context/BookingContext';
+import { roomSupportsExtra, useBooking } from '../../context/BookingProcessContext';
 
 export default function Step3ExtraOptions() {
     const { language } = useLanguage();

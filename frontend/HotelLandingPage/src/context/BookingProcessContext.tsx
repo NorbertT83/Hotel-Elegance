@@ -1,3 +1,4 @@
+import { customAlphabet } from 'nanoid';
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { Room, BookingState, ExtraOption } from '../types/booking';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -19,7 +20,9 @@ interface BookingContextProps {
     isFormValid: boolean;
 }
 
-const BookingContext = createContext<BookingContextProps | undefined>(undefined);
+const BookingProcessContext = createContext<BookingContextProps | undefined>(undefined);
+
+const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4);
 
 const validate = {
     name: (val: string) => val.length > 2 && val.length <= 30 && /^[\p{L}\s-]+$/u.test(val),
@@ -37,7 +40,7 @@ export function roomSupportsExtra(room: Room, option: ExtraOption): boolean {
     return room.extras?.includes(option) ?? false;
 };
 
-export function BookingProvider({ children }: { children: ReactNode }) {
+export function BookingProcessProvider({ children }: { children: ReactNode }) {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -49,6 +52,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
     const [bookingState, setBookingState] = useState<BookingState>(() => {
         const defaultDefaults = {
+            bookingId: "",
             freeRooms: [],
             guests: { adult: 2, child: 0 },
             arrivalDate: "",
@@ -160,7 +164,12 @@ export function BookingProvider({ children }: { children: ReactNode }) {
         }
         try {
             if (guestid && guestid != 0) {
-                const createResponse = await createData('booking', {
+                // Foglalási szám generálása (pl: HE-2026-A1B2)
+                const year = new Date(bookingState.arrivalDate).getFullYear();
+                setBookingState(prev => ({...prev, bookingId: `HE-${year}-${nanoid()}`}));
+
+                const createBookingResponse = await createData('booking', {
+                    id: bookingState.bookingId,
                     room_number: filteredRooms[0]?.room_number || null,
                     room_type: bookingState.roomTypeChosen,
                     guest1_id: guestid || null,
@@ -168,12 +177,11 @@ export function BookingProvider({ children }: { children: ReactNode }) {
                     end_of_stay: bookingState.departureDate,
                     catering_level: bookingState.cateringChosen
                 });
-                if (!createResponse || !createResponse.id) {
+                if (!createBookingResponse || !createBookingResponse.id) {
                     console.error("Sikertelen foglalás: foglalás létrehozása sikertelen");
                     return;
                 }
-                console.log("Sikeres foglalás: ", createResponse.id)
-                // TODO 
+                console.log("Sikeres foglalás: ", createBookingResponse.id);
                 setStep(5);
             }
         } catch (err: any){
@@ -202,7 +210,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <BookingContext.Provider value={{
+        <BookingProcessContext.Provider value={{
             step, 
             bookingState, 
             filteredRooms,
@@ -218,12 +226,12 @@ export function BookingProvider({ children }: { children: ReactNode }) {
             handleInputChange
         }}>
             {children}
-        </BookingContext.Provider>
+        </BookingProcessContext.Provider>
     );
 }
 
 export const useBooking = () => {
-    const context = useContext(BookingContext);
+    const context = useContext(BookingProcessContext);
     if (!context) throw new Error("useBooking must be used within a BookingProvider");
     return context;
 };

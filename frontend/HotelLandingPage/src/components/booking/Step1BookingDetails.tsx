@@ -2,7 +2,7 @@ import { HashLink } from "react-router-hash-link";
 import { getNameOfDay } from '../../utils/utils';
 import { bookingPageText } from '../../utils/translations';
 import { useLanguage } from "../../context/LanguageContext";
-import { useBooking } from "../../context/BookingContext";
+import { useBooking } from "../../context/BookingProcessContext";
 import s from '../../styles/BookingPage.module.css';
 
 

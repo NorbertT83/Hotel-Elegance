@@ -349,7 +349,7 @@ export const guestPageText = {
         loginPage: {
             h1Text: "Bejelentkezés",
             emailPlaceholder: "Email-cím...",
-            passPlaceholder: "Jelszó...",
+            passPlaceholder: "Foglalási azonosító...",
             buttonText: "Belépés"
         },
         guestPage: {
@@ -382,7 +382,7 @@ export const guestPageText = {
         loginPage: {
             h1Text: "Authentication",
             emailPlaceholder: "Email...",
-            passPlaceholder: "Password...",
+            passPlaceholder: "Booking ID...",
             buttonText: "Login"
         },
         guestPage: {

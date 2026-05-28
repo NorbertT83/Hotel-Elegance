@@ -1,5 +1,5 @@
 import { useLanguage } from '../../context/LanguageContext';
-import { useBooking } from '../../context/BookingContext';
+import { useBooking } from '../../context/BookingProcessContext';
 import { bookingPageText } from '../../utils/translations';
 import s from '../../styles/BookingPage.module.css';
 import { RoomType } from '../../types/booking';

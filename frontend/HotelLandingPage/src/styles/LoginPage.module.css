@@ -26,6 +26,13 @@
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+.loginForm > div {
+    width: 100%;
+    display: inline-flex;
+    text-wrap: nowrap;
+    align-items: center;
+    gap: .5rem;
+}
 .inputField {
     width: 100%;
     font-family: var(--font-body);
