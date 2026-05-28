@@ -7,7 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 
 
 export default function GuestPage() {
-    const { guest, isLoading, logout } = useGuest();
+    const { guest, currentBooking, currentRoom, isLoading, logout } = useGuest();
     const { language } = useLanguage();
     const sidebarMenuItems = guestPageText[language].guestPage.sidebarMenuItems;
     const menuOverviewLabels = guestPageText[language].guestPage.menuOverview
@@ -38,6 +38,7 @@ export default function GuestPage() {
                     </div>
                     <div className={s.content}>
                         <table>
+                        <tbody>
                             <tr>
                                 <td>{menuOverviewLabels.guestCard.nameText}</td>
                                 <td>{guest.lname} {guest.fname}</td>
@@ -53,6 +54,7 @@ export default function GuestPage() {
                             <tr><td> {guest.city}</td></tr>
                             <tr><td> {guest.street}</td></tr>
 
+                        </tbody>
                         </table>
                     </div>
                 </div>
@@ -62,8 +64,10 @@ export default function GuestPage() {
                         {menuOverviewLabels.roomCard.headerText}
                     </div>
                     <div className={s.content}>
-                        <p>Room Card</p>
-                        <p>Room number</p>
+                        <p>{currentRoom?.room_number}</p>
+                        <p>{currentRoom?.floorspace} m2</p>
+                        <p>{currentRoom?.bedtype}</p>
+                        <p>{currentRoom?.status}</p>
                     </div>
                 </div>
 

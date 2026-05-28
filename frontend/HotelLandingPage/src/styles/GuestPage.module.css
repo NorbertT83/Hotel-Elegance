@@ -58,7 +58,7 @@
 .card {
     background-color: var(--surface-container);
     border-radius: .5rem;
-    border: 1px solid transparent;
+    border: 1px solid var(--secondary-container);
     height: max-content;
     transition: border .25s linear;
 }

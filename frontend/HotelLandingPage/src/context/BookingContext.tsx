@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
-import { Room, BookingState, ExtraOption, Guest } from '../types/booking';
+import { Room, BookingState, ExtraOption } from '../types/booking';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createData, getData } from '../api/apiService';
 
@@ -56,6 +56,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
             roomTypeChosen: "standard",
             cateringChosen: "breakfast",
             extrasChosen: [],
+            roomAssigned: {} as Room,
             formData: { lname: "", fname: "", email: "", country: "HU", zip: "", city: "", street: "" }
         };
 
@@ -126,9 +127,10 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     
     const finishBooking = async () => {
         console.log("Küldés API-nak...", { ...bookingState });
-
+        
         // guest keresése, ha nincs, új guest létrehozása, majd booking létrehozása a guest ID-val
         let guestid;
+
         try {
             const existingGuestResponse: any[] = await getData('guest', { email: bookingState.formData.email });
             if (existingGuestResponse && existingGuestResponse.length > 0) {

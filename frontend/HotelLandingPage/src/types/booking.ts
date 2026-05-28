@@ -19,7 +19,7 @@ export interface BookingState {
 export interface Room {
     room_number: number;
     room_type: RoomType;
-    floor_space: number;
+    floorspace: number;
     bedtype: "single"|"twin"|"queen"|"kingsize";
     has_balcony: number;
     has_view: "city"|"garden"|"panorama";

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Máj 22. 13:34
+-- Létrehozás ideje: 2026. Máj 28. 13:58
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -39,27 +39,31 @@ CREATE TABLE `bookings` (
   `guest2_id` int(11) DEFAULT NULL,
   `guest3_id` int(11) DEFAULT NULL,
   `guest4_id` int(11) DEFAULT NULL,
-  `catering_level` enum('breakfast','halfboard','fullboard','') NOT NULL DEFAULT 'breakfast'
+  `catering_level` enum('breakfast','halfboard','fullboard','') NOT NULL DEFAULT 'breakfast',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`) VALUES
-(1, 101, '', 8, '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 1, NULL, NULL, 'breakfast'),
-(2, 102, '', 7, '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'breakfast'),
-(3, 201, '', 3, '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 9, NULL, NULL, 'breakfast'),
-(4, 202, '', 2, '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'breakfast'),
-(5, 103, '', 4, '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'breakfast'),
-(6, 301, '', 6, '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 5, NULL, NULL, 'breakfast'),
-(7, 302, '', 11, '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 10, NULL, NULL, 'breakfast'),
-(8, 203, '', 15, '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 12, NULL, NULL, 'breakfast'),
-(9, 303, 'deluxe', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast'),
-(10, 402, 'suite', 16, '2026-05-20', '2026-05-24', '2026-05-20 12:45:00', '0000-00-00 00:00:00', NULL, NULL, NULL, 'breakfast'),
-(11, 401, 'suite', 1, '2026-05-22', '2026-05-26', NULL, NULL, NULL, NULL, NULL, 'halfboard'),
-(12, 403, 'suite', 2, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'fullboard'),
-(15, 303, 'deluxe', 17, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'halfboard');
+INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`, `created_at`) VALUES
+(1, 101, '', 8, '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 1, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(2, 102, '', 7, '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(3, 201, '', 3, '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 9, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(4, 202, '', 2, '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(5, 103, '', 4, '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(6, 301, '', 6, '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 5, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(7, 302, '', 11, '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 10, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(8, 203, '', 15, '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 12, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(9, 303, 'deluxe', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(10, 402, 'suite', 16, '2026-05-20', '2026-05-24', '2026-05-20 12:45:00', '0000-00-00 00:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+(11, 401, 'suite', 1, '2026-05-22', '2026-05-26', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
+(12, 403, 'suite', 2, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-05-28 11:37:01'),
+(15, 303, 'deluxe', 17, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
+(20, 201, 'deluxe', 18, '2026-05-26', '2026-05-28', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
+(21, 302, 'deluxe', 19, '2026-05-26', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-05-28 11:37:01'),
+(22, 303, 'deluxe', 18, '2026-05-28', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01');
 
 --
 -- Eseményindítók `bookings`
@@ -185,7 +189,9 @@ INSERT INTO `guests` (`id`, `email`, `id_card_number`, `fname`, `lname`, `date_o
 (14, 'ella.williams2016@aol.com', 'ID100014', 'Ella', 'Williams', '2016-01-03', 'United States', '', '', 'Los Angeles, Sunset Blvd 77.', NULL, 0),
 (15, 'varga.daniel.miskolc@freemail.hu', 'ID100015', 'Dániel', 'Varga', '1999-09-09', 'Hungary', '', '', 'Miskolc, Széchenyi utca 1.', 'MIS999', 2),
 (16, 'szekeres.nora89@gmail.com', 'ID100321', 'Nóra', 'Szekeres', '1989-07-01', 'Hungary', '', '', 'Győr, Bajcsi Zs. utca 12.', NULL, 0),
-(17, 'nrbrt@nrbrt-codes.hu', NULL, 'Norbert', 'Tóth', NULL, 'HU', '1135', 'Budapest', 'Béke tér 1.', NULL, 0);
+(17, 'nrbrt@nrbrt-codes.hu', NULL, 'Norbert', 'Tóth', NULL, 'HU', '1135', 'Budapest', 'Béke tér 1.', NULL, 0),
+(18, 'ntoth.gbam@gmail.com', NULL, 'Norbert', 'Tóth', NULL, 'HU', '2310', 'Szigetszentmiklós', 'Nyomdász utca 8', NULL, 0),
+(19, 'norbert.toth83@gmail.com', NULL, 'Norbert', 'Tóth', NULL, 'HU', '9072', 'Nagyszentjános', 'Galagonya u. 16', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -231,41 +237,59 @@ INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_
 --
 
 CREATE TABLE `servicebookings` (
+  `id` int(11) NOT NULL,
   `booking_id` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT current_timestamp(),
-  `quantity` int(11) NOT NULL CHECK (`quantity` > 0)
+  `requested_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `quantity` int(11) UNSIGNED NOT NULL,
+  `status` enum('created','pending','completed','deleted') NOT NULL DEFAULT 'created',
+  `price_at_booking` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `servicebookings`
 --
 
-INSERT INTO `servicebookings` (`booking_id`, `service_id`, `timestamp`, `quantity`) VALUES
-(1, 1, '2026-04-01 15:00:00', 1),
-(1, 6, '2026-04-01 19:30:00', 2),
-(2, 2, '2026-04-02 10:00:00', 1),
-(2, 3, '2026-04-02 09:00:00', 1),
-(3, 4, '2026-04-03 08:00:00', 1),
-(3, 6, '2026-04-03 20:00:00', 1),
-(4, 11, '2026-04-04 14:00:00', 1),
-(4, 12, '2026-04-04 16:00:00', 1),
-(4, 13, '2026-04-04 17:30:00', 1),
-(5, 5, '2026-04-05 11:00:00', 2),
-(5, 7, '2026-04-05 13:00:00', 1),
-(6, 8, '2026-04-06 18:00:00', 3),
-(6, 9, '2026-04-06 14:00:00', 1),
-(6, 10, '2026-04-06 14:00:00', 1),
-(7, 1, '2026-04-07 15:30:00', 2),
-(7, 14, '2026-04-07 17:00:00', 1),
-(8, 15, '2026-04-08 09:00:00', 2),
-(8, 17, '2026-04-08 10:30:00', 2),
-(9, 6, '2026-04-09 20:00:00', 1),
-(9, 11, '2026-04-09 18:00:00', 1),
-(9, 12, '2026-04-09 16:00:00', 1),
-(10, 3, '2026-04-10 08:00:00', 1),
-(10, 6, '2026-04-10 19:00:00', 2),
-(10, 16, '2026-04-10 09:00:00', 1);
+INSERT INTO `servicebookings` (`id`, `booking_id`, `service_id`, `requested_at`, `updated_at`, `quantity`, `status`, `price_at_booking`) VALUES
+(1, 1, 1, '2026-04-01 15:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(2, 1, 6, '2026-04-01 19:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(3, 2, 2, '2026-04-02 10:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(4, 2, 3, '2026-04-02 09:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(5, 3, 4, '2026-04-03 08:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(6, 3, 6, '2026-04-03 20:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(7, 4, 11, '2026-04-04 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(8, 4, 12, '2026-04-04 16:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(9, 4, 13, '2026-04-04 17:30:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(10, 5, 5, '2026-04-05 11:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(11, 5, 7, '2026-04-05 13:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(12, 6, 8, '2026-04-06 18:00:00', '2026-05-28 12:46:14', 3, 'completed', 0),
+(13, 6, 9, '2026-04-06 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(14, 6, 10, '2026-04-06 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(15, 7, 1, '2026-04-07 15:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(16, 7, 14, '2026-04-07 17:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(17, 8, 15, '2026-04-08 09:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(18, 8, 17, '2026-04-08 10:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(19, 9, 6, '2026-04-09 20:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(20, 9, 11, '2026-04-09 18:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(21, 9, 12, '2026-04-09 16:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(22, 10, 3, '2026-04-10 08:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(23, 10, 6, '2026-04-10 19:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(24, 10, 16, '2026-04-10 09:00:00', '2026-05-28 12:45:16', 1, 'completed', 0);
+
+--
+-- Eseményindítók `servicebookings`
+--
+DELIMITER $$
+CREATE TRIGGER `before_servicebookings_insert` BEFORE INSERT ON `servicebookings` FOR EACH ROW BEGIN
+    SET NEW.price_at_booking = (
+        SELECT price 
+        FROM services 
+        WHERE id = NEW.service_id
+    );
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -277,7 +301,7 @@ CREATE TABLE `services` (
   `id` int(11) NOT NULL,
   `name_hu` varchar(50) NOT NULL,
   `description_hu` mediumtext DEFAULT NULL,
-  `price` int(10) UNSIGNED NOT NULL,
+  `price` int(11) UNSIGNED NOT NULL,
   `service_type_hu` enum('Wellness','Extrák','Logisztika') DEFAULT NULL,
   `name_en` varchar(50) DEFAULT NULL,
   `description_en` mediumtext DEFAULT NULL,
@@ -349,8 +373,9 @@ ALTER TABLE `rooms`
 -- A tábla indexei `servicebookings`
 --
 ALTER TABLE `servicebookings`
-  ADD PRIMARY KEY (`booking_id`,`service_id`,`timestamp`),
-  ADD KEY `fk_servicebookings_service` (`service_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_servicebookings_service` (`service_id`),
+  ADD KEY `fk_booking_id` (`booking_id`);
 
 --
 -- A tábla indexei `services`
@@ -366,7 +391,7 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT a táblához `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT a táblához `employees`
@@ -378,7 +403,13 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT a táblához `guests`
 --
 ALTER TABLE `guests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT a táblához `servicebookings`
+--
+ALTER TABLE `servicebookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT a táblához `services`
@@ -404,6 +435,8 @@ ALTER TABLE `bookings`
 -- Megkötések a táblához `servicebookings`
 --
 ALTER TABLE `servicebookings`
+  ADD CONSTRAINT `fk_booking_id` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`),
+  ADD CONSTRAINT `fk_service_id` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`),
   ADD CONSTRAINT `fk_servicebookings_booking` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_servicebookings_service` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON UPDATE CASCADE;
 COMMIT;
