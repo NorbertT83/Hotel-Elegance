@@ -7,21 +7,20 @@ import { useGuest } from '../context/GuestContext';
 import { guestPageText } from '../utils/translations';
 import LanguageSelector from '../components/LanguageSelector';
 
-export default function LoginPage() {
+export default function GuestLoginPage() {
     const { language } = useLanguage();
     const [email, setEmail] = useState('');
+    const [bookingId1stHalf, setBookingId1stHalf] = useState('');
     const [bookingId2ndHalf, setBookingId2ndHalf] = useState('');
     const { login } = useGuest();
     const navigate = useNavigate();
 
     const labels = guestPageText[language].loginPage
 
-    const bookingId1stHalf = `HE-${new Date().getFullYear()}-`;
-
-    const handleLogin = (e: React.SubmitEvent<HTMLFormElement>) => {
+    async function handleLogin(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         if (email.trim()) {
-            login(email, `${bookingId1stHalf}${bookingId2ndHalf}`);
+            await login(email, `HE-${bookingId1stHalf}-${bookingId2ndHalf}`);
         }
         navigate('/guest');
     };
@@ -40,7 +39,16 @@ export default function LoginPage() {
                     placeholder={labels.emailPlaceholder}
                 />
                 <div>
-                    <strong>{bookingId1stHalf}</strong>
+                    <strong>HE -</strong>
+
+                    <input 
+                        className={s.inputField}
+                        type="text"
+                        maxLength={4}
+                        value={bookingId1stHalf}
+                        onChange={(e) => setBookingId1stHalf(e.target.value)}
+                        placeholder='20xx'
+                    />-
                     <input 
                         className={s.inputField}
                         type="password"

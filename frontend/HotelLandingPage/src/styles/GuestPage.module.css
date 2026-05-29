@@ -5,15 +5,17 @@
     gap: 1.5rem;
     margin-top: 8rem;
     margin-inline: auto;
+    padding-inline: 1rem;
 }
 
-.guestSection ul {
+.guestSection nav {
     margin: 0;
     padding: 0;
     list-style-type: none;
 }
 
 .sidebar {
+    min-height: 80vh;
     background-color: var(--surface-container-low);
     color: var(--text-on-background);
     border: 1px solid var(--outline-variant);
@@ -21,7 +23,7 @@
     padding: 2rem;
 }
 
-.sidebar ul {
+.sidebar nav {
     display: grid;
     grid-template-columns: 1fr;
     width: 100%;
@@ -42,66 +44,6 @@
     filter: drop-shadow(0 0 16px var(--primary));
 }
 
-.cardWrapper {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    gap: 1.5rem;
-    width: 100%;
-    height: 80vh;
-    margin: 0 auto;
-    background-color: var(--surface-container-low);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    border: 1px solid var(--outline-variant);
-}
-
-.card {
-    background-color: var(--surface-container);
-    border-radius: .5rem;
-    border: 1px solid var(--secondary-container);
-    height: max-content;
-    transition: border .25s linear;
-}
-
-.card:hover {
-    border: 1px solid var(--outline-variant);
-}
-
-.cardHeader {
-    background-color: var(--secondary-container);
-    border-top-left-radius: .5rem;
-    border-top-right-radius: .5rem;
-    color: var(--on-surface-variant);
-    padding: 1rem;
-    text-decoration: underline 1px;
-    text-underline-offset: 8px;
-    font-variant: small-caps;
-    font-size: 1.25rem;
-    overflow: hidden;
-}
-
-.guestCard .content{
-    padding: 1rem;
-}
-
-.guestCard .content table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.guestCard .content tr {
-    padding: .5rem;
-    border: 1px solid var(--secondary-container);
-}
-
-.guestCard .content td {
-    padding: .5rem;
-    border: 1px solid var(--secondary-container);
-}
-
-.roomCard .content{
-    padding: 1rem;
-}
 
 @media screen and (max-width: 1024px) {
     .guestSection {
@@ -111,18 +53,15 @@
         width: 100%;
     }
     .sidebar {
+        width: min(768px, 95vw);
+        min-height: auto;
         padding: .5rem 1rem;
         margin: 0 auto;
-        width: min(768px, 95vw);
     }
-    .sidebar ul {
+    .sidebar nav {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     }
     .sidebar li {
         font-size: .8rem;
-    }
-
-    .cardWrapper {
-        width: 95vw;
     }
 }

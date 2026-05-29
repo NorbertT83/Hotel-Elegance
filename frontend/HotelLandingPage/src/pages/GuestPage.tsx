@@ -1,77 +1,49 @@
+import s from '../styles/GuestPage.module.css'
+
 import { useState } from 'react';
 import { useGuest } from '../context/GuestContext'
 import { Navigate } from 'react-router-dom'
-import s from '../styles/GuestPage.module.css'
 import { guestPageText } from '../utils/translations';
 import { useLanguage } from '../context/LanguageContext';
 
+import Overview from './guest/Overview'
+import RoomService from './guest/RoomService';
+import Wellness from './guest/Wellness';
+import Extras from './guest/Extras';
+import Logistics from './guest/Logistics';
+
+const PAGES = [Overview, RoomService, Wellness, Extras, Logistics];
 
 export default function GuestPage() {
-    const { guest, currentBooking, currentRoom, isLoading, logout } = useGuest();
+    const { guest, currentBooking, isLoading } = useGuest();
     const { language } = useLanguage();
     const sidebarMenuItems = guestPageText[language].guestPage.sidebarMenuItems;
-    const menuOverviewLabels = guestPageText[language].guestPage.menuOverview
     const [menuIndexSelected, setMenuIndexSelected] = useState<number>(0);
 
     if (isLoading) {
         return <div>Betöltés...</div>;
     }
 
-    if (!guest) {
+    if (!guest || !currentBooking) {
         return <Navigate to="/guest/login" />;
     }
+
+    const ActivePage = PAGES[menuIndexSelected] || Overview;
     
     return (
         <div className={s.guestSection}>
-            <div className={s.sidebar}>
-                <ul>
+            <aside className={s.sidebar}>
+                <nav>
                     {sidebarMenuItems.map((item, index) => (
-                        <li key={item} className={ menuIndexSelected===index ? s.selected : '' } onClick={() => setMenuIndexSelected(index)}>{item.toLocaleUpperCase()}</li>
+                        <li key={item} className={ menuIndexSelected===index ? s.selected : '' }
+                            onClick={() => setMenuIndexSelected(index)}>{item.toLocaleUpperCase()}
+                        </li>
                     ))}
-                </ul>
-            </div>
-            <div className={s.cardWrapper}>
+                </nav>
+            </aside>
 
-                <div className={`${s.card} ${s.guestCard}`}>
-                    <div className={s.cardHeader}>
-                        {menuOverviewLabels.guestCard.headerText}
-                    </div>
-                    <div className={s.content}>
-                        <table>
-                        <tbody>
-                            <tr>
-                                <td>{menuOverviewLabels.guestCard.nameText}</td>
-                                <td>{guest.lname} {guest.fname}</td>
-                            </tr>
-                            <tr>
-                                <td>{menuOverviewLabels.guestCard.emailText}</td>
-                                <td>{guest.email}</td>
-                            </tr>
-                            <tr>
-                                <td rowSpan={3}>{menuOverviewLabels.guestCard.addressText}</td>
-                                <td>{guest.country} {guest.zip_code}</td>
-                            </tr>
-                            <tr><td>{guest.city}</td></tr>
-                            <tr><td>{guest.street}</td></tr>
+            <ActivePage />
 
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div className={`${s.card} ${s.roomCard}`}>
-                    <div className={s.cardHeader}>
-                        {menuOverviewLabels.roomCard.headerText}
-                    </div>
-                    <div className={s.content}>
-                        <p>Szobaszám: {currentRoom?.room_number}</p>
-                        <p>Terület: {currentRoom?.floorspace} m2</p>
-                        <p>Ágy: {currentRoom?.bed_type}</p>
-                        <p>Állapot: {currentRoom?.status}</p>
-                    </div>
-                </div>
-
-            </div>
         </div>
     );
 }

@@ -1,0 +1,73 @@
+.cardWrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    grid-auto-rows: max-content;
+    margin: 0 auto;
+    background-color: var(--surface-container-low);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--outline-variant);
+}
+
+.card {
+    background-color: var(--surface-container);
+    border-radius: .5rem;
+    border: 1px solid var(--secondary-container);
+    height: max-content;
+    transition: border .25s linear;
+}
+
+.card:hover {
+    border: 1px solid var(--outline-variant);
+}
+
+.cardHeader {
+    background-color: var(--secondary-container);
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+    color: var(--on-surface-variant);
+    padding: 1rem;
+    text-decoration: underline 1px;
+    text-underline-offset: 8px;
+    font-variant: small-caps;
+    font-size: 1.25rem;
+    overflow: hidden;
+}
+
+.guestCard .content{
+    display: grid;
+    width: 100%;
+    grid-template-columns: max-content 3fr;
+    gap: .5rem 1rem;
+    padding: 1rem;
+}
+
+.span3 {
+    grid-row: span 3;
+}
+
+.truncate {
+    min-width: 0;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.roomCard .content{
+    padding: 1rem;
+}
+
+.bookingCard .content{
+    padding: 1rem;
+}
+
+@media screen and (max-width: 1024px) {
+    .cardWrapper {
+        width: 95vw;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+    }
+}

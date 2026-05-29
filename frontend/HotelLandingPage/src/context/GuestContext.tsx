@@ -72,7 +72,7 @@ export const GuestProvider = ({ children }: Props) => {
 
                 if (activeBooking.roomNumber) {
                     const roomData: Room = await getData(`room/${activeBooking.roomNumber}`);
-                    return [activeBooking, roomData]
+                    return { fetchedBooking: activeBooking, fetchedRoom: roomData };
                 }
                 return null;
             }
@@ -83,8 +83,8 @@ export const GuestProvider = ({ children }: Props) => {
         }
     };
 
-    async function checkLoginCredentials(email: string, password: string) {
-        console.log(password);
+    async function checkLoginCredentials(email: string, bookingIdAsPassword: string) {
+        console.log(bookingIdAsPassword);
         const guestResponse: Guest[] = await getData('guest', {email});
         if (!guestResponse) {
             console.log('Nincs Guest');
@@ -93,25 +93,22 @@ export const GuestProvider = ({ children }: Props) => {
         const guestData = guestResponse[0];
         guestData.role = "guest";
 
-        const result = await fetchBookingAndRoom(password);
+        const result = await fetchBookingAndRoom(bookingIdAsPassword);
 
-        if (!result) {
-            return null;
-        }
+        if (!result) return null;
 
-        const [fetchedBooking, fetchedRoom] = result as [BookingContextType, Room];
+        const {fetchedBooking, fetchedRoom} = result;
 
-        if (!fetchedBooking || fetchedBooking.id !== password) {
+        if (fetchedBooking.id !== bookingIdAsPassword) {
             console.log('Nincs Booking');
             return null;
         }
 
+        if (fetchedBooking.checkout || fetchedBooking.guestId !== guestData.id) return null;
+
         setCurrentBooking(fetchedBooking);
         localStorage.setItem('booking_id', fetchedBooking.id);
         setCurrentRoom(fetchedRoom);
-
-        console.log(fetchedBooking);
-        console.log(fetchedRoom);
 
         return guestData
     }
@@ -123,12 +120,18 @@ export const GuestProvider = ({ children }: Props) => {
             
             if (savedGuestId && savedBookingId) {
                 try {
-                    const user = await checkLoginCredentials(savedGuestId, savedBookingId);
-                    setGuest(user);
+                    const guestResponse: Guest = await getData(`guest/${savedGuestId}`);
+                    if (!guestResponse) return;
+
+                    const user = await checkLoginCredentials(guestResponse.email, savedBookingId);
+                    if (user) {
+                        setGuest(user);
+                    } else {
+                        logout();
+                    }
                 } catch (error) {
                     console.error("Nem sikerült a vendég betöltése:", error);
-                    localStorage.removeItem("guest_id");
-                    localStorage.removeItem("booking_id");
+                    logout();
                 }
             }
 
@@ -138,9 +141,9 @@ export const GuestProvider = ({ children }: Props) => {
         initGuest();
     }, []);
 
-    async function login(email: string, password: string) {
+    async function login(email: string, bookingIdAsPassword: string) {
         setIsLoading(true);
-        const newUser = await checkLoginCredentials(email, password);
+        const newUser = await checkLoginCredentials(email, bookingIdAsPassword);
         if (!newUser) {
             return
         }

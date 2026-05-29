@@ -6,7 +6,7 @@ import Step4PersonalData from "../components/booking/Step4PersonalData";
 import Step5SuccessCard from "../components/booking/Step5SuccessCard";
 import s from '../styles/BookingPage.module.css';
 
-export default function BookingPage() {
+export default function BookingProcessPage() {
     return (
         <BookingProcessProvider>
             <BookingSlider />

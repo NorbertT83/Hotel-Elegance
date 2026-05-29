@@ -19,8 +19,8 @@
     
     --container-max: 1280px;
     --section-gap: 120px;
-    --margin-mobile: 20px;
-    --margin-desktop: 64px;
+    --margin-mobile: 16px;
+    --margin-desktop: 48px;
 }
 
 * {
@@ -31,8 +31,21 @@
 
 html {
     scroll-behavior: smooth;
+    scrollbar-color: var(--primary) var(--surface-container-low);
     overflow-x: hidden;
     max-width: 100%;
+}
+::-webkit-scrollbar-thumb:hover {
+    filter: brightness(0.8);
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 100px;
+    border: 2px solid var(--surface-container-low);
+}
+::-webkit-scrollbar-track {
+    background: var(--surface-container-low);
+    border-radius: 100px;
 }
 
 body {
@@ -121,7 +134,7 @@ h1, h2, h3, .logo, .footer-logo {
     background-color: rgba(19, 19, 19, 0.8);
     backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(82, 68, 57, 0.2);
-    padding: 24px var(--margin-mobile);
+    padding: 1.5rem var(--margin-mobile);
     transition: all 0.3s ease;
 }
 
@@ -136,10 +149,11 @@ h1, h2, h3, .logo, .footer-logo {
 .logo {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: .5rem;
     font-size: 24px;
     color: var(--primary);
     letter-spacing: -0.02em;
+    text-wrap-mode: nowrap;
 }
 
 .logo img {
@@ -560,7 +574,7 @@ h1, h2, h3, .logo, .footer-logo {
 
 @media (min-width: 768px) {
     .header {
-        padding-inline: var(--margin-desktop);
+        padding-inline: 1rem;
     }
 
     .nav-links {
