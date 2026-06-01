@@ -354,7 +354,8 @@ export const guestPageText = {
             errorMessages: {
                 noEmailOrBookingId: 'Kérem, adja meg az email címét és a foglalási azonosítóját.',
                 noMatchingEmailOrBooking: 'Nincs egyező foglalás. Kérem, ellenőrizze az adatokat és próbálja újra.',
-                bookingExpired: 'Ez a foglalás már lezárult.'
+                bookingExpired: 'Ez a foglalás már lezárult.',
+                network: 'Váratlan hiba történt a bejelentkezés során. Kérem, próbálja újra később.',
             }
         },
         guestPage: {
@@ -392,7 +393,8 @@ export const guestPageText = {
             errorMessages: {
                 noEmailOrBookingId: "Please enter your email address and booking ID.",
                 noMatchingEmailOrBooking: "No matching booking found. Please check your details and try again.",
-                bookingExpired: "This booking has already expired."
+                bookingExpired: "This booking has already expired.",
+                network: "An unexpected error occurred during login. Please try again later.",
             }
         },
         guestPage: {

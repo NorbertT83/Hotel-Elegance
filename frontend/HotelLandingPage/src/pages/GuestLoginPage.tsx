@@ -21,8 +21,14 @@ export default function GuestLoginPage() {
     async function handleLogin(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         if (email.trim() && bookingId1stHalf.trim() && bookingId2ndHalf.trim()) {
-            await login(email.trim(), `HE-${bookingId1stHalf}-${bookingId2ndHalf}`);
+            const result = await login(email.trim(), `HE-${bookingId1stHalf}-${bookingId2ndHalf}`);
+
+            if (!result.success) {
+                setError(labels.errorMessages[result.errorType as keyof typeof labels.errorMessages]);
+                return;
+            }
         }
+        
         navigate('/guest');
     };
 

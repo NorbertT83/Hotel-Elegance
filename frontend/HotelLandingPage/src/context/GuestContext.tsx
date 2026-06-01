@@ -1,18 +1,21 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { BookingState, CateringType, Guest, Room, RoomType } from '../types/booking';
+import { CateringType, Guest, Room, RoomType } from '../types/booking';
 import { getData } from '../api/apiService';
 
 type Props = {
     children: React.ReactNode;
 };
 
+export type LoginResult = 
+    | { success: true } 
+    | { success: false; errorType: 'noMatchingEmailOrBooking' | 'bookingExpired' | 'network' | string };
 
 type GuestContextType = {
     guest: Guest | null;
     currentBooking: BookingContextType | null;
     currentRoom: Room | null;
     isLoading: boolean;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, bookingIdAsPassword: string) => Promise<LoginResult>;
     logout: () => void;
 };
 
@@ -62,10 +65,36 @@ export const GuestProvider = ({ children }: Props) => {
     const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     
-    async function fetchBookingAndRoom(password: string) {
+    useEffect(() => {
+        const initGuest = async () => {
+            const savedGuestId = localStorage.getItem("guest_id");
+            const savedBookingId = localStorage.getItem("booking_id");
+            
+            if (savedGuestId && savedBookingId) {
+                try {
+                    const guestResponse: Guest = await getData(`guest/${savedGuestId}`);
+                    if (!guestResponse) return;
+
+                    const result = await login(guestResponse.email, savedBookingId);
+                    if (!result.success) {
+                        logout();
+                    }
+                } catch (error) {
+                    console.error("Nem sikerült a mentett vendég betöltése:", error);
+                    logout();
+                }
+            }
+
+            setIsLoading(false);
+        };
+
+        initGuest();
+    }, []);
+
+        async function fetchBookingAndRoom(bookingId: string) {
         setIsLoading(true);
         try {
-            const bookingResponse: BookingResponseDTO = await getData(`booking/${password}`);
+            const bookingResponse: BookingResponseDTO = await getData(`booking/${bookingId}`);
 
             if (bookingResponse) {
                 const activeBooking: BookingContextType = mapBookingDTOToState(bookingResponse);
@@ -78,77 +107,48 @@ export const GuestProvider = ({ children }: Props) => {
             }
         } catch (error) {
             console.error("Hiba a foglalási adatok lekérése közben:", error);
+            return null;
         } finally {
             setIsLoading(false);
         }
     };
 
-    async function checkLoginCredentials(email: string, bookingIdAsPassword: string) {
-        console.log(bookingIdAsPassword);
-        const guestResponse: Guest[] = await getData('guest', {email});
-        if (!guestResponse) {
-            console.log('Nincs Guest');
-            return null;
-        }
-        const guestData = guestResponse[0];
-        guestData.role = "guest";
+    async function login(email: string, bookingIdAsPassword: string): Promise<LoginResult> {
+        setIsLoading(true);
+        try {
+            const guestResponse: Guest[] = await getData('guest', {email});
 
-        const result = await fetchBookingAndRoom(bookingIdAsPassword);
+            if (!guestResponse) {
+                return {success: false, errorType: 'noMatchingEmailOrBooking'};
+            }
+            const guestData = guestResponse[0];
+            guestData.role = "guest";
 
-        if (!result) return null;
+            const result = await fetchBookingAndRoom(bookingIdAsPassword);
 
-        const {fetchedBooking, fetchedRoom} = result;
+            if (!result) return { success: false, errorType: 'noMatchingEmailOrBooking' };
 
-        if (fetchedBooking.id !== bookingIdAsPassword || fetchedBooking.guestId !== guestData.id) {
-            return null;
-        }
+            const {fetchedBooking, fetchedRoom} = result;
 
-        if (fetchedBooking.checkout || fetchedBooking.departureDate < new Date()) return null;
-
-        setCurrentBooking(fetchedBooking);
-        localStorage.setItem('booking_id', fetchedBooking.id);
-        setCurrentRoom(fetchedRoom);
-
-        return guestData;
-    }
-
-    useEffect(() => {
-        const initGuest = async () => {
-            const savedGuestId = localStorage.getItem("guest_id");
-            const savedBookingId = localStorage.getItem("booking_id");
-            
-            if (savedGuestId && savedBookingId) {
-                try {
-                    const guestResponse: Guest = await getData(`guest/${savedGuestId}`);
-                    if (!guestResponse) return;
-
-                    const user = await checkLoginCredentials(guestResponse.email, savedBookingId);
-                    if (user) {
-                        setGuest(user);
-                    } else {
-                        logout();
-                    }
-                } catch (error) {
-                    console.error("Nem sikerült a vendég betöltése:", error);
-                    logout();
-                }
+            if (fetchedBooking.id !== bookingIdAsPassword || fetchedBooking.guestId !== guestData.id) {
+                return { success: false, errorType: 'noMatchingEmailOrBooking' };
             }
 
+            if (fetchedBooking.checkout || fetchedBooking.departureDate < new Date())
+                return { success: false, errorType: 'bookingExpired' };
+
+            setGuest(guestData);
+            setCurrentBooking(fetchedBooking);
+            setCurrentRoom(fetchedRoom);
+            localStorage.setItem("guest_id", String(guestData.id));
+            localStorage.setItem('booking_id', fetchedBooking.id);
+            return { success: true };
+        } catch (error) {
+            console.error("Hiba a bejelentkezés során:", error);
+            return { success: false, errorType: "network" };
+        } finally {
             setIsLoading(false);
-        };
-
-        initGuest();
-    }, []);
-
-    async function login(email: string, bookingIdAsPassword: string) {
-        setIsLoading(true);
-        const newUser = await checkLoginCredentials(email, bookingIdAsPassword);
-        if (!newUser) {
-            return
         }
-        setGuest(newUser); 
-        localStorage.setItem("guest_id", String(newUser.id));
-        setIsLoading(false);
     };
 
     const logout = () => {
