@@ -99,18 +99,17 @@ export const GuestProvider = ({ children }: Props) => {
 
         const {fetchedBooking, fetchedRoom} = result;
 
-        if (fetchedBooking.id !== bookingIdAsPassword) {
-            console.log('Nincs Booking');
+        if (fetchedBooking.id !== bookingIdAsPassword || fetchedBooking.guestId !== guestData.id) {
             return null;
         }
 
-        if (fetchedBooking.checkout || fetchedBooking.guestId !== guestData.id) return null;
+        if (fetchedBooking.checkout || fetchedBooking.departureDate < new Date()) return null;
 
         setCurrentBooking(fetchedBooking);
         localStorage.setItem('booking_id', fetchedBooking.id);
         setCurrentRoom(fetchedRoom);
 
-        return guestData
+        return guestData;
     }
 
     useEffect(() => {

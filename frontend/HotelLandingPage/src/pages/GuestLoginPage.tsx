@@ -12,6 +12,7 @@ export default function GuestLoginPage() {
     const [email, setEmail] = useState('');
     const [bookingId1stHalf, setBookingId1stHalf] = useState('');
     const [bookingId2ndHalf, setBookingId2ndHalf] = useState('');
+    const [error, setError] = useState<string | null>(null);
     const { login } = useGuest();
     const navigate = useNavigate();
 
@@ -19,8 +20,8 @@ export default function GuestLoginPage() {
 
     async function handleLogin(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (email.trim()) {
-            await login(email, `HE-${bookingId1stHalf}-${bookingId2ndHalf}`);
+        if (email.trim() && bookingId1stHalf.trim() && bookingId2ndHalf.trim()) {
+            await login(email.trim(), `HE-${bookingId1stHalf}-${bookingId2ndHalf}`);
         }
         navigate('/guest');
     };
@@ -29,6 +30,7 @@ export default function GuestLoginPage() {
         <div className={s.loginSection}>
             <LanguageSelector />
             <h1 className={s.h1Text}>{labels.h1Text}</h1>
+            {error && <div className='errorMessage'>{error}</div>}
             <form className={s.loginForm} onSubmit={handleLogin}>
                 <input 
                     className={s.inputField}
