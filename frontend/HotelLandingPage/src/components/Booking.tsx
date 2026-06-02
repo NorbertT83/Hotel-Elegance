@@ -4,7 +4,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { landingPageText } from '../utils/translations';
 import { addDays } from '../utils/utils';
 import { Room } from '../types/booking';
-import { getData } from '../api/apiService';
+import { getData } from '../services/apiService';
 
 export default function Booking() {
     const navigate = useNavigate();

@@ -50,3 +50,10 @@
 .inputField:focus-within {
     outline: 1px solid var(--primary-container);
 }
+
+.errorMessage {
+    color: var(--error);
+    font-size: .875rem;
+    text-align: center;
+    margin-bottom: 1rem;;
+}

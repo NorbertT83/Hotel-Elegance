@@ -17,9 +17,13 @@ export default function BookingProcessPage() {
 function BookingSlider() {
     const { step } = useBooking();
     const sliderStyle = { transform: `translateX(-${(step - 1) * 100}%)` };
+    const progressStepStyle = { width: `calc(${(step - 1) * 25}% + 2px)` };
 
     return (
         <section className={s.bookingSection}>
+            <div className={s.progressBar}>
+                <div className={s.progressStep} style={progressStepStyle}></div>
+            </div>
             <div className={s.slider} style={sliderStyle}>
                 <Step1BookingDetails />
                 <Step2RoomSelection />

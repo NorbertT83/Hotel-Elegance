@@ -17,3 +17,27 @@ export function addDays(dateString:string, days:number) {
 
     return `${yyyy}-${mm}-${dd}`;
 }
+
+export interface TokenPayload {
+    guestId: number;
+    bookingId: string;
+    exp: number;
+    iat: number;
+}
+
+export function parseJwt(token: string): TokenPayload | null {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            window.atob(base64)
+                .split('')
+                .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+        );
+        return JSON.parse(jsonPayload) as TokenPayload;
+    } catch (error) {
+        console.error("Érvénytelen JWT token formátum", error);
+        return null;
+    }
+}

@@ -352,9 +352,11 @@ export const guestPageText = {
             passPlaceholder: "Foglalási azonosító...",
             buttonText: "Belépés",
             errorMessages: {
+                onlyNumbers: 'Kérem, csak számokat adjon meg ebben a mezőben.',
+                allFieldsRequired: 'Kérem, töltse ki az összes mezőt.',
                 noEmailOrBookingId: 'Kérem, adja meg az email címét és a foglalási azonosítóját.',
                 noMatchingEmailOrBooking: 'Nincs egyező foglalás. Kérem, ellenőrizze az adatokat és próbálja újra.',
-                bookingExpired: 'Ez a foglalás már lezárult.',
+                bookingExpired: 'Ez a foglalás már lezárult. További módosítás nem lehetséges.',
                 network: 'Váratlan hiba történt a bejelentkezés során. Kérem, próbálja újra később.',
             }
         },
@@ -391,9 +393,11 @@ export const guestPageText = {
             passPlaceholder: "Booking ID...",
             buttonText: "Login",
             errorMessages: {
+                onlyNumbers: "Please enter only numbers for the year.",
+                allFieldsRequired: "Please fill in all fields.",
                 noEmailOrBookingId: "Please enter your email address and booking ID.",
                 noMatchingEmailOrBooking: "No matching booking found. Please check your details and try again.",
-                bookingExpired: "This booking has already expired.",
+                bookingExpired: "This booking has already expired. Further access is not possible.",
                 network: "An unexpected error occurred during login. Please try again later.",
             }
         },

@@ -1,6 +1,7 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { CateringType, Guest, Room, RoomType } from '../types/booking';
-import { getData } from '../api/apiService';
+import { getData, createData, apiServiceConfig, tryToRefreshToken } from '../services/apiService';
+import { parseJwt } from '../utils/utils';
 
 type Props = {
     children: React.ReactNode;
@@ -15,6 +16,8 @@ type GuestContextType = {
     currentBooking: BookingContextType | null;
     currentRoom: Room | null;
     isLoading: boolean;
+    accessToken: string | null;
+    setAccessToken: (token: string | null) => void;
     login: (email: string, bookingIdAsPassword: string) => Promise<LoginResult>;
     logout: () => void;
 };
@@ -64,103 +67,118 @@ export const GuestProvider = ({ children }: Props) => {
     const [currentBooking, setCurrentBooking] = useState<BookingContextType | null>(null);
     const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    
-    useEffect(() => {
-        const initGuest = async () => {
-            const savedGuestId = localStorage.getItem("guest_id");
-            const savedBookingId = localStorage.getItem("booking_id");
-            
-            if (savedGuestId && savedBookingId) {
-                try {
-                    const guestResponse: Guest = await getData(`guest/${savedGuestId}`);
-                    if (!guestResponse) return;
+    const [accessToken, setAccessToken] = useState<string | null>(null);
 
-                    const result = await login(guestResponse.email, savedBookingId);
-                    if (!result.success) {
-                        logout();
-                    }
-                } catch (error) {
-                    console.error("Nem sikerült a mentett vendég betöltése:", error);
-                    logout();
-                }
+    const logout = useCallback(() => {
+        setGuest(null);
+        setAccessToken(null);
+        setCurrentBooking(null);
+        setCurrentRoom(null);
+    }, []);
+
+    useEffect(() => {
+        apiServiceConfig.setLogoutCallback(logout);
+        apiServiceConfig.setTokenRefreshCallback((newToken) => {
+            setAccessToken(newToken);
+        });
+    }, [logout]);
+
+    useEffect(() => {
+        apiServiceConfig.setToken(accessToken);
+    }, [accessToken]);
+
+    const hydrateAppState = useCallback(async (token: string) => {
+        const payload = parseJwt(token);
+        if (!payload) {
+            logout();
+            return false;
+        }
+
+        try {
+            const guestResponse: Guest = await getData(`guest/${payload.guestId}`);
+            if (!guestResponse) {
+                logout();
+                return false;
             }
 
-            setIsLoading(false);
+            const bookingResponse: BookingResponseDTO = await getData(`booking/${payload.bookingId}`);
+            if (!bookingResponse) {
+                logout();
+                return false;
+            }
+
+            const activeBooking: BookingContextType = mapBookingDTOToState(bookingResponse);
+            let roomData: Room | null = null;
+
+            if (activeBooking.roomNumber) {
+                roomData = await getData(`room/${activeBooking.roomNumber}`);
+            }
+
+            setGuest({ ...guestResponse, role: "guest" });
+            setCurrentBooking(activeBooking);
+            setCurrentRoom(roomData);
+            return true;
+
+        } catch (error) {
+            console.error("Hiba az adatok hidratálása során:", error);
+            logout();
+            return false;
+        }
+    }, [logout]);
+
+    useEffect(() => {
+        const initGuest = async () => {
+            setIsLoading(true);
+            try {
+                const token = await tryToRefreshToken();
+                
+                if (token) {
+                    setAccessToken(token);
+                    await hydrateAppState(token);
+                } else {
+                    logout();
+                }
+            } catch (error) {
+                logout();
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         initGuest();
-    }, []);
-
-        async function fetchBookingAndRoom(bookingId: string) {
-        setIsLoading(true);
-        try {
-            const bookingResponse: BookingResponseDTO = await getData(`booking/${bookingId}`);
-
-            if (bookingResponse) {
-                const activeBooking: BookingContextType = mapBookingDTOToState(bookingResponse);
-
-                if (activeBooking.roomNumber) {
-                    const roomData: Room = await getData(`room/${activeBooking.roomNumber}`);
-                    return { fetchedBooking: activeBooking, fetchedRoom: roomData };
-                }
-                return null;
-            }
-        } catch (error) {
-            console.error("Hiba a foglalási adatok lekérése közben:", error);
-            return null;
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }, [hydrateAppState, logout]);
 
     async function login(email: string, bookingIdAsPassword: string): Promise<LoginResult> {
         setIsLoading(true);
         try {
-            const guestResponse: Guest[] = await getData('guest', {email});
+            // A backend endpoint (POST /auth/login) ellenőrzi az emailt és a booking_id-t.
+            // Siker esetén beállítja a Refresh Token Cookie-t és VISSZAADJA az Access Tokent!
+            const res = await createData<{ email: string; bookingId: string }, { success: boolean; accessToken?: string; errorType?: string }>(
+                'auth/login', 
+                { email, bookingId: bookingIdAsPassword }
+            );
 
-            if (!guestResponse) {
-                return {success: false, errorType: 'noMatchingEmailOrBooking'};
+            if (res.success && res.accessToken) {
+                setAccessToken(res.accessToken);
+                
+                const success = await hydrateAppState(res.accessToken);
+                if (success) {
+                    return { success: true };
+                }
             }
-            const guestData = guestResponse[0];
-            guestData.role = "guest";
+            
+            return { success: false, errorType: res.errorType || 'noMatchingEmailOrBooking' };
 
-            const result = await fetchBookingAndRoom(bookingIdAsPassword);
-
-            if (!result) return { success: false, errorType: 'noMatchingEmailOrBooking' };
-
-            const {fetchedBooking, fetchedRoom} = result;
-
-            if (fetchedBooking.id !== bookingIdAsPassword || fetchedBooking.guestId !== guestData.id) {
-                return { success: false, errorType: 'noMatchingEmailOrBooking' };
-            }
-
-            if (fetchedBooking.checkout || fetchedBooking.departureDate < new Date())
-                return { success: false, errorType: 'bookingExpired' };
-
-            setGuest(guestData);
-            setCurrentBooking(fetchedBooking);
-            setCurrentRoom(fetchedRoom);
-            localStorage.setItem("guest_id", String(guestData.id));
-            localStorage.setItem('booking_id', fetchedBooking.id);
-            return { success: true };
         } catch (error) {
             console.error("Hiba a bejelentkezés során:", error);
             return { success: false, errorType: "network" };
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const logout = () => {
-        setGuest(null);
-        setCurrentBooking(null);
-        setCurrentRoom(null);
-        localStorage.removeItem("guest_id");
-        localStorage.removeItem("booking_id");
-    };
+    }
 
     return (
-        <GuestContext.Provider value={{ guest, currentBooking, currentRoom, isLoading, login, logout }}>
+        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, isLoading, login, logout }}>
             {children}
         </GuestContext.Provider>
     );

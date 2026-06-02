@@ -2,7 +2,7 @@ import { customAlphabet } from 'nanoid';
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { Room, BookingState, ExtraOption } from '../types/booking';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { createData, getData } from '../api/apiService';
+import { getData, createData } from '../services/apiService';
 
 interface BookingContextProps {
     step: number;
