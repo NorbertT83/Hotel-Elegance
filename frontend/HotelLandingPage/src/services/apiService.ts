@@ -53,6 +53,7 @@ async function baseRequest(endpoint: string, options: RequestInit = {}, timeout 
         let response = await fetch(`${apiURL}${endpoint}`, {
             ...options,
             headers,
+            credentials: 'include',
             signal: controller.signal,
         });
 
@@ -65,6 +66,7 @@ async function baseRequest(endpoint: string, options: RequestInit = {}, timeout 
                 response = await fetch(`${apiURL}${endpoint}`, {
                     ...options,
                     headers,
+                    credentials: 'include',
                     signal: controller.signal,
                 });
             } else {
@@ -94,6 +96,7 @@ export async function getData<T>(endpoint = "", params: Record<string, string> =
 
     const queryString = urlParams.toString();
     const fullEndpoint = queryString ? `${endpoint}?${queryString}` : endpoint;
+    console.log(fullEndpoint);
 
     const response = await baseRequest(fullEndpoint, { method: "GET" }, timeout);
 
@@ -108,7 +111,7 @@ export async function getData<T>(endpoint = "", params: Record<string, string> =
     return await response.json() as T;
 }
 
-export async function createData<T, R = any>(endpoint = "", data = {}, timeout = 5000): Promise<R> {
+export async function createData<T, R = any>(endpoint = "", data:T = {} as T, timeout = 5000): Promise<R> {
     const response = await baseRequest(endpoint, {
         method: "POST",
         body: JSON.stringify(data)
@@ -122,7 +125,7 @@ export async function createData<T, R = any>(endpoint = "", data = {}, timeout =
     return await response.json() as R;
 }
 
-export async function updateData<T, R = Response>(endpoint = "", id = "", data = {}, timeout = 5000): Promise<R> {
+export async function updateData<T, R = Response>(endpoint = "", id = "", data: T = {} as T, timeout = 5000): Promise<R> {
     const response = await baseRequest(`${endpoint}/${id}`, {
         method: "PUT",
         body: JSON.stringify(data)

@@ -2,7 +2,7 @@ import { customAlphabet } from 'nanoid';
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { Room, BookingState, ExtraOption } from '../types/booking';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getData, createData } from '../services/apiService';
+import { createData } from '../services/apiService';
 
 interface BookingContextProps {
     step: number;
@@ -132,60 +132,36 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
     const finishBooking = async () => {
         console.log("Küldés API-nak...", { ...bookingState });
         
-        // guest keresése, ha nincs, új guest létrehozása, majd booking létrehozása a guest ID-val
-        let guestid;
+        const year = new Date(bookingState.arrivalDate).getFullYear();
+        const generatedBookingId = `HE-${year}-${nanoid()}`;
 
         try {
-            const existingGuestResponse: any[] = await getData('guest', { email: bookingState.formData.email });
-            if (existingGuestResponse && existingGuestResponse.length > 0) {
-                console.log("Létező vendég megtalálva:", existingGuestResponse[0]);
-                guestid = existingGuestResponse[0].id;
-            }
-        } catch {
-            try {
-                const guestResponse = await createData('guest', {
-                    fname: bookingState.formData.fname,
-                    lname: bookingState.formData.lname,
-                    email: bookingState.formData.email,
-                    country: bookingState.formData.country,
-                    zip_code: bookingState.formData.zip,
-                    city: bookingState.formData.city,
-                    street: bookingState.formData.street
-                });
-                if (!guestResponse || !guestResponse.id) {
-                    console.error("Sikertelen foglalás: vendég létrehozása sikertelen");
-                    return;
-                }
-                guestid = guestResponse.id;
-            } catch (err: any){
-                console.error(err.message);
-                return;
-            }
-        }
-        try {
-            if (guestid && guestid != 0) {
-                // Foglalási szám generálása (pl: HE-2026-A1B2)
-                const year = new Date(bookingState.arrivalDate).getFullYear();
-                setBookingState(prev => ({...prev, bookingId: `HE-${year}-${nanoid()}`}));
+            const response: any = await createData('auth/public-booking', {
+                fname: bookingState.formData.fname,
+                lname: bookingState.formData.lname,
+                email: bookingState.formData.email,
+                country: bookingState.formData.country,
+                zip_code: bookingState.formData.zip,
+                city: bookingState.formData.city,
+                street: bookingState.formData.street,
 
-                const createBookingResponse = await createData('booking', {
-                    id: bookingState.bookingId,
-                    room_number: filteredRooms[0]?.room_number || null,
-                    room_type: bookingState.roomTypeChosen,
-                    guest1_id: guestid || null,
-                    beginning_of_stay: bookingState.arrivalDate,
-                    end_of_stay: bookingState.departureDate,
-                    catering_level: bookingState.cateringChosen
-                });
-                if (!createBookingResponse || !createBookingResponse.id) {
-                    console.error("Sikertelen foglalás: foglalás létrehozása sikertelen");
-                    return;
-                }
-                console.log("Sikeres foglalás: ", createBookingResponse.id);
+                booking_id: generatedBookingId,
+                room_number: filteredRooms[0]?.room_number || null,
+                room_type: bookingState.roomTypeChosen,
+                beginning_of_stay: bookingState.arrivalDate,
+                end_of_stay: bookingState.departureDate,
+                catering_level: bookingState.cateringChosen
+            });
+
+            if (response && response.success) {
+                console.log("Sikeres foglalás rögzítve! ID:", response.booking_id);
+                setBookingState(prev => ({ ...prev, bookingId: generatedBookingId }));
                 setStep(5);
+            } else {
+                console.error("Sikertelen foglalás: Nem érkezett sikeres válasz a szervertől.");
             }
-        } catch (err: any){
-            console.log(err.message);
+        } catch (err: any) {
+            console.error("Hiba történt a foglalási folyamat során:", err.message);
         }
     };
 

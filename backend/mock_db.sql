@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Máj 28. 13:58
+-- Létrehozás ideje: 2026. Jún 03. 08:48
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `bookings` (
-  `id` int(11) NOT NULL,
+  `id` varchar(12) NOT NULL,
   `room_number` smallint(5) UNSIGNED DEFAULT NULL,
   `room_type` enum('standard','deluxe','suite','') NOT NULL,
   `guest1_id` int(11) NOT NULL,
@@ -48,22 +48,23 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`, `created_at`) VALUES
-(1, 101, '', 8, '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 1, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(2, 102, '', 7, '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(3, 201, '', 3, '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 9, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(4, 202, '', 2, '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(5, 103, '', 4, '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(6, 301, '', 6, '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 5, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(7, 302, '', 11, '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 10, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(8, 203, '', 15, '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 12, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(9, 303, 'deluxe', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(10, 402, 'suite', 16, '2026-05-20', '2026-05-24', '2026-05-20 12:45:00', '0000-00-00 00:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
-(11, 401, 'suite', 1, '2026-05-22', '2026-05-26', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
-(12, 403, 'suite', 2, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-05-28 11:37:01'),
-(15, 303, 'deluxe', 17, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
-(20, 201, 'deluxe', 18, '2026-05-26', '2026-05-28', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
-(21, 302, 'deluxe', 19, '2026-05-26', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-05-28 11:37:01'),
-(22, 303, 'deluxe', 18, '2026-05-28', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01');
+('1', 101, '', 8, '2026-04-01', '2026-04-03', '2026-04-01 14:10:00', '2026-04-03 10:05:00', 1, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('10', 402, 'suite', 16, '2026-05-20', '2026-05-24', '2026-05-20 12:45:00', '0000-00-00 00:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('11', 401, 'suite', 1, '2026-05-22', '2026-05-26', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
+('12', 403, 'suite', 2, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-05-28 11:37:01'),
+('15', 303, 'deluxe', 17, '2026-05-22', '2026-05-24', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
+('2', 102, '', 7, '2026-04-02', '2026-04-04', '2026-04-02 13:30:00', '2026-04-04 09:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('20', 201, 'deluxe', 18, '2026-05-26', '2026-05-28', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
+('21', 302, 'deluxe', 19, '2026-05-26', '2026-05-30', '2026-05-27 08:36:57', '2026-05-28 08:36:57', NULL, NULL, NULL, 'fullboard', '2026-05-28 11:37:01'),
+('22', 303, 'deluxe', 18, '2026-05-28', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
+('3', 201, '', 3, '2026-04-03', '2026-04-05', '2026-04-03 15:00:00', '2026-04-05 11:00:00', 9, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('4', 202, '', 2, '2026-04-04', '2026-04-06', '2026-04-04 14:45:00', '2026-04-06 10:30:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('5', 103, '', 4, '2026-04-05', '2026-04-08', '2026-04-05 13:15:00', '2026-04-08 10:00:00', NULL, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('6', 301, '', 6, '2026-04-06', '2026-04-09', '2026-04-06 14:20:00', '2026-04-09 10:10:00', 5, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('7', 302, '', 11, '2026-04-07', '2026-04-09', '2026-04-07 15:10:00', '2026-04-09 11:20:00', 10, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('8', 203, '', 15, '2026-04-08', '2026-04-10', '2026-04-08 13:50:00', '2026-04-10 10:00:00', 12, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('9', 303, 'deluxe', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
+('HE-2026-194V', 102, 'standard', 19, '2026-05-29', '2026-06-04', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-29 05:40:29');
 
 --
 -- Eseményindítók `bookings`
@@ -191,7 +192,7 @@ INSERT INTO `guests` (`id`, `email`, `id_card_number`, `fname`, `lname`, `date_o
 (16, 'szekeres.nora89@gmail.com', 'ID100321', 'Nóra', 'Szekeres', '1989-07-01', 'Hungary', '', '', 'Győr, Bajcsi Zs. utca 12.', NULL, 0),
 (17, 'nrbrt@nrbrt-codes.hu', NULL, 'Norbert', 'Tóth', NULL, 'HU', '1135', 'Budapest', 'Béke tér 1.', NULL, 0),
 (18, 'ntoth.gbam@gmail.com', NULL, 'Norbert', 'Tóth', NULL, 'HU', '2310', 'Szigetszentmiklós', 'Nyomdász utca 8', NULL, 0),
-(19, 'norbert.toth83@gmail.com', NULL, 'Norbert', 'Tóth', NULL, 'HU', '9072', 'Nagyszentjános', 'Galagonya u. 16', NULL, 0);
+(19, 'norbert.toth83@gmail.com', NULL, 'Norbert', 'Tóth', NULL, 'HU', '9072', 'Nagyszentjános', 'Galagonya u. 16', 'REP437', 6);
 
 -- --------------------------------------------------------
 
@@ -228,7 +229,7 @@ INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_
 (303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 29900),
 (401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 76000),
 (402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'unavailable', 76000),
-(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'needs_cleaning', 1);
+(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'needs_cleaning', 62000);
 
 -- --------------------------------------------------------
 
@@ -238,7 +239,7 @@ INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_
 
 CREATE TABLE `servicebookings` (
   `id` int(11) NOT NULL,
-  `booking_id` int(11) NOT NULL,
+  `booking_id` varchar(12) NOT NULL,
   `service_id` int(11) NOT NULL,
   `requested_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -252,30 +253,30 @@ CREATE TABLE `servicebookings` (
 --
 
 INSERT INTO `servicebookings` (`id`, `booking_id`, `service_id`, `requested_at`, `updated_at`, `quantity`, `status`, `price_at_booking`) VALUES
-(1, 1, 1, '2026-04-01 15:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(2, 1, 6, '2026-04-01 19:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
-(3, 2, 2, '2026-04-02 10:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(4, 2, 3, '2026-04-02 09:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(5, 3, 4, '2026-04-03 08:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(6, 3, 6, '2026-04-03 20:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(7, 4, 11, '2026-04-04 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(8, 4, 12, '2026-04-04 16:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(9, 4, 13, '2026-04-04 17:30:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(10, 5, 5, '2026-04-05 11:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
-(11, 5, 7, '2026-04-05 13:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(12, 6, 8, '2026-04-06 18:00:00', '2026-05-28 12:46:14', 3, 'completed', 0),
-(13, 6, 9, '2026-04-06 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(14, 6, 10, '2026-04-06 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(15, 7, 1, '2026-04-07 15:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
-(16, 7, 14, '2026-04-07 17:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(17, 8, 15, '2026-04-08 09:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
-(18, 8, 17, '2026-04-08 10:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
-(19, 9, 6, '2026-04-09 20:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(20, 9, 11, '2026-04-09 18:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(21, 9, 12, '2026-04-09 16:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(22, 10, 3, '2026-04-10 08:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
-(23, 10, 6, '2026-04-10 19:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
-(24, 10, 16, '2026-04-10 09:00:00', '2026-05-28 12:45:16', 1, 'completed', 0);
+(1, '1', 1, '2026-04-01 15:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(2, '1', 6, '2026-04-01 19:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(3, '2', 2, '2026-04-02 10:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(4, '2', 3, '2026-04-02 09:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(5, '3', 4, '2026-04-03 08:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(6, '3', 6, '2026-04-03 20:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(7, '4', 11, '2026-04-04 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(8, '4', 12, '2026-04-04 16:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(9, '4', 13, '2026-04-04 17:30:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(10, '5', 5, '2026-04-05 11:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(11, '5', 7, '2026-04-05 13:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(12, '6', 8, '2026-04-06 18:00:00', '2026-05-28 12:46:14', 3, 'completed', 0),
+(13, '6', 9, '2026-04-06 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(14, '6', 10, '2026-04-06 14:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(15, '7', 1, '2026-04-07 15:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(16, '7', 14, '2026-04-07 17:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(17, '8', 15, '2026-04-08 09:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(18, '8', 17, '2026-04-08 10:30:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(19, '9', 6, '2026-04-09 20:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(20, '9', 11, '2026-04-09 18:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(21, '9', 12, '2026-04-09 16:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(22, '10', 3, '2026-04-10 08:00:00', '2026-05-28 12:46:14', 1, 'completed', 0),
+(23, '10', 6, '2026-04-10 19:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
+(24, '10', 16, '2026-04-10 09:00:00', '2026-05-28 12:45:16', 1, 'completed', 0);
 
 --
 -- Eseményindítók `servicebookings`
@@ -388,12 +389,6 @@ ALTER TABLE `services`
 --
 
 --
--- AUTO_INCREMENT a táblához `bookings`
---
-ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
-
---
 -- AUTO_INCREMENT a táblához `employees`
 --
 ALTER TABLE `employees`
@@ -437,7 +432,6 @@ ALTER TABLE `bookings`
 ALTER TABLE `servicebookings`
   ADD CONSTRAINT `fk_booking_id` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`),
   ADD CONSTRAINT `fk_service_id` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`),
-  ADD CONSTRAINT `fk_servicebookings_booking` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_servicebookings_service` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON UPDATE CASCADE;
 COMMIT;
 

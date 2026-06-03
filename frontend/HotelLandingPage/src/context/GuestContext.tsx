@@ -95,13 +95,13 @@ export const GuestProvider = ({ children }: Props) => {
         }
 
         try {
-            const guestResponse: Guest = await getData(`guest/${payload.guestId}`);
+            const guestResponse: Guest = await getData(`guest/${payload.guest_id}`);
             if (!guestResponse) {
                 logout();
                 return false;
             }
 
-            const bookingResponse: BookingResponseDTO = await getData(`booking/${payload.bookingId}`);
+            const bookingResponse: BookingResponseDTO = await getData(`booking/${payload.booking_id}`);
             if (!bookingResponse) {
                 logout();
                 return false;
@@ -151,11 +151,9 @@ export const GuestProvider = ({ children }: Props) => {
     async function login(email: string, bookingIdAsPassword: string): Promise<LoginResult> {
         setIsLoading(true);
         try {
-            // A backend endpoint (POST /auth/login) ellenőrzi az emailt és a booking_id-t.
-            // Siker esetén beállítja a Refresh Token Cookie-t és VISSZAADJA az Access Tokent!
-            const res = await createData<{ email: string; bookingId: string }, { success: boolean; accessToken?: string; errorType?: string }>(
+            const res = await createData<{ email: string; booking_id: string }, { success: boolean; accessToken?: string; errorType?: string }>(
                 'auth/login', 
-                { email, bookingId: bookingIdAsPassword }
+                { email, booking_id: bookingIdAsPassword }
             );
 
             if (res.success && res.accessToken) {

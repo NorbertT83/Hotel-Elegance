@@ -37,7 +37,7 @@ export default function WelcomeModal(): React.JSX.Element | null {
             <p style={{color: 'var(--on-surface-variant)'}}>Szeretne bejelentkezni?</p>
 
             <div style={{margin: '1rem auto', width: '50%'}}>
-                <Link to="/guest/login" className='btn btn-primary' onClick={() => setShowWelcomeModal(false)}>Bejelentkezés</Link>
+                <Link to="/guest" className='btn btn-primary' onClick={() => setShowWelcomeModal(false)}>Bejelentkezés</Link>
             </div>
         </div>
     );

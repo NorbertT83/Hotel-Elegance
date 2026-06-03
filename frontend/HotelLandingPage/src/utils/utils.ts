@@ -19,8 +19,8 @@ export function addDays(dateString:string, days:number) {
 }
 
 export interface TokenPayload {
-    guestId: number;
-    bookingId: string;
+    guest_id: number;
+    booking_id: string;
     exp: number;
     iat: number;
 }
