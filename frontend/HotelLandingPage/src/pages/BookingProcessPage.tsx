@@ -1,9 +1,9 @@
 import { BookingProcessProvider, useBooking } from "../context/BookingProcessContext";
-import Step1BookingDetails from "../components/booking/Step1BookingDetails";
-import Step2RoomSelection from "../components/booking/Step2RoomSelection";
-import Step3ExtraOptions from "../components/booking/Step3ExtraOptions";
-import Step4PersonalData from "../components/booking/Step4PersonalData";
-import Step5SuccessCard from "../components/booking/Step5SuccessCard";
+import Step1BookingDetails from "./booking/Step1BookingDetails";
+import Step2RoomSelection from "./booking/Step2RoomSelection";
+import Step3ExtraOptions from "./booking/Step3ExtraOptions";
+import Step4PersonalData from "./booking/Step4PersonalData";
+import Step5SuccessCard from "./booking/Step5SuccessCard";
 import s from '../styles/BookingPage.module.css';
 
 export default function BookingProcessPage() {

@@ -17,7 +17,14 @@ interface BookingContextProps {
     nextStep: () => void;
     prevStep: () => void;
     finishBooking: () => void;
-    isFormValid: boolean;
+    isFormValid: {
+        lname: boolean;
+        fname: boolean;
+        email: boolean;
+        zip: boolean;
+        city: boolean;
+        street: boolean;
+    };
 }
 
 const BookingProcessContext = createContext<BookingContextProps | undefined>(undefined);
@@ -25,7 +32,7 @@ const BookingProcessContext = createContext<BookingContextProps | undefined>(und
 const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4);
 
 const validate = {
-    name: (val: string) => val.length > 2 && val.length <= 30 && /^[\p{L}\s-]+$/u.test(val),
+    name: (val: string) => val.length > 1 && val.length < 30 && /^[\p{L}\s-]+$/u.test(val),
     email: (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
     zip: (val: string) => /^[a-zA-Z0-9\s-]{4,10}$/.test(val),
     city: (val: string) => val.length > 1 && /^[\p{L}\s-]+$/u.test(val),
@@ -61,7 +68,15 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
             cateringChosen: "breakfast",
             extrasChosen: [],
             roomAssigned: {} as Room,
-            formData: { lname: "", fname: "", email: "", country: "HU", zip: "", city: "", street: "" }
+            formData: {
+                lname: { value: "", isTouched: false },
+                fname: { value: "", isTouched: false },
+                email: { value: "", isTouched: false },
+                country: { value: "HU", isTouched: false },
+                zip: { value: "", isTouched: false },
+                city: { value: "", isTouched: false },
+                street: { value: "", isTouched: false }
+            },
         };
 
         if (!location.state) return defaultDefaults as BookingState;
@@ -88,15 +103,15 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
 
     const isFormValid = useMemo(() => {
         const { lname, fname, email, zip, city, street } = bookingState.formData;
-        return (
-            validate.name(lname) &&
-            validate.name(fname) &&
-            validate.email(email) &&
-            validate.zip(zip) &&
-            validate.city(city) &&
-            validate.street(street)
-        );
-    }, [bookingState.formData.lname, bookingState.formData.fname, bookingState.formData.email, bookingState.formData.zip, bookingState.formData.city, bookingState.formData.street]);
+        return ({
+            lname: validate.name(lname.value),
+            fname: validate.name(fname.value),
+            email: validate.email(email.value),
+            zip: validate.zip(zip.value),
+            city: validate.city(city.value),
+            street: validate.street(street.value)
+        });
+    }, [bookingState.formData.lname.value, bookingState.formData.fname.value, bookingState.formData.email.value, bookingState.formData.zip.value, bookingState.formData.city.value, bookingState.formData.street.value]);
     
     const roomsForSelectedType = useMemo(() => {
         return bookingState.freeRooms.filter(
@@ -175,12 +190,14 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
+        const value = e.target.value;
+        const name = e.target.name as keyof typeof bookingState.formData;
+
         setBookingState(prev => ({
             ...prev,
             formData: {
                 ...prev.formData,
-                [name]: value
+                [name]: { ...prev.formData[name], value, isTouched: true }
             }
         }));
     };

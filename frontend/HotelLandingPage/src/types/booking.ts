@@ -3,7 +3,7 @@ import { Country } from "../utils/countries";
 export type RoomType = "standard" | "deluxe" | "suite";
 export type CateringType = "breakfast" | "halfboard" | "fullboard";
 export type ExtraOption = "balcony" | "panorama"| "garden" | "jacuzzi" | "kitchen" | "latecheckout" | "transfer" | "champagne";
-export interface FormData { lname: string; fname: string; email: string; country: string; zip: string; city: string; street: string; }
+export interface FormData { lname: { value: string; isTouched: boolean }; fname: { value: string; isTouched: boolean }; email: { value: string; isTouched: boolean }; country: { value: string; isTouched: boolean }; zip: { value: string; isTouched: boolean }; city: { value: string; isTouched: boolean }; street: { value: string; isTouched: boolean }; }
 
 export interface BookingState {
     bookingId: string;
