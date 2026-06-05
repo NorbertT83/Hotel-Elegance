@@ -242,7 +242,7 @@ if ($resource === 'auth') {
         }
 
         // 3. Lejárati ellenőrzés (már checkout v. régebbi a távozás mint a mai nap)
-        if (!empty($booking['checkout']) || strtotime($booking['end_of_stay']) < time()) {
+        if (!empty($booking['checkout']) || strtotime($booking['end_of_stay']) <= time()) {
             http_response_code(401);
             echo json_encode(["success" => false, "errorType" => "bookingExpired"]);
             exit;
@@ -280,7 +280,10 @@ if ($resource === 'auth') {
 
         if (!$refreshToken) {
             http_response_code(401);
-            echo json_encode(["error" => "Nincs refresh token a sutikben."]);
+            echo json_encode([
+                "success" => false,
+                "error" => "Nincs refresh token a sutikben."
+            ]);
             exit;
         }
 
@@ -289,7 +292,10 @@ if ($resource === 'auth') {
 
         if (!$payload) {
             http_response_code(401);
-            echo json_encode(["error" => "Lejart vagy manipulalt refresh token."]);
+            echo json_encode([
+                "success" => false,
+                "error" => "Lejart vagy manipulalt refresh token."
+            ]);
             exit;
         }
 
@@ -300,6 +306,7 @@ if ($resource === 'auth') {
         ], $jwt_secret, 900);
 
         echo json_encode([
+            "success" => true,
             "accessToken" => $newAccessToken
         ]);
         exit;

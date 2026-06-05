@@ -68,7 +68,9 @@ export default function GuestLoginPage() {
                     <input 
                         className={s.inputField}
                         type="text"
+                        minLength={4}
                         maxLength={4}
+                        required
                         value={bookingId1stHalf}
                         onChange={(e) => handleYearInput(e.target.value)}
                         onFocus={() => setError(null)}
@@ -79,6 +81,7 @@ export default function GuestLoginPage() {
                         type="password"
                         minLength={4}
                         maxLength={4}
+                        required
                         value={bookingId2ndHalf}
                         onChange={(e) => setBookingId2ndHalf(e.target.value)}
                         onFocus={() => setError(null)}

@@ -58,7 +58,7 @@ async function baseRequest(endpoint: string, options: RequestInit = {}, timeout 
         });
 
         // 401 Auto-refresh kezelés
-        if (response.status === 401 && endpoint !== 'auth/refresh') {
+        if (response.status === 401 && !endpoint.startsWith('auth/')) {
             const newAccessToken = await tryToRefreshToken();
 
             if (newAccessToken) {
@@ -118,6 +118,14 @@ export async function createData<T, R = any>(endpoint = "", data:T = {} as T, ti
     }, timeout);
 
     if (!response.ok) {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            const errorJson = await response.json().catch(() => null);
+            if (errorJson) {
+                return errorJson as R;
+            }
+        }
+        
         const errorBody = await response.text().catch(() => "Ismeretlen hiba");
         throw new Error(`HTTP hiba: ${response.status} - ${errorBody}`);
     }
