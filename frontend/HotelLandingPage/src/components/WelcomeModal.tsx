@@ -1,6 +1,7 @@
 import { useEffect, useState, CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocalStorageExpiry } from "../hooks/useLocalStorageExpiry";
+import { useGuest } from '../context/GuestContext';
 
 export default function WelcomeModal(): React.JSX.Element | null {
     const [isAtHotel, setIsAtHotel] = useState(false);
@@ -9,6 +10,7 @@ export default function WelcomeModal(): React.JSX.Element | null {
         true,
         120_000 // 2 hours
     );
+    const { guest } = useGuest();
 
     useEffect(() => {
         //fetch('http://192.168.2.162/api/check_ip.php')
@@ -26,7 +28,7 @@ export default function WelcomeModal(): React.JSX.Element | null {
 
     if (!isAtHotel || !showWelcomeModal) return null;
 
-    return (
+    return ( !guest &&
         <div style={modalStyle}>
             <button style={closeButtonStyle} onClick={() => setShowWelcomeModal(false)} aria-label="Bezárás">
                 <span className="material-symbols-outlined">close</span>

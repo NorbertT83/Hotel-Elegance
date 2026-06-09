@@ -7,7 +7,7 @@ import { roomSupportsExtra, useBooking } from '../../context/BookingProcessConte
 export default function Step3ExtraOptions() {
     const { language } = useLanguage();
     const labels = bookingPageText[language].step3;
-    const { bookingState, roomsForSelectedType, setFilteredRooms, extraOptions, setBookingState, handleCheckboxChange, prevStep, nextStep } = useBooking();
+    const { bookingState, roomsForSelectedType, setFilteredRooms, extraOptions, setBookingState, prevStep, nextStep } = useBooking();
     
     type Step3Keys = keyof typeof labels;
     const cateringOptions = ['breakfast', 'halfboard', 'fullboard'] as CateringType[];

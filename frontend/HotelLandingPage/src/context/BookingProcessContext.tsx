@@ -67,7 +67,6 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
             roomTypeChosen: "standard",
             cateringChosen: "breakfast",
             extrasChosen: [],
-            roomAssigned: {} as Room,
             formData: {
                 lname: { value: "", isTouched: false },
                 fname: { value: "", isTouched: false },
@@ -149,23 +148,25 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
         
         const year = new Date(bookingState.arrivalDate).getFullYear();
         const generatedBookingId = `HE-${year}-${nanoid()}`;
+        console.log(generatedBookingId);
 
         try {
             const response: any = await createData('auth/public-booking', {
-                fname: bookingState.formData.fname,
-                lname: bookingState.formData.lname,
-                email: bookingState.formData.email,
-                country: bookingState.formData.country,
-                zip_code: bookingState.formData.zip,
-                city: bookingState.formData.city,
-                street: bookingState.formData.street,
+                fname: bookingState.formData.fname.value,
+                lname: bookingState.formData.lname.value,
+                email: bookingState.formData.email.value,
+                country: bookingState.formData.country.value,
+                zip_code: bookingState.formData.zip.value,
+                city: bookingState.formData.city.value,
+                street: bookingState.formData.street.value,
 
                 booking_id: generatedBookingId,
                 room_number: filteredRooms[0]?.room_number || null,
                 room_type: bookingState.roomTypeChosen,
                 beginning_of_stay: bookingState.arrivalDate,
                 end_of_stay: bookingState.departureDate,
-                catering_level: bookingState.cateringChosen
+                catering_level: bookingState.cateringChosen,
+                services: bookingState.extrasChosen || []
             });
 
             if (response && response.success) {

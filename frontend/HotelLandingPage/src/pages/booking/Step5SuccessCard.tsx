@@ -47,7 +47,7 @@ export default function Step5SuccessCard() {
                     </p>
                     <p className={s.infoText}>
                         {step5Text.emailInfo}
-                        <span className={s.highlighted}>{` ${bookingState.formData.email} `}</span>
+                        <span className={s.highlighted}>{` ${bookingState.formData.email.value} `}</span>
                         {step5Text.emailInfo2}
                     </p>
                     <p className={s.spamNotice}>

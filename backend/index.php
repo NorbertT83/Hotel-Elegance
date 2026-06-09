@@ -332,26 +332,26 @@ if ($resource === 'auth') {
             if ($existingGuest) {
                 $guestId = $existingGuest['id'];
                 // TODO
-                // (Opcionális) Ha szeretnéd, itt egy UPDATE-tel frissítheted a vendég adatait, 
-                // ha esetleg új telefonszámot vagy új várost adott meg a mostani foglalásnál.
+                // Itt egy UPDATE-tel frissíthető a vendég adatai 
             } else {
-                $stmt = $pdo->prepare("INSERT INTO `guests` (`email`, `fname`, `lname`, `phone`, `country`, `city`, `address`) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO `guests` (`email`, `fname`, `lname`, `zip_code`, `country`, `city`, `street`) VALUES (?, ?, ?, ?, ?, ?, ?)");
                 $stmt->execute([
                     $email,
                     $inputData['fname'] ?? '',
                     $inputData['lname'] ?? '',
-                    $inputData['phone'] ?? '',
+                    $inputData['zip_code'] ?? '',
                     $inputData['country'] ?? '',
                     $inputData['city'] ?? '',
-                    $inputData['address'] ?? ''
+                    $inputData['street'] ?? ''
                 ]);
                 $guestId = $pdo->lastInsertId();
             }
 
             // 2. Létrehozzuk magát a foglalást a kinyert $guestId használatával
+            $bookingId = $inputData['booking_id'] ?? null;
             $stmt = $pdo->prepare("INSERT INTO `bookings` (`id`, `guest1_id`, `room_number`, `room_type`, `beginning_of_stay`, `end_of_stay`, `catering_level`) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
-                $inputData['booking_id'] ?? null,
+                $bookingId,
                 $guestId,
                 $inputData['room_number'] ?? null,
                 $inputData['room_type'] ?? null,
@@ -359,9 +359,27 @@ if ($resource === 'auth') {
                 $inputData['end_of_stay'] ?? null,
                 $inputData['catering_level'] ?? null
             ]);
+            // 3. Ha volt extra szolgáltatás bejelölve azt is hozzáadjuk a servicebookings táblába
+            if (!empty($inputData['services']) && is_array($inputData['services'])) {
+                $getServiceStmt = $pdo->prepare("SELECT `id` FROM `services` WHERE `name_en` LIKE ? LIMIT 1");
+                $insertServiceStmt = $pdo->prepare("INSERT INTO `servicebookings` (`booking_id`, `service_id`, `quantity`) VALUES (?, ?, ?)");
 
+                foreach ($inputData['services'] as $serviceName) {  
+                    $getServiceStmt->execute([$serviceName]);
+                    $serviceData = $getServiceStmt->fetch();
+
+                    if ($serviceData) {
+                        $insertServiceStmt->execute([
+                            $bookingId,
+                            $serviceData['id'],
+                            1
+                        ]);
+                    }
+                }
+            }
             $pdo->commit();
 
+            http_response_code(201);
             echo json_encode([
                 "success" => true,
                 "message" => "A foglalás sikeresen rögzítve!",
@@ -370,10 +388,12 @@ if ($resource === 'auth') {
             ]);
             exit;
 
-        } catch (\PDOException $e) {
-            $pdo->rollBack();
+        } catch (\Throwable $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             http_response_code(500);
-            echo json_encode(["success" => false, "error" => "Adatbázis hiba a foglalás során: " . $e->getMessage()]);
+            echo json_encode(["success" => false, "error" => "Hiba történt a foglalás során: " . $e->getMessage()]);
             exit;
         }
     }
