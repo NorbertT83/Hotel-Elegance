@@ -114,7 +114,7 @@ export async function getData<T>(endpoint = "", params: Record<string, string> =
 export async function createData<T, R = any>(endpoint = "", data:T = {} as T, timeout = 5000): Promise<R> {
     const response = await baseRequest(endpoint, {
         method: "POST",
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     }, timeout);
 
     if (!response.ok) {

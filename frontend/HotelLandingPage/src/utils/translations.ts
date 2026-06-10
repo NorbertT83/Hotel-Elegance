@@ -7,6 +7,7 @@ export const landingPageText = {
         header: {
             navLinks: ['Szobák', 'Szolgáltatások', 'Galéria', 'Rólunk'],
             bookNow: 'Foglalás',
+            logout: 'Kijelentkezés',
         },
         hero: {
             title: 'Elegancia minden részletben',
@@ -112,6 +113,7 @@ export const landingPageText = {
         header: {
             navLinks: ['Rooms', 'Services', 'Gallery', 'About'],
             bookNow: 'Book Now',
+            logout: 'Logout',
         },
         hero: {
             title: 'Elegance in every detail',

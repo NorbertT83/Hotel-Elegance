@@ -8,8 +8,9 @@ $pass = $config['db_pass'];
 $charset = $config['db_char'];
 $jwt_secret = $config['jwt_secret'];
 
+$isUsingHttps = false;
 
-$allowed_origins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000', 'https://nrbrt-codes.hu'];
+$allowed_origins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://nrbrt-codes.hu'];
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
 if (in_array($origin, $allowed_origins)) {
@@ -56,23 +57,24 @@ function verify_jwt($jwt, $secret) {
     $tokenParts = explode('.', $jwt);
     if (count($tokenParts) !== 3) return false;
     
-    $header = base64url_decode($tokenParts[0]);
-    $payload = base64url_decode($tokenParts[1]);
+    $headerEncoded = $tokenParts[0];
+    $payloadEncoded = $tokenParts[1];
     $signatureProvided = $tokenParts[2];
 
+    $signatureValid = base64url_encode(hash_hmac('sha256', $headerEncoded . "." . $payloadEncoded, $secret, true));
+
+    if (!hash_equals($signatureValid, $signatureProvided)) {
+        return false;
+    }
+
+    $payload = base64url_decode($payloadEncoded);
     $payloadArr = json_decode($payload, true);
+
     if (isset($payloadArr['exp']) && $payloadArr['exp'] < time()) {
         return false;
     }
 
-    $base64UrlHeader = base64url_encode($header);
-    $base64UrlPayload = base64url_encode($payload);
-    $signatureValid = base64url_encode(hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secret, true));
-
-    if (hash_equals($signatureValid, $signatureProvided)) {
-        return $payloadArr;
-    }
-    return false;
+    return $payloadArr;
 }
 
 // --- ADATBÁZIS CSATLAKOZÁS ---
@@ -91,10 +93,10 @@ try {
     exit;
 }
 
-
 function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], $allowedSorts = []) {
     $params = [];
     $sql = "SELECT * FROM `$table`";
+    
     if ($idOrAll !== 'all') {
         $sql .= " WHERE `$idColumn` = ?";
         $params[] = $idOrAll;
@@ -111,12 +113,22 @@ function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], 
                 }
             }
         }
-        if (count($whereConditions) > 0) $sql .= " WHERE " . implode(" AND ", $whereConditions);
+        if (count($whereConditions) > 0) {
+            $sql .= " WHERE " . implode(" AND ", $whereConditions);
+        }
+
+        if (!empty($_GET['sort']) && in_array($_GET['sort'], $allowedSorts)) {
+            $sortColumn = $_GET['sort'];
+            $direction = (isset($_GET['order']) && strtolower($_GET['order']) === 'desc') ? 'DESC' : 'ASC';
+            $sql .= " ORDER BY `$sortColumn` $direction";
+        }
     }
+    
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     return ($idOrAll === 'all') ? $stmt->fetchAll() : $stmt->fetch();
 }
+
 function createResource($pdo, $table, $data) {
     if (empty($data)) return false;
     $columns = array_keys($data);
@@ -148,13 +160,6 @@ $urlParts = explode('/', trim($relativeRoute, '/'));
 $resource = $urlParts[0] ?? '';
 $id = $urlParts[1] ?? 'all';
 
-
-// $requestUri = str_replace($scriptPath, '', $requestPath);
-// $requestUri = trim($requestUri, '/');
-
-// $parts = explode('/', $requestUri);
-// $resource = $parts[0] ?? null;
-// $id = $parts[1] ?? 'all'; 
 $method = $_SERVER['REQUEST_METHOD']; 
 
 if (!$resource) {
@@ -218,7 +223,6 @@ if ($resource === 'auth') {
             exit;
         }
 
-        // 1. Vendég ellenőrzése
         $stmt = $pdo->prepare("SELECT * FROM `guests` WHERE `email` = ? LIMIT 1");
         $stmt->execute([$email]);
         $guest = $stmt->fetch();
@@ -229,40 +233,48 @@ if ($resource === 'auth') {
             exit;
         }
 
-        // 2. Foglalás ellenőrzése
         $stmt = $pdo->prepare("SELECT * FROM `bookings` WHERE `id` = ? LIMIT 1");
         $stmt->execute([$bookingId]);
         $booking = $stmt->fetch();
 
-        // Passzol a foglalás a vendéghez?
         if (!$booking || $booking['guest1_id'] != $guest['id']) {
             http_response_code(401);
             echo json_encode(["success" => false, "errorType" => "noMatchingEmailOrBooking"]);
             exit;
         }
 
-        // 3. Lejárati ellenőrzés (már checkout v. régebbi a távozás mint a mai nap)
         if (!empty($booking['checkout']) || strtotime($booking['end_of_stay']) <= time()) {
             http_response_code(401);
             echo json_encode(["success" => false, "errorType" => "bookingExpired"]);
             exit;
         }
 
-        // 4. Token összeállítása
-        $tokenPayload = [
-            'guest_id' => (int)$guest['id'],
+        $guestId = (int)$guest['id'];
+        $jti = bin2hex(random_bytes(16)); // randomizált tokenazonosító
+
+        $accessTokenPayload = [
+            'guest_id' => $guestId,
             'booking_id' => $booking['id']
         ];
 
-        $accessToken = generate_jwt($tokenPayload, $jwt_secret, 900);       // 15 percig jó
-        $refreshToken = generate_jwt($tokenPayload, $jwt_secret, 604800);   // 7 napig jó
+        $refreshTokenPayload = [
+            'guest_id' => $guestId,
+            'booking_id' => $booking['id'],
+            'jti' => $jti
+        ];
 
-        // 5. Refresh token elrejtése egy HttpOnly Cookie-ba
+        $accessToken = generate_jwt($accessTokenPayload, $jwt_secret, 900);       // 15 perc
+        $refreshToken = generate_jwt($refreshTokenPayload, $jwt_secret, 604800);   // 7 nap
+
+        $expiresAt = date('Y-m-d H:i:s', time() + 604800);
+        $dbStmt = $pdo->prepare("INSERT INTO `refresh_tokens` (`guest_id`, `token_id`, `expires_at`) VALUES (?, ?, ?)");
+        $dbStmt->execute([$guestId, $jti, $expiresAt]);
+
         setcookie('refresh_token', $refreshToken, [
             'expires' => time() + 604800,
             'path' => '/',
             'domain' => '', 
-            'secure' => false,   // Helyi tesztelésnél (HTTP) false, éles (HTTPS) szerveren kötelezően TRUE!
+            'secure' => $isUsingHttps,
             'httponly' => true,
             'samesite' => 'Lax'
         ]);
@@ -274,32 +286,40 @@ if ($resource === 'auth') {
         exit;
     }
 
-    // B: REFRESH (TOKEN MEGÚJÍTÁS) FOLYAMAT
+    // B: TOKEN REFRESH FOLYAMAT
     if ($id === 'refresh' && $method === 'POST') {
         $refreshToken = $_COOKIE['refresh_token'] ?? null;
 
         if (!$refreshToken) {
             http_response_code(401);
-            echo json_encode([
-                "success" => false,
-                "error" => "Nincs refresh token a sutikben."
-            ]);
+            echo json_encode(["success" => false, "error" => "Nincs refresh token a sutikben."]);
             exit;
         }
 
-        // Token hitelesítése
         $payload = verify_jwt($refreshToken, $jwt_secret);
 
         if (!$payload) {
             http_response_code(401);
-            echo json_encode([
-                "success" => false,
-                "error" => "Lejart vagy manipulalt refresh token."
-            ]);
+            echo json_encode(["success" => false, "error" => "Lejart vagy manipulalt refresh token."]);
             exit;
         }
 
-        // Új Access Token kibocsátása változatlan adatokkal, újabb 15 percre
+        if (!isset($payload['jti'])) {
+            http_response_code(401);
+            echo json_encode(["success" => false, "error" => "Hibás token struktúra."]);
+            exit;
+        }
+
+        $dbStmt = $pdo->prepare("SELECT * FROM `refresh_tokens` WHERE `token_id` = ? LIMIT 1");
+        $dbStmt->execute([$payload['jti']]);
+        $dbToken = $dbStmt->fetch();
+
+        if (!$dbToken) {
+            http_response_code(401);
+            echo json_encode(["success" => false, "error" => "A refresh tokent érvénytelenítették (kijelentkezett)."]);
+            exit;
+        }
+
         $newAccessToken = generate_jwt([
             'guest_id' => $payload['guest_id'],
             'booking_id' => $payload['booking_id']
@@ -312,7 +332,37 @@ if ($resource === 'auth') {
         exit;
     }
 
-    // C: PUBLIKUS FOGLALÁS (VENDÉG ELLENŐRZÉSSEL ÉS ÖSSZEFÉSÜLÉSSEL)
+    // C: LOGOUT FOLYAMAT
+    if ($id === 'logout' && $method === 'POST') {
+        $refreshToken = $_COOKIE['refresh_token'] ?? null;
+
+        if ($refreshToken) {
+            $payload = verify_jwt($refreshToken, $jwt_secret);
+            
+            if ($payload && isset($payload['jti'])) {
+                $dbStmt = $pdo->prepare("DELETE FROM `refresh_tokens` WHERE `token_id` = ?");
+                $dbStmt->execute([$payload['jti']]);
+            }
+        }
+
+        setcookie('refresh_token', '', [
+            'expires' => time() - 3600, // Lejárt 1 órája
+            'path' => '/',
+            'domain' => '', 
+            'secure' => $isUsingHttps,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+
+        http_response_code(200);
+        echo json_encode([
+            "success" => true,
+            "message" => "Sikeres kijelentkezés, token azonosító törölve az adatbázisból."
+        ]);
+        exit;
+    }
+
+    // C -> D: PUBLIKUS FOGLALÁS
     if ($id === 'public-booking' && $method === 'POST') {
         $email = $inputData['email'] ?? null;
         
@@ -331,8 +381,6 @@ if ($resource === 'auth') {
 
             if ($existingGuest) {
                 $guestId = $existingGuest['id'];
-                // TODO
-                // Itt egy UPDATE-tel frissíthető a vendég adatai 
             } else {
                 $stmt = $pdo->prepare("INSERT INTO `guests` (`email`, `fname`, `lname`, `zip_code`, `country`, `city`, `street`) VALUES (?, ?, ?, ?, ?, ?, ?)");
                 $stmt->execute([
@@ -347,7 +395,6 @@ if ($resource === 'auth') {
                 $guestId = $pdo->lastInsertId();
             }
 
-            // 2. Létrehozzuk magát a foglalást a kinyert $guestId használatával
             $bookingId = $inputData['booking_id'] ?? null;
             $stmt = $pdo->prepare("INSERT INTO `bookings` (`id`, `guest1_id`, `room_number`, `room_type`, `beginning_of_stay`, `end_of_stay`, `catering_level`) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
@@ -359,7 +406,7 @@ if ($resource === 'auth') {
                 $inputData['end_of_stay'] ?? null,
                 $inputData['catering_level'] ?? null
             ]);
-            // 3. Ha volt extra szolgáltatás bejelölve azt is hozzáadjuk a servicebookings táblába
+            
             if (!empty($inputData['services']) && is_array($inputData['services'])) {
                 $getServiceStmt = $pdo->prepare("SELECT `id` FROM `services` WHERE `name_en` LIKE ? LIMIT 1");
                 $insertServiceStmt = $pdo->prepare("INSERT INTO `servicebookings` (`booking_id`, `service_id`, `quantity`) VALUES (?, ?, ?)");
@@ -389,11 +436,12 @@ if ($resource === 'auth') {
             exit;
 
         } catch (\Throwable $e) {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
+            if ($pdo->inTransaction()) { $pdo->rollBack(); }
+            
+            error_log($e->getMessage()); 
+            
             http_response_code(500);
-            echo json_encode(["success" => false, "error" => "Hiba történt a foglalás során: " . $e->getMessage()]);
+            echo json_encode(["success" => false, "error" => "Adatbázis hiba történt a foglalás során."]);
             exit;
         }
     }
@@ -453,7 +501,6 @@ $endpoints = [
 if (array_key_exists($resource, $endpoints)) {
     $config = $endpoints[$resource];
 
-    // --- VIRTUÁLIS VÉGPONT: FREEROOMS KEZELÉSE ---
     if ($resource === 'freerooms') {
         if ($method !== 'GET') {
             http_response_code(405);

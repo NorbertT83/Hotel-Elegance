@@ -74,7 +74,40 @@ export const GuestProvider = ({ children }: Props) => {
         setAccessToken(null);
         setCurrentBooking(null);
         setCurrentRoom(null);
+        console.log("Kijelentkezés");
+
+        (async () => {
+            try {
+                await createData<{ reviews?: string }, { success: boolean }>('auth/logout', {});
+                localStorage.removeItem('pendingLogout');
+                console.log("Szerveroldali session sikeresen lezárva.");
+            } catch (error) {
+                console.warn("Hálózati hiba! A kijelentkezés rögzítve az offline sorban.");
+                localStorage.setItem('pendingLogout', 'true');
+            }
+        })();
+
     }, []);
+
+    useEffect(() => {
+        const syncOfflineLogout = async () => {
+            if (localStorage.getItem('pendingLogout') === 'true' && navigator.onLine) {
+                try {
+                    await createData('auth/logout', {});
+                    localStorage.removeItem('pendingLogout');
+                    console.log("Beragadt offline kijelentkezés sikeresen szinkronizálva a szerverrel.");
+                } catch (e) {
+                    // Ha a szerver még mindig áll, a "pendingLogout" marad true, legközelebb újra megpróbálja
+                }
+            }
+        };
+
+        syncOfflineLogout();
+
+        window.addEventListener('online', syncOfflineLogout);
+        return () => window.removeEventListener('online', syncOfflineLogout);
+    }, []);
+
 
     useEffect(() => {
         apiServiceConfig.setLogoutCallback(logout);
