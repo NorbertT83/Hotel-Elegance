@@ -15,7 +15,7 @@
 }
 
 .sidebar {
-    min-height: 80vh;
+    height: 80vh;
     background-color: var(--surface-container-low);
     color: var(--text-on-background);
     border: 1px solid var(--outline-variant);
@@ -54,7 +54,7 @@
     }
     .sidebar {
         width: min(768px, 95vw);
-        min-height: auto;
+        height: auto;
         padding: .5rem 1rem;
         margin: 0 auto;
     }

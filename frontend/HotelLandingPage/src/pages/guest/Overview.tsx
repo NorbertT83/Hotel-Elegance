@@ -1,7 +1,7 @@
 import { useGuest } from "../../context/GuestContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { guestPageText } from "../../utils/translations";
-import s from '../../styles/GuestOverview.module.css';
+import s from '../../styles/GuestSubPages.module.css';
 
 export default function Overview() {
     const { language }= useLanguage();

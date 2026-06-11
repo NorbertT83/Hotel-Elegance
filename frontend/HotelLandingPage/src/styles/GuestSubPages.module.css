@@ -76,11 +76,58 @@
 }
 
 
+.roomServiceCard .content {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.categorySection .categoryTitle {
+    color: var(--primary);
+    font-size: 2rem;
+    padding: 1rem 0rem;
+}
+
+.categorySection .itemRow {
+    display: flex;
+    gap: .5rem;
+    padding: .5rem 2rem;
+    justify-content: space-between;
+}
+
+.itemName {
+    color: var(--on-surface-variant);
+    font-weight: 400;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.itemDescription {
+    font-size: .85rem;
+    font-style: italic;
+    color: var(--on-surface);
+}
+
+.price {
+    font-size: 1.2rem;
+    color: var(--on-surface-variant);
+    text-wrap-mode: nowrap;
+}
+
+.measure {
+    font-size: .75rem;
+    text-align: right;
+    color: var(--on-surface);
+}
+
 @media screen and (max-width: 1024px) {
     .cardWrapper {
         width: 95vw;
         padding: 0;
         border: none;
         background-color: transparent;
+    }
+    .categorySection .itemRow {
+        padding: .5rem 1rem;
     }
 }
