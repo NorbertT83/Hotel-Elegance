@@ -5,7 +5,7 @@ import s from '../../styles/GuestOverview.module.css';
 
 export default function Overview() {
     const { language }= useLanguage();
-    const { guest, currentBooking, currentRoom } = useGuest();
+    const { guest, currentBooking, currentRoom, currentBookedServices } = useGuest();
     const menuOverviewLabels = guestPageText[language].guestPage.menuOverview;
 
     if (!guest) return;
@@ -13,7 +13,6 @@ export default function Overview() {
     return (
         <div className={s.cardWrapper}>
             <div className={`${s.card} ${s.guestCard}`}>
-
                 <div className={s.cardHeader}>
                     {menuOverviewLabels.guestCard.headerText}
                 </div>
@@ -28,15 +27,15 @@ export default function Overview() {
                     <div>{guest.city}</div>
                     <div>{guest.street}</div>
                     {guest.car_plate_number ? <>
-                        <div>Gépjárműve:</div>
+                        <div>{menuOverviewLabels.guestCard.car}</div>
                         <div>{guest.car_plate_number}</div>
                         </> : ''}
                     
-                    <div>Összes éjszaka:</div>
+                    <div>{menuOverviewLabels.guestCard.nightsSlept}</div>
                     <div>{guest.total_nights}</div>
-                    <div>Lojalitási szint:</div>
+                    <div>{menuOverviewLabels.guestCard.vipLevel}</div>
                     <div>{guest.loyalty_level}</div>
-                    <div>Aktuális foglalása:</div>
+                    <div>{menuOverviewLabels.guestCard.currentBooking}</div>
                     <div>{currentBooking?.id}</div>
                 </div>
             </div>
@@ -47,22 +46,37 @@ export default function Overview() {
                 </div>
 
                 <div className={s.content}>
-                    <p>Szobaszám: {currentRoom?.room_number}</p>
-                    <p>Terület: {currentRoom?.floorspace} m2</p>
-                    <p>Ágy: {currentRoom?.bed_type}</p>
-                    <p>Állapot: {currentRoom?.status}</p>
+                    <div>{menuOverviewLabels.roomCard.roomNumber}</div>
+                    <div>{currentRoom?.room_number}</div>
+
+                    <div>{menuOverviewLabels.roomCard.roomSize}</div>
+                    <div>{currentRoom?.floorspace} m2</div>
+
+                    <div>{menuOverviewLabels.roomCard.bedtype}</div>
+                    <div>{currentRoom?.bed_type}</div>
+
+                    <div>{menuOverviewLabels.roomCard.status}</div>
+                    <div>{currentRoom?.status}</div>
                 </div>
             </div>
 
-            <div className={`${s.card} ${s.bookingCard}`}>
+            <div className={`${s.card} ${s.serviceCard}`}>
                 <div className={s.cardHeader}>
-                    Igénybevett szolgáltatások
+                    {menuOverviewLabels.serviceCard.headerText}
                 </div>
 
                 <div className={s.content}>
-                    <p>Masszázs: {currentRoom?.room_number}</p>
-                    <p>Transzfer: {currentRoom?.floorspace} m2</p>
-                    <p>Szobaszerviz: {currentRoom?.bed_type}</p>
+                    {currentBookedServices.map((sb) => (
+                        <div key={sb.id} className={s.serviceItem}>
+                            <span>{sb.name_hu}</span>
+
+                            {sb.status != 'completed' ?
+                                <span style={{color: "gray"}} title={sb.updated_at} className="material-symbols-outlined">hourglass_check</span>
+                            :
+                                <span style={{color: "green"}} title={sb.updated_at} className="material-symbols-outlined">done_all</span>
+                            }
+                        </div>
+                    ))}
                 </div>
             </div>
 

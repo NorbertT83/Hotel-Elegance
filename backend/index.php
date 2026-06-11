@@ -173,6 +173,7 @@ $inputData = json_decode(file_get_contents("php://input"), true);
 // MIDDLEWARE: A WHITELIST KIVÉTELÉVEL MINDEN MÁS VÉGPONT ELLENŐRZI A JWT TOKENT
 $publicRoutes = [
     'service' => ['GET'],
+    'foodbeverage' => ['GET'],
     'freerooms'     => ['GET'],
 ];
 
@@ -493,6 +494,13 @@ $endpoints = [
             'needs_view' => ['city', 'garden', 'panorama']
         ]
     ],
+    'foodbeverage' => [
+        'table'   => 'food_and_beverage',
+        'id'      => 'id',
+        'filters' => ['category'],
+        'sorts'   => ['category', 'price', 'name_hu', 'name_en'],
+        'enums'   => ['category' => ['breakfast','starter','soup','main_course','dessert','hot_drink','soft_drink','alcoholic_drink']]
+    ],
     'freerooms' => [
         'filters' => ['end_of_stay_after']
     ]
@@ -545,6 +553,53 @@ if (array_key_exists($resource, $endpoints)) {
         }
         exit;
     }
+
+    // --- EGYEDI AL-VÉGPONT: FOGLALÁSHOZ TARTOZÓ SZOLGÁLTATÁSOK LEKÉRDEZÉSE ---
+    if ($resource === 'booking' && $id === 'services') {
+        if ($method !== 'GET') {
+            http_response_code(405);
+            echo json_encode(["error" => "Nem engedélyezett metódus: $method"]);
+            exit;
+        }
+
+        $currentBookingId = $authenticatedUser['booking_id'] ?? null;
+
+        if (!$currentBookingId) {
+            http_response_code(400);
+            echo json_encode(["error" => "Nem található érvényes foglalási azonosító a tokenben."]);
+            exit;
+        }
+
+        try {
+            $sql = "SELECT 
+                        sb.id,
+                        sb.quantity,
+                        sb.status,
+                        sb.requested_at,
+                        sb.updated_at,
+                        sb.price_at_booking,
+                        s.id AS service_id,
+                        s.name_hu,
+                        s.name_en,
+                        s.service_type_hu,
+                        s.service_type_en
+                    FROM `servicebookings` sb
+                    INNER JOIN `services` s ON sb.service_id = s.id
+                    WHERE sb.booking_id = ?";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$currentBookingId]);
+            $services = $stmt->fetchAll();
+
+            echo json_encode($services);
+            exit;
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => "Adatbázis hiba: " . $e->getMessage()]);
+            exit;
+        }
+    }
+
 
     $table = $config['table'];
     $idCol = $config['id'];

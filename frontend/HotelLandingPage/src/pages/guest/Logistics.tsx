@@ -1,5 +1,27 @@
+import { useGuest } from '../../context/GuestContext'
+import { useLanguage } from '../../context/LanguageContext';
+import s from '../../styles/GuestOverview.module.css'
+
+
 export default function Logistics() {
+    const { services } = useGuest();
+    const { language } = useLanguage();
+
     return (
-        <div>Logistics</div>
+        <div className={s.cardWrapper}>
+            <div className={`${s.card} ${s.serviceCard}`}>
+                <div className={s.cardHeader}>
+                    Választható szabadidős és logisztikai szolgáltatásaink
+                </div>
+
+                <div className={s.content}>
+                    {services.filter(s => s.service_type_en === "Logistics").map(service => (
+                        <div key={service.id}>
+                            <p>{service[`name_${language}`]}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
     )
 }

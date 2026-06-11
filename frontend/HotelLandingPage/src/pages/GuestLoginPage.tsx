@@ -51,17 +51,17 @@ export default function GuestLoginPage() {
         <div className={s.loginSection}>
             <LanguageSelector />
             <h1 className={s.h1Text}>{labels.h1Text}</h1>
-            {error && <div className={s.errorMessage}>{labels.errorMessages[error]}</div>}
             <form className={s.loginForm} onSubmit={handleLogin}>
                 <input 
                     className={s.inputField}
                     type="text" 
+                    required
                     autoFocus
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
                     onFocus={() => setError(null)}
                     placeholder={labels.emailPlaceholder}
-                />
+                    />
                 <div>
                     <strong>HE -</strong>
 
@@ -75,7 +75,7 @@ export default function GuestLoginPage() {
                         onChange={(e) => handleYearInput(e.target.value)}
                         onFocus={() => setError(null)}
                         placeholder='20xx'
-                    />-
+                        />-
                     <input 
                         className={s.inputField}
                         type="password"
@@ -86,10 +86,11 @@ export default function GuestLoginPage() {
                         onChange={(e) => setBookingId2ndHalf(e.target.value)}
                         onFocus={() => setError(null)}
                         placeholder={labels.passPlaceholder}
-                    />
+                        />
                 </div>
                 <button className='btn btn-primary' type="submit">{labels.buttonText}</button>
             </form>
+            {error && <div className={s.errorMessage}><span className="material-symbols-outlined">error</span>{labels.errorMessages[error]}</div>}
         </div>
     );
 };

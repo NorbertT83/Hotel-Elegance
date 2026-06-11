@@ -36,13 +36,33 @@
     overflow: hidden;
 }
 
-.guestCard .content{
+.content {
     display: grid;
     width: 100%;
     grid-template-columns: max-content 3fr;
     gap: .5rem 1rem;
     padding: 1rem;
 }
+
+.bookingCard .content{
+    padding: 1rem;
+}
+
+.roomCard .content {
+    grid-template-columns: 1fr 1.5fr;
+    padding: 1rem;
+}
+
+.serviceCard .content {
+    grid-template-columns: 1fr;
+}
+
+.serviceItem {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
 
 .span3 {
     grid-row: span 3;
@@ -55,13 +75,6 @@
     text-overflow: ellipsis;
 }
 
-.roomCard .content{
-    padding: 1rem;
-}
-
-.bookingCard .content{
-    padding: 1rem;
-}
 
 @media screen and (max-width: 1024px) {
     .cardWrapper {

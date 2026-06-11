@@ -46,3 +46,31 @@ export interface Guest {
     loyalty_level: number,
     role: string
 }
+
+export interface BookedService {
+    id: number,
+    service_id: number,
+    name_hu: string,
+    description_hu: string,
+    service_type_hu: string,
+    name_en: string,
+    description_en: string,
+    service_type_en: string,
+    price_at_booking: number,
+    quantity: number,
+    status: 'created' | 'pending' | 'completed' | 'deleted',
+    requested_at: string,
+    updated_at: string,
+}
+
+export interface HotelService {
+    id: string | number;
+    service_type_hu: string;
+    service_type_en: string;
+    name_hu: string;
+    name_en: string;
+    description_hu: string;
+    description_en: string;
+    price: number;
+    [key: string]: any;
+}

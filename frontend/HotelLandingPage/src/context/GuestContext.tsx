@@ -1,7 +1,8 @@
 import { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import { CateringType, Guest, Room, RoomType } from '../types/booking';
+import { BookedService, CateringType, Guest, HotelService, Room, RoomType } from '../types/booking';
 import { getData, createData, apiServiceConfig, tryToRefreshToken } from '../services/apiService';
 import { parseJwt } from '../utils/utils';
+import { useLanguage } from './LanguageContext';
 
 type Props = {
     children: React.ReactNode;
@@ -15,6 +16,8 @@ type GuestContextType = {
     guest: Guest | null;
     currentBooking: BookingContextType | null;
     currentRoom: Room | null;
+    currentBookedServices: BookedService[];
+    services: HotelService[],
     isLoading: boolean;
     accessToken: string | null;
     setAccessToken: (token: string | null) => void;
@@ -66,14 +69,18 @@ export const GuestProvider = ({ children }: Props) => {
     const [guest, setGuest] = useState<Guest | null>(null);
     const [currentBooking, setCurrentBooking] = useState<BookingContextType | null>(null);
     const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
+    const [currentBookedServices, setCurrentBookedServices] = useState<BookedService []>([]);
+    const [services, setServices] = useState<HotelService []>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [accessToken, setAccessToken] = useState<string | null>(null);
+    const { language } = useLanguage();
 
     const logout = useCallback(() => {
         setGuest(null);
         setAccessToken(null);
         setCurrentBooking(null);
         setCurrentRoom(null);
+        setCurrentBookedServices([]);
         console.log("Kijelentkezés");
 
         (async () => {
@@ -147,6 +154,16 @@ export const GuestProvider = ({ children }: Props) => {
                 roomData = await getData(`room/${activeBooking.roomNumber}`);
             }
 
+            const serviceResponse = await getData<HotelService[]>('service/all', {sort: `name_${language}`});
+            if (serviceResponse) {
+                setServices(serviceResponse);
+            }
+            
+            const bookedServicesResponse: BookedService [] = await getData(`booking/services`);
+            if (bookedServicesResponse) {
+                setCurrentBookedServices(bookedServicesResponse);
+            }
+
             setGuest({ ...guestResponse, role: "guest" });
             setCurrentBooking(activeBooking);
             setCurrentRoom(roomData);
@@ -209,7 +226,7 @@ export const GuestProvider = ({ children }: Props) => {
     }
 
     return (
-        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, isLoading, login, logout }}>
+        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, currentBookedServices, services, isLoading, login, logout }}>
             {children}
         </GuestContext.Provider>
     );

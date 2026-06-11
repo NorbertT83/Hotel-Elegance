@@ -1,20 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { getData } from '../services/apiService';
+import { HotelService } from '../types/booking';
 import s from '../styles/Services.module.css';
 import { landingPageText } from '../utils/translations';
-
-interface HotelService {
-    id: string | number;
-    service_type_hu: string;
-    service_type_en: string;
-    name_hu: string;
-    name_en: string;
-    description_hu: string;
-    description_en: string;
-    price: number;
-    [key: string]: any;
-}
 
 export default function Services() {
     const { language } = useLanguage();
