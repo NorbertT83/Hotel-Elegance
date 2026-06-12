@@ -244,7 +244,7 @@ if ($resource === 'auth') {
             exit;
         }
 
-        if (!empty($booking['checkout']) || strtotime($booking['end_of_stay']) <= time()) {
+        if (!empty($booking['checkout']) || date('Y-m-d', strtotime($booking['end_of_stay'])) < date('Y-m-d')) {
             http_response_code(401);
             echo json_encode(["success" => false, "errorType" => "bookingExpired"]);
             exit;

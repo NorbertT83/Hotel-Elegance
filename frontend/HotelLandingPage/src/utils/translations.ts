@@ -395,7 +395,19 @@ export const guestPageText = {
                     hour: "óra",
                 }
             },
-            menuRoomservice: "",
+            menuRoomservice: {
+                headerText: "Étel- és Ital kínálatunk",
+                categories: {
+                    breakfast: 'Reggeli',
+                    starter: 'Előételek',
+                    soup: 'Levesek',
+                    main_course: 'Főételek',
+                    dessert: 'Desszertek',
+                    coffee: 'Kávék',
+                    soft_drink: 'Üdítők',
+                    alcoholic_drink: 'Alkoholos Italok',
+                },
+            },
             menuWellness: "",
             menuExtras: "",
             menuLogistics: "",
@@ -450,7 +462,19 @@ export const guestPageText = {
                     hour: "hour",
                 }
             },
-            menuRoomservice: "",
+            menuRoomservice: {
+                headerText: "Our Food & Beverage selection",
+                categories: {
+                    breakfast: 'Breakfast',
+                    starter: 'Starters',
+                    soup: 'Soups',
+                    main_course: 'Main Courses',
+                    dessert: 'Desserts',
+                    coffee: 'Coffees',
+                    soft_drink: 'Soft Drinks',
+                    alcoholic_drink: 'Alcoholic Drinks',
+                },
+            },
             menuWellness: "",
             menuExtras: "",
             menuLogistics: "",

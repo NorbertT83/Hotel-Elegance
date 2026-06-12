@@ -24,16 +24,42 @@
 }
 
 .cardHeader {
+    position: relative;
     background-color: var(--secondary-container);
     border-top-left-radius: .5rem;
     border-top-right-radius: .5rem;
-    color: var(--on-surface-variant);
     padding: 1rem;
+    overflow: hidden;
+}
+
+.cardHeader div:first-child {
+    color: var(--on-surface-variant);
     text-decoration: underline 1px;
     text-underline-offset: 8px;
     font-variant: small-caps;
     font-size: 1.25rem;
-    overflow: hidden;
+}
+
+.cart {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    font-size: 1.5rem;
+    color: var(--on-surface-variant);
+    transition: color .2s ease-in-out, transform .2s ease-in-out;
+}
+
+.cart:hover {
+    cursor: pointer;
+    color: var(--on-surface);
+    transform: scale(1.1);
+}
+.cartCounter {
+    position: absolute;
+    top: -.25rem;
+    right: -.25rem;
+    font-size: .75rem;
+    color: var(--primary);
 }
 
 .content {
@@ -75,7 +101,6 @@
     text-overflow: ellipsis;
 }
 
-
 .roomServiceCard .content {
     display: grid;
     grid-template-columns: 1fr;
@@ -94,12 +119,29 @@
     justify-content: space-between;
 }
 
+.itemRow > div:nth-child(2) {
+    flex-shrink: 0;
+}
+
+.itemDetails {
+    margin-right: auto;
+    min-width: 0;
+}
+
 .itemName {
     color: var(--on-surface-variant);
     font-weight: 400;
     font-size: 1.2rem;
     letter-spacing: 3px;
     text-transform: uppercase;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .itemDescription {
@@ -120,6 +162,43 @@
     color: var(--on-surface);
 }
 
+.amountPicker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .25rem;
+    padding-left: 1rem;
+    flex-shrink: 0;
+}
+
+.amountDisplay {
+    background-color: var(--text-on-background);
+    color: var(--surface-container-low);
+    width: 2.5rem;
+    padding: .25rem .75rem;
+    text-align: center;
+    border-radius: .5rem;
+    user-select: none;
+}
+
+.amountModifier {
+    color: var(--on-surface-variant);
+    padding-inline: .4rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    user-select: none;
+}
+
+.amountModifier:hover {
+    cursor: pointer;
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.hasAmount {
+    background-color: var(--primary);
+}
+
 @media screen and (max-width: 1024px) {
     .cardWrapper {
         width: 95vw;
@@ -127,7 +206,26 @@
         border: none;
         background-color: transparent;
     }
+
+    .roomServiceCard .content {
+        padding: .5rem;
+    }
+
     .categorySection .itemRow {
-        padding: .5rem 1rem;
+        padding: .5rem 0;
+    }
+
+    .itemName {
+        letter-spacing: 1px;
+    }
+    .amountDisplay {
+        width: 2rem;
+        padding: .25rem;
+    }
+    .amountPicker {
+        padding-left: .5rem;
+    }
+    .price {
+        font-size: 1rem;
     }
 }
