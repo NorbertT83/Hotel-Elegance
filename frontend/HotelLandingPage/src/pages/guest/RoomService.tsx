@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { getData } from '../../services/apiService';
 import FoodBevItem from '../../components/FoodBevItem';
+import CartModal from '../../components/CartModal';
 import s from '../../styles/GuestSubPages.module.css';
 import { guestPageText } from '../../utils/translations';
 
@@ -16,25 +17,22 @@ export type FoodBev = {
     measure: string;
 };
 
-type OrderItem = {
+export type OrderItem = {
     item: FoodBev;
     quantity: number;
 };
-
 
 const categoryOrder: FoodBev['category'][] = [
     'breakfast', 'starter', 'soup', 'main_course', 'dessert', 'coffee', 'soft_drink', 'alcoholic_drink'
 ];
 
-function showCartModal() {
-    return null; // TODO cart modal felépítése...
-}
 
 export default function RoomService() {
     const { language } = useLanguage();
     const labels = guestPageText[language].guestPage.menuRoomservice;
     const [foodAndBeverage, setFoodAndBeverage] = useState<FoodBev[]>([]);
     const [cart, setCart] = useState<OrderItem[]>([]);
+    const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const hydrateFoodBev = async () => {
@@ -96,13 +94,24 @@ export default function RoomService() {
 
     const totalItemsInCart = cart.reduce((sum, current) => sum + current.quantity, 0);
 
-    return (
+    useEffect(() => {
+        if (!totalItemsInCart) setIsCartOpen(false);
+    }, [totalItemsInCart])
+
+    return ( <>
+        {isCartOpen && <CartModal
+            cart={cart}
+            isCartOpen={isCartOpen}
+            setIsCartOpen={setIsCartOpen}
+            handleCartChange={handleCartChange}
+        /> }
+
         <div className={s.cardWrapper}>
             <div className={`${s.card} ${s.roomServiceCard}`}>
                 <div className={s.cardHeader}>
                     <div className={s.headerText}>{labels.headerText}</div>
                     {totalItemsInCart > 0 && (
-                        <div className={s.cart} onClick={showCartModal}>
+                        <div className={s.cart} title={labels.cartTitle} onClick={() => setIsCartOpen(true)}>
                             <span className="material-symbols-outlined">hand_meal</span>
                             <div className={s.cartCounter}>{totalItemsInCart}</div>
                         </div>
@@ -111,8 +120,8 @@ export default function RoomService() {
 
                 <div className={s.content}>
                     {categoryOrder.map(categoryKey => {
-                        const items = sortedGroupedData[categoryKey];
-                        if (!items || items.length === 0) return null;
+                        const categoryItems = sortedGroupedData[categoryKey];
+                        if (!categoryItems || categoryItems.length === 0) return null;
 
                         return (
                             <div key={categoryKey} className={s.categorySection}>
@@ -121,14 +130,16 @@ export default function RoomService() {
                                 </h2>
                                 
                                 <div className={s.categoryItems}>
-                                    {items.map(fandb => (
-                                        <FoodBevItem
-                                            key={fandb.id}
-                                            fandb={fandb}
-                                            language={language}
-                                            handleCartChange={handleCartChange}
+                                    {categoryItems.map(item => {
+                                        const cartItem = cart.find(orderItem => orderItem.item.id === item.id);
+                                        const currentAmount = cartItem ? cartItem.quantity : 0;
+                                        return <FoodBevItem
+                                                key={item.id}
+                                                item={item}
+                                                amount={currentAmount}
+                                                handleCartChange={handleCartChange}
                                         />
-                                    ))}
+                                    })}
                                 </div>
                             </div>
                         );
@@ -136,5 +147,6 @@ export default function RoomService() {
                 </div>
             </div>
         </div>
+    </>
     );
 }

@@ -1,48 +1,37 @@
 import { useState } from "react";
 import s from '../styles/GuestSubPages.module.css';
-import { Language } from "../context/LanguageContext";
+import { useLanguage } from "../context/LanguageContext";
 import { FoodBev } from "../pages/guest/RoomService";
 
-export default function FoodBevItem({
-    fandb,
-    language,
-    handleCartChange
-}: {
-    fandb: FoodBev;
-    language: Language;
-    handleCartChange: (id: FoodBev["id"], quantity: number) => void;
-}) {
-    const [amount, setAmount] = useState(0);
+interface FoodBevProps {
+    item: FoodBev;
+    amount: number;
+    handleCartChange: (id: FoodBev["id"], amount: number) => void;
+}
 
-    function handleAmountChange(change: number) {
-        const newAmount = amount + change;
-
-        if (newAmount < 0 || newAmount >= 20) return;
-
-        setAmount(newAmount);
-        handleCartChange(fandb.id, newAmount);
-    }
+export default function FoodBevItem({ item, handleCartChange, amount=0}: FoodBevProps ) {
+    const { language } = useLanguage();
 
     return (
         <div className={s.itemRow}>
             <div className={s.itemDetails}>
-                <div className={s.itemName} title={fandb[`name_${language}`]}>
-                    {fandb[`name_${language}`]}
+                <div className={s.itemName} title={item[`name_${language}`]}>
+                    {item[`name_${language}`]}
                 </div>
                 <div className={s.itemDescription}>
-                    {fandb[`description_${language}`]}
+                    {item[`description_${language}`]}
                 </div>
             </div>
             <div>
                 <p className={s.price}>
-                    {Intl.NumberFormat(language === 'hu' ? 'hu-HU' : 'en-US').format(fandb.price)} Ft
+                    {Intl.NumberFormat(language === 'hu' ? 'hu-HU' : 'en-US').format(item.price)} Ft
                 </p>
-                <div className={s.measure}>{fandb.measure}</div>
+                <div className={s.measure}>{item.measure}</div>
             </div>
             <div className={s.amountPicker}>
-                <span className={s.amountModifier} onClick={() => handleAmountChange(-1)}>-</span>
+                <span className={s.amountModifier} onClick={() => handleCartChange(item.id, amount - 1)}>-</span>
                 <span className={`${s.amountDisplay} ${amount > 0 ? s.hasAmount : ''}`}>{amount}</span>
-                <span className={s.amountModifier} onClick={() => handleAmountChange(1)}>+</span>
+                <span className={s.amountModifier} onClick={() => handleCartChange(item.id, amount + 1)}>+</span>
             </div>
         </div>
     );

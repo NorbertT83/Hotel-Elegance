@@ -47,6 +47,7 @@
     right: 2rem;
     font-size: 1.5rem;
     color: var(--on-surface-variant);
+    user-select: none;
     transition: color .2s ease-in-out, transform .2s ease-in-out;
 }
 
@@ -211,6 +212,49 @@
 
 .hasAmount {
     background-color: var(--primary);
+}
+
+.cartModal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    z-index: 999;
+}
+
+.cartModal .closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-on-background);
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+.closeButton:hover {
+    color:var(--error)
+}
+
+.cartWrapper {
+    width: max-content;
+    max-width: 50%;
+    margin-top: 4rem;
+
+}
+.cartHeader .headerText {
+    text-align: left;
+    width: 100%;
+}
+
+.cartContent {
+    padding: 2rem;
+    width: 50vw;
 }
 
 @media screen and (max-width: 1024px) {
