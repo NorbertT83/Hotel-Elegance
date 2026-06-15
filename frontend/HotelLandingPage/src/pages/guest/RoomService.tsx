@@ -100,7 +100,7 @@ export default function RoomService() {
         <div className={s.cardWrapper}>
             <div className={`${s.card} ${s.roomServiceCard}`}>
                 <div className={s.cardHeader}>
-                    <div>{labels.headerText}</div>
+                    <div className={s.headerText}>{labels.headerText}</div>
                     {totalItemsInCart > 0 && (
                         <div className={s.cart} onClick={showCartModal}>
                             <span className="material-symbols-outlined">hand_meal</span>

@@ -15,7 +15,7 @@
 }
 
 .sidebar {
-    height: 80vh;
+    height: 83vh;
     background-color: var(--surface-container-low);
     color: var(--text-on-background);
     border: 1px solid var(--outline-variant);
@@ -50,6 +50,8 @@
         grid-template-columns: 1fr;
         margin-top: 6rem;
         max-width: auto;
+        gap: .5rem;
+        padding: .25rem;
         width: 100%;
     }
     .sidebar {

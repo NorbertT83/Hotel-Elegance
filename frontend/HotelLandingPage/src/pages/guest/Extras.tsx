@@ -11,7 +11,7 @@ export default function Extras() {
         <div className={s.cardWrapper}>
             <div className={`${s.card} ${s.serviceCard}`}>
                 <div className={s.cardHeader}>
-                    Választható kényelmi szolgáltatásaink
+                    <div className={s.headerText}>Választható kényelmi szolgáltatásaink</div>                    
                 </div>
 
                 <div className={s.content}>

@@ -1,7 +1,6 @@
 import { HashLink } from 'react-router-hash-link';
 import { useLanguage } from '../context/LanguageContext';
 import { landingPageText } from '../utils/translations';
-import LanguageSelector from './LanguageSelector';
 
 export default function Footer() {
     const { language } = useLanguage();
@@ -47,7 +46,6 @@ export default function Footer() {
                     <span>{text.copyright}</span>
                 </div>
             </div>
-            <LanguageSelector />
         </footer>
     )
 }

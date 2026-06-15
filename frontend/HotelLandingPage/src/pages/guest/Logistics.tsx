@@ -11,7 +11,7 @@ export default function Logistics() {
         <div className={s.cardWrapper}>
             <div className={`${s.card} ${s.serviceCard}`}>
                 <div className={s.cardHeader}>
-                    Választható szabadidős és logisztikai szolgáltatásaink
+                    <div className={s.headerText}>Választható szabadidős és logisztikai szolgáltatásaink</div>
                 </div>
 
                 <div className={s.content}>

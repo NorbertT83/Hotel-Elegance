@@ -6,7 +6,7 @@ import s from '../../styles/GuestSubPages.module.css';
 export default function Overview() {
     const { language }= useLanguage();
     const { guest, currentBooking, currentRoom, currentBookedServices } = useGuest();
-    const menuOverviewLabels = guestPageText[language].guestPage.menuOverview;
+    const labels = guestPageText[language].guestPage.menuOverview;
 
     if (!guest) return;
 
@@ -14,55 +14,55 @@ export default function Overview() {
         <div className={s.cardWrapper}>
             <div className={`${s.card} ${s.guestCard}`}>
                 <div className={s.cardHeader}>
-                    {menuOverviewLabels.guestCard.headerText}
+                    <div className={s.headerText}>{labels.guestCard.headerText}</div>
                 </div>
 
                 <div className={s.content}>
-                    <div>{menuOverviewLabels.guestCard.nameText}</div>
+                    <div>{labels.guestCard.nameText}</div>
                     <div>{guest.lname} {guest.fname}</div>
-                    <div>{menuOverviewLabels.guestCard.emailText}</div>
+                    <div>{labels.guestCard.emailText}</div>
                     <div className={s.truncate}>{guest.email}</div>
-                    <div className={s.span3}>{menuOverviewLabels.guestCard.addressText}</div>
+                    <div className={s.span3}>{labels.guestCard.addressText}</div>
                     <div>{guest.country} {guest.zip_code}</div>
                     <div>{guest.city}</div>
                     <div>{guest.street}</div>
                     {guest.car_plate_number ? <>
-                        <div>{menuOverviewLabels.guestCard.car}</div>
+                        <div>{labels.guestCard.car}</div>
                         <div>{guest.car_plate_number}</div>
                         </> : ''}
                     
-                    <div>{menuOverviewLabels.guestCard.nightsSlept}</div>
+                    <div>{labels.guestCard.nightsSlept}</div>
                     <div>{guest.total_nights}</div>
-                    <div>{menuOverviewLabels.guestCard.vipLevel}</div>
+                    <div>{labels.guestCard.vipLevel}</div>
                     <div>{guest.loyalty_level}</div>
-                    <div>{menuOverviewLabels.guestCard.currentBooking}</div>
+                    <div>{labels.guestCard.currentBooking}</div>
                     <div>{currentBooking?.id}</div>
                 </div>
             </div>
 
             <div className={`${s.card} ${s.roomCard}`}>
                 <div className={s.cardHeader}>
-                    {menuOverviewLabels.roomCard.headerText}
+                    <div className={s.headerText}>{labels.roomCard.headerText}</div>
                 </div>
 
                 <div className={s.content}>
-                    <div>{menuOverviewLabels.roomCard.roomNumber}</div>
+                    <div>{labels.roomCard.roomNumber}</div>
                     <div>{currentRoom?.room_number}</div>
 
-                    <div>{menuOverviewLabels.roomCard.roomSize}</div>
+                    <div>{labels.roomCard.roomSize}</div>
                     <div>{currentRoom?.floorspace} m2</div>
 
-                    <div>{menuOverviewLabels.roomCard.bedtype}</div>
+                    <div>{labels.roomCard.bedtype}</div>
                     <div>{currentRoom?.bed_type}</div>
 
-                    <div>{menuOverviewLabels.roomCard.status}</div>
+                    <div>{labels.roomCard.status}</div>
                     <div>{currentRoom?.status}</div>
                 </div>
             </div>
 
             <div className={`${s.card} ${s.serviceCard}`}>
                 <div className={s.cardHeader}>
-                    {menuOverviewLabels.serviceCard.headerText}
+                    <div className={s.headerText}>{labels.serviceCard.headerText}</div>
                 </div>
 
                 <div className={s.content}>

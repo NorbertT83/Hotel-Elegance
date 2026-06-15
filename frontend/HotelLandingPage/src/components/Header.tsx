@@ -31,5 +31,3 @@ export default function Header() {
         </header>
     )
 }
-
-const fillStyle = { fontVariationSettings: "'FILL' 1" }

@@ -12,7 +12,7 @@ export default function Wellness() {
         <div className={s.cardWrapper}>
             <div className={`${s.card} ${s.serviceCard}`}>
                 <div className={s.cardHeader}>
-                    Választható wellness szolgáltatásaink
+                    <div className={s.headerText}>Választható wellness szolgáltatásaink</div>
                 </div>
 
                 <div className={s.content}>
