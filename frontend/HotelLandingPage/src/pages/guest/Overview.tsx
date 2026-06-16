@@ -3,6 +3,13 @@ import { useLanguage } from "../../context/LanguageContext";
 import { guestPageText } from "../../utils/translations";
 import s from '../../styles/GuestSubPages.module.css';
 
+const statusIcons = {
+    created: 'order_approve',
+    pending: 'schedule',
+    completed: 'check_circle',
+    deleted: 'contract_delete'
+}
+
 export default function Overview() {
     const { language }= useLanguage();
     const { guest, currentBooking, currentRoom, currentBookedServices } = useGuest();
@@ -66,15 +73,16 @@ export default function Overview() {
                 </div>
 
                 <div className={s.content}>
+                    <div className={s.serviceTableHead}>
+                        <span> {labels.serviceCard.description} </span>
+                        <span> {labels.serviceCard.latestUpdate} </span>
+                        <span> {labels.serviceCard.status} </span>
+                    </div>
                     {currentBookedServices.map((sb) => (
                         <div key={sb.id} className={s.serviceItem}>
-                            <span>{sb.name_hu}</span>
-
-                            {sb.status != 'completed' ?
-                                <span style={{color: "gray"}} title={sb.updated_at} className="material-symbols-outlined">hourglass_check</span>
-                            :
-                                <span style={{color: "green"}} title={sb.updated_at} className="material-symbols-outlined">done_all</span>
-                            }
+                            <span>{sb[`name_${language}`]}</span>
+                            <span>{sb.updated_at}</span>
+                            <span style={{color: sb.status=='completed' ? "green" : "gray"}} title={labels.serviceCard[sb.status]} className="material-symbols-outlined">{statusIcons[sb.status]}</span>
                         </div>
                     ))}
                 </div>

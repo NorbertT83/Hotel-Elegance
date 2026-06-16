@@ -452,6 +452,28 @@ if ($resource === 'auth') {
     exit;
 }
 
+if ($resource == "foodbeverage" && $id == "categories" && $method == "GET") {
+    try {
+        $pdo->beginTransaction();
+
+        $stmt = $pdo->prepare("SELECT DISTINCT category FROM food_and_beverage ORDER BY category");
+        $stmt->execute();
+        $foodbevCategories = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        http_response_code(200);
+        echo json_encode(["success" => true, "categories" => $foodbevCategories]);
+        exit;
+
+    } catch (\Throwable $e) {
+        if ($pdo->inTransaction()) { $pdo->rollBack(); }
+        
+        error_log($e->getMessage()); 
+        
+        http_response_code(500);
+        echo json_encode(["success" => false, "error" => "Adatbázis hiba történt a lekérés során."]);
+        exit;
+    }
+}
+
 // --- NORMÁL TÁBLA ALAPÚ ENDPOINTEK DEFINÍCIÓJA ---
 $endpoints = [
     'room' => [
@@ -500,7 +522,6 @@ $endpoints = [
         'filters' => ['status', 'booking_id'],
         'sorts'   => ['status', 'updated_at'],
         'enums'   => ['status' => ['created', 'pending', 'completed', 'deleted']]
-
     ],
     'foodbeverage' => [
         'table'   => 'food_and_beverage',

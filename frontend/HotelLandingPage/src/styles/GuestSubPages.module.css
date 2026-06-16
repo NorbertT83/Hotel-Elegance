@@ -80,11 +80,35 @@
 .serviceCard .content {
     grid-template-columns: 1fr;
 }
-
+.serviceTableHead {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    font-size: .8rem;
+    font-style: italic;
+    padding-bottom: .25rem;
+    border-bottom: 1px solid var(--outline-variant);
+}
+.serviceTableHead span:last-child {
+    justify-self: center;
+}
 .serviceItem {
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    width: 100%;
     align-items: center;
-    gap: .5rem;
+    gap: 1rem;
+}
+.serviceItem span:first-child {
+    color: var(--primary);
+}
+.serviceItem span:nth-child(2) {
+    font-size: .8rem;
+}
+.serviceItem span:last-child {
+    user-select: none;
+    justify-self: center;
 }
 
 .span3 {

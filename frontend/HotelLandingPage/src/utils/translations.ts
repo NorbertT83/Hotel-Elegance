@@ -391,8 +391,15 @@ export const guestPageText = {
                 serviceCard: {
                     headerText: "Igénybe vett szolgáltatások",
                     service: "Szolgáltatás",
+                    description: "Megnevezés",
+                    latestUpdate: "Utolsó frissítés",
+                    status: "Állapot",
                     piece: "darab",
                     hour: "óra",
+                    created: "Létrehozva",
+                    pending: "Teljesítés alatt",
+                    completed: "Teljesítve",
+                    deleted: "Törölve"
                 }
             },
             menuRoomservice: {
@@ -452,17 +459,24 @@ export const guestPageText = {
                     currentBooking: "Current booking Nr.:",
                 },
                 roomCard: {
-                    headerText: "Your Room\'s preferences",
+                    headerText: "Your Room\'s features",
                     roomNumber: "Room number:",
                     roomSize: "Room size:",
                     bedtype: "Bedtype:",
                     status: "Status:",
                 },
                 serviceCard: {
-                    headerText: "Utilized services",
+                    headerText: "Utilized services summary",
                     service: "Service",
+                    description: "Description",
+                    latestUpdate: "Last update",
+                    status: "Status",
                     piece: "piece",
                     hour: "hour",
+                    created: "Created",
+                    pending: "Pending",
+                    completed: "Completed",
+                    deleted: "Deleted"
                 }
             },
             menuRoomservice: {
