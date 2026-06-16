@@ -8,7 +8,7 @@ import s from '../../styles/BookingPage.module.css';
 export default function Step5SuccessCard() {
     const navigate = useNavigate();
     const { language } = useLanguage()
-    const { bookingState, setBookingState } = useBooking();
+    const { bookingState } = useBooking();
     const [copied, setCopied] = useState(false);
     const step5Text = bookingPageText[language].step5;
 

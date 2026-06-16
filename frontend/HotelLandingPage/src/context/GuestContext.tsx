@@ -17,7 +17,8 @@ type GuestContextType = {
     currentBooking: BookingContextType | null;
     currentRoom: Room | null;
     currentBookedServices: BookedService[];
-    services: HotelService[],
+    refreshBookedServices: () => void;
+    services: HotelService[];
     isLoading: boolean;
     accessToken: string | null;
     setAccessToken: (token: string | null) => void;
@@ -159,10 +160,7 @@ export const GuestProvider = ({ children }: Props) => {
                 setServices(serviceResponse);
             }
             
-            const bookedServicesResponse: BookedService [] = await getData(`booking/services`);
-            if (bookedServicesResponse) {
-                setCurrentBookedServices(bookedServicesResponse);
-            }
+            await refreshBookedServices();
 
             setGuest({ ...guestResponse, role: "guest" });
             setCurrentBooking(activeBooking);
@@ -198,6 +196,14 @@ export const GuestProvider = ({ children }: Props) => {
         initGuest();
     }, [hydrateAppState, logout]);
 
+    async function refreshBookedServices() {
+        const bookedServicesResponse: BookedService [] = await getData(`booking/services`);
+        if (bookedServicesResponse) {
+            setCurrentBookedServices(bookedServicesResponse);
+        }
+    }
+
+
     async function login(email: string, bookingIdAsPassword: string): Promise<LoginResult> {
         setIsLoading(true);
         try {
@@ -226,7 +232,7 @@ export const GuestProvider = ({ children }: Props) => {
     }
 
     return (
-        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, currentBookedServices, services, isLoading, login, logout }}>
+        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, services, isLoading, login, logout }}>
             {children}
         </GuestContext.Provider>
     );

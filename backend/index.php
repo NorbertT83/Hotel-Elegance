@@ -490,9 +490,17 @@ $endpoints = [
         'filters' => ['room_number', 'guest1_id','end_of_stay_after'],
         'sorts'   => ['beginning_of_stay', 'room_number', 'guest1_id'],
         'enums'   => [
-            'room_type' => ['standard','deluxe','suite'],
+            'room_type'  => ['standard','deluxe','suite'],
             'needs_view' => ['city', 'garden', 'panorama']
         ]
+    ],
+    'servicebooking' => [
+        'table'   => 'servicebookings',
+        'id'      => 'id',
+        'filters' => ['status', 'booking_id'],
+        'sorts'   => ['status', 'updated_at'],
+        'enums'   => ['status' => ['created', 'pending', 'completed', 'deleted']]
+
     ],
     'foodbeverage' => [
         'table'   => 'food_and_beverage',
@@ -616,7 +624,7 @@ if (array_key_exists($resource, $endpoints)) {
             try {
                 createResource($pdo, $table, $inputData);
                 http_response_code(201);
-                echo json_encode(["id" => $pdo->lastInsertId(), "message" => "Sikeresen létrehozva."]);
+                echo json_encode(["id" => $pdo->lastInsertId(), "success" => true, "message" => "Sikeresen létrehozva."]);
             } catch (\PDOException $e) { http_response_code(400); echo json_encode(["error" => $e->getMessage()]); }
             break;
 
@@ -624,7 +632,7 @@ if (array_key_exists($resource, $endpoints)) {
             if ($id === 'all') { http_response_code(400); echo json_encode(["error" => "Hianyzo ID."]); break; }
             try {
                 $affected = deleteResource($pdo, $table, $idCol, $id);
-                if ($affected > 0) { echo json_encode(["message" => "Torolve."]); } 
+                if ($affected > 0) { echo json_encode(["success" => true, "message" => "Torolve."]); } 
                 else { http_response_code(404); echo json_encode(["error" => "Nem talalhato."]); }
             } catch (\PDOException $e) { http_response_code(400); echo json_encode(["error" => $e->getMessage()]); }
             break;

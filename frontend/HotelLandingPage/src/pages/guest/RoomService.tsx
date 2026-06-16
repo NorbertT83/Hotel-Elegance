@@ -1,10 +1,13 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import { getData } from '../../services/apiService';
+import { createData, getData } from '../../services/apiService';
 import FoodBevItem from '../../components/FoodBevItem';
 import CartModal from '../../components/CartModal';
 import s from '../../styles/GuestSubPages.module.css';
 import { guestPageText } from '../../utils/translations';
+import { useGuest } from '../../context/GuestContext';
+import MessageBoxModal from '../../components/MessageBoxModal';
+
 
 export type FoodBev = {
     id: number;
@@ -32,7 +35,9 @@ export default function RoomService() {
     const labels = guestPageText[language].guestPage.menuRoomservice;
     const [foodAndBeverage, setFoodAndBeverage] = useState<FoodBev[]>([]);
     const [cart, setCart] = useState<OrderItem[]>([]);
+    const { currentBooking, services, refreshBookedServices } = useGuest();
     const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+    const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 
     useEffect(() => {
         const hydrateFoodBev = async () => {
@@ -92,6 +97,29 @@ export default function RoomService() {
         });
     }
 
+    async function placeOrder(cartValue: number) {
+        try {
+            const response: any = await createData('servicebooking', {
+                booking_id: currentBooking?.id,
+                service_id: services.find((service) => service.name_en === 'Room service')?.id,
+                quantity: 1,
+                price_at_booking: cartValue
+            });
+
+            if (response && response.success) {
+                console.log("Sikeres foglalás rögzítve! ID:", response.id);
+                setCart([]);
+                setShowSuccessModal(true);
+                refreshBookedServices();
+            } else {
+                console.error("Sikertelen foglalás: Nem érkezett sikeres válasz a szervertől.");
+            }
+        } catch (err: any) {
+            console.error("Hiba történt a foglalási folyamat során:", err.message);
+        }
+    }
+
+
     const totalItemsInCart = cart.reduce((sum, current) => sum + current.quantity, 0);
 
     useEffect(() => {
@@ -99,11 +127,20 @@ export default function RoomService() {
     }, [totalItemsInCart])
 
     return ( <>
+        {showSuccessModal && 
+            <MessageBoxModal
+                headerText='Információ'
+                message='Sikeres rendelés! Köszönjük!'
+                timeout={2500}
+                onClose={() => setShowSuccessModal(false)}
+            />
+        }
         {isCartOpen && <CartModal
             cart={cart}
             isCartOpen={isCartOpen}
             setIsCartOpen={setIsCartOpen}
             handleCartChange={handleCartChange}
+            placeOrder={placeOrder}
         /> }
 
         <div className={s.cardWrapper}>

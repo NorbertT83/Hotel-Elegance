@@ -407,7 +407,9 @@ export const guestPageText = {
                     soft_drink: 'Üdítők',
                     alcoholic_drink: 'Alkoholos Italok',
                 },
-                cartTitle: "Kosár tartalma"
+                cartTitle: "Kosár tartalma",
+                cartTotal: "Kosárérték:",
+                cartOrder: "Megrendelés"
             },
             menuWellness: "",
             menuExtras: "",
@@ -475,7 +477,9 @@ export const guestPageText = {
                     soft_drink: 'Soft Drinks',
                     alcoholic_drink: 'Alcoholic Drinks',
                 },
-                cartTitle: "Cart contents"
+                cartTitle: "Cart contents",
+                cartTotal: "Cart Total:",
+                cartOrder: "Place Order"
             },
             menuWellness: "",
             menuExtras: "",

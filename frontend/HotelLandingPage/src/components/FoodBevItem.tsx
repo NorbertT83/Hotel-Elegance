@@ -26,7 +26,7 @@ export default function FoodBevItem({ item, handleCartChange, amount=0}: FoodBev
                 <p className={s.price}>
                     {Intl.NumberFormat(language === 'hu' ? 'hu-HU' : 'en-US').format(item.price)} Ft
                 </p>
-                <div className={s.measure}>{item.measure}</div>
+                <div className={s.measure}>{ item.measure ? item.measure : `1 ${language == 'hu' ? 'adag' : 'serving'}`} </div>
             </div>
             <div className={s.amountPicker}>
                 <span className={s.amountModifier} onClick={() => handleCartChange(item.id, amount - 1)}>-</span>
