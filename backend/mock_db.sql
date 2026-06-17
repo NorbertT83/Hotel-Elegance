@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Jún 11. 14:06
+-- Létrehozás ideje: 2026. Jún 16. 14:17
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -65,7 +65,7 @@ INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginnin
 ('9', 303, 'deluxe', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
 ('HE-2026-194A', 303, 'deluxe', 18, '2026-05-28', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
 ('HE-2026-194V', 102, 'standard', 19, '2026-05-29', '2026-06-04', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-29 05:40:29'),
-('HE-2026-UCT4', 403, 'suite', 19, '2026-06-03', '2026-06-12', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-06-03 09:53:43');
+('HE-2026-UCT4', 403, 'suite', 19, '2026-06-10', '2026-06-17', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-06-03 09:53:43');
 
 --
 -- Eseményindítók `bookings`
@@ -156,13 +156,13 @@ DELIMITER ;
 
 CREATE TABLE `food_and_beverage` (
   `id` int(11) NOT NULL,
-  `category` enum('breakfast','starter','soup','main_course','dessert','hot_drink','soft_drink','alcoholic_drink') NOT NULL,
+  `category` enum('breakfast','starter','soup','main_course','dessert','soft_drink','alcoholic_drink','coffee') NOT NULL,
   `name_hu` varchar(50) NOT NULL,
   `description_hu` text NOT NULL,
   `name_en` varchar(50) NOT NULL,
   `description_en` text NOT NULL,
   `price` int(11) NOT NULL,
-  `measure` varchar(20) NOT NULL
+  `measure` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -170,16 +170,16 @@ CREATE TABLE `food_and_beverage` (
 --
 
 INSERT INTO `food_and_beverage` (`id`, `category`, `name_hu`, `description_hu`, `name_en`, `description_en`, `price`, `measure`) VALUES
-(1, 'breakfast', 'Croissant vajjal és lekvárral', 'Frissen sütött vajas croissant házi lekvárral.', 'Butter Croissant with Jam', 'Freshly baked butter croissant served with homemade jam.', 2900, '1 adag'),
-(2, 'breakfast', 'Pain au chocolat', 'Francia csokoládés leveles péksütemény.', 'Pain au Chocolat', 'French chocolate-filled pastry.', 3200, '1 adag'),
-(3, 'breakfast', 'Amerikai reggeli', 'Tükörtojás, bacon, kolbász, pirítós és saláta.', 'American Breakfast', 'Eggs, bacon, sausage, toast and salad.', 6900, '1 adag'),
-(4, 'breakfast', 'Kontinentális reggeli', 'Pékáru, vaj, lekvár, sonka és sajt.', 'Continental Breakfast', 'Pastries, butter, jam, ham and cheese.', 5900, '1 adag'),
-(5, 'breakfast', 'Füstölt lazacos bagel', 'Krémsajt, lazac és kapribogyó.', 'Smoked Salmon Bagel', 'Cream cheese, smoked salmon and capers.', 5900, '1 adag'),
-(6, 'breakfast', 'Avokádós pirítós', 'Kovászos kenyér avokádókrémmel.', 'Avocado Toast', 'Sourdough toast with avocado cream.', 4900, '1 adag'),
-(7, 'breakfast', 'Eggs Benedict', 'Buggyantott tojás hollandi mártással.', 'Eggs Benedict', 'Poached eggs with hollandaise sauce.', 5900, '1 adag'),
-(8, 'breakfast', 'Rántotta három tojásból', 'Friss tojásból készített rántotta.', 'Three-Egg Scramble', 'Freshly prepared scrambled eggs.', 3900, '1 adag'),
-(9, 'breakfast', 'Omlett sonkával és sajttal', 'Klasszikus omlett sonkával és sajttal.', 'Ham and Cheese Omelette', 'Classic omelette with ham and cheese.', 4500, '1 adag'),
-(10, 'breakfast', 'Granola joghurttal', 'Házi granola görög joghurttal.', 'Granola with Yogurt', 'Homemade granola with Greek yogurt.', 3900, '1 adag'),
+(1, 'breakfast', 'Croissant vajjal és lekvárral', 'Frissen sütött vajas croissant házi lekvárral.', 'Butter Croissant with Jam', 'Freshly baked butter croissant served with homemade jam.', 2900, NULL),
+(2, 'breakfast', 'Pain au chocolat', 'Francia csokoládés leveles péksütemény.', 'Pain au Chocolat', 'French chocolate-filled pastry.', 3200, NULL),
+(3, 'breakfast', 'Amerikai reggeli', 'Tükörtojás, bacon, kolbász, pirítós és saláta.', 'American Breakfast', 'Eggs, bacon, sausage, toast and salad.', 6900, NULL),
+(4, 'breakfast', 'Kontinentális reggeli', 'Pékáru, vaj, lekvár, sonka és sajt.', 'Continental Breakfast', 'Pastries, butter, jam, ham and cheese.', 5900, NULL),
+(5, 'breakfast', 'Füstölt lazacos bagel', 'Krémsajt, lazac és kapribogyó.', 'Smoked Salmon Bagel', 'Cream cheese, smoked salmon and capers.', 5900, NULL),
+(6, 'breakfast', 'Avokádós pirítós', 'Kovászos kenyér avokádókrémmel.', 'Avocado Toast', 'Sourdough toast with avocado cream.', 4900, NULL),
+(7, 'breakfast', 'Eggs Benedict', 'Buggyantott tojás hollandi mártással.', 'Eggs Benedict', 'Poached eggs with hollandaise sauce.', 5900, NULL),
+(8, 'breakfast', 'Rántotta 3 tojásból', 'Friss tojásból készített rántotta.', 'Three-Egg Scramble', 'Freshly prepared scrambled eggs.', 3900, NULL),
+(9, 'breakfast', 'Omlett sonkával és sajttal', 'Klasszikus omlett sonkával és sajttal.', 'Ham and Cheese Omelette', 'Classic omelette with ham and cheese.', 4500, NULL),
+(10, 'breakfast', 'Granola joghurttal', 'Házi granola görög joghurttal.', 'Granola with Yogurt', 'Homemade granola with Greek yogurt.', 3900, NULL),
 (11, 'starter', 'Marhatatár', 'Kézzel vágott marhahús briós pirítóssal.', 'Beef Tartare', 'Hand-cut beef tartare with brioche toast.', 6900, '180 g'),
 (12, 'starter', 'Füstölt lazac', 'Hidegen füstölt lazac citrusos salátával.', 'Smoked Salmon', 'Cold smoked salmon with citrus salad.', 6200, '150 g'),
 (13, 'starter', 'Burrata', 'Krémes burrata paradicsomokkal.', 'Burrata', 'Creamy burrata with tomatoes.', 5400, '200 g'),
@@ -195,26 +195,26 @@ INSERT INTO `food_and_beverage` (`id`, `category`, `name_hu`, `description_hu`, 
 (23, 'soup', 'Szarvasgombás burgonyakrémleves', 'Fekete szarvasgomba olajjal.', 'Truffle Potato Soup', 'Potato cream soup with truffle oil.', 3900, '300 ml'),
 (24, 'soup', 'Halászlé', 'Magyar halászlé filézett hallal.', 'Hungarian Fish Soup', 'Traditional Hungarian fish soup.', 4900, '350 ml'),
 (25, 'soup', 'Paradicsomleves', 'Bazsalikommal és parmezánnal.', 'Tomato Soup', 'Tomato soup with basil and parmesan.', 3500, '300 ml'),
-(26, 'main_course', 'Csirkemell supreme', 'Ropogós bőrös csirkemell burgonyapürével.', 'Chicken Supreme', 'Crispy skin chicken breast with mashed potatoes.', 7900, '1 adag'),
-(27, 'main_course', 'Kacsamell', 'Roséra sült kacsamell zellerpürével.', 'Duck Breast', 'Medium roasted duck breast with celery purée.', 9900, '1 adag'),
-(28, 'main_course', 'Bélszín steak 200g', 'Prémium marhabélszín grillezett zöldségekkel.', 'Beef Tenderloin Steak 200g', 'Premium beef tenderloin with vegetables.', 14900, '1 adag'),
-(29, 'main_course', 'Rib-eye steak 300g', 'Márványozott marhahús steak.', 'Rib-Eye Steak 300g', 'Marbled rib-eye steak.', 17900, '1 adag'),
-(30, 'main_course', 'Wiener schnitzel', 'Borjú bécsi szelet petrezselymes burgonyával.', 'Wiener Schnitzel', 'Veal schnitzel with parsley potatoes.', 9900, '1 adag'),
-(31, 'main_course', 'Lazacfilé', 'Spárgával és citromos vajjal.', 'Salmon Fillet', 'Salmon fillet with asparagus.', 10900, '1 adag'),
-(32, 'main_course', 'Fogasfilé', 'Sült fogasfilé zöldséges rizottóval.', 'Pike Perch Fillet', 'Roasted pike perch with risotto.', 9900, '1 adag'),
-(33, 'main_course', 'Tonhal steak', 'Grillezett tonhal steak salátával.', 'Tuna Steak', 'Grilled tuna steak with salad.', 12900, '1 adag'),
-(34, 'main_course', 'Sertésszűz', 'Sertésszűz érlelt jus-vel.', 'Pork Tenderloin', 'Pork tenderloin with rich jus.', 7900, '1 adag'),
-(35, 'main_course', 'Báránygerinc', 'Rozmaringos báránygerinc.', 'Rack of Lamb', 'Rosemary rack of lamb.', 13900, '1 adag'),
+(26, 'main_course', 'Csirkemell supreme', 'Ropogós bőrös csirkemell burgonyapürével.', 'Chicken Supreme', 'Crispy skin chicken breast with mashed potatoes.', 7900, NULL),
+(27, 'main_course', 'Kacsamell', 'Roséra sült kacsamell zellerpürével.', 'Duck Breast', 'Medium roasted duck breast with celery purée.', 9900, NULL),
+(28, 'main_course', 'Bélszín steak 200g', 'Prémium marhabélszín grillezett zöldségekkel.', 'Beef Tenderloin Steak 200g', 'Premium beef tenderloin with vegetables.', 14900, NULL),
+(29, 'main_course', 'Rib-eye steak 300g', 'Márványozott marhahús steak.', 'Rib-Eye Steak 300g', 'Marbled rib-eye steak.', 17900, NULL),
+(30, 'main_course', 'Wiener schnitzel', 'Borjú bécsi szelet petrezselymes burgonyával.', 'Wiener Schnitzel', 'Veal schnitzel with parsley potatoes.', 9900, NULL),
+(31, 'main_course', 'Lazacfilé', 'Spárgával és citromos vajjal.', 'Salmon Fillet', 'Salmon fillet with asparagus.', 10900, NULL),
+(32, 'main_course', 'Fogasfilé', 'Sült fogasfilé zöldséges rizottóval.', 'Pike Perch Fillet', 'Roasted pike perch with risotto.', 9900, NULL),
+(33, 'main_course', 'Tonhal steak', 'Grillezett tonhal steak salátával.', 'Tuna Steak', 'Grilled tuna steak with salad.', 12900, NULL),
+(34, 'main_course', 'Sertésszűz', 'Sertésszűz érlelt jus-vel.', 'Pork Tenderloin', 'Pork tenderloin with rich jus.', 7900, NULL),
+(35, 'main_course', 'Báránygerinc', 'Rozmaringos báránygerinc.', 'Rack of Lamb', 'Rosemary rack of lamb.', 13900, NULL),
 (36, 'dessert', 'Csokoládé fondant', 'Vanília fagylalttal.', 'Chocolate Fondant', 'Chocolate fondant with vanilla ice cream.', 3900, '180 g'),
 (37, 'dessert', 'Crème brûlée', 'Klasszikus francia desszert.', 'Crème Brûlée', 'Classic French dessert.', 3500, '150 g'),
 (38, 'dessert', 'New York sajttorta', 'Bogyós gyümölcsökkel.', 'New York Cheesecake', 'Cheesecake with berries.', 3600, '180 g'),
 (39, 'dessert', 'Tiramisu', 'Mascarponés olasz desszert.', 'Tiramisu', 'Italian mascarpone dessert.', 3500, '180 g'),
 (40, 'dessert', 'Somlói galuska', 'Tradicionális magyar desszert.', 'Somlói Sponge Cake', 'Traditional Hungarian dessert.', 3200, '220 g'),
-(41, 'hot_drink', 'Espresso', 'Prémium arabica kávé.', 'Espresso', 'Premium arabica coffee.', 1200, '30 ml'),
-(42, 'hot_drink', 'Dupla espresso', 'Kétszeres adag espresso.', 'Double Espresso', 'Double shot espresso.', 1800, '60 ml'),
-(43, 'hot_drink', 'Americano', 'Espresso forró vízzel.', 'Americano', 'Espresso with hot water.', 1600, '180 ml'),
-(44, 'hot_drink', 'Cappuccino', 'Espresso tejhabbal.', 'Cappuccino', 'Espresso with milk foam.', 1900, '250 ml'),
-(45, 'hot_drink', 'Caffè Latte', 'Krémes tejeskávé.', 'Caffè Latte', 'Creamy milk coffee.', 2200, '300 ml'),
+(41, 'coffee', 'Espresso', 'Prémium arabica kávé.', 'Espresso', 'Premium arabica coffee.', 1200, '30 ml'),
+(42, 'coffee', 'Dupla espresso', 'Kétszeres adag espresso.', 'Double Espresso', 'Double shot espresso.', 1800, '60 ml'),
+(43, 'coffee', 'Americano', 'Espresso forró vízzel.', 'Americano', 'Espresso with hot water.', 1600, '180 ml'),
+(44, 'coffee', 'Cappuccino', 'Espresso tejhabbal.', 'Cappuccino', 'Espresso with milk foam.', 1900, '250 ml'),
+(45, 'coffee', 'Caffè Latte', 'Krémes tejeskávé.', 'Caffè Latte', 'Creamy milk coffee.', 2200, '300 ml'),
 (46, 'soft_drink', 'Coca-Cola', 'Klasszikus szénsavas üdítőital.', 'Coca-Cola', 'Classic carbonated soft drink.', 1400, '330 ml'),
 (47, 'soft_drink', 'Coca-Cola Zero', 'Cukormentes üdítőital.', 'Coca-Cola Zero', 'Sugar-free soft drink.', 1400, '330 ml'),
 (48, 'soft_drink', 'Sprite', 'Citrom-lime ízű üdítőital.', 'Sprite', 'Lemon-lime soft drink.', 1400, '330 ml'),
@@ -229,7 +229,8 @@ INSERT INTO `food_and_beverage` (`id`, `category`, `name_hu`, `description_hu`, 
 (57, 'alcoholic_drink', 'Old Fashioned', 'Bourbon whiskey, cukor és bitter.', 'Old Fashioned', 'Bourbon whiskey, sugar and bitters.', 4500, '120 ml'),
 (58, 'alcoholic_drink', 'Espresso Martini', 'Vodka, kávélikőr és espresso.', 'Espresso Martini', 'Vodka, coffee liqueur and espresso.', 4600, '180 ml'),
 (59, 'alcoholic_drink', 'Mojito', 'Rum, lime, menta és szóda.', 'Mojito', 'Rum, lime, mint and soda.', 3900, '250 ml'),
-(60, 'alcoholic_drink', 'Aperol Spritz', 'Aperol, prosecco és szóda.', 'Aperol Spritz', 'Aperol, prosecco and soda.', 4200, '250 ml');
+(60, 'alcoholic_drink', 'Aperol Spritz', 'Aperol, prosecco és szóda.', 'Aperol Spritz', 'Aperol, prosecco and soda.', 4200, '250 ml'),
+(61, 'soft_drink', 'Narancslé - 100%', 'Frissen facsart narancslé.', 'Orange juice - 100%', 'Freshly squeezed orange juice.', 2200, '200 ml');
 
 -- --------------------------------------------------------
 
@@ -300,7 +301,10 @@ INSERT INTO `refresh_tokens` (`id`, `guest_id`, `token_id`, `expires_at`, `creat
 (2, 19, 'b8f99a03fea64b4c2b25756254795e8c', '2026-06-17 10:12:21', '2026-06-10 08:12:21'),
 (9, 19, '8fd981d75a3f2f640fc1ad169e64344b', '2026-06-18 09:00:20', '2026-06-11 07:00:20'),
 (10, 19, 'a391668060227d7a8d2b64d8aa6468e8', '2026-06-18 10:23:55', '2026-06-11 08:23:55'),
-(12, 19, 'bafb83c2e3b41fef9fa9390956a5991d', '2026-06-18 13:14:54', '2026-06-11 11:14:54');
+(12, 19, 'bafb83c2e3b41fef9fa9390956a5991d', '2026-06-18 13:14:54', '2026-06-11 11:14:54'),
+(14, 19, '70666dbfd4b60b684de9dd7e689995a6', '2026-06-19 06:24:46', '2026-06-12 04:24:46'),
+(15, 19, '10c7428c3b162492cc18b594c95938d2', '2026-06-19 12:28:18', '2026-06-12 10:28:18'),
+(20, 19, '46b8fe1fde63479dbf593427f8170e31', '2026-06-23 13:36:54', '2026-06-16 11:36:54');
 
 -- --------------------------------------------------------
 
@@ -386,18 +390,23 @@ INSERT INTO `servicebookings` (`id`, `booking_id`, `service_id`, `requested_at`,
 (23, '10', 6, '2026-04-10 19:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
 (24, '10', 16, '2026-04-10 09:00:00', '2026-05-28 12:45:16', 1, 'completed', 0),
 (25, 'HE-2026-UCT4', 3, '2026-06-09 10:39:21', '2026-06-11 10:11:51', 1, 'completed', 10000),
-(33, 'HE-2026-UCT4', 4, '2026-06-11 09:52:17', '2026-06-11 09:52:17', 1, 'created', 15000);
+(33, 'HE-2026-UCT4', 4, '2026-06-11 09:52:17', '2026-06-11 09:52:17', 1, 'created', 15000),
+(38, 'HE-2026-UCT4', 11, '2026-06-15 06:18:50', '2026-06-15 06:18:50', 1, 'created', 13000),
+(43, 'HE-2026-UCT4', 6, '2026-06-16 12:52:29', '2026-06-16 12:52:29', 1, 'created', 5900),
+(55, 'HE-2026-UCT4', 6, '2026-06-16 14:12:24', '2026-06-16 14:12:24', 1, 'created', 11800);
 
 --
 -- Eseményindítók `servicebookings`
 --
 DELIMITER $$
 CREATE TRIGGER `before_servicebookings_insert` BEFORE INSERT ON `servicebookings` FOR EACH ROW BEGIN
-    SET NEW.price_at_booking = (
-        SELECT price 
-        FROM services 
-        WHERE id = NEW.service_id
-    );
+    IF NEW.price_at_booking IS NULL THEN
+        SET NEW.price_at_booking = (
+            SELECT price 
+            FROM services 
+            WHERE id = NEW.service_id
+        );
+    END IF;
 END
 $$
 DELIMITER ;
@@ -429,7 +438,7 @@ INSERT INTO `services` (`id`, `name_hu`, `description_hu`, `price`, `service_typ
 (3, 'Transzfer', 'Reptéri transzfer egy irányba', 10000, 'Logisztika', 'Transfer', 'Airport transfer one way', 'Logistics'),
 (4, 'Autóbérlés', 'Napi autóbérlés alap csomag', 15000, 'Logisztika', 'Car rental', 'Daily car rental basic package', 'Logistics'),
 (5, 'Mosatás', 'Ruhák mosása és vasalása', 5000, 'Extrák', 'Laundry', 'Washing and ironing of clothes', 'Extras'),
-(6, 'Szobaszerviz', 'Étel-ital rendelés szobába', 2500, 'Extrák', 'Room service', 'Food and beverage room service', 'Extras'),
+(6, 'Szobaszerviz', 'Étel-ital rendelés szobába', 0, 'Extrák', 'Room service', 'Food and beverage room service', 'Extras'),
 (7, 'Extra takarítás', 'Napi extra takarítás kérésre', 4000, 'Extrák', 'Extra cleaning', 'Daily extra cleaning upon request', 'Extras'),
 (8, 'Gyerekfelügyelet', 'Szakképzett felügyelet óránként', 3500, 'Extrák', 'Babysitting', 'Professional supervision per hour', 'Extras'),
 (9, 'Pótágy', 'Extra ágy biztosítása', 7000, 'Extrák', 'Extra bed', 'Provision of an extra bed', 'Extras'),
@@ -523,7 +532,7 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT a táblához `food_and_beverage`
 --
 ALTER TABLE `food_and_beverage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT a táblához `guests`
@@ -535,13 +544,13 @@ ALTER TABLE `guests`
 -- AUTO_INCREMENT a táblához `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT a táblához `servicebookings`
 --
 ALTER TABLE `servicebookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT a táblához `services`

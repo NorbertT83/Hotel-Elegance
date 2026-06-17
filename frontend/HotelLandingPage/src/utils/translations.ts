@@ -383,7 +383,7 @@ export const guestPageText = {
                 },
                 roomCard: {
                     headerText: "Szobája jellemzői",
-                    roomNumber: "Szobaszám:",
+                    room: "Szoba",
                     roomSize: "Terület:",
                     bedtype:"Ágytípus:",
                     status: "Állapot:",
@@ -460,7 +460,7 @@ export const guestPageText = {
                 },
                 roomCard: {
                     headerText: "Your Room\'s features",
-                    roomNumber: "Room number:",
+                    room: "Room",
                     roomSize: "Room size:",
                     bedtype: "Bedtype:",
                     status: "Status:",

@@ -1,4 +1,36 @@
-export function getNameOfDay(date:string, language:string) {
+import { Language } from "../context/LanguageContext";
+
+export function dateFormatter(sent_at: string, language: Language) {
+    let formattedDate;
+    const now = new Date();
+    let date = new Date(sent_at);
+    const diff = +now - +date; // + jellel számmá kényszeríti (alternatív .getTime() használata)
+    if (diff < 60000) {
+        formattedDate = language === 'hu' ? 'most' : 'now';
+    } else if (diff < 120000) {
+        formattedDate = `${Math.floor((diff) / 60000)} ${language === 'hu' ? ' perce' : ' minute ago'}`;
+    } else if (diff < 3600000) {
+        formattedDate = `${Math.floor((diff) / 60000)} ${language === 'hu' ? ' perce' : ' minutes ago'}`;
+    } else if (diff< 7200000) {
+        formattedDate = `${Math.floor((diff) / 3600000)} ${language === 'hu' ? ' órája' : ' hour ago'}`;
+    } else if (diff< 86400000) {
+        formattedDate = `${Math.floor((diff) / 3600000)} ${language === 'hu' ? ' órája' : ' hours ago'}`;
+    } else {
+        // const month = String(date.getMonth() + 1).padStart(2, '0'); // Hónap (01-12)
+        // const day = String(date.getDate()).padStart(2, '0'); // Nap (01-31)
+        // formattedDate = `${month}.${day}.`;
+        formattedDate = date.toLocaleString((language === 'hu' ? "hu-HU" : "en-US"), {
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+    };
+    return formattedDate;
+};
+
+export function getNameOfDay(date:string, language: Language) {
     const dayName = new Date(date).toLocaleDateString((language === 'hu' ? "hu-HU" : "en-US"), {weekday: "long"});
     return dayName
 }

@@ -12,6 +12,11 @@
     border: 1px solid var(--outline-variant);
 }
 
+.cardWrapper:has(.guestCard) {
+    display: block;
+    columns: 2;
+}
+
 .card {
     background-color: var(--surface-container);
     border-radius: .5rem;
@@ -20,12 +25,19 @@
     transition: border .25s linear;
 }
 
+.guestCard, .roomCard, .serviceCard, .weatherCard {
+    margin-bottom: 1.5rem;
+}
+
 .card:hover {
     border: 1px solid var(--outline-variant);
 }
 
 .cardHeader {
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: var(--secondary-container);
     border-top-left-radius: .5rem;
     border-top-right-radius: .5rem;
@@ -39,6 +51,10 @@
     text-underline-offset: 8px;
     font-variant: small-caps;
     font-size: 1.25rem;
+}
+
+.cardHeader .headerIcon {
+    height: 2rem;
 }
 
 .cart {
@@ -73,6 +89,17 @@
     padding: 1rem;
 }
 
+.guestCard .vipLevel {
+    height: 1.75rem;
+    width: 1.75rem;
+    text-align: center;
+    font-weight: bold;
+    user-select: none;
+    border: 1px solid var(--primary);
+    border-radius: 999px;
+    filter: drop-shadow(0 0 3px var(--primary));
+}
+
 .roomCard .content {
     grid-template-columns: 1fr 1.5fr;
 }
@@ -82,7 +109,7 @@
 }
 .serviceTableHead {
     display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-columns: 3fr 2fr 1fr;
     gap: 1rem;
     width: 100%;
     font-size: .8rem;
@@ -95,13 +122,13 @@
 }
 .serviceItem {
     display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-columns: 3fr 2fr 1fr;
     width: 100%;
     align-items: center;
     gap: 1rem;
 }
 .serviceItem span:first-child {
-    color: var(--primary);
+    color: var(--on-surface-variant);
 }
 .serviceItem span:nth-child(2) {
     font-size: .8rem;
@@ -317,6 +344,15 @@
         padding: 0;
         border: none;
         background-color: transparent;
+    }
+
+    .cardWrapper:has(.guestCard) {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .guestCard, .roomCard, .serviceCard, .weatherCard {
+        margin-bottom: 0;
     }
 
     .roomServiceCard .content {
