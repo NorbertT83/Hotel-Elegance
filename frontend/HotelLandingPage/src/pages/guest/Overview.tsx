@@ -4,9 +4,10 @@ import { guestPageText } from "../../utils/translations";
 import { dateFormatter } from "../../utils/utils";
 import s from '../../styles/GuestSubPages.module.css';
 import FloorPlanIcon from '../../assets/floorplan.svg';
+import { BookedService } from "../../types/booking";
+import { createData } from "../../services/apiService";
 
-
-const statusIcons = {
+const serviceStatusIcons = {
     created: {
         icon: 'assignment',
         color: 'var(--on-surface-variant)',
@@ -23,13 +24,20 @@ const statusIcons = {
         icon: 'contract_delete',
         color: 'gray',
     },
-    doorOpen: {
-        icon: 'door_open',
-        color: 'var(--error)',
+    door_locked: {
+        icon: 'door_open', //'door_front',
+        color: 'var(--error)' //,'green'
     },
-    doorClosed: {
-        icon: 'door_front',
-        color: 'green',
+}
+
+const roomStatusIcons = {
+    available: {
+        icon: 'check_circle', // vagy 'meeting_room'
+        color: 'var(--primary)',
+    },
+    unavailable: {
+        icon: 'block',
+        color: 'var(--error)',
     },
     dont_disturb: {
         icon: 'do_not_disturb_on_total_silence',
@@ -48,24 +56,39 @@ const statusIcons = {
         color: 'var(--on-surface-variant)',
     },
     under_maintenance: {
-        icon: 'maintenance',
+        icon: 'construction',
         color: 'var(-primary)',
     },
 }
 
 export default function Overview() {
-    const { language }= useLanguage();
-    const { guest, currentBooking, currentRoom, currentBookedServices } = useGuest();
+    const { language } = useLanguage();
+    const { guest, currentBooking, currentRoom, currentBookedServices, refreshBookedServices } = useGuest();
     const labels = guestPageText[language].guestPage.menuOverview;
 
-    if (!guest) return;
+
+    async function handleDelete(service: BookedService) {
+        try {
+            service.status = 'deleted';
+            const response = await createData('servicebooking/updatestatus', service);
+            if (!response && !response.success) {
+                console.log(`Hiba: ${response?.error}`)
+                return
+            }
+            refreshBookedServices();
+        } catch {
+            console.log('Hiba az update közben');
+        }
+    }
+
+    if (!guest || !currentBooking || !currentRoom) return;
 
     return (
         <div className={s.cardWrapper}>
             <div className={`${s.card} ${s.guestCard}`}>
                 <div className={s.cardHeader}>
-                    <div className={s.headerText}>{currentBooking?.id}</div>
-                    <div className={s.vipLevel} title={language=="hu" ? 'VIP szintje' : 'Your VIP level'}>{guest.loyalty_level}</div>
+                    <div className={s.headerText}>{currentBooking.id}</div>
+                    <div className={s.vipLevel} title={language=='hu' ? 'VIP szintje' : 'Your VIP level'}>{guest.loyalty_level}</div>
                 </div>
 
                 <div className={s.content}>
@@ -103,19 +126,19 @@ export default function Overview() {
 
             <div className={`${s.card} ${s.roomCard}`}>
                 <div className={s.cardHeader}>
-                    <div className={s.headerText}>{labels.roomCard.room} <strong>#{currentRoom?.room_number}</strong></div>
+                    <div className={s.headerText}>{labels.roomCard.room} <strong>#{currentRoom.room_number}</strong></div>
                     <img className={s.headerIcon} src={FloorPlanIcon} alt="floorplan" />
                 </div>
 
                 <div className={s.content}>
                     <div><span className="material-symbols-outlined" title={`${labels.roomCard.roomSize}`}>square_foot</span></div>
-                    <div>{currentRoom?.floorspace} m<sup style={{fontSize: '.6rem'}}>2</sup></div>
+                    <div>{currentRoom.floorspace} m<sup style={{fontSize: '.6rem'}}>2</sup></div>
 
                     <div><span className="material-symbols-outlined" title={`${labels.roomCard.bedtype}`}>king_bed</span></div>
-                    <div>{currentRoom?.bed_type}</div>
+                    <div>{currentRoom.bed_type}</div>
 
                     <div>{labels.roomCard.status}</div>
-                    <div>{currentRoom?.status}</div>
+                    <div><span className="material-symbols-outlined">{roomStatusIcons[currentRoom.status].icon}</span></div>
                 </div>
             </div>
 
@@ -134,7 +157,12 @@ export default function Overview() {
                         <div key={sb.id} className={s.serviceItem}>
                             <span style={sb.status === 'deleted' ? {textDecoration: 'line-through'} : undefined}>{sb[`name_${language}`]}</span>
                             <span>{dateFormatter(sb.updated_at, language)}</span>
-                            <span style={{color: statusIcons[sb.status].color}} title={labels.serviceCard[sb.status]} className="material-symbols-outlined">{statusIcons[sb.status].icon}</span>
+                            <div className={s.serviceStatusWrapper}>
+                                <span style={{color: serviceStatusIcons[sb.status].color}} title={labels.serviceCard[sb.status]} className="material-symbols-outlined">{serviceStatusIcons[sb.status].icon}</span>
+                                {sb.status === 'created' &&
+                                    <button className={`btn ${s.deleteButton}`} onClick={()=>handleDelete(sb)}><span className="material-symbols-outlined">delete</span></button>
+                                }
+                            </div>
                         </div>
                     ))}
                 </div>

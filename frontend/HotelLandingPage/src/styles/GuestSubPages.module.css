@@ -117,9 +117,7 @@
     padding-bottom: .25rem;
     border-bottom: 1px solid var(--outline-variant);
 }
-.serviceTableHead span:last-child {
-    justify-self: center;
-}
+
 .serviceItem {
     display: grid;
     grid-template-columns: 3fr 2fr 1fr;
@@ -133,9 +131,33 @@
 .serviceItem span:nth-child(2) {
     font-size: .8rem;
 }
-.serviceItem span:last-child {
+.serviceItem .serviceStatusWrapper {
+    display: flex;
+    align-items: center;
     user-select: none;
-    justify-self: center;
+}
+.serviceStatusWrapper .deleteButton {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    margin-left: .5rem;
+    opacity: 0;
+    visibility: hidden;
+    /* pointer-events: none; */
+    transform: translateX(-80%);
+    transition: opacity .2s ease-in-out, transform .2s ease-in-out, visibility .2s ease-in-out, color .2s ease-in-out;
+}
+
+.serviceStatusWrapper:hover .deleteButton {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0%);
+    /* pointer-events: auto; */
+}
+
+.serviceStatusWrapper:hover .deleteButton:hover span {
+    color: var(--error);
 }
 
 .span3 {

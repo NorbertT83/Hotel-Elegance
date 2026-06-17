@@ -474,6 +474,43 @@ if ($resource == "foodbeverage" && $id == "categories" && $method == "GET") {
     }
 }
 
+if ($resource == "servicebooking" && $id == "updatestatus" && $method == "POST") {
+    
+    if (empty($inputData) || !isset($inputData['id']) || !isset($inputData['status'])) { 
+        http_response_code(400); 
+        echo json_encode(["success" => false, "error" => "Hiányzó vagy hibás JSON adatok."]); 
+        exit; 
+    }
+
+    try {
+        $serviceBookingId = $inputData['id'];
+        $status = $inputData['status'];
+
+        $stmt = $pdo->prepare("SELECT id FROM servicebookings WHERE id = ?");
+        $stmt->execute([$serviceBookingId]);
+        $exists = $stmt->fetch();
+
+        if (!$exists) { 
+            http_response_code(404);
+            echo json_encode(["success" => false, "error" => "Nem létező ID."]); 
+            exit; 
+        }
+
+        $stmt = $pdo->prepare("UPDATE servicebookings SET `status` = ? WHERE id = ?");
+        $stmt->execute([$status, $serviceBookingId]);
+
+        echo json_encode(["success" => true, "message" => "Sikeres frissítés."]);
+        exit;
+
+    } catch (\Throwable $e) {
+        error_log($e->getMessage()); 
+        
+        http_response_code(500);
+        echo json_encode(["success" => false, "error" => "Adatbázis hiba történt a művelet során."]);
+        exit;
+    }
+}
+
 // --- NORMÁL TÁBLA ALAPÚ ENDPOINTEK DEFINÍCIÓJA ---
 $endpoints = [
     'room' => [
