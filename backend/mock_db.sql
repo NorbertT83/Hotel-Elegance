@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Jún 16. 14:17
+-- Létrehozás ideje: 2026. Jún 18. 14:32
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -65,7 +65,7 @@ INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginnin
 ('9', 303, 'deluxe', 13, '2026-04-09', '2026-04-11', '2026-04-09 14:30:00', '2026-04-11 11:00:00', 14, NULL, NULL, 'breakfast', '2026-05-28 11:37:01'),
 ('HE-2026-194A', 303, 'deluxe', 18, '2026-05-28', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
 ('HE-2026-194V', 102, 'standard', 19, '2026-05-29', '2026-06-04', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-29 05:40:29'),
-('HE-2026-UCT4', 403, 'suite', 19, '2026-06-10', '2026-06-17', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-06-03 09:53:43');
+('HE-2026-UCT4', 403, 'suite', 19, '2026-06-12', '2026-06-20', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-06-03 09:53:43');
 
 --
 -- Eseményindítók `bookings`
@@ -304,7 +304,10 @@ INSERT INTO `refresh_tokens` (`id`, `guest_id`, `token_id`, `expires_at`, `creat
 (12, 19, 'bafb83c2e3b41fef9fa9390956a5991d', '2026-06-18 13:14:54', '2026-06-11 11:14:54'),
 (14, 19, '70666dbfd4b60b684de9dd7e689995a6', '2026-06-19 06:24:46', '2026-06-12 04:24:46'),
 (15, 19, '10c7428c3b162492cc18b594c95938d2', '2026-06-19 12:28:18', '2026-06-12 10:28:18'),
-(20, 19, '46b8fe1fde63479dbf593427f8170e31', '2026-06-23 13:36:54', '2026-06-16 11:36:54');
+(20, 19, '46b8fe1fde63479dbf593427f8170e31', '2026-06-23 13:36:54', '2026-06-16 11:36:54'),
+(21, 19, '281f0326eee55a1450c20f48ce842aee', '2026-06-24 06:01:51', '2026-06-17 04:01:51'),
+(22, 19, 'dc3bf2111c21d32220cfc19831bfd411', '2026-06-24 09:19:02', '2026-06-17 07:19:02'),
+(24, 19, '81175a9ad88d4b1119cee440679ea148', '2026-06-25 09:22:44', '2026-06-18 07:22:44');
 
 -- --------------------------------------------------------
 
@@ -316,32 +319,37 @@ CREATE TABLE `rooms` (
   `room_number` smallint(5) UNSIGNED NOT NULL,
   `room_type` enum('standard','deluxe','suite','') NOT NULL,
   `floorspace` tinyint(3) UNSIGNED NOT NULL,
-  `bed_type` enum('single','twin','queen','kingsize') NOT NULL,
+  `bed_type` enum('single','twin','kingsize') NOT NULL,
   `has_balcony` tinyint(1) NOT NULL,
   `has_view` enum('city','garden','panorama') DEFAULT NULL,
   `max_adults` tinyint(3) UNSIGNED NOT NULL,
   `extras` mediumtext DEFAULT NULL,
-  `status` enum('available','occupied','dont_disturb','needs_cleaning','cleaning','under_maintenence','unavailable') NOT NULL DEFAULT 'unavailable',
-  `price_per_night` int(10) UNSIGNED DEFAULT NULL
+  `status` enum('available','occupied','under_maintenance','unavailable') NOT NULL DEFAULT 'unavailable',
+  `price_per_night` int(10) UNSIGNED DEFAULT NULL,
+  `door_locked` tinyint(1) NOT NULL DEFAULT 1,
+  `needs_cleaning` tinyint(1) NOT NULL DEFAULT 0,
+  `dont_disturb` tinyint(1) NOT NULL DEFAULT 0,
+  `is_cleaning` tinyint(1) NOT NULL DEFAULT 0,
+  `ac_temp` tinyint(3) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- A tábla adatainak kiíratása `rooms`
 --
 
-INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_balcony`, `has_view`, `max_adults`, `extras`, `status`, `price_per_night`) VALUES
-(101, 'standard', 18, 'queen', 0, 'city', 2, '', 'cleaning', 22000),
-(102, 'standard', 20, 'twin', 1, 'city', 2, '', 'occupied', 21000),
-(103, 'standard', 22, 'queen', 1, 'garden', 2, '', 'needs_cleaning', 24000),
-(201, 'deluxe', 28, 'kingsize', 1, 'garden', 3, '', 'available', 38000),
-(202, 'deluxe', 30, 'kingsize', 1, 'city', 3, '', 'occupied', 42000),
-(203, 'deluxe', 27, 'queen', 1, 'panorama', 2, '', 'cleaning', 36000),
-(301, 'standard', 28, 'twin', 0, 'garden', 2, '', 'available', 34500),
-(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, 'jacuzzi', 'dont_disturb', 42000),
-(303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 29900),
-(401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 76000),
-(402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'unavailable', 76000),
-(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'needs_cleaning', 62000);
+INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_balcony`, `has_view`, `max_adults`, `extras`, `status`, `price_per_night`, `door_locked`, `needs_cleaning`, `dont_disturb`, `is_cleaning`, `ac_temp`) VALUES
+(101, 'standard', 18, 'single', 0, 'city', 2, '', 'available', 22000, 1, 0, 0, 0, 0),
+(102, 'standard', 20, 'twin', 1, 'city', 2, '', 'occupied', 21000, 1, 0, 0, 0, 0),
+(103, 'standard', 22, 'twin', 1, 'garden', 2, '', 'unavailable', 24000, 1, 0, 0, 0, 0),
+(201, 'deluxe', 28, 'kingsize', 1, 'garden', 3, '', 'under_maintenance', 38000, 1, 0, 0, 0, 0),
+(202, 'deluxe', 30, 'kingsize', 1, 'city', 3, '', 'occupied', 42000, 1, 0, 0, 0, 0),
+(203, 'deluxe', 27, 'twin', 1, 'panorama', 2, '', 'occupied', 36000, 1, 0, 0, 0, 0),
+(301, 'standard', 28, 'twin', 0, 'garden', 2, '', 'available', 34500, 1, 0, 0, 0, 0),
+(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, 'jacuzzi', 'available', 42000, 1, 0, 0, 0, 0),
+(303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 29900, 1, 0, 0, 0, 0),
+(401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 76000, 1, 0, 0, 0, 0),
+(402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'unavailable', 76000, 1, 0, 0, 0, 0),
+(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'available', 62000, 1, 0, 0, 0, 23);
 
 -- --------------------------------------------------------
 
@@ -390,10 +398,11 @@ INSERT INTO `servicebookings` (`id`, `booking_id`, `service_id`, `requested_at`,
 (23, '10', 6, '2026-04-10 19:00:00', '2026-05-28 12:46:14', 2, 'completed', 0),
 (24, '10', 16, '2026-04-10 09:00:00', '2026-05-28 12:45:16', 1, 'completed', 0),
 (25, 'HE-2026-UCT4', 3, '2026-06-09 10:39:21', '2026-06-11 10:11:51', 1, 'completed', 10000),
-(33, 'HE-2026-UCT4', 4, '2026-06-11 09:52:17', '2026-06-11 09:52:17', 1, 'created', 15000),
-(38, 'HE-2026-UCT4', 11, '2026-06-15 06:18:50', '2026-06-15 06:18:50', 1, 'created', 13000),
-(43, 'HE-2026-UCT4', 6, '2026-06-16 12:52:29', '2026-06-16 12:52:29', 1, 'created', 5900),
-(55, 'HE-2026-UCT4', 6, '2026-06-16 14:12:24', '2026-06-16 14:12:24', 1, 'created', 11800);
+(33, 'HE-2026-UCT4', 4, '2026-06-11 09:52:17', '2026-06-17 10:51:32', 1, 'completed', 15000),
+(38, 'HE-2026-UCT4', 11, '2026-06-15 06:18:50', '2026-06-18 11:51:08', 1, 'deleted', 13000),
+(43, 'HE-2026-UCT4', 6, '2026-06-16 12:52:29', '2026-06-17 06:46:20', 1, 'pending', 5900),
+(55, 'HE-2026-UCT4', 6, '2026-06-16 14:12:24', '2026-06-17 06:46:29', 1, 'deleted', 11800),
+(56, 'HE-2026-UCT4', 6, '2026-06-18 11:51:30', '2026-06-18 11:51:30', 1, 'created', 6900);
 
 --
 -- Eseményindítók `servicebookings`
@@ -544,13 +553,13 @@ ALTER TABLE `guests`
 -- AUTO_INCREMENT a táblához `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT a táblához `servicebookings`
 --
 ALTER TABLE `servicebookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT a táblához `services`
