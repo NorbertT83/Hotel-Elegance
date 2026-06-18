@@ -2,13 +2,13 @@ import { useGuest } from "../../context/GuestContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { guestPageText } from "../../utils/translations";
 import { dateFormatter } from "../../utils/utils";
-import { BookedService } from "../../types/booking";
+import { BookedService, Room } from "../../types/booking";
 import { createData } from "../../services/apiService";
 import s from '../../styles/GuestSubPages.module.css';
 import FloorPlanIcon from '../../assets/floorplan.svg';
 import CurrentWeatherHeader from "../../components/CurrentWeatherHeader";
 import WeatherCard from "../../components/WeatherCard";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const serviceStatusIcons = {
     created: {
@@ -38,14 +38,6 @@ const roomStatusIcons = {
         icon: 'block',
         color: 'var(--error)',
     },
-    dont_disturb: {
-        icon: 'do_not_disturb_on_total_silence',
-        color: 'var(--on-surface-variant)',
-    },
-    door_locked: {
-        icon: 'door_open', //'door_front',
-        color: 'var(--error)' //,'green'
-    },
     cleaning: {
         icon: 'cleaning', //vacuum
         color: 'var(--on-surface-variant)',
@@ -62,17 +54,95 @@ const roomStatusIcons = {
         icon: 'construction',
         color: 'var(--primary)',
     },
-    ac_temp: {
-        icon: 'hvac',
-        color: 'var(--primary)',
-    }
 }
 
 export default function Overview() {
     const { language } = useLanguage();
-    const { guest, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, updateThermostat } = useGuest();
+    const { guest, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, updateRoomFeature } = useGuest();
     const labels = guestPageText[language].guestPage.menuOverview;
+    const [optimisticTemp, setOptimisticTemp] = useState<number | null>(null);
+    const [optimisticLocked, setOptimisticLocked] = useState<boolean | null>(null);
+    const [optimisticDoNotDisturb, setOptimisticDoNotDisturb] = useState<boolean | null>(null);
+    const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lockDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const doNotDisturbDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lastSentTemp = useRef<number | null>(null);
+    const lastSentLocked = useRef<boolean | null>(null);
+    const lastSentDoNotDisturb = useRef<boolean | null>(null);
 
+    useEffect(() => {
+        if (currentRoom) {
+            setOptimisticTemp(currentRoom.ac_temp);
+            setOptimisticLocked(currentRoom.door_locked);
+            lastSentTemp.current = currentRoom.ac_temp;
+            lastSentLocked.current = currentRoom.door_locked;
+        }
+    }, [currentRoom]);
+
+    const scheduleFeatureUpdate = <T,>(
+        nextValue: T,
+        setOptimistic: (value: T) => void,
+        lastSentRef: { current: T | null },
+        debounceRef: { current: ReturnType<typeof setTimeout> | null },
+        updateFn: (value: T) => Promise<boolean>,
+        fallbackValue: T
+    ) => {
+        setOptimistic(nextValue);
+
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+
+        debounceRef.current = setTimeout(async () => {
+            if (lastSentRef.current !== nextValue) {
+                const success = await updateFn(nextValue);
+                if (success) {
+                    lastSentRef.current = nextValue;
+                } else {
+                    setOptimistic(fallbackValue);
+                }
+            }
+        }, 1000);
+    };
+
+    const scheduleThermostatUpdate = (nextTemp: number) => {
+        scheduleFeatureUpdate<number>(
+            nextTemp,
+            setOptimisticTemp,
+            lastSentTemp,
+            debounceTimer,
+            (value) => updateRoomFeature('ac_temp', value),
+            currentRoom?.ac_temp ?? 0
+        );
+    };
+
+    const scheduleDoorLockUpdate = (nextLocked: boolean) => {
+        scheduleFeatureUpdate<boolean>(
+            nextLocked,
+            setOptimisticLocked,
+            lastSentLocked,
+            lockDebounceTimer,
+            (value) => updateRoomFeature('door_locked', value),
+            currentRoom?.door_locked ?? false
+        );
+    };
+
+    const scheduleDoNotDisturbUpdate = (nextValue: boolean) => {
+        scheduleFeatureUpdate<boolean>(
+            nextValue,
+            setOptimisticDoNotDisturb,
+            lastSentDoNotDisturb,
+            doNotDisturbDebounceTimer,
+            (value) => updateRoomFeature('dont_disturb', value),
+            currentRoom?.dont_disturb ?? false
+        );
+    };
+
+    const getVisibleTemperature = () => optimisticTemp ?? currentRoom?.ac_temp ?? 0;
+    const changeBaseTemp = () => (getVisibleTemperature() === 0 ? 22 : getVisibleTemperature());
+
+    const getVisibleDoorLocked = () => optimisticLocked ?? currentRoom?.door_locked ?? false;
+    const getVisibleDoNotDisturb = () => optimisticDoNotDisturb ?? currentRoom?.dont_disturb ?? false;
 
     async function handleBookedServiceDelete(service: BookedService) {
         try {
@@ -138,23 +208,76 @@ export default function Overview() {
                 </div>
 
                 <div className={s.content}>
-                    <div><span className="material-symbols-outlined" title={`${labels.roomCard.roomSize}`}>square_foot</span></div>
-                    <div>{currentRoom.floorspace} m<sup style={{fontSize: '.6rem'}}>2</sup></div>
-
-                    <div><span className="material-symbols-outlined" title={`${labels.roomCard.bedtype}`}>king_bed</span></div>
-                    <div>{currentRoom.bed_type}</div>
-
-                    <div>{labels.roomCard.status}</div>
-                        <div><span className="material-symbols-outlined">{roomStatusIcons[currentRoom.status].icon}</span>
+                    <div className={s.infoContainer}>
+                        <div className={s.infoItem}>
+                            <span className="material-symbols-outlined" title={labels.roomCard.roomSize}>square_foot</span>
+                            <span>{currentRoom.floorspace} m<sup style={{fontSize: '.6rem'}}>2</sup></span>
+                        </div>
+                        <div className={s.infoItem}>
+                            <span className="material-symbols-outlined" title={labels.roomCard.bedtype}>king_bed</span>
+                            <span>{currentRoom.bed_type}</span>
+                        </div>
+                        <div className={s.infoItem}>
+                            <span className="material-symbols-outlined" title={labels.roomCard.roomType}>hotel</span>
+                            <span>{currentRoom.room_type}</span>
+                        </div>
+                        <div className={s.infoItem}>
+                            <span className="material-symbols-outlined" title={labels.roomCard.status}>{roomStatusIcons[currentRoom.status].icon}</span>
+                            <span>{currentRoom.status.replace(/_/g, ' ')}</span>
+                        </div>
+                        <div className={s.infoItem}>
+                            <span className="material-symbols-outlined" title={labels.roomCard.view}>visibility</span>
+                            <span>{currentRoom.has_view}</span>
+                        </div>
+                        <div className={s.infoItem}>
+                            <span className="material-symbols-outlined" title={labels.roomCard.extras}>room_service</span>
+                            <span>{currentRoom.extras}</span>
+                        </div>
                     </div>
 
-                    <div className={s.thermostatContainer}>
-                        <span className={`material-symbols-outlined ${s.icon}`}>hvac</span>
-                        <div className={s.onOff} onClick={() => updateThermostat(0)}><span className="material-symbols-outlined">{currentRoom.ac_temp ? 'mode_fan' : 'mode_fan_off'}</span></div>
+                    <div className={`${s.subCardContainer} ${getVisibleTemperature() === 0 ? s.acOff : s.rotateFan}`}>
+                        <div className={s.icon}>A/C</div>
+                        <div className={s.onOff}
+                            onClick={() => scheduleThermostatUpdate(getVisibleTemperature() ? 0 : 22)}>
+                                <span className="material-symbols-outlined">{getVisibleTemperature() ? 'mode_fan' : 'mode_fan_off'}
+                                </span>
+                        </div>
                         <div className={s.thermostat}>
-                            <span className="material-symbols-outlined" onClick={() => updateThermostat(1)}>remove</span>
-                            <span>{currentRoom.ac_temp}</span>
-                            <span className="material-symbols-outlined" onClick={() => updateThermostat(-1)}>add</span>
+                            <span className="material-symbols-outlined"
+                                onClick={() => scheduleThermostatUpdate(changeBaseTemp() - 1)}>remove
+                            </span>
+
+                            <div className={s.tempDisplay}>{getVisibleTemperature()}</div>
+
+                            <span className="material-symbols-outlined"
+                                onClick={() => scheduleThermostatUpdate(changeBaseTemp() + 1)}>add
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className={`${s.subCardContainer} ${getVisibleDoorLocked() ? '' : s.unlocked}`}>
+                        <div className={s.icon}> {labels.roomCard.door} </div>
+                        <div className={s.toggle}
+                            onClick={() => scheduleDoorLockUpdate(!getVisibleDoorLocked())}>
+                                <span className="material-symbols-outlined">
+                                    {getVisibleDoorLocked() ? 'lock' : 'lock_open'}
+                                </span>
+                        </div>
+                        <div className={s.toggleStatus}>
+                            {getVisibleDoorLocked() ? labels.roomCard.closed : labels.roomCard.open}
+                        </div>
+                    </div>
+
+                    <div className={`${s.subCardContainer} ${getVisibleDoNotDisturb() ? '' : s.unlocked}`}>
+                        <div className={s.icon}>{labels.roomCard.DND}</div>
+                        <div className={s.toggle}
+                            onClick={() => scheduleDoNotDisturbUpdate(!getVisibleDoNotDisturb())}>
+                                <span className="material-symbols-outlined">
+                                    {getVisibleDoNotDisturb() ? 'do_not_disturb_on' : 'do_not_disturb_off'}
+                                </span>
+                        </div>
+                        <div className={s.toggleStatus}>
+                            {getVisibleDoNotDisturb() ? labels.roomCard.DND_on : labels.roomCard.DND_off}
                         </div>
                     </div>
 

@@ -23,7 +23,7 @@ if (in_array($origin, $allowed_origins)) {
 
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -156,6 +156,34 @@ function createResource($pdo, $table, $data, $allowedFields = null) {
 function deleteResource($pdo, $table, $idColumn, $id) {
     $sql = "DELETE FROM `$table` WHERE `$idColumn` = ?";
     $stmt = $pdo->prepare($sql); $stmt->execute([$id]);
+    return $stmt->rowCount();
+}
+
+function updateResource($pdo, $table, $idColumn, $id, $data, $allowedFields = null) {
+    if (empty($data) || !is_array($data)) {
+        return false;
+    }
+
+    if (is_array($allowedFields) && count($allowedFields) > 0) {
+        $data = array_intersect_key($data, array_flip($allowedFields));
+    }
+
+    if (isset($data[$idColumn])) {
+        unset($data[$idColumn]);
+    }
+
+    if (empty($data)) {
+        return false;
+    }
+
+    $columns = array_keys($data);
+    $assignments = array_map(fn($col) => "`$col` = ?", $columns);
+    $sql = "UPDATE `$table` SET " . implode(', ', $assignments) . " WHERE `$idColumn` = ?";
+    $params = array_values($data);
+    $params[] = $id;
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
     return $stmt->rowCount();
 }
 
@@ -538,7 +566,8 @@ $endpoints = [
             'room_type' => ['standard','deluxe','suite'],
             'bed_type' => ['single', 'twin', 'kingsize'],
             'has_view' => ['city', 'garden', 'panorama']
-        ]
+        ],
+        'update_fields' => ['room_type','floorspace','bed_type','has_balcony','has_view','max_adults','extras','status','door_locked','needs_cleaning','is_cleaning','dont_disturb','ac_temp','price_per_night'],
     ],
     'guest' => [
         'table'   => 'guests',
@@ -719,6 +748,20 @@ if (array_key_exists($resource, $endpoints)) {
                 $affected = deleteResource($pdo, $table, $idCol, $id);
                 if ($affected > 0) { echo json_encode(["success" => true, "message" => "Torolve."]); } 
                 else { http_response_code(404); echo json_encode(["error" => "Nem talalhato."]); }
+            } catch (\PDOException $e) { http_response_code(400); echo json_encode(["error" => $e->getMessage()]); }
+            break;
+        case 'PUT':
+            if ($id === 'all') { http_response_code(400); echo json_encode(["error" => "Hianyzo ID."]); break; }
+            if (empty($inputData) || !is_array($inputData)) { http_response_code(400); echo json_encode(["error" => "Hianyzo vagy hibas JSON adatok."]); break; }
+            try {
+                $allowedFields = $config['update_fields'] ?? $config['insert_fields'] ?? null;
+                $affected = updateResource($pdo, $table, $idCol, $id, $inputData, $allowedFields);
+                if ($affected > 0) {
+                    echo json_encode(["success" => true, "message" => "Sikeres frissítés."]);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["error" => "Nem talalhato vagy nincs valtozas."]);
+                }
             } catch (\PDOException $e) { http_response_code(400); echo json_encode(["error" => $e->getMessage()]); }
             break;
     }

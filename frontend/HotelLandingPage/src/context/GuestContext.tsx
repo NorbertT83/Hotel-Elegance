@@ -18,7 +18,7 @@ type GuestContextType = {
     currentRoom: Room | null;
     currentBookedServices: BookedService[];
     refreshBookedServices: () => void;
-    updateThermostat: (temp: number) => Promise<boolean>;
+    updateRoomFeature: <K extends keyof Room>(feature: K, value: Room[K]) => Promise<boolean>;
     services: HotelService[];
     isLoading: boolean;
     accessToken: string | null;
@@ -204,13 +204,18 @@ export const GuestProvider = ({ children }: Props) => {
         }
     }
 
-    async function updateThermostat(temp: number) {
-        const updateResponse = await updateData('room', `currentRoom.room_number`, {ac_temp: temp} );
-        if (updateResponse) {
-            setCurrentRoom(prev => ({...prev, ac_temp: temp}));
-            return true;
+    async function updateRoomFeature<K extends keyof Room>(feature: K, value: Room[K]) {
+        if (!currentRoom) {
+            return false;
         }
-        return false;
+        try {
+            await updateData<Partial<Room>>('room', currentRoom.room_number.toString(), { [feature]: value } as Partial<Room>);
+            setCurrentRoom(prev => prev ? { ...prev, [feature]: value } : prev);
+            return true;
+        } catch (error) {
+            console.error(`Unable to update room feature ${String(feature)}:`, error);
+            return false;
+        }
     }
 
 
@@ -242,7 +247,7 @@ export const GuestProvider = ({ children }: Props) => {
     }
 
     return (
-        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, updateThermostat, services, isLoading, login, logout }}>
+        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, updateRoomFeature, services, isLoading, login, logout }}>
             {children}
         </GuestContext.Provider>
     );

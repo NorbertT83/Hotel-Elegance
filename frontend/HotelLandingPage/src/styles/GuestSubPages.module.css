@@ -108,43 +108,125 @@
 
 .roomCard .content {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
-.thermostatContainer {
+.subCardContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
-    padding: 1rem;
+    width: 8rem;
+    padding: 1.25rem 1rem .75rem 1rem;
     border-radius: .5rem;
     border: 1px solid var(--outline-variant);
+    background-color: var(--surface-container-low);
 }
-.thermostatContainer .icon {
+.infoContainer {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(8rem, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.infoItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .75rem;
+    border-radius: .5rem;
+    border: 1px solid var(--outline-variant);
+    background-color: var(--surface-container);
+}
+.infoItem span:first-child {
+    font-size: 1.25rem;
+    color: var(--primary);
+}
+.infoItem span:last-child {
+    color: var(--on-surface-variant);
+    font-size: .9rem;
+    text-transform: capitalize;
+}
+.icon {
     position: absolute;
-    top: .5rem;
+    top: 0;
     left: .5rem;
-    font-size: 1.2rem;
+    font-size: .8rem;
 }
-.thermostatContainer .onOff span {
+.subCardContainer span {
+    cursor: pointer;
+}
+.subCardContainer .onOff span {
     font-size: 2.5rem;
     padding-inline: .5rem;
     color: var(--primary);
 }
-.thermostatContainer.acOff .onOff span {
+.subCardContainer.acOff .onOff span {
     color: gray;
+}
+.subCardContainer.rotateFan .onOff span {
+    animation: spin 4s linear infinite reverse;
+}
+@keyframes spin {
+    0% {rotate: 0deg}
+    100% {rotate: 360deg}
+
 }
 .thermostat {
     display: flex;
     align-items: center;
     gap: .5rem;
 }
-.thermostat span:nth-of-type(2) {
+.thermostat .tempDisplay {
+    width: 1rem;
+    text-align: center;
     color: var(--primary);
 }
 .acContainer.acOff .thermostat span {
     color: gray;
 }
+
+.subCardContainer .toggle {
+    cursor: pointer;
+}
+.subCardContainer .toggle span {
+    font-size: 2.5rem;
+    color: var(--primary);
+    transition: transform .3s ease-in-out;
+}
+.subCardContainer.unlocked .toggle span {
+    color: var(--error);
+    animation: wiggle .4s ease-in-out;
+}
+@keyframes wiggle {
+    0% {rotate: 0deg}
+    25% {rotate: -10deg}
+    75% {rotate: 10deg}
+    100% {rotate: 0deg}
+}
+.subCardContainer .toggleStatus {
+    font-size: .75rem;
+    color: var(--on-surface-variant);
+    margin-top: .5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.subCardContainer.unlocked .toggleStatus {
+    color: var(--error);
+}
+.subCardContainer .toggle span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.subCardContainer.unlocked .toggle span {
+    color: var(--error);
+    animation: wiggle .4s ease-in-out;
+}
+
 
 .serviceCard .content {
     grid-template-columns: 1fr;
@@ -159,7 +241,6 @@
     padding-bottom: .25rem;
     border-bottom: 1px solid var(--outline-variant);
 }
-
 .serviceItem {
     display: grid;
     grid-template-columns: 3fr 2fr 1fr;
@@ -186,7 +267,6 @@
     margin-left: .5rem;
     opacity: 0;
     visibility: hidden;
-    /* pointer-events: none; */
     transform: translateX(-80%);
     transition: opacity .2s ease-in-out, transform .2s ease-in-out, visibility .2s ease-in-out, color .2s ease-in-out;
 }
@@ -195,7 +275,6 @@
     opacity: 1;
     visibility: visible;
     transform: translateX(0%);
-    /* pointer-events: auto; */
 }
 
 .serviceStatusWrapper:hover .deleteButton:hover span {
