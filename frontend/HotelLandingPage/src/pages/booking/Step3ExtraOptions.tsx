@@ -7,7 +7,7 @@ import { roomSupportsExtra, useBooking } from '../../context/BookingProcessConte
 export default function Step3ExtraOptions() {
     const { language } = useLanguage();
     const labels = bookingPageText[language].step3;
-    const { bookingState, roomsForSelectedType, setFilteredRooms, extraOptions, setBookingState, prevStep, nextStep } = useBooking();
+    const { bookingState, roomsForSelectedType, setFilteredRooms, extraOptions, setBookingState, prevStep, nextStep, updateBooking } = useBooking();
     
     type Step3Keys = keyof typeof labels;
     const cateringOptions = ['breakfast', 'halfboard', 'fullboard'] as CateringType[];
@@ -41,10 +41,7 @@ export default function Step3ExtraOptions() {
             }
         }
 
-        setBookingState(prev => ({
-            ...prev,
-            extrasChosen: newExtrasChosen
-        }));
+        updateBooking({ extrasChosen: newExtrasChosen });
     };
 
     return (
@@ -63,7 +60,7 @@ export default function Step3ExtraOptions() {
                                     name="catering"
                                     value={option}
                                     checked={bookingState.cateringChosen === option}
-                                    onChange={(e) => setBookingState(p => ({ ...p, cateringChosen: e.target.value as CateringType }))}
+                                    onChange={(e) => updateBooking({ cateringChosen: e.target.value as CateringType })}
                                 />
                                 {labels[option as Step3Keys]} <span>{labels[`${option}Note` as Step3Keys]}</span>
                             </label>
@@ -130,7 +127,7 @@ export default function Step3ExtraOptions() {
                             }
 
                             if (finalExtrasChosen.length !== bookingState.extrasChosen.length) {
-                                setBookingState(p => ({ ...p, extrasChosen: finalExtrasChosen }));
+                                updateBooking({ extrasChosen: finalExtrasChosen });
                             }
 
                             let matchingRooms = roomsForSelectedType.filter((room) => {
