@@ -12,6 +12,7 @@ interface BookingContextProps {
     extraOptions: ExtraOption[];
     setBookingState: React.Dispatch<React.SetStateAction<BookingState>>;
     setFilteredRooms: React.Dispatch<React.SetStateAction<Room[]>>;
+    updateBooking: (patch: Partial<BookingState>) => void;
     handleCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     nextStep: () => void;
@@ -99,6 +100,10 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
 
     const [filteredRooms, setFilteredRooms] = useState<Room[]>(bookingState.freeRooms);
     const [step, setStep] = useState(1);
+
+    const updateBooking = (patch: Partial<BookingState>) => {
+        setBookingState(prev => ({ ...prev, ...patch }));
+    };
 
     const isFormValid = useMemo(() => {
         const { lname, fname, email, zip, city, street } = bookingState.formData;
@@ -212,6 +217,7 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
             extraOptions,
             setBookingState, 
             setFilteredRooms,
+            updateBooking,
             nextStep, 
             prevStep, 
             finishBooking,

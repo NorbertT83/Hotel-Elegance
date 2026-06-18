@@ -8,7 +8,7 @@ import { RoomType } from '../../types/booking';
 export default function Step2RoomSelection()  {
     const { language } = useLanguage();
     const labels = bookingPageText[language].step2;
-    const { bookingState, setBookingState, setFilteredRooms, nextStep, prevStep  } = useBooking();
+    const { bookingState, setBookingState, setFilteredRooms, nextStep, prevStep, updateBooking } = useBooking();
     const availableRoomTypes = [...new Set(bookingState.freeRooms.map(room => room.room_type))];
 
     const roomOptions: { value: RoomType; label: string }[] = [
@@ -29,11 +29,10 @@ export default function Step2RoomSelection()  {
                             key={availRoom}
                             className={`${s.roomOption} ${bookingState.roomTypeChosen === availRoom ? s.active : ''}`}
                             onClick={() => {
-                                setBookingState(p => ({ 
-                                    ...p, 
+                                updateBooking({ 
                                     roomTypeChosen: roomOptions.find(r => r.value === availRoom)?.value as RoomType,
                                     extrasChosen: [] 
-                                }));
+                                });
 
                             }}
                         >

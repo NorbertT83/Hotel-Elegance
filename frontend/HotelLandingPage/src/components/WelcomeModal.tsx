@@ -28,7 +28,7 @@ export default function WelcomeModal(): React.JSX.Element | null {
 
     if (!isAtHotel || !showWelcomeModal) return null;
 
-    return ( !guest &&
+    return (!guest ? (
         <div style={modalStyle}>
             <button style={closeButtonStyle} onClick={() => setShowWelcomeModal(false)} aria-label="Bezárás">
                 <span className="material-symbols-outlined">close</span>
@@ -42,7 +42,7 @@ export default function WelcomeModal(): React.JSX.Element | null {
                 <Link to="/guest" className='btn btn-primary' onClick={() => setShowWelcomeModal(false)}>Bejelentkezés</Link>
             </div>
         </div>
-    );
+    ) : null);
 };
 
 const modalStyle: CSSProperties = {
