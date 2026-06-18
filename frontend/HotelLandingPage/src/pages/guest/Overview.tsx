@@ -2,10 +2,13 @@ import { useGuest } from "../../context/GuestContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { guestPageText } from "../../utils/translations";
 import { dateFormatter } from "../../utils/utils";
-import s from '../../styles/GuestSubPages.module.css';
-import FloorPlanIcon from '../../assets/floorplan.svg';
 import { BookedService } from "../../types/booking";
 import { createData } from "../../services/apiService";
+import s from '../../styles/GuestSubPages.module.css';
+import FloorPlanIcon from '../../assets/floorplan.svg';
+import CurrentWeatherHeader from "../../components/CurrentWeatherHeader";
+import WeatherCard from "../../components/WeatherCard";
+import { useState } from "react";
 
 const serviceStatusIcons = {
     created: {
@@ -24,10 +27,6 @@ const serviceStatusIcons = {
         icon: 'contract_delete',
         color: 'gray',
     },
-    door_locked: {
-        icon: 'door_open', //'door_front',
-        color: 'var(--error)' //,'green'
-    },
 }
 
 const roomStatusIcons = {
@@ -43,6 +42,10 @@ const roomStatusIcons = {
         icon: 'do_not_disturb_on_total_silence',
         color: 'var(--on-surface-variant)',
     },
+    door_locked: {
+        icon: 'door_open', //'door_front',
+        color: 'var(--error)' //,'green'
+    },
     cleaning: {
         icon: 'cleaning', //vacuum
         color: 'var(--on-surface-variant)',
@@ -57,17 +60,21 @@ const roomStatusIcons = {
     },
     under_maintenance: {
         icon: 'construction',
-        color: 'var(-primary)',
+        color: 'var(--primary)',
     },
+    ac_temp: {
+        icon: 'hvac',
+        color: 'var(--primary)',
+    }
 }
 
 export default function Overview() {
     const { language } = useLanguage();
-    const { guest, currentBooking, currentRoom, currentBookedServices, refreshBookedServices } = useGuest();
+    const { guest, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, updateThermostat } = useGuest();
     const labels = guestPageText[language].guestPage.menuOverview;
 
 
-    async function handleDelete(service: BookedService) {
+    async function handleBookedServiceDelete(service: BookedService) {
         try {
             service.status = 'deleted';
             const response = await createData('servicebooking/updatestatus', service);
@@ -113,14 +120,14 @@ export default function Overview() {
 
             <div className={`${s.card} ${s.weatherCard}`}>
                 <div className={s.cardHeader}>
-                    <div className={s.headerText}>Weather Card</div>
+                    <div style={{display: 'flex', alignItems: 'center', gap: '.5rem'}}>
+                        <div className={s.headerText}>{labels.weatherCard.headerText}</div>
+                    </div>
+                    <CurrentWeatherHeader lat={47.52956} lon={19.0766} />
                 </div>
 
                 <div className={s.content}>
-                    <div>
-                        <a href="https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=47.52956&lon=19.0766">Met.no API</a>
-                    </div>
-                    <div>TODO Weather Card</div>
+                    <WeatherCard lat={47.52956} lon={19.0766} />
                 </div>
             </div>
 
@@ -138,7 +145,19 @@ export default function Overview() {
                     <div>{currentRoom.bed_type}</div>
 
                     <div>{labels.roomCard.status}</div>
-                    <div><span className="material-symbols-outlined">{roomStatusIcons[currentRoom.status].icon}</span></div>
+                        <div><span className="material-symbols-outlined">{roomStatusIcons[currentRoom.status].icon}</span>
+                    </div>
+
+                    <div className={s.thermostatContainer}>
+                        <span className={`material-symbols-outlined ${s.icon}`}>hvac</span>
+                        <div className={s.onOff} onClick={() => updateThermostat(0)}><span className="material-symbols-outlined">{currentRoom.ac_temp ? 'mode_fan' : 'mode_fan_off'}</span></div>
+                        <div className={s.thermostat}>
+                            <span className="material-symbols-outlined" onClick={() => updateThermostat(1)}>remove</span>
+                            <span>{currentRoom.ac_temp}</span>
+                            <span className="material-symbols-outlined" onClick={() => updateThermostat(-1)}>add</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -160,7 +179,7 @@ export default function Overview() {
                             <div className={s.serviceStatusWrapper}>
                                 <span style={{color: serviceStatusIcons[sb.status].color}} title={labels.serviceCard[sb.status]} className="material-symbols-outlined">{serviceStatusIcons[sb.status].icon}</span>
                                 {sb.status === 'created' &&
-                                    <button className={`btn ${s.deleteButton}`} onClick={()=>handleDelete(sb)}><span className="material-symbols-outlined">delete</span></button>
+                                    <button className={`btn ${s.deleteButton}`} onClick={()=>handleBookedServiceDelete(sb)}><span className="material-symbols-outlined">delete</span></button>
                                 }
                             </div>
                         </div>

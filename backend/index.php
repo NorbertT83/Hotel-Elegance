@@ -534,9 +534,9 @@ $endpoints = [
         'filters' => ['room_type', 'status', 'bed_type', 'has_balcony'],
         'sorts'   => ['room_number', 'price_per_night', 'floorspace'],
         'enums'   => [
-            'status' => ['available','occupied','dont_disturb','needs_cleaning','cleaning','under_maintenence','unavailable'],
+            'status' => ['available','occupied','under_maintenance','unavailable'],
             'room_type' => ['standard','deluxe','suite'],
-            'bed_type' => ['single', 'twin', 'queen', 'kingsize'],
+            'bed_type' => ['single', 'twin', 'kingsize'],
             'has_view' => ['city', 'garden', 'panorama']
         ]
     ],
@@ -698,7 +698,6 @@ if (array_key_exists($resource, $endpoints)) {
         case 'POST':
             if (empty($inputData)) { http_response_code(400); echo json_encode(["error" => "Hianyzo JSON."]); break; }
             try {
-                // Ensure the endpoint declares allowed insert fields to avoid accidental/malicious inserts
                 if (!isset($config['insert_fields']) || !is_array($config['insert_fields']) || count($config['insert_fields']) === 0) {
                     http_response_code(403);
                     echo json_encode(["error" => "Insert not allowed for this resource."]);

@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { BookedService, CateringType, Guest, HotelService, Room, RoomType } from '../types/booking';
-import { getData, createData, apiServiceConfig, tryToRefreshToken } from '../services/apiService';
+import { getData, createData, apiServiceConfig, tryToRefreshToken, updateData } from '../services/apiService';
 import { parseJwt } from '../utils/utils';
 import { useLanguage } from './LanguageContext';
 
@@ -18,6 +18,7 @@ type GuestContextType = {
     currentRoom: Room | null;
     currentBookedServices: BookedService[];
     refreshBookedServices: () => void;
+    updateThermostat: (temp: number) => Promise<boolean>;
     services: HotelService[];
     isLoading: boolean;
     accessToken: string | null;
@@ -203,6 +204,15 @@ export const GuestProvider = ({ children }: Props) => {
         }
     }
 
+    async function updateThermostat(temp: number) {
+        const updateResponse = await updateData('room', `currentRoom.room_number`, {ac_temp: temp} );
+        if (updateResponse) {
+            setCurrentRoom(prev => ({...prev, ac_temp: temp}));
+            return true;
+        }
+        return false;
+    }
+
 
     async function login(email: string, bookingIdAsPassword: string): Promise<LoginResult> {
         setIsLoading(true);
@@ -232,7 +242,7 @@ export const GuestProvider = ({ children }: Props) => {
     }
 
     return (
-        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, services, isLoading, login, logout }}>
+        <GuestContext.Provider value={{ guest, accessToken, setAccessToken, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, updateThermostat, services, isLoading, login, logout }}>
             {children}
         </GuestContext.Provider>
     );

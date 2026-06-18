@@ -21,12 +21,17 @@ export interface Room {
     room_number: number;
     room_type: RoomType;
     floorspace: number;
-    bed_type: "single"|"twin"|"queen"|"kingsize";
+    bed_type: "single"|"twin"|"kingsize";
     has_balcony: number;
     has_view: "city"|"garden"|"panorama";
     max_adults: number;
     extras: "jacuzzi"|"kitchen";
-    status: "available"|"needs_cleaning"|"cleaning"|"occupied"|"dont_disturb"|"under_maintenance"|"unavailable";
+    status: "available"|"occupied"|"under_maintenance"|"unavailable";
+    door_locked: boolean;
+    needs_cleaning: boolean;
+    is_cleaning: boolean;
+    dont_disturb: boolean;
+    ac_temp: number;
     price_per_night: number;
 }
 

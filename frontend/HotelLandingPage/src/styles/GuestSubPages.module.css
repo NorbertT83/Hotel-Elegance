@@ -27,6 +27,7 @@
 
 .guestCard, .roomCard, .serviceCard, .weatherCard {
     margin-bottom: 1.5rem;
+    break-inside: avoid;
 }
 
 .card:hover {
@@ -89,6 +90,11 @@
     padding: 1rem;
 }
 
+.weatherCard .content{
+    display: flex;
+    justify-content: space-around;
+}
+
 .guestCard .vipLevel {
     height: 1.75rem;
     width: 1.75rem;
@@ -101,7 +107,43 @@
 }
 
 .roomCard .content {
-    grid-template-columns: 1fr 1.5fr;
+    display: flex;
+}
+
+.thermostatContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 1rem;
+    border-radius: .5rem;
+    border: 1px solid var(--outline-variant);
+}
+.thermostatContainer .icon {
+    position: absolute;
+    top: .5rem;
+    left: .5rem;
+    font-size: 1.2rem;
+}
+.thermostatContainer .onOff span {
+    font-size: 2.5rem;
+    padding-inline: .5rem;
+    color: var(--primary);
+}
+.thermostatContainer.acOff .onOff span {
+    color: gray;
+}
+.thermostat {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+.thermostat span:nth-of-type(2) {
+    color: var(--primary);
+}
+.acContainer.acOff .thermostat span {
+    color: gray;
 }
 
 .serviceCard .content {

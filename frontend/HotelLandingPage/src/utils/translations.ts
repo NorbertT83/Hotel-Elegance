@@ -400,7 +400,12 @@ export const guestPageText = {
                     pending: "Teljesítés alatt",
                     completed: "Teljesítve",
                     deleted: "Törölve"
-                }
+                },
+                weatherCard: {
+                    headerText: 'Időjárás',
+                    today: 'Ma',
+                    tomorrow: 'Holnap',
+                },
             },
             menuRoomservice: {
                 headerText: "Étel- és Ital kínálatunk",
@@ -477,7 +482,12 @@ export const guestPageText = {
                     pending: "Pending",
                     completed: "Completed",
                     deleted: "Deleted"
-                }
+                },
+                weatherCard: {
+                    headerText: 'Weather',
+                    today: 'Today',
+                    tomorrow: 'Tomorrow',
+                },
             },
             menuRoomservice: {
                 headerText: "Our Food & Beverage selection",

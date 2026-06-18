@@ -432,6 +432,9 @@ h1, h2, h3, .logo, .footer-logo {
 .link-with-icon .material-symbols-outlined {
     font-size: 14px;
 }
+.material-symbols-outlined {
+    user-select: none;
+}
 
 .room-card:hover .link-with-icon {
     text-decoration: underline;
