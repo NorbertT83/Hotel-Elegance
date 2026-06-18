@@ -8,7 +8,8 @@ $pass = $config['db_pass'];
 $charset = $config['db_char'];
 $jwt_secret = $config['jwt_secret'];
 
-$isUsingHttps = false;
+$isUsingHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+// In production ensure TLS is used and `isUsingHttps` becomes true so cookies are marked secure.
 
 $allowed_origins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://nrbrt-codes.hu'];
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
@@ -36,7 +37,12 @@ function base64url_encode($data) {
 }
 
 function base64url_decode($data) {
-    return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
+    $remainder = strlen($data) % 4;
+    if ($remainder) {
+        $padlen = 4 - $remainder;
+        $data .= str_repeat('=', $padlen);
+    }
+    return base64_decode(strtr($data, '-_', '+/'));
 }
 
 function generate_jwt($payload, $secret, $expiry_seconds) {
@@ -56,23 +62,23 @@ function generate_jwt($payload, $secret, $expiry_seconds) {
 function verify_jwt($jwt, $secret) {
     $tokenParts = explode('.', $jwt);
     if (count($tokenParts) !== 3) return false;
-    
+
     $headerEncoded = $tokenParts[0];
     $payloadEncoded = $tokenParts[1];
     $signatureProvided = $tokenParts[2];
 
-    $signatureValid = base64url_encode(hash_hmac('sha256', $headerEncoded . "." . $payloadEncoded, $secret, true));
+    $headerJson = base64url_decode($headerEncoded);
+    $headerArr = json_decode($headerJson, true);
+    if (!isset($headerArr['alg']) || $headerArr['alg'] !== 'HS256') return false;
 
-    if (!hash_equals($signatureValid, $signatureProvided)) {
-        return false;
-    }
+    $signatureValid = base64url_encode(hash_hmac('sha256', $headerEncoded . "." . $payloadEncoded, $secret, true));
+    if (!hash_equals($signatureValid, $signatureProvided)) return false;
 
     $payload = base64url_decode($payloadEncoded);
     $payloadArr = json_decode($payload, true);
 
-    if (isset($payloadArr['exp']) && $payloadArr['exp'] < time()) {
-        return false;
-    }
+    if (!is_array($payloadArr)) return false;
+    if (isset($payloadArr['exp']) && $payloadArr['exp'] < time()) return false;
 
     return $payloadArr;
 }
@@ -129,13 +135,22 @@ function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], 
     return ($idOrAll === 'all') ? $stmt->fetchAll() : $stmt->fetch();
 }
 
-function createResource($pdo, $table, $data) {
+function createResource($pdo, $table, $data, $allowedFields = null) {
     if (empty($data)) return false;
-    $columns = array_keys($data);
-    $placeholders = array_fill(0, count($data), '?');
+
+    // Require an explicit whitelist to avoid blind INSERT of arbitrary keys
+    if (!is_array($allowedFields) || count($allowedFields) === 0) {
+        throw new \InvalidArgumentException('Insert not allowed without allowedFields list.');
+    }
+
+    $filtered = array_intersect_key($data, array_flip($allowedFields));
+    if (empty($filtered)) return false;
+
+    $columns = array_keys($filtered);
+    $placeholders = array_fill(0, count($filtered), '?');
     $sql = "INSERT INTO `$table` (`" . implode("`, `", $columns) . "`) VALUES (" . implode(", ", $placeholders) . ")";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(array_values($data));
+    $stmt->execute(array_values($filtered));
     return true;
 }
 function deleteResource($pdo, $table, $idColumn, $id) {
@@ -311,13 +326,13 @@ if ($resource === 'auth') {
             exit;
         }
 
-        $dbStmt = $pdo->prepare("SELECT * FROM `refresh_tokens` WHERE `token_id` = ? LIMIT 1");
+        $dbStmt = $pdo->prepare("SELECT * FROM `refresh_tokens` WHERE `token_id` = ? AND `expires_at` > NOW() LIMIT 1");
         $dbStmt->execute([$payload['jti']]);
         $dbToken = $dbStmt->fetch();
 
         if (!$dbToken) {
             http_response_code(401);
-            echo json_encode(["success" => false, "error" => "A refresh tokent érvénytelenítették (kijelentkezett)."]);
+            echo json_encode(["success" => false, "error" => "A refresh tokent érvénytelenítették vagy lejárt (kijelentkezett)."]);
             exit;
         }
 
@@ -492,7 +507,8 @@ $endpoints = [
         'table'   => 'guests',
         'id'      => 'id',
         'filters' => ['city', 'country', 'loyalty_level', 'email'],
-        'sorts'   => ['fname', 'lname', 'country', 'loyalty_level']
+        'sorts'   => ['fname', 'lname', 'country', 'loyalty_level'],
+        'insert_fields' => ['email','fname','lname','zip_code','country','city','street']
     ],
     'employee' => [
         'table'   => 'employees',
@@ -504,7 +520,8 @@ $endpoints = [
         'table'   => 'services',
         'id'      => 'id',
         'filters' => ['service_type_hu', 'service_type_en'],
-        'sorts'   => ['name_hu', 'name_en', 'price', 'service_type_hu', 'service_type_en']
+        'sorts'   => ['name_hu', 'name_en', 'price', 'service_type_hu', 'service_type_en'],
+        'insert_fields' => ['name_hu','name_en','price','service_type_hu','service_type_en']
     ],
     'booking' => [
         'table'   => 'bookings',
@@ -521,7 +538,8 @@ $endpoints = [
         'id'      => 'id',
         'filters' => ['status', 'booking_id'],
         'sorts'   => ['status', 'updated_at'],
-        'enums'   => ['status' => ['created', 'pending', 'completed', 'deleted']]
+        'enums'   => ['status' => ['created', 'pending', 'completed', 'deleted']],
+        'insert_fields' => ['booking_id','service_id','quantity','status','price_at_booking']
     ],
     'foodbeverage' => [
         'table'   => 'food_and_beverage',
@@ -643,9 +661,19 @@ if (array_key_exists($resource, $endpoints)) {
         case 'POST':
             if (empty($inputData)) { http_response_code(400); echo json_encode(["error" => "Hianyzo JSON."]); break; }
             try {
-                createResource($pdo, $table, $inputData);
+                // Ensure the endpoint declares allowed insert fields to avoid accidental/malicious inserts
+                if (!isset($config['insert_fields']) || !is_array($config['insert_fields']) || count($config['insert_fields']) === 0) {
+                    http_response_code(403);
+                    echo json_encode(["error" => "Insert not allowed for this resource."]);
+                    break;
+                }
+
+                createResource($pdo, $table, $inputData, $config['insert_fields']);
                 http_response_code(201);
                 echo json_encode(["id" => $pdo->lastInsertId(), "success" => true, "message" => "Sikeresen létrehozva."]);
+            } catch (\InvalidArgumentException $e) {
+                http_response_code(403);
+                echo json_encode(["error" => $e->getMessage()]);
             } catch (\PDOException $e) { http_response_code(400); echo json_encode(["error" => $e->getMessage()]); }
             break;
 
