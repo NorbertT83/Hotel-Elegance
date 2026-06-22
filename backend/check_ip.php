@@ -15,7 +15,6 @@ $hotel_ips = ["78.131.58.217", "91.227.139.94", "::1", "127.0.0.1", "192.168.2.1
 
 $client_ip = $_SERVER['REMOTE_ADDR'] ?? '';
 if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    // X-Forwarded-For may be a comma-separated list - take the first (original client)
     $parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
     $first = trim($parts[0]);
     if (filter_var($first, FILTER_VALIDATE_IP)) {
@@ -29,7 +28,6 @@ $response = [
     "isAtHotel" => $is_at_hotel
 ];
 
-// Only include debug ip in non-production environments
 if (getenv('DEBUG_IP') === '1') {
     $response['debug_your_ip'] = $client_ip;
 }

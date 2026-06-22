@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import s from '../styles/GuestSubPages.module.css';
 
 export default function CurrentWeatherHeader({ lat, lon }: { lat: number; lon: number }) {
     const [temp, setTemp] = useState<number | null>(null);
@@ -37,7 +38,7 @@ export default function CurrentWeatherHeader({ lat, lon }: { lat: number; lon: n
     if (temp === null || hum === null) return <div style={{color: 'var(--on-surface-variant)'}}>—</div>;
 
     return (
-        <div style={{fontSize: '.9rem', color: 'var(--on-surface-variant)'}}>
+        <div className={s.currentWeather} style={{fontSize: '.9rem', color: 'var(--on-surface-variant)'}}>
             {temp} °C / {hum} %
         </div>
     );

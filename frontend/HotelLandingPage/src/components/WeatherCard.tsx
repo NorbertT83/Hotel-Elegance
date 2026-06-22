@@ -94,7 +94,7 @@ export default function WeatherCard({ lat, lon }: { lat: number; lon: number }) 
             <div style={{justifyItems: 'center'}}>
                 <div style={{fontWeight: 600, textTransform: 'capitalize'}}>{label}</div>
                 <div style={{fontSize: '1.5rem', userSelect: 'none'}}>{iconFor(symbol)}</div>
-                <div style={{display: 'flex', alignItems: 'center', gap: '.5rem'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '.25rem'}}>
                     <div>{temp !== undefined ? `${Math.round(temp)}°C` : 'N/A'}</div>/
                     <div>{hum !== undefined ? `${Math.round(hum)}%` : 'N/A'}</div>
                 </div>

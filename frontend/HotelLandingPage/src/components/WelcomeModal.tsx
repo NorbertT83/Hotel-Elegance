@@ -13,8 +13,8 @@ export default function WelcomeModal(): React.JSX.Element | null {
     const { guest } = useGuest();
 
     useEffect(() => {
-        //fetch('http://192.168.2.162/api/check_ip.php')
-        fetch('https://nrbrt-codes.hu/hotelmanager/api/check_ip.php')
+        fetch('http://localhost/api/check_ip.php')
+        //fetch('https://nrbrt-codes.hu/hotelmanager/api/check_ip.php')
         .then(response => response.json())
         .then(data => {
             console.log(data);
