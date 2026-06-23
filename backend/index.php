@@ -251,6 +251,80 @@ if (!$isPublic) {
     $authenticatedUser = $tokenPayload; 
 }
 
+// --- IDOR / BOLA AUTHORIZATION MIDDLEWARE FOR GUESTS ---
+if (!$isPublic && isset($authenticatedUser['booking_id'])) {
+    $guestId = $authenticatedUser['guest_id'];
+    $bookingId = $authenticatedUser['booking_id'];
+
+    // 1. Block guests from accessing employee endpoints
+    if ($resource === 'employee') {
+        http_response_code(403);
+        echo json_encode(["error" => "Access denied. Guests cannot access employee records."]);
+        exit;
+    }
+
+    // 2. Restrict guests to their own guest profile
+    if ($resource === 'guest') {
+        if ($id === 'all') {
+            $id = $guestId; // Force filter to own guest ID
+        } elseif ($id != $guestId) {
+            http_response_code(403);
+            echo json_encode(["error" => "Access denied to other guest profiles."]);
+            exit;
+        }
+    }
+
+    // 3. Restrict guests to their own booking info
+    if ($resource === 'booking') {
+        // Special sub-endpoint check for booking/services
+        if ($id === 'services') {
+            // Handled internally by index.php
+        } elseif ($id === 'all') {
+            $id = $bookingId; // Force filter to own booking ID
+        } elseif ($id !== $bookingId) {
+            http_response_code(403);
+            echo json_encode(["error" => "Access denied to other bookings."]);
+            exit;
+        }
+    }
+
+    // 4. Restrict guests to their assigned room
+    if ($resource === 'room') {
+        // Fetch the assigned room number for this booking
+        $stmt = $pdo->prepare("SELECT `room_number` FROM `bookings` WHERE `id` = ? LIMIT 1");
+        $stmt->execute([$bookingId]);
+        $assignedRoom = $stmt->fetchColumn();
+
+        if ($id === 'all') {
+            $id = $assignedRoom ? $assignedRoom : 'none';
+        } elseif ($id != $assignedRoom) {
+            http_response_code(403);
+            echo json_encode(["error" => "Access denied. You can only access details for your assigned room."]);
+            exit;
+        }
+    }
+
+    // 5. Restrict guests to their own service bookings
+    if ($resource === 'servicebooking') {
+        if ($method === 'POST') {
+            // Enforce that guest can only create service bookings for their own booking
+            $inputData['booking_id'] = $bookingId;
+        } elseif ($id !== 'all') {
+            // Check ownership of the requested service booking
+            $stmt = $pdo->prepare("SELECT `booking_id` FROM `servicebookings` WHERE `id` = ? LIMIT 1");
+            $stmt->execute([$id]);
+            $ownerBookingId = $stmt->fetchColumn();
+
+            if ($ownerBookingId !== $bookingId) {
+                http_response_code(403);
+                echo json_encode(["error" => "Access denied to this service booking."]);
+                exit;
+            }
+        }
+    }
+}
+
+
 
 
 // --- 3. DEDIKÁLT VIRTUAL ENDPOINT: AUTH KEZELÉSE ---
@@ -419,11 +493,26 @@ if ($resource === 'auth') {
         try {
             $pdo->beginTransaction();
 
-            $stmt = $pdo->prepare("SELECT id FROM `guests` WHERE `email` = ? LIMIT 1");
+            $stmt = $pdo->prepare("SELECT `id`, `fname`, `lname` FROM `guests` WHERE `email` = ? LIMIT 1");
             $stmt->execute([$email]);
             $existingGuest = $stmt->fetch();
 
             if ($existingGuest) {
+                // Prevent account takeover by verifying first and last name match existing record
+                $existingFname = mb_strtolower(trim($existingGuest['fname']), 'UTF-8');
+                $existingLname = mb_strtolower(trim($existingGuest['lname']), 'UTF-8');
+                $inputFname = mb_strtolower(trim($inputData['fname'] ?? ''), 'UTF-8');
+                $inputLname = mb_strtolower(trim($inputData['lname'] ?? ''), 'UTF-8');
+
+                if ($existingFname !== $inputFname || $existingLname !== $inputLname) {
+                    http_response_code(400);
+                    echo json_encode([
+                        "success" => false, 
+                        "error" => "Ez az e-mail cím már regisztrálva van egy másik névvel."
+                    ]);
+                    $pdo->rollBack();
+                    exit;
+                }
                 $guestId = $existingGuest['id'];
             } else {
                 $stmt = $pdo->prepare("INSERT INTO `guests` (`email`, `fname`, `lname`, `zip_code`, `country`, `city`, `street`) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -440,6 +529,16 @@ if ($resource === 'auth') {
             }
 
             $bookingId = $inputData['booking_id'] ?? null;
+            if ($bookingId) {
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM `bookings` WHERE `id` = ?");
+                $stmt->execute([$bookingId]);
+                if ($stmt->fetchColumn() > 0) {
+                    http_response_code(400);
+                    echo json_encode(["success" => false, "error" => "A megadott foglalási azonosító már létezik."]);
+                    $pdo->rollBack();
+                    exit;
+                }
+            }
             $stmt = $pdo->prepare("INSERT INTO `bookings` (`id`, `guest1_id`, `room_number`, `room_type`, `beginning_of_stay`, `end_of_stay`, `catering_level`) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $bookingId,

@@ -4,6 +4,13 @@ import SuiteRoomImage from '../assets/suite_room.png';
 
 export const landingPageText = {
     hu: {
+        welcomModal: {
+            welcome: 'Üdvözöljük a hotelben!',
+            line1: 'Észleltük, hogy a hotel hálózatát használja.',
+            line2: 'Extra funkciókat és felhasználói élményt kínálunk.',
+            line3: 'Szeretne bejelentkezni?',
+            login: 'Bejelentkezés',
+        },
         header: {
             navLinks: ['Szobák', 'Szolgáltatások', 'Galéria', 'Rólunk'],
             bookNow: 'Foglalás',
@@ -108,8 +115,14 @@ export const landingPageText = {
         },
     },
 
-
     en: {
+        welcomModal: {
+            welcome: 'Welcome to the Hotel!',
+            line1: 'It looks like, you\'re using our network.',
+            line2: 'We provide extra features and user exprerience.',
+            line3: 'Would you like to log in?',
+            login: 'Login',
+        },
         header: {
             navLinks: ['Rooms', 'Services', 'Gallery', 'About'],
             bookNow: 'Book Now',
@@ -377,7 +390,7 @@ export const guestPageText = {
                     emailText: "E-mail:",
                     addressText: "Cím:",
                     car: "Járműve:",
-                    nightsSlept: "Nálunk töltött éjszakái:",
+                    nightsSlept: "Összes éjszakái:",
                     vipLevel: "VIP szintje:",
                     currentBooking: "Aktuális foglalása:",
                 },
@@ -433,11 +446,26 @@ export const guestPageText = {
                 },
                 cartTitle: "Kosár tartalma",
                 cartTotal: "Kosárérték:",
-                cartOrder: "Megrendelés"
+                cartOrder: "Megrendelés",
             },
-            menuWellness: "",
-            menuExtras: "",
-            menuLogistics: "",
+            menuWellness: {
+                headerText: "Wellness szolgáltatásaink",
+                cartTitle: "Kosár tartalma",
+                cartTotal: "Kosárérték:",
+                cartOrder: "Megrendelés",
+            },
+            menuExtras: {
+                headerText: "Kényelmi szolgáltatásaink",
+                cartTitle: "Kosár tartalma",
+                cartTotal: "Kosárérték:",
+                cartOrder: "Megrendelés",
+            },
+            menuLogistics: {
+                headerText: "Logisztikai szolgáltatásaink",
+                cartTitle: "Kosár tartalma",
+                cartTotal: "Kosárérték:",
+                cartOrder: "Megrendelés",
+            },
         }
     },
 
@@ -471,7 +499,7 @@ export const guestPageText = {
                     emailText: "E-mail:",
                     addressText: "Address:",
                     car: "Your car:",
-                    nightsSlept: "Nights spent at us:",
+                    nightsSlept: "Nights spent:",
                     vipLevel: "VIP level:",
                     currentBooking: "Current booking Nr.:",
                 },
@@ -527,11 +555,26 @@ export const guestPageText = {
                 },
                 cartTitle: "Cart contents",
                 cartTotal: "Cart Total:",
-                cartOrder: "Place Order"
+                cartOrder: "Place Order",
             },
-            menuWellness: "",
-            menuExtras: "",
-            menuLogistics: "",
+            menuWellness: {
+                headerText: "Wellness services",
+                cartTitle: "Cart contents",
+                cartTotal: "Cart Total:",
+                cartOrder: "Place Order",
+            },
+            menuExtras: {
+                headerText: "Extra services",
+                cartTitle: "Cart contents",
+                cartTotal: "Cart Total:",
+                cartOrder: "Place Order",
+            },
+            menuLogistics: {
+                headerText: "Logistics services",
+                cartTitle: "Cart contents",
+                cartTotal: "Cart Total:",
+                cartOrder: "Place Order",
+            },
         }
     }
 };

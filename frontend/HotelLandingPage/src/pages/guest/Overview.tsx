@@ -189,20 +189,20 @@ export default function Overview() {
                 </div>
 
                 <div className={s.content}>
-                    <div>{labels.guestCard.nameText}</div>
+                    <div className={s.firstCol}>{labels.guestCard.nameText}</div>
                     <div>{guest.lname} {guest.fname}</div>
-                    <div>{labels.guestCard.emailText}</div>
+                    <div className={s.firstCol}>{labels.guestCard.emailText}</div>
                     <div className={s.truncate}>{guest.email}</div>
-                    <div className={s.span3}>{labels.guestCard.addressText}</div>
+                    <div className={`${s.span3} ${s.firstCol}`}>{labels.guestCard.addressText}</div>
                     <div>{guest.country} {guest.zip_code}</div>
                     <div>{guest.city}</div>
                     <div>{guest.street}</div>
                     {guest.car_plate_number ? <>
-                        <div>{labels.guestCard.car}</div>
+                        <div className={s.firstCol}>{labels.guestCard.car}</div>
                         <div>{guest.car_plate_number}</div>
                         </> : ''}
                     
-                    <div>{labels.guestCard.nightsSlept}</div>
+                    <div className={s.firstCol}>{labels.guestCard.nightsSlept}</div>
                     <div>{guest.total_nights}</div>
 
                 </div>
@@ -255,17 +255,17 @@ export default function Overview() {
                     </div>
                     
                     <div className={s.infoContainer}>
-                        <div className={s.infoItem} title={labels.roomCard.roomSize}>
-                            <span className="material-symbols-outlined">square_foot</span>
-                            <span>{currentRoom.floorspace} m<sup style={{fontSize: '.6rem'}}>2</sup></span>
+                        <div className={s.infoItem} title={labels.roomCard.roomType}>
+                            <span className="material-symbols-outlined">hotel</span>
+                            <span>{currentRoom.room_type}</span>
                         </div>
                         <div className={s.infoItem} title={labels.roomCard.bedType}>
                             <span className="material-symbols-outlined">king_bed</span>
                             <span>{currentRoom.bed_type}</span>
                         </div>
-                        <div className={s.infoItem} title={labels.roomCard.roomType}>
-                            <span className="material-symbols-outlined">hotel</span>
-                            <span>{currentRoom.room_type}</span>
+                        <div className={s.infoItem} title={labels.roomCard.roomSize}>
+                            <span className="material-symbols-outlined">square_foot</span>
+                            <span>{currentRoom.floorspace} m<sup style={{fontSize: '.6rem'}}>2</sup></span>
                         </div>
                         <div className={s.infoItem} title={labels.roomCard.view}>
                             <span className="material-symbols-outlined">visibility</span>

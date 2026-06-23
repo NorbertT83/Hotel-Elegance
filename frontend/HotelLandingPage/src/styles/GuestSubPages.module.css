@@ -8,29 +8,33 @@
     margin: 0 auto;
     background-color: var(--surface-container-low);
     border-radius: 1rem;
-    padding: 1.5rem;
+    padding: 0;
+    overflow-y: hidden;
     border: 1px solid var(--outline-variant);
 }
 
 .cardWrapper:has(.guestCard) {
     display: block;
     columns: 2;
+    padding: 1.5rem;
 }
 
 .card {
     background-color: var(--surface-container);
     border-radius: .5rem;
-    border: 1px solid var(--secondary-container);
     height: max-content;
     transition: border .25s linear;
 }
 
+.cardWrapper:has(.guestCard) .card {
+    border: 1px solid var(--secondary-container);
+}
 .guestCard, .roomCard, .serviceCard, .weatherCard {
     margin-bottom: 1.5rem;
     break-inside: avoid;
 }
 
-.card:hover {
+.cardWrapper:has(.guestCard) .card:hover {
     border: 1px solid var(--outline-variant);
 }
 
@@ -121,6 +125,9 @@
     grid-template-columns: max-content 3fr;
 }
 
+.guestCard .content .firstCol {
+    color: var(--on-surface-variant);
+}
 .weatherCard .content{
     display: flex;
     justify-content: space-around;
@@ -335,11 +342,6 @@
     text-overflow: ellipsis;
 }
 
-.cardWrapper:has(.roomServiceCard) {
-    padding: 0;
-    overflow-y: hidden;
-}
-
 .card.roomServiceCard {
     border: none;
     height: inherit;
@@ -524,15 +526,32 @@
     width: 170px;
 }
 
+@media screen and (max-width: 1280px) {
+    .cardWrapper {
+        padding: .75rem;
+        gap: .75rem;
+    }
+    .guestCard, .roomCard, .serviceCard, .weatherCard {
+        margin-bottom: .75rem;
+    }
+    .roomCard .content {
+        gap: .5rem;
+        padding: .5rem;
+    }
+    .infoContainer{
+        gap: .5rem;
+    }
+}
+
 @media screen and (max-width: 1024px) {
     .cardWrapper {
         width: 95vw;
         padding: 0;
         gap: .75rem;
-        border: none;
         background-color: transparent;
         height: auto;
-        overflow: visible;
+        overflow: hidden;
+        margin-bottom: 4rem;
     }
 
     .cardWrapper:has(.guestCard) {
@@ -543,13 +562,16 @@
     .guestCard, .roomCard, .serviceCard, .weatherCard {
         margin-bottom: 0;
     }
-
-    .roomServiceCard .content {
+    
+    .content {
         padding: .5rem;
         padding-bottom: 4rem;
     }
+    .guestCard .content {
+        grid-template-columns: 1fr 2fr;
+    }
 
-    .categorySection .itemRow {
+    .itemRow {
         padding: .5rem 0;
     }
 

@@ -29,7 +29,11 @@ export default function MessageBoxModal({headerText, message, timeout = 0, onClo
         <div className="messageBoxModal">
             <div className="messageBoxHeader">{ headerText }</div>
             <div className="messageBoxBody">{ message }</div>
-            <div><button onClick={() => setShowMessageBox(false)}>Close</button></div>
+            <div>
+                <button onClick={() => setShowMessageBox(false)}>
+                    <span className="material-symbols-outlined">close</span>
+                </button>
+            </div>
         </div>
     )
 }
