@@ -49,11 +49,12 @@ export default function Overview() {
 
         return [value, setValue] as const;
     }
+    
     const [optimisticTemp, setOptimisticTemp] = useState<number | null>(null);
     const [optimisticLocked, setOptimisticLocked] = useState<boolean | null>(null);
     const [optimisticDoNotDisturb, setOptimisticDoNotDisturb] = useState<boolean | null>(null);
     const [optimisticNeedsCleaning, setOptimisticNeedsCleaning] = useState<boolean | null>(null);
-    const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const acDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lockDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const doNotDisturbDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const needsCleaningDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -75,10 +76,10 @@ export default function Overview() {
         }
     }, [currentRoom]);
 
-    const guestKey = `cardCollapsed:guest:${currentBooking?.id ?? 'unknown'}`;
-    const weatherKey = `cardCollapsed:weather:${currentBooking?.id ?? 'unknown'}`;
-    const roomKey = `cardCollapsed:room:${currentRoom?.room_number ?? 'unknown'}`;
-    const serviceKey = `cardCollapsed:service:${currentBooking?.id ?? 'unknown'}`;
+    const guestKey = 'cardCollapsed:guest';
+    const weatherKey = 'cardCollapsed:weather';
+    const roomKey = 'cardCollapsed:room';
+    const serviceKey = 'cardCollapsed:service';
 
     const [guestCollapsed, setGuestCollapsed] = usePersistedBoolean(guestKey, false);
     const [weatherCollapsed, setWeatherCollapsed] = usePersistedBoolean(weatherKey, false);
@@ -116,7 +117,7 @@ export default function Overview() {
             nextTemp,
             setOptimisticTemp,
             lastSentTemp,
-            debounceTimer,
+            acDebounceTimer,
             (value) => updateRoomFeature('ac_temp', value),
             currentRoom?.ac_temp ?? 0
         );

@@ -9,6 +9,7 @@ import Footer from './components/Footer'
 import WelcomeModal from './components/WelcomeModal'
 import { GuestProvider } from './context/GuestContext'
 import LanguageSelector from './components/LanguageSelector'
+import ScrollToTop from './components/ScrollToTop'
 
 const MainLayout = () => (
     <>
@@ -31,6 +32,7 @@ function App() {
         <LanguageProvider>
             <GuestProvider>
                 <BrowserRouter basename="/hotelelegance">
+                    <ScrollToTop />
                     <WelcomeModal />
                     <Header />
                     <Routes>

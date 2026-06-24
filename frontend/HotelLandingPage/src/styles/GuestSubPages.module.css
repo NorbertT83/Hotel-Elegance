@@ -557,6 +557,8 @@
     .cardWrapper:has(.guestCard) {
         display: grid;
         grid-template-columns: 1fr;
+        padding: 0;
+        border: none;
     }
 
     .guestCard, .roomCard, .serviceCard, .weatherCard {
@@ -565,7 +567,6 @@
     
     .content {
         padding: .5rem;
-        padding-bottom: 4rem;
     }
     .guestCard .content {
         grid-template-columns: 1fr 2fr;

@@ -120,18 +120,41 @@ h1, h2, h3, .logo, .footer-logo {
 .btn-secondary {
     background-color: var(--secondary-container);
     color: var(--primary);
-    padding: 12px 32px;
+    padding: 12px 24px;
 }
 
 .btn-secondary:hover {
     color: var(--text-on-background);
 }
 
+.btn-light {
+    background-color: transparent;
+    color: var(--primary);
+    padding: 12px;
+}
+.btn-light:hover {
+    color: var(--text-on-background);
+}
+
+.btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    height: 3rem;
+}
+
+.separator {
+    width: 1px;
+    background-color: var(--outline-variant);
+    height: inherit;
+}
 .header {
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 50;
+    overflow: hidden;
     background-color: rgba(19, 19, 19, 0.8);
     backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(82, 68, 57, 0.2);
