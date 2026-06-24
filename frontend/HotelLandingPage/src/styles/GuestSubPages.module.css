@@ -16,7 +16,6 @@
 .cardWrapper:has(.guestCard) {
     display: block;
     columns: 2;
-    padding: 1.5rem;
     overflow-y: auto;
 }
 
@@ -166,7 +165,7 @@
     position: relative;
     height: 100%;
     width: 100%;
-    min-width: 7rem;
+    min-width: 6rem;
     padding: 1.25rem 1rem .75rem 1rem;
     border-radius: .5rem;
     border: 1px solid var(--outline-variant);
@@ -174,7 +173,7 @@
 }
 .infoContainer {
     display: grid;
-    grid-template-columns: repeat(2, minmax(7rem, 1fr));
+    grid-template-columns: repeat(2, minmax(6rem, 1fr));
     grid-column: span 2;
     gap: 1rem;
     width: 100%;

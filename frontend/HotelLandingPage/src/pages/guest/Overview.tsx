@@ -8,7 +8,15 @@ import s from '../../styles/GuestSubPages.module.css';
 import FloorPlanIcon from '../../assets/floorplan.svg';
 import CurrentWeatherHeader from "../../components/CurrentWeatherHeader";
 import WeatherCard from "../../components/WeatherCard";
+import { useLocalStorageState } from "../../hooks/useLocalStorage";
 import { useEffect, useRef, useState } from "react";
+
+const COLLAPSE_KEYS = {
+    guest: 'cardCollapsed:guest',
+    weather: 'cardCollapsed:weather',
+    room: 'cardCollapsed:room',
+    service: 'cardCollapsed:service',
+} as const;
 
 const serviceStatusIcons = {
     created: {
@@ -33,22 +41,6 @@ export default function Overview() {
     const { language } = useLanguage();
     const { guest, currentBooking, currentRoom, currentBookedServices, refreshBookedServices, updateRoomFeature } = useGuest();
     const labels = guestPageText[language].guestPage.menuOverview;
-
-    function usePersistedBoolean(key: string, initial: boolean) {
-        const [value, setValue] = useState<boolean>(initial);
-        useEffect(() => {
-            try {
-                const raw = localStorage.getItem(key);
-                setValue(raw === null ? initial : raw === 'true');
-            } catch { setValue(initial); }
-        }, [key, initial]);
-
-        useEffect(() => {
-            try { localStorage.setItem(key, String(value)); } catch {}
-        }, [key, value]);
-
-        return [value, setValue] as const;
-    }
     
     const [optimisticTemp, setOptimisticTemp] = useState<number | null>(null);
     const [optimisticLocked, setOptimisticLocked] = useState<boolean | null>(null);
@@ -76,15 +68,10 @@ export default function Overview() {
         }
     }, [currentRoom]);
 
-    const guestKey = 'cardCollapsed:guest';
-    const weatherKey = 'cardCollapsed:weather';
-    const roomKey = 'cardCollapsed:room';
-    const serviceKey = 'cardCollapsed:service';
-
-    const [guestCollapsed, setGuestCollapsed] = usePersistedBoolean(guestKey, false);
-    const [weatherCollapsed, setWeatherCollapsed] = usePersistedBoolean(weatherKey, false);
-    const [roomCollapsed, setRoomCollapsed] = usePersistedBoolean(roomKey, false);
-    const [serviceCollapsed, setServiceCollapsed] = usePersistedBoolean(serviceKey, false);
+    const [guestCollapsed, setGuestCollapsed] = useLocalStorageState<boolean>(COLLAPSE_KEYS.guest, false);
+    const [weatherCollapsed, setWeatherCollapsed] = useLocalStorageState<boolean>(COLLAPSE_KEYS.weather, false);
+    const [roomCollapsed, setRoomCollapsed] = useLocalStorageState<boolean>(COLLAPSE_KEYS.room, false);
+    const [serviceCollapsed, setServiceCollapsed] = useLocalStorageState<boolean>(COLLAPSE_KEYS.service, false);
 
     const scheduleFeatureUpdate = <T,>(
         nextValue: T,
@@ -193,7 +180,7 @@ export default function Overview() {
                 <div className={s.cardHeader}>
                     <div className={s.headerText}>{currentBooking.id}</div>
                     <div className={s.vipLevel} title={language=='hu' ? 'VIP szintje' : 'Your VIP level'}>{guest.loyalty_level}</div>
-                    <button aria-label="Toggle guest card" className={s.collapseButton} onClick={() => setGuestCollapsed(!guestCollapsed)}>
+                    <button aria-label="Toggle guest card" className={s.collapseButton} onClick={() => setGuestCollapsed(!(guestCollapsed ?? false))}>
                         <span className="material-symbols-outlined">{guestCollapsed ? 'expand_more' : 'expand_less'}</span>
                     </button>
                 </div>
@@ -224,7 +211,7 @@ export default function Overview() {
                         <div className={s.headerText}>{labels.weatherCard.headerText}</div>
                     </div>
                     <CurrentWeatherHeader lat={47.52956} lon={19.0766} />
-                    <button aria-label="Toggle weather card" className={s.collapseButton} onClick={() => setWeatherCollapsed(!weatherCollapsed)}>
+                    <button aria-label="Toggle weather card" className={s.collapseButton} onClick={() => setWeatherCollapsed(!(weatherCollapsed ?? false))}>
                         <span className="material-symbols-outlined">{weatherCollapsed ? 'expand_more' : 'expand_less'}</span>
                     </button>
                 </div>
@@ -238,7 +225,7 @@ export default function Overview() {
                 <div className={s.cardHeader}>
                     <div className={s.headerText}>{labels.roomCard.room} <strong>#{currentRoom.room_number}</strong></div>
                     <img className={s.headerIcon} src={FloorPlanIcon} alt="floorplan" />
-                    <button aria-label="Toggle room card" className={s.collapseButton} onClick={() => setRoomCollapsed(!roomCollapsed)}>
+                    <button aria-label="Toggle room card" className={s.collapseButton} onClick={() => setRoomCollapsed(!(roomCollapsed ?? false))}>
                         <span className="material-symbols-outlined">{roomCollapsed ? 'expand_more' : 'expand_less'}</span>
                     </button>
                 </div>
@@ -328,7 +315,7 @@ export default function Overview() {
             <div className={`${s.card} ${s.serviceCard} ${serviceCollapsed ? s.collapsed : ''}`}>
                 <div className={s.cardHeader}>
                     <div className={s.headerText}>{labels.serviceCard.headerText}</div>
-                    <button aria-label="Toggle service card" className={s.collapseButton} onClick={() => setServiceCollapsed(!serviceCollapsed)}>
+                    <button aria-label="Toggle service card" className={s.collapseButton} onClick={() => setServiceCollapsed(!(serviceCollapsed ?? false))}>
                         <span className="material-symbols-outlined">{serviceCollapsed ? 'expand_more' : 'expand_less'}</span>
                     </button>
                 </div>
