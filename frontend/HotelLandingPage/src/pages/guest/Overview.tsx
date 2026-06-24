@@ -162,6 +162,15 @@ export default function Overview() {
     const getVisibleDoNotDisturb = () => optimisticDoNotDisturb ?? currentRoom?.dont_disturb ?? false;
     const getVisibleNeedsCleaning = () => optimisticNeedsCleaning ?? currentRoom?.needs_cleaning ?? false;
 
+    const isOlderThanTwoHours = (timestamp: string) => {
+        return Date.now() - new Date(timestamp).getTime() > 2 * 60 * 60 * 1000;
+    };
+
+    const visibleBookedServices = currentBookedServices
+        .filter((sb) => !(sb.status === 'deleted' && isOlderThanTwoHours(sb.updated_at)))
+        .slice()
+        .sort((prev, curr) => +new Date(curr.updated_at) - +new Date(prev.updated_at));
+
     async function handleBookedServiceDelete(service: BookedService) {
         try {
             service.status = 'deleted';
@@ -330,7 +339,7 @@ export default function Overview() {
                         <span> {labels.serviceCard.latestUpdate} </span>
                         <span> {labels.serviceCard.status} </span>
                     </div>
-                    {currentBookedServices.sort((prev, curr) => +new Date(curr.updated_at) - +new Date(prev.updated_at)).map((sb) => (
+                    {visibleBookedServices.map((sb) => (
                         <div key={sb.id} className={s.serviceItem}>
                             <span style={sb.status === 'deleted' ? {textDecoration: 'line-through'} : undefined}>{sb[`name_${language}`]}</span>
                             <span>{dateFormatter(sb.updated_at, language)}</span>

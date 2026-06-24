@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { createData, getData } from '../../services/apiService';
 import FoodBevItem from '../../components/FoodBevItem';
@@ -7,6 +7,7 @@ import s from '../../styles/GuestSubPages.module.css';
 import { guestPageText } from '../../utils/translations';
 import { useGuest } from '../../context/GuestContext';
 import MessageBoxModal from '../../components/MessageBoxModal';
+import { useLocalStorageState } from '../../hooks/useLocalStorage';
 
 
 export type FoodBev = {
@@ -34,7 +35,7 @@ export default function RoomService() {
     const { language } = useLanguage();
     const labels = guestPageText[language].guestPage.menuRoomservice;
     const [foodAndBeverage, setFoodAndBeverage] = useState<FoodBev[]>([]);
-    const [cart, setCart] = useState<OrderItem[]>([]);
+    const [cart, setCart] = useLocalStorageState<OrderItem[]>('guest-cart-roomservice', []);
     const { currentBooking, services, refreshBookedServices } = useGuest();
     const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
     const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);

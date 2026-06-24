@@ -1,5 +1,5 @@
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGuest } from '../../context/GuestContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { createData } from '../../services/apiService';
@@ -8,6 +8,7 @@ import MessageBoxModal from '../../components/MessageBoxModal';
 import s from '../../styles/GuestSubPages.module.css';
 import { guestPageText } from '../../utils/translations';
 import { HotelService } from '../../types/booking';
+import { useLocalStorageState } from '../../hooks/useLocalStorage';
 
 
 export type ServiceOrderItem = {
@@ -19,7 +20,7 @@ export default function Wellness() {
     const { language } = useLanguage();
     const labels = guestPageText[language].guestPage.menuWellness;
     const { currentBooking, services, refreshBookedServices } = useGuest();
-    const [cart, setCart] = useState<ServiceOrderItem[]>([]);
+    const [cart, setCart] = useLocalStorageState<ServiceOrderItem[]>('guest-cart-wellness', []);
     const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
     const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 
