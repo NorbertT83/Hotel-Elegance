@@ -1,5 +1,5 @@
 import { HashLink } from 'react-router-hash-link';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useGuest } from '../context/GuestContext';
 import { landingPageText } from '../utils/translations';
@@ -9,6 +9,8 @@ export default function Header() {
     const { language } = useLanguage();
     const { guest, logout } = useGuest();
     const navigate = useNavigate();
+    const location = useLocation();
+    const isGuestPage = location.pathname === '/guest';
     const labels = landingPageText[language].header;
 
 
@@ -25,9 +27,15 @@ export default function Header() {
                     <HashLink smooth to="/#aboutus"> {labels.navLinks[3]} </HashLink>
                 </nav>
                 {guest ? <div className="btn-container">
-                        <button  className="btn btn-light" onClick={() => navigate('/guest')}><span className='material-symbols-outlined'>person</span></button>
-                        <div className='separator'></div>
-                        <button  className="btn btn-light" onClick={logout}> <span className='material-symbols-outlined'>logout</span> </button>
+                        {!isGuestPage && (
+                            <>
+                                <button className="btn btn-light" onClick={() => navigate('/guest')}><span className='material-symbols-outlined'>person</span></button>
+                                <div className='separator'></div>
+                            </>
+                        )}
+                        <button className="btn btn-light" onClick={logout} title={language === 'hu' ? 'Kijelentkezés' : 'Logout'}>
+                            <span className='material-symbols-outlined'>logout</span>
+                        </button>
                     </div>
                 :
                     <HashLink smooth to="/#booking" className="btn btn-primary"> {labels.bookNow} </HashLink>

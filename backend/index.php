@@ -99,6 +99,25 @@ try {
     exit;
 }
 
+// --- RATE LIMITER ---
+function checkRateLimit(PDO $pdo, string $key, int $maxAttempts, int $windowSeconds): bool {
+    $windowStart = date('Y-m-d H:i:s', time() - $windowSeconds);
+
+    // Insert on first attempt; on duplicate key reset window if expired, else increment
+    $stmt = $pdo->prepare("
+        INSERT INTO `rate_limits` (`key`, `attempts`, `window_start`)
+        VALUES (?, 1, NOW())
+        ON DUPLICATE KEY UPDATE
+            attempts    = IF(window_start < ?, 1, attempts + 1),
+            window_start = IF(window_start < ?, NOW(), window_start)
+    ");
+    $stmt->execute([$key, $windowStart, $windowStart]);
+
+    $stmt = $pdo->prepare("SELECT `attempts` FROM `rate_limits` WHERE `key` = ?");
+    $stmt->execute([$key]);
+    return (int)$stmt->fetchColumn() > $maxAttempts;
+}
+
 function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], $allowedSorts = []) {
     $params = [];
     $sql = "SELECT * FROM `$table`";
@@ -332,6 +351,14 @@ if ($resource === 'auth') {
 
     // A: LOGIN FOLYAMAT
     if ($id === 'login' && $method === 'POST') {
+        // Rate limit: max 10 login attempts per IP per 15 minutes
+        $clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        if (checkRateLimit($pdo, "login:{$clientIp}", 10, 900)) {
+            http_response_code(429);
+            header('Retry-After: 900');
+            echo json_encode(["success" => false, "errorType" => "rateLimited", "error" => "Túl sok bejelentkezési kísérlet. Kérjük, várjon 15 percet."]);
+            exit;
+        }
         $email = $inputData['email'] ?? null;
         $bookingId = $inputData['booking_id'] ?? null;
 
@@ -482,6 +509,14 @@ if ($resource === 'auth') {
 
     // C -> D: PUBLIKUS FOGLALÁS
     if ($id === 'public-booking' && $method === 'POST') {
+        // Rate limit: max 5 booking attempts per IP per hour
+        $clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        if (checkRateLimit($pdo, "booking:{$clientIp}", 5, 3600)) {
+            http_response_code(429);
+            header('Retry-After: 3600');
+            echo json_encode(["success" => false, "error" => "Túl sok foglalási kísérlet. Kérjük, várjon egy órát."]);
+            exit;
+        }
         $email = $inputData['email'] ?? null;
         
         if (!$email) {

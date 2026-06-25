@@ -6,9 +6,9 @@
     height: 83dvh;
     grid-auto-rows: max-content;
     margin: 0 auto;
+    padding: 0;
     background-color: var(--surface-container-low);
     border-radius: 1rem;
-    padding: 0;
     overflow-y: hidden;
     border: 1px solid var(--outline-variant);
 }
@@ -17,6 +17,7 @@
     display: block;
     columns: 2;
     overflow-y: auto;
+    padding: 1.5rem;
 }
 
 .card {
@@ -527,7 +528,7 @@
 }
 
 @media screen and (max-width: 1280px) {
-    .cardWrapper {
+    .cardWrapper:has(.guestCard) {
         padding: .75rem;
         gap: .75rem;
     }
@@ -546,7 +547,6 @@
 @media screen and (max-width: 1024px) {
     .cardWrapper {
         width: 95vw;
-        padding: 0;
         gap: .75rem;
         background-color: transparent;
         height: auto;

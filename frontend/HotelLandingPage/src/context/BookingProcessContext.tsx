@@ -3,6 +3,8 @@ import { createContext, useContext, useState, useEffect, ReactNode, useMemo } fr
 import { Room, BookingState, ExtraOption } from '../types/booking';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createData } from '../services/apiService';
+import { useGuest } from './GuestContext';
+import countries from '../utils/countries';
 
 interface BookingContextProps {
     step: number;
@@ -98,8 +100,31 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
     });
 
 
+    const { guest } = useGuest();
     const [filteredRooms, setFilteredRooms] = useState<Room[]>(bookingState.freeRooms);
     const [step, setStep] = useState(1);
+
+    useEffect(() => {
+        if (!guest) return;
+
+        setBookingState(prev => {
+            const current = prev.formData;
+            const guestCountryCode = countries.find(country => country.name.toLowerCase() === guest.country.toLowerCase())?.code ?? current.country.value;
+
+            const updatedFormData = {
+                lname: !current.lname.isTouched ? { ...current.lname, value: guest.lname } : current.lname,
+                fname: !current.fname.isTouched ? { ...current.fname, value: guest.fname } : current.fname,
+                email: !current.email.isTouched ? { ...current.email, value: guest.email } : current.email,
+                country: !current.country.isTouched ? { ...current.country, value: guestCountryCode } : current.country,
+                zip: !current.zip.isTouched ? { ...current.zip, value: guest.zip_code } : current.zip,
+                city: !current.city.isTouched ? { ...current.city, value: guest.city } : current.city,
+                street: !current.street.isTouched ? { ...current.street, value: guest.street } : current.street,
+            };
+
+            const hasChanges = Object.entries(updatedFormData).some(([key, field]) => field.value !== current[key as keyof typeof current].value);
+            return hasChanges ? { ...prev, formData: updatedFormData } : prev;
+        });
+    }, [guest]);
 
     const updateBooking = (patch: Partial<BookingState>) => {
         setBookingState(prev => ({ ...prev, ...patch }));
