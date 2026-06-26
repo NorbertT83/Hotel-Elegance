@@ -585,23 +585,46 @@ if ($resource === 'auth') {
                 $inputData['catering_level'] ?? null
             ]);
             
-            if (!empty($inputData['services']) && is_array($inputData['services'])) {
+if (!empty($inputData['services']) && is_array($inputData['services'])) {
                 $getServiceStmt = $pdo->prepare("SELECT `id` FROM `services` WHERE `name_en` LIKE ? LIMIT 1");
                 $insertServiceStmt = $pdo->prepare("INSERT INTO `servicebookings` (`booking_id`, `service_id`, `quantity`) VALUES (?, ?, ?)");
+                $insertChampagneStmt = $pdo->prepare("INSERT INTO `servicebookings` (`booking_id`, `service_id`, `quantity`, `price_at_booking`) VALUES (?, ?, ?, ?)");
 
                 foreach ($inputData['services'] as $serviceName) {  
-                    $getServiceStmt->execute([$serviceName]);
-                    $serviceData = $getServiceStmt->fetch();
+                    
+                    if (strtolower($serviceName) === 'champagne') {
+                        $fbStmt = $pdo->prepare("SELECT `price` FROM `food_and_beverage` WHERE `description_en` LIKE '%champagne%' LIMIT 1");
+                        $fbStmt->execute();
+                        $champagnePrice = $fbStmt->fetchColumn();
 
-                    if ($serviceData) {
-                        $insertServiceStmt->execute([
-                            $bookingId,
-                            $serviceData['id'],
-                            1
-                        ]);
+                        $rsStmt = $pdo->prepare("SELECT `id` FROM `services` WHERE `name_en` = 'Room service' LIMIT 1");
+                        $rsStmt->execute();
+                        $roomServiceId = $rsStmt->fetchColumn();
+
+                        if ($champagnePrice !== false && $roomServiceId) {
+                            $insertChampagneStmt->execute([
+                                $bookingId,
+                                $roomServiceId,
+                                1,
+                                $champagnePrice
+                            ]);
+                        }
+                    } else {
+                        // Eredeti logika a többi, hagyományos szolgáltatásra
+                        $getServiceStmt->execute([$serviceName]);
+                        $serviceData = $getServiceStmt->fetch();
+
+                        if ($serviceData) {
+                            $insertServiceStmt->execute([
+                                $bookingId,
+                                $serviceData['id'],
+                                1
+                            ]);
+                        }
                     }
                 }
             }
+
             $pdo->commit();
 
             http_response_code(201);
