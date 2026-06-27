@@ -1,0 +1,11 @@
+.slideInRight {
+    opacity: 0;
+    transform: translateX(150px);
+    transition: opacity .5s ease-out, transform .5s ease-out;
+    will-change: opacity, transform;
+}
+
+.slideInRight.visible {
+    opacity: 1;
+    transform: translateX(0px);
+}

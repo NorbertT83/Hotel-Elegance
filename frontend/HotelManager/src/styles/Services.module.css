@@ -1,0 +1,72 @@
+.container {
+    display: grid;
+    place-items: center;
+}
+
+.btnCell {
+    display: flex;
+    gap: .5rem;
+}
+.btnCell button {
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    max-width: 60rem;
+    padding: 1rem;
+    border-collapse: collapse;
+}
+td {
+    border: 1px solid gray;
+}
+
+th {
+    font-weight: 600;
+    padding: 1rem;
+    border-right: 1px solid gray;
+    background-color: var(--activeColor);
+    color: var(--lightColor);
+}
+
+th:first-of-type {
+    border-top-left-radius: .5rem;
+}
+th:last-of-type {
+    border: none;
+    border-top-right-radius: .5rem;
+}
+
+
+td {
+    padding: .5rem 1rem;
+}
+
+tr:nth-of-type(odd) {
+    background-color: var(--lightColor);
+}
+
+td:nth-of-type(3), td:nth-of-type(4) {
+    text-align: center;
+}
+
+th span {
+    font-size: .625rem;
+    font-weight: 100;
+}
+
+.editInput, select{
+    padding: .5rem 1rem;
+    border-radius: .25rem;
+    border: 1px solid black;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+input[type="number"] {
+    width: 7rem;
+}
+
+select {
+    width: 8rem;
+}

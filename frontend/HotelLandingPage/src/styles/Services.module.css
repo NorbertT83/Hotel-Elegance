@@ -1,0 +1,55 @@
+.servicesSection {
+    padding: 0 var(--margin-mobile) var(--section-gap) var(--margin-mobile);
+    max-width: var(--container-max);
+    margin: 0 auto;
+    scroll-margin-top: 120px;
+}
+
+.servicesSection > h2 {
+    font-size: 32px;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 16px;
+}
+.servicesSection > p {
+    color: var(--on-surface-variant);
+    text-align: center;
+    margin-bottom: 64px;
+}
+.servicesContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    gap: 20px;
+}
+
+.serviceCard {
+    justify-self: center;
+    justify-items: center;
+    width: 90%;
+    max-width: 420px;
+    background-color: var(--surface-container-low);
+    padding: var(--margin-mobile);
+    border: 1px solid rgba(82, 68, 57, 0.2);
+    border-radius: 12px;
+}
+
+.serviceCard:hover {
+    border-color: rgba(82, 68, 57, 0.5);
+}
+.cardTitle {
+    margin-bottom: 16px;
+}
+
+.serviceList {
+    color: var(--on-surface-variant);
+}
+
+@media (min-width: 768px) {
+    .servicesContainer {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .serviceCard {
+        width: max(220px, 100%);
+    }
+}

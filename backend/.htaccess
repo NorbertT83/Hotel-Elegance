@@ -1,0 +1,6 @@
+RewriteEngine On
+# Ha a kért fájl vagy könyvtár nem létezik fizikailag...
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# ...akkor irányítsd az összes kérést az index.php-re
+RewriteRule ^(.*)$ index.php [QSA,L]
