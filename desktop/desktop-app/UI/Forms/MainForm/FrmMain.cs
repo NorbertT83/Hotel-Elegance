@@ -39,8 +39,6 @@ namespace Hotel_erp_Winforms_App
             EmployeeControl employeeControl = new EmployeeControl();
             EmployeeSideControl sideControl = new EmployeeSideControl();
 
-            employeeControl.EmployeeSelected += (src, employee) => sideControl.EmployeeDetails(employee);
-
             ShowControl(employeeControl);
             lbControlTitle.Text = "Employees";
 

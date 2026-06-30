@@ -25,6 +25,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         private void FrmEditEmployee_Load(object sender, EventArgs e)
         {
             DisplayEmployee(_selectedEmployee);
+            tbAddTaxNumber.Text = _selectedEmployee.TaxNumber.Substring(2);
         }
 
         public void DisplayEmployee(Employee employee)
@@ -76,7 +77,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void btnSaveEmployee_Click(object sender, EventArgs e)
         {
-            if (ErrorHandling()) return;
+            if (!ErrorHandling()) return;
 
             DialogResult response = MessageBox.Show(
                 "Are you sure the details are correnct?",
@@ -90,10 +91,17 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 string connectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=";
                 string checkQuery = "SELECT COUNT(*) FROM employees WHERE tax_number = @taxNumber";
                 string query =
-                    "INSERT INTO employees (fname, lname, tax_number, paid_holidays_left, address, date_of_birth, " +
-                    "date_of_hiring, role, salary, created_at, updated_at) " +
-                    "VALUES(@fname, @lname, @taxNumber, @holidays, @address, @birthDate, @hiring, @role, @salary, " +
-                    "@created_at, @updated_at) ";
+                    "UPDATE employees " +
+                    "SET fname = @fname, " +
+                    "lname = @lname, " +
+                    "tax_number = @taxNumber, " +
+                    "paid_holidays_left = @holidays, " +
+                    "address = @address, " +
+                    "date_of_birth = @birthDate, " +
+                    "role = @role, " +
+                    "salary = @salary, " +
+                    "updated_at = @updated_at " +
+                    "WHERE id = @id";
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
                     try
@@ -102,7 +110,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                         MySqlCommand checkCmd = new MySqlCommand(checkQuery, connection);
                         checkCmd.Parameters.AddWithValue("taxNumber", tbAddTaxNumber.Text);
 
-                        int existingCount = (int)checkCmd.ExecuteScalar();
+                        int existingCount = Convert.ToInt32(checkCmd.ExecuteScalar());
 
                         if (existingCount > 0)
                         {
@@ -118,17 +126,14 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                         {
                             { "@fname", tbAddFirstName.Text },
                             { "@lname", tbAddLastName.Text },
-                            { "@taxNumber", "TX" + tbAddTaxNumber.Text.ToUpper() },
+                            { "@taxNumber", "TX" + tbAddTaxNumber.Text },
                             { "@holidays", holidays },
                             { "@address", tbAddAddress.Text },
                             { "@birthDate", dtpBirthdate.Value },
-                            { "@hiring", DateTime.Now },
                             { "@role", cbAddJobTitle.Text },
                             { "@salary", salary },
-                            { "@password_hash", "" },
-                            { "@password_salt", "" },
-                            { "@created_at", DateTime.Now },
-                            { "@updated_at", DateTime.Now }
+                            { "@updated_at", DateTime.Now },
+                            { "@id", _selectedEmployee.Id }
                         };
 
                         foreach (var param in parameters)
