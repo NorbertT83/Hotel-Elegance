@@ -40,29 +40,29 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             }
         }
 
-        private void btnCurrent_Click(object sender, EventArgs e)
-        {
-            List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkin IS NOT NULL AND checkout IS NULL");
+        //private void btnCurrent_Click(object sender, EventArgs e)
+        //{
+        //    List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkin IS NOT NULL AND checkout IS NULL");
 
-            dgvBookings.DataSource = null;
-            dgvBookings.DataSource = list;
-        }
+        //    dgvBookings.DataSource = null;
+        //    dgvBookings.DataSource = list;
+        //}
 
-        private void btnIncoming_Click(object sender, EventArgs e)
-        {
-            List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkin IS NULL");
+        //private void btnIncoming_Click(object sender, EventArgs e)
+        //{
+        //    List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkin IS NULL");
 
-            dgvBookings.DataSource = null;
-            dgvBookings.DataSource = list;
-        }
+        //    dgvBookings.DataSource = null;
+        //    dgvBookings.DataSource = list;
+        //}
 
-        private void btnFinished_Click(object sender, EventArgs e)
-        {
-            List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkout IS NOT NULL");
+        //private void btnFinished_Click(object sender, EventArgs e)
+        //{
+        //    List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkout IS NOT NULL");
 
-            dgvBookings.DataSource = null;
-            dgvBookings.DataSource = list;
-        }
+        //    dgvBookings.DataSource = null;
+        //    dgvBookings.DataSource = list;
+        //}
 
         //private void btnSave_Click(object sender, EventArgs e)
         //{

@@ -58,6 +58,8 @@ namespace Hotel_erp_Winforms_App
             {
                 sideControl.CurrentUserDetails(SessionManager.CurrentUser);
             }
+
+            btnBookings.BackColor = Color.FromArgb(40, 70, 120);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
