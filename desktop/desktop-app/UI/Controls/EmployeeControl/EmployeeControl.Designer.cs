@@ -353,7 +353,6 @@
         private Label lbName;
         private Panel pnlControlHeader;
         private Panel pnlDgvContainer;
-        private Panel pnlSpacer;
         private Label label2;
         private GroupBox groupBox1;
         private RadioButton rbJobTitle;

@@ -29,17 +29,17 @@ namespace Hotel_erp_Winforms_App.Models
         }
 
         public int Id { get; set; }
-        public string FName { get; set; }
-        public string LName { get; set; }
-        public string TaxNumber { get; set; }
+        public string? FName { get; set; }
+        public string? LName { get; set; }
+        public string? TaxNumber { get; set; }
         public int PaidHolidaysLeft { get; set; }
-        public string Address { get; set; }
+        public string? Address { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfHiring { get; set; }
-        public string JobTitle { get; set; } //enum?
+        public string? JobTitle { get; set; } //enum?
         public int Salary { get; set; }
-        public string Password_hash { get; set; }
-        public string Password_salt { get; set; }
+        public string? Password_hash { get; set; }
+        public string? Password_salt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

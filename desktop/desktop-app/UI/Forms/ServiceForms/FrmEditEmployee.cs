@@ -35,7 +35,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             tbAddTaxNumber.Text = _selectedEmployee?.TaxNumber ?? "";
             cbAddHolidays.Text = _selectedEmployee?.PaidHolidaysLeft.ToString();
             tbAddAddress.Text = _selectedEmployee?.Address ?? "";
-            dtpBirthdate.Value = _selectedEmployee.DateOfBirth;
+            dtpBirthdate.Value = _selectedEmployee?.DateOfBirth ?? DateTime.Now;
             cbAddJobTitle.Text = _selectedEmployee?.JobTitle ?? "";
             tbAddSalary.Text = _selectedEmployee?.Salary.ToString();
         }

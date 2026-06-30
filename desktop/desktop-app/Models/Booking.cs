@@ -33,7 +33,7 @@ namespace Hotel_erp_Winforms_App.Models
         public int GuestId2 {  get; set; }
         public int GuestId3 { get; set; }
         public int GuestId4 { get; set; }
-        public string LevelOfService { get; set; }
+        public string? LevelOfService { get; set; }
         public Booking() { }
         // GUEST_ID3-4-5 STB KELL?
     }

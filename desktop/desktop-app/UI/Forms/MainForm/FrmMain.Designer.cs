@@ -258,7 +258,6 @@
         private Button btnServices;
         private Button btnHousekeeping;
         private Button btnBookings;
-        private UI.Controls.EmployeeControl.EmployeeControl employeeControl;
         private Panel panelRight;
         private Panel panelMainContent;
         private PictureBox pictureBox1;

@@ -7,6 +7,6 @@ namespace Hotel_erp_Winforms_App.Helpers
 {
     public static class SessionManager
     {
-        public static Employee CurrentUser { get; set; }
+        public static Employee? CurrentUser { get; set; }
     }
 }
