@@ -21,9 +21,7 @@ namespace Hotel_erp_Winforms_App
                 new DateTime(2026, 5, 21), "Manager", 130000, "", "", new DateTime(2026, 5, 21), new DateTime(2026, 5, 21)
             );
 
-            Application.Run(new FrmLogin());
-
-            // github push teszt
+            Application.Run(new FrmMain(employee));
         }
     }
 }

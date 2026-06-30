@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Hotel_erp_Winforms_App.Models;
+using Hotel_erp_Winforms_App.Services;
+using Hotel_erp_Winforms_App.UI.Controls;
+using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,10 +11,6 @@ using System.Drawing;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
-using Hotel_erp_Winforms_App.Models;
-using Hotel_erp_Winforms_App.Services;
-using Microsoft.Data.SqlClient;
-using Hotel_erp_Winforms_App.UI.Controls;
 
 
 namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
@@ -108,11 +109,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 
         private void dgvEmployees_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if(e.RowIndex >= 0)
+            if (e.RowIndex >= 0)
             {
                 Employee selectedEmployee = dgvEmployees.Rows[e.RowIndex].DataBoundItem as Employee;
 
-                if(selectedEmployee != null)
+                if (selectedEmployee != null)
                 {
                     EmployeeSelected?.Invoke(this, selectedEmployee);
                 }
@@ -145,6 +146,30 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 
                 EmployeeRowSelected?.Invoke(this, selectedEmployee);
             }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            FrmAddEmployee addEmployee = new FrmAddEmployee();
+            addEmployee.ShowDialog();
+        }
+
+        private void btnModify_Click(object sender, EventArgs e)
+        {
+            //if (_selectedEmployee == null)
+            //{
+            //    MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    return;
+            //}
+
+            //using (FrmEditEmployee editEmployee = new FrmEditEmployee())
+            //{
+            //    editEmployee.DisplayEmployee(_selectedEmployee);
+            //    editEmployee.ShowDialog();
+            //}
+
+            FrmEditEmployee editemployee = new FrmEditEmployee();
+            editemployee.ShowDialog();
         }
     }
 }

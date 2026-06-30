@@ -56,10 +56,15 @@
             colPasswordSalt = new DataGridViewTextBoxColumn();
             colCreatedAt = new DataGridViewTextBoxColumn();
             colUpdatedAt = new DataGridViewTextBoxColumn();
+            groupBox2 = new GroupBox();
+            btnDelete = new Button();
+            btnModify = new Button();
+            btnAdd = new Button();
             pnlControlHeader.SuspendLayout();
             groupBox1.SuspendLayout();
             pnlDgvContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvEmployees).BeginInit();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -108,14 +113,14 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             groupBox1.Controls.Add(cbJobTitle);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(rbJobTitle);
             groupBox1.Controls.Add(rbName);
-            groupBox1.Dock = DockStyle.Right;
-            groupBox1.Location = new Point(481, 0);
+            groupBox1.Location = new Point(475, 0);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(496, 201);
+            groupBox1.Size = new Size(228, 201);
             groupBox1.TabIndex = 4;
             groupBox1.TabStop = false;
             groupBox1.Text = "Sort";
@@ -125,7 +130,7 @@
             cbJobTitle.DropDownStyle = ComboBoxStyle.DropDownList;
             cbJobTitle.FormattingEnabled = true;
             cbJobTitle.Items.AddRange(new object[] { "All", "HK Manager", "Receptionist", "Room Service", "Front Office Manager", "F&B Manager", "Cleaner" });
-            cbJobTitle.Location = new Point(265, 113);
+            cbJobTitle.Location = new Point(15, 144);
             cbJobTitle.Name = "cbJobTitle";
             cbJobTitle.Size = new Size(197, 36);
             cbJobTitle.TabIndex = 4;
@@ -134,7 +139,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(265, 68);
+            label3.Location = new Point(6, 113);
             label3.Name = "label3";
             label3.Size = new Size(137, 28);
             label3.TabIndex = 3;
@@ -143,7 +148,7 @@
             // rbJobTitle
             // 
             rbJobTitle.AutoSize = true;
-            rbJobTitle.Location = new Point(33, 117);
+            rbJobTitle.Location = new Point(15, 71);
             rbJobTitle.Name = "rbJobTitle";
             rbJobTitle.Size = new Size(124, 32);
             rbJobTitle.TabIndex = 1;
@@ -156,7 +161,7 @@
             // rbName
             // 
             rbName.AutoSize = true;
-            rbName.Location = new Point(33, 66);
+            rbName.Location = new Point(15, 33);
             rbName.Name = "rbName";
             rbName.Size = new Size(142, 32);
             rbName.TabIndex = 0;
@@ -326,10 +331,69 @@
             colUpdatedAt.ReadOnly = true;
             colUpdatedAt.Visible = false;
             // 
+            // groupBox2
+            // 
+            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            groupBox2.BackColor = Color.FromArgb(239, 246, 255);
+            groupBox2.Controls.Add(btnDelete);
+            groupBox2.Controls.Add(btnModify);
+            groupBox2.Controls.Add(btnAdd);
+            groupBox2.Location = new Point(719, 10);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(268, 201);
+            groupBox2.TabIndex = 5;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Manage";
+            // 
+            // btnDelete
+            // 
+            btnDelete.BackColor = Color.White;
+            btnDelete.BackgroundImage = Properties.Resources.piros_x;
+            btnDelete.BackgroundImageLayout = ImageLayout.Zoom;
+            btnDelete.Cursor = Cursors.Hand;
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Location = new Point(190, 70);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Padding = new Padding(2);
+            btnDelete.Size = new Size(60, 60);
+            btnDelete.TabIndex = 9;
+            btnDelete.UseVisualStyleBackColor = false;
+            // 
+            // btnModify
+            // 
+            btnModify.BackColor = Color.White;
+            btnModify.BackgroundImage = Properties.Resources.modify;
+            btnModify.BackgroundImageLayout = ImageLayout.Zoom;
+            btnModify.Cursor = Cursors.Hand;
+            btnModify.FlatStyle = FlatStyle.Flat;
+            btnModify.Location = new Point(103, 70);
+            btnModify.Name = "btnModify";
+            btnModify.Padding = new Padding(2);
+            btnModify.Size = new Size(60, 60);
+            btnModify.TabIndex = 8;
+            btnModify.UseVisualStyleBackColor = false;
+            btnModify.Click += btnModify_Click;
+            // 
+            // btnAdd
+            // 
+            btnAdd.BackColor = Color.White;
+            btnAdd.BackgroundImage = Properties.Resources.personadd;
+            btnAdd.BackgroundImageLayout = ImageLayout.Zoom;
+            btnAdd.Cursor = Cursors.Hand;
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.Location = new Point(16, 70);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Padding = new Padding(2);
+            btnAdd.Size = new Size(60, 60);
+            btnAdd.TabIndex = 7;
+            btnAdd.UseVisualStyleBackColor = false;
+            btnAdd.Click += btnAdd_Click;
+            // 
             // EmployeeControl
             // 
             AutoScaleDimensions = new SizeF(11F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(groupBox2);
             Controls.Add(pnlDgvContainer);
             Controls.Add(pnlControlHeader);
             Font = new Font("Segoe UI", 15F);
@@ -344,6 +408,7 @@
             groupBox1.PerformLayout();
             pnlDgvContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvEmployees).EndInit();
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -374,5 +439,9 @@
         private DataGridViewTextBoxColumn colPasswordSalt;
         private DataGridViewTextBoxColumn colCreatedAt;
         private DataGridViewTextBoxColumn colUpdatedAt;
+        private GroupBox groupBox2;
+        private Button btnAdd;
+        private Button btnModify;
+        private Button btnDelete;
     }
 }
