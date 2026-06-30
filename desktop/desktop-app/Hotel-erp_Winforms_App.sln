@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11806.211 stable
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel-erp_Winforms_App", "Hotel-erp_Winforms_App.csproj", "{DB45A557-A83E-253B-15D7-AB0FCC5C49FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB45A557-A83E-253B-15D7-AB0FCC5C49FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB45A557-A83E-253B-15D7-AB0FCC5C49FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB45A557-A83E-253B-15D7-AB0FCC5C49FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB45A557-A83E-253B-15D7-AB0FCC5C49FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {167FB7DC-C2C8-4E0F-8001-648E99C45E89}
+	EndGlobalSection
+EndGlobal
