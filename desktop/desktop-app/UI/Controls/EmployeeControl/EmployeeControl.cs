@@ -2,7 +2,6 @@
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.UI.Controls;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,8 +18,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
     {
         private List<Employee> _employees = new List<Employee>();
         private EmployeeService _employeeService = new EmployeeService();
-        public event EventHandler<Employee>? EmployeeSelected;
-        public event EventHandler<Employee>? EmployeeRowSelected;
 
         public EmployeeControl()
         {
@@ -107,46 +104,31 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             dgvEmployees.DataSource = _employeeService.LoadDgv(query);
         }
 
-        private void dgvEmployees_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                Employee selectedEmployee = dgvEmployees.Rows[e.RowIndex].DataBoundItem as Employee;
+        //private void dgvEmployees_SelectionChanged(object sender, EventArgs e)
+        //{
+        //    if (dgvEmployees.SelectedRows.Count > 0)
+        //    {
+        //        DataGridViewRow row = dgvEmployees.SelectedRows[0];
 
-                if (selectedEmployee != null)
-                {
-                    EmployeeSelected?.Invoke(this, selectedEmployee);
-                }
-            }
-        }
+        //        Employee selectedEmployee = new Employee
+        //        {
+        //            Id = Convert.ToInt32(row.Cells["colId"].Value),
+        //            FName = row.Cells["colFname"].Value?.ToString() ?? "",
+        //            LName = row.Cells["colLname"].Value?.ToString() ?? "",
+        //            TaxNumber = row.Cells["colTaxNumber"].Value?.ToString() ?? "",
+        //            PaidHolidaysLeft = Convert.ToInt32(row.Cells["colHolidays"].Value),
+        //            Address = row.Cells["colAddress"].Value?.ToString() ?? "",
+        //            DateOfBirth = Convert.ToDateTime(row.Cells["colBirthDate"].Value),
+        //            DateOfHiring = Convert.ToDateTime(row.Cells["colHiringDate"].Value),
+        //            JobTitle = row.Cells["colJobTitle"].Value?.ToString() ?? "",
+        //            Salary = Convert.ToInt32(row.Cells["colSalary"].Value),
+        //            CreatedAt = Convert.ToDateTime(row.Cells["colCreatedAt"].Value),
+        //            UpdatedAt = Convert.ToDateTime(row.Cells["colUpdatedAt"].Value)
+        //        };
 
-        private void dgvEmployees_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dgvEmployees.SelectedRows.Count > 0)
-            {
-                DataGridViewRow row = dgvEmployees.SelectedRows[0];
-
-                Employee selectedEmployee = new Employee
-                {
-                    Id = Convert.ToInt32(row.Cells["colId"].Value),
-                    FName = row.Cells["colFname"].Value?.ToString() ?? "",
-                    LName = row.Cells["colLname"].Value?.ToString() ?? "",
-                    TaxNumber = row.Cells["colTaxNumber"].Value?.ToString() ?? "",
-                    PaidHolidaysLeft = Convert.ToInt32(row.Cells["colHolidays"].Value),
-                    Address = row.Cells["colAddress"].Value?.ToString() ?? "",
-                    DateOfBirth = Convert.ToDateTime(row.Cells["colBirthDate"].Value),
-                    DateOfHiring = Convert.ToDateTime(row.Cells["colHiringDate"].Value),
-                    JobTitle = row.Cells["colJobTitle"].Value?.ToString() ?? "",
-                    Salary = Convert.ToInt32(row.Cells["colSalary"].Value),
-                    Password_hash = "",
-                    Password_salt = "",
-                    CreatedAt = Convert.ToDateTime(row.Cells["colCreatedAt"].Value),
-                    UpdatedAt = Convert.ToDateTime(row.Cells["colUpdatedAt"].Value)
-                };
-
-                EmployeeRowSelected?.Invoke(this, selectedEmployee);
-            }
-        }
+        //        EmployeeRowSelected?.Invoke(this, selectedEmployee);
+        //    }
+        //}
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -168,8 +150,24 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             //    editEmployee.ShowDialog();
             //}
 
-            FrmEditEmployee editemployee = new FrmEditEmployee();
-            editemployee.ShowDialog();
+            if(dgvEmployees.CurrentRow != null)
+            {
+                Employee? selectedEmployee = dgvEmployees.CurrentRow.DataBoundItem as Employee;
+
+                if(selectedEmployee != null)
+                {
+                    FrmEditEmployee editEmployee = new FrmEditEmployee(selectedEmployee);
+                    editEmployee.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("The table is empty or no row is selected!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

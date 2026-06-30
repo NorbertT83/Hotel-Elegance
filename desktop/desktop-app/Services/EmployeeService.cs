@@ -1,5 +1,6 @@
 ﻿using Hotel_erp_Winforms_App.Models;
 using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,14 +14,15 @@ namespace Hotel_erp_Winforms_App.Services
 {
     public class EmployeeService
     {
-        private readonly string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=HotelDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+        private readonly string connectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=";
+
         public List<Employee> LoadDgv(string query, Dictionary<string, object>? parameters = null)
         {
             List<Employee> employees = new List<Employee>();
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand(query, connection);
+                MySqlCommand cmd = new MySqlCommand(query, connection);
 
                 if(parameters != null)
                 {
@@ -32,7 +34,7 @@ namespace Hotel_erp_Winforms_App.Services
 
                 connection.Open();
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -48,8 +50,6 @@ namespace Hotel_erp_Winforms_App.Services
                             Convert.ToDateTime(reader["date_of_hiring"]),
                             reader["role"]?.ToString() ?? string.Empty,
                             Convert.ToInt32(reader["salary"]),
-                            reader["password_hash"]?.ToString() ?? string.Empty,
-                            reader["password_salt"]?.ToString() ?? string.Empty,
                             Convert.ToDateTime(reader["created_at"]),
                             Convert.ToDateTime(reader["updated_at"])
                         );
@@ -77,20 +77,20 @@ namespace Hotel_erp_Winforms_App.Services
         public Employee GetEmployeeByTaxNumber(string taxNumber)
         {
             string query = "SELECT id, fname, lname, tax_number, paid_holidays_left, address, date_of_birth, date_of_hiring, " +
-                "role, salary, password_hash, password_salt, created_at, updated_at " +
+                "role, salary, created_at, updated_at " +
                 "FROM employees " +
                 "WHERE tax_number = @taxNumber";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@taxNumber", taxNumber);
 
                     try
                     {
                         conn.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -106,8 +106,6 @@ namespace Hotel_erp_Winforms_App.Services
                                     Convert.ToDateTime(reader["date_of_hiring"]),
                                     reader["role"]?.ToString() ?? string.Empty,
                                     Convert.ToInt32(reader["salary"]),
-                                    reader["password_hash"]?.ToString() ?? string.Empty,
-                                    reader["password_salt"]?.ToString() ?? string.Empty,
                                     Convert.ToDateTime(reader["created_at"]),
                                     Convert.ToDateTime(reader["updated_at"])
                                 );
@@ -125,9 +123,9 @@ namespace Hotel_erp_Winforms_App.Services
         {
             string query = "UPDATE employees SET password_hash = @passwordHash, password_salt = @passwordSalt, updated_at = GETDATE() WHERE " +
                 "tax_number = @taxNumber";
-            using(SqlConnection conn = new SqlConnection(connectionString))
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using(SqlCommand cmd = new SqlCommand(query, conn))
+                using(MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@passwordHash", hashedPassword);
                     cmd.Parameters.AddWithValue("@passwordSalt", string.Empty);

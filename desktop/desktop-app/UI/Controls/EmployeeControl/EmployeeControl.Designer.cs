@@ -131,6 +131,7 @@
             cbJobTitle.FormattingEnabled = true;
             cbJobTitle.Items.AddRange(new object[] { "All", "HK Manager", "Receptionist", "Room Service", "Front Office Manager", "F&B Manager", "Cleaner" });
             cbJobTitle.Location = new Point(15, 144);
+            cbJobTitle.Margin = new Padding(3, 10, 3, 3);
             cbJobTitle.Name = "cbJobTitle";
             cbJobTitle.Size = new Size(197, 36);
             cbJobTitle.TabIndex = 4;
@@ -219,16 +220,17 @@
             dgvEmployees.Dock = DockStyle.Fill;
             dgvEmployees.Location = new Point(0, 0);
             dgvEmployees.Name = "dgvEmployees";
+            dgvEmployees.ReadOnly = true;
             dgvEmployees.RowHeadersVisible = false;
             dgvEmployees.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvEmployees.Size = new Size(977, 275);
             dgvEmployees.TabIndex = 0;
-            dgvEmployees.CellClick += dgvEmployees_CellClick;
             // 
             // colId
             // 
             colId.HeaderText = "Id";
             colId.Name = "colId";
+            colId.ReadOnly = true;
             colId.Visible = false;
             // 
             // colLname

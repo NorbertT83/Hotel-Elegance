@@ -25,33 +25,33 @@ namespace Hotel_erp_Winforms_App.Forms
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            EmployeeService _employeeService = new EmployeeService();
+        //    EmployeeService _employeeService = new EmployeeService();
 
-            loggedInEmployee = _employeeService.GetEmployeeByTaxNumber(tbTaxNumber.Text);
+        //    loggedInEmployee = _employeeService.GetEmployeeByTaxNumber(tbTaxNumber.Text);
 
-            if (loggedInEmployee != null)
-            {
-                bool isPasswordValid = PasswordHelper.VerifyPassword(tbPassword.Text, loggedInEmployee.Password_hash);
+        //    if (loggedInEmployee != null)
+        //    {
+        //        bool isPasswordValid = PasswordHelper.VerifyPassword(tbPassword.Text, loggedInEmployee.Password_hash);
 
-                if (isPasswordValid)
-                {
-                    SessionManager.CurrentUser = loggedInEmployee;
+        //        if (isPasswordValid)
+        //        {
+        //            SessionManager.CurrentUser = loggedInEmployee;
 
-                    FrmMain mainForm = new FrmMain(loggedInEmployee);
-                    mainForm.Show();
-                    this.Hide();
-                }
+        //            FrmMain mainForm = new FrmMain(loggedInEmployee);
+        //            mainForm.Show();
+        //            this.Hide();
+        //        }
 
-                else
-                {
-                    MessageBox.Show("Hibás jelszó!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+        //        else
+        //        {
+        //            MessageBox.Show("Hibás jelszó!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        }
+        //    }
 
-            else
-            {
-                MessageBox.Show("A felhasználó nem létezik!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+        //    else
+        //    {
+        //        MessageBox.Show("A felhasználó nem létezik!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
         }
 
         private void linkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
