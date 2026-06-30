@@ -63,7 +63,7 @@ export default function RoomModal({roomType, isOpen, onClose }:Props) {
                         </ul>)}
                     </div>
 
-                    <span className={s.price}>{roomData.price}<span>{roomData.priceSuffix}</span></span>
+                    <span className={s.price}>{roomData.price} <span>{roomData.priceSuffix}</span></span>
                 </div>
 
             </div>

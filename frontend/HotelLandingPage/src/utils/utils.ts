@@ -1,4 +1,5 @@
 import { Language } from "../context/LanguageContext";
+import { BookingState, CateringType, ExtraOption, Room } from "../types/booking";
 
 export function dateFormatter(sent_at: string, language: Language) {
     let formattedDate;
@@ -72,4 +73,57 @@ export function parseJwt(token: string): TokenPayload | null {
         console.error("Érvénytelen JWT token formátum", error);
         return null;
     }
+}
+
+// ─── Flat-fee extras (in HUF) that are not baked into price_per_night ──────────
+export const EXTRA_FLAT_FEES: Partial<Record<ExtraOption, number>> = {
+    champagne:    37_000,
+    transfer:     10_000,
+    latecheckout:  5_000,
+};
+
+export const CATERING_MULTIPLIERS: Record<CateringType, number> = {
+    breakfast:  1.0,
+    halfboard:  1.1,
+    fullboard:  1.2,
+};
+
+export interface PriceBreakdown {
+    nights: number;
+    pricePerNight: number;
+    roomBaseTotal: number;
+    cateringMultiplier: number;
+    cateringExtra: number;
+    flatFeeExtras: { key: ExtraOption; amount: number }[];
+    total: number;
+}
+
+export function calculateBookingPrice(bookingState: BookingState, filteredRoom: Room | null): PriceBreakdown {
+    const arrival    = new Date(bookingState.arrivalDate);
+    const departure  = new Date(bookingState.departureDate);
+    const msPerDay   = 1_000 * 60 * 60 * 24;
+    const nights     = Math.max(1, Math.round((+departure - +arrival) / msPerDay));
+
+    const pricePerNight = filteredRoom?.price_per_night ?? 0;
+    const roomBaseTotal = pricePerNight * nights;
+
+    const multiplier    = CATERING_MULTIPLIERS[bookingState.cateringChosen] ?? 1;
+    const cateringExtra = Math.round(roomBaseTotal * (multiplier - 1));
+
+    const flatFeeExtras = bookingState.extrasChosen
+        .filter((opt) => opt in EXTRA_FLAT_FEES)
+        .map((opt) => ({ key: opt, amount: EXTRA_FLAT_FEES[opt]! }));
+
+    const flatTotal = flatFeeExtras.reduce((s, e) => s + e.amount, 0);
+    const total     = roomBaseTotal + cateringExtra + flatTotal;
+
+    return {
+        nights,
+        pricePerNight,
+        roomBaseTotal,
+        cateringMultiplier: multiplier,
+        cateringExtra,
+        flatFeeExtras,
+        total,
+    };
 }

@@ -322,6 +322,88 @@
 }
 
 
+/* ─── Price summary box ──────────────────────────────────────────────────────── */
+.priceSummary {
+    width: 100%;
+    margin-top: 1.5rem;
+    border-radius: .75rem;
+    background: linear-gradient(135deg, rgba(82, 68, 57, 0.08) 0%, rgba(82, 68, 57, 0.04) 100%);
+    border: 1px solid rgba(82, 68, 57, 0.25);
+    overflow: hidden;
+}
+
+.priceSummaryHeader {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem 1rem;
+    background: rgba(82, 68, 57, 0.12);
+    border-bottom: 1px solid rgba(82, 68, 57, 0.15);
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: .03em;
+    color: var(--primary);
+    text-transform: uppercase;
+}
+
+.priceSummaryHeader .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.priceSummaryRows {
+    display: flex;
+    flex-direction: column;
+    padding: .6rem 1rem;
+    gap: .3rem;
+}
+
+.priceRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: .875rem;
+    padding: .15rem 0;
+    color: var(--on-surface-variant);
+}
+
+.priceRow .priceLabel {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+}
+
+.priceRow .priceLabel .material-symbols-outlined {
+    font-size: .95rem;
+    opacity: .7;
+}
+
+.priceRow .priceAmount {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.priceRowDivider {
+    height: 1px;
+    background: rgba(82, 68, 57, 0.15);
+    margin: .25rem 0;
+}
+
+.priceRowTotal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem 0 .2rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--primary);
+}
+
+.priceRowTotal .priceAmount {
+    font-size: 1.15rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .02em;
+}
+
 @media (max-width: 768px) {
     .bookingSection {
         margin: 7rem auto 4rem auto; 

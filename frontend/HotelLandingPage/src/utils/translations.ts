@@ -37,8 +37,8 @@ export const landingPageText = {
                 standard: {
                     roomType: 'standard',
                     title: 'Standard Elegance',
-                    price: '$440',
-                    priceSuffix: '/éjszaka',
+                    price: '42000',
+                    priceSuffix: 'Ft/éjszaka',
                     description:
                     'Letisztult, harmonikus szoba elegáns részletekkel, kényelmes enteriőrrel és meleg, nyugodt atmoszférával a pihentető kikapcsolódásért.',
                     linkText: 'Szoba megtekintése',
@@ -56,8 +56,8 @@ export const landingPageText = {
                 deluxe: {
                     roomType: 'deluxe',
                     title: 'Grand Ivory',
-                    price: '$510',
-                    priceSuffix: '/éjszaka',
+                    price: '65000',
+                    priceSuffix: 'Ft/éjszaka',
                     description:
                     'Tágas saroklakosztály panorámás kilátással, privát terasszal és egyedi készítésű bútorokkal, lágy pezsgő színekben.',
                     linkText: 'Lakosztály megtekintése',
@@ -72,8 +72,8 @@ export const landingPageText = {
                 suite: {
                     roomType: 'suite',
                     title: 'Panorama Penthouse',
-                    price: '$720',
-                    priceSuffix: '/éjszaka',
+                    price: '152000',
+                    priceSuffix: 'Ft/éjszaka',
                     description:
                     'Magas szintű kényelem körbefutó erkéllyel, külön étkezővel és a visszafogott luxus iránti kivételes figyelemmel.',
                     linkText: 'Lakosztály megtekintése',
@@ -148,8 +148,8 @@ export const landingPageText = {
             types: {
                     standard: {
                         title: 'Standard Elegance',
-                        price: '$440',
-                        priceSuffix: '/night',
+                        price: '42000',
+                        priceSuffix: 'HUF/night',
                         description:
                             'Sleek, harmonious design with elegant touches and cozy interiors, offering a warm and peaceful ambiance for ultimate relaxation.',
                         linkText: 'View room',
@@ -167,8 +167,8 @@ export const landingPageText = {
                     deluxe: {
                         title: 'Grand Ivory',
                         image: '../assets/',
-                        price: '$850',
-                        priceSuffix: '/night',
+                        price: '65000',
+                        priceSuffix: 'HUF/night',
                         description:
                             'Spacious corner suite with panoramic views, private terrace, and bespoke furnishings in soft champagne tones.',
                         linkText: 'View suite',
@@ -182,8 +182,8 @@ export const landingPageText = {
                     },
                     suite: {
                         title: 'Panorama Penthouse',
-                        price: '$1,200',
-                        priceSuffix: '/night',
+                        price: '152000',
+                        priceSuffix: 'HUF/night',
                         description:
                             'High-level comfort with wrap-around balcony, separate dining area, and exceptional attention to understated luxury.',
                         linkText: 'View suite',
@@ -267,6 +267,14 @@ export const bookingPageText = {
             transfer: 'Repülőtéri transzfer',
             prevButton: 'Vissza',
             nextButton: 'Tovább',
+            priceBox: {
+                title: 'Áttekintő',
+                nights: 'éjszaka',
+                perNight: '/éj',
+                roomBase: 'Szoba alap',
+                catering: 'Étkezési felár',
+                total: 'Végösszeg',
+            },
         },
         step4: {
             header: 'Személyes adatok',
@@ -332,6 +340,14 @@ export const bookingPageText = {
             transfer: 'Airport transfer',
             prevButton: 'Back',
             nextButton: 'Next',
+            priceBox: {
+                title: 'Price summary',
+                nights: 'nights',
+                perNight: '/night',
+                roomBase: 'Room total',
+                catering: 'Catering surcharge',
+                total: 'Total',
+            },
         },
         step4: {
             header: 'Personal Information',

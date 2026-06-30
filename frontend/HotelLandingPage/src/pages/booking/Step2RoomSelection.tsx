@@ -8,7 +8,7 @@ import { RoomType } from '../../types/booking';
 export default function Step2RoomSelection()  {
     const { language } = useLanguage();
     const labels = bookingPageText[language].step2;
-    const { bookingState, setBookingState, setFilteredRooms, nextStep, prevStep, updateBooking } = useBooking();
+    const { bookingState, setFilteredRooms, nextStep, prevStep, updateBooking } = useBooking();
     const availableRoomTypes = [...new Set(bookingState.freeRooms.map(room => room.room_type))];
 
     const roomOptions: { value: RoomType; label: string }[] = [
