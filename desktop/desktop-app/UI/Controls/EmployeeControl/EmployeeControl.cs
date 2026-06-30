@@ -18,6 +18,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
     {
         private List<Employee> _employees = new List<Employee>();
         private EmployeeService _employeeService = new EmployeeService();
+        private System.Windows.Forms.Timer _dbRefreshTimer = new System.Windows.Forms.Timer();
 
         public EmployeeControl()
         {
@@ -28,6 +29,24 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
         {
             LoadData();
             cbJobTitle.SelectedIndex = 0;
+
+            _dbRefreshTimer.Interval = 10000;
+            _dbRefreshTimer.Tick += DbRefreshTimer_Tick;
+            _dbRefreshTimer.Start();
+        }
+
+        private void DbRefreshTimer_Tick(object? sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbSearch.Text)) return;
+
+            int selectedRowIndex = dgvEmployees.CurrentRow?.Index ?? -1;
+            LoadData();
+
+            if(selectedRowIndex >= 0 && selectedRowIndex < dgvEmployees.Rows.Count)
+            {
+                dgvEmployees.ClearSelection();
+                dgvEmployees.Rows[selectedRowIndex].Selected = true;
+            }
         }
 
         private void LoadData()
@@ -104,32 +123,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             dgvEmployees.DataSource = _employeeService.LoadDgv(query);
         }
 
-        //private void dgvEmployees_SelectionChanged(object sender, EventArgs e)
-        //{
-        //    if (dgvEmployees.SelectedRows.Count > 0)
-        //    {
-        //        DataGridViewRow row = dgvEmployees.SelectedRows[0];
-
-        //        Employee selectedEmployee = new Employee
-        //        {
-        //            Id = Convert.ToInt32(row.Cells["colId"].Value),
-        //            FName = row.Cells["colFname"].Value?.ToString() ?? "",
-        //            LName = row.Cells["colLname"].Value?.ToString() ?? "",
-        //            TaxNumber = row.Cells["colTaxNumber"].Value?.ToString() ?? "",
-        //            PaidHolidaysLeft = Convert.ToInt32(row.Cells["colHolidays"].Value),
-        //            Address = row.Cells["colAddress"].Value?.ToString() ?? "",
-        //            DateOfBirth = Convert.ToDateTime(row.Cells["colBirthDate"].Value),
-        //            DateOfHiring = Convert.ToDateTime(row.Cells["colHiringDate"].Value),
-        //            JobTitle = row.Cells["colJobTitle"].Value?.ToString() ?? "",
-        //            Salary = Convert.ToInt32(row.Cells["colSalary"].Value),
-        //            CreatedAt = Convert.ToDateTime(row.Cells["colCreatedAt"].Value),
-        //            UpdatedAt = Convert.ToDateTime(row.Cells["colUpdatedAt"].Value)
-        //        };
-
-        //        EmployeeRowSelected?.Invoke(this, selectedEmployee);
-        //    }
-        //}
-
         private void btnAdd_Click(object sender, EventArgs e)
         {
             FrmAddEmployee addEmployee = new FrmAddEmployee();
@@ -138,26 +131,40 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 
         private void btnModify_Click(object sender, EventArgs e)
         {
-            //if (_selectedEmployee == null)
-            //{
-            //    MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    return;
-            //}
-
-            //using (FrmEditEmployee editEmployee = new FrmEditEmployee())
-            //{
-            //    editEmployee.DisplayEmployee(_selectedEmployee);
-            //    editEmployee.ShowDialog();
-            //}
-
-            if(dgvEmployees.CurrentRow != null)
+            if (dgvEmployees.CurrentRow != null)
             {
                 Employee? selectedEmployee = dgvEmployees.CurrentRow.DataBoundItem as Employee;
 
-                if(selectedEmployee != null)
+                if (selectedEmployee != null)
                 {
                     FrmEditEmployee editEmployee = new FrmEditEmployee(selectedEmployee);
                     editEmployee.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("The table is empty or no row is selected!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (dgvEmployees.CurrentRow != null)
+            {
+                Employee? selectedEmployee = dgvEmployees.CurrentRow.DataBoundItem as Employee;
+
+                if (selectedEmployee != null)
+                {
+                    DialogResult result = MessageBox.Show("Are you sure you want to delete this employee?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if(result == DialogResult.Yes)
+                    {
+                        _employeeService.DeleteEmployee(selectedEmployee);
+                    }
                 }
                 else
                 {

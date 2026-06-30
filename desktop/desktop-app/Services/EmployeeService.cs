@@ -146,5 +146,28 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
         // jelszó kezelés vége
+
+        public void DeleteEmployee(Employee employee)
+        {
+            string query = "DELETE FROM employees WHERE tax_number = @taxNumber";
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@taxNumber", employee.TaxNumber);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                }
+            }
+            
+            catch(Exception ex)
+            {
+                MessageBox.Show($"An error occured while trying to delete from database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

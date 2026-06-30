@@ -360,6 +360,7 @@
             btnDelete.Size = new Size(60, 60);
             btnDelete.TabIndex = 9;
             btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
             // 
             // btnModify
             // 
