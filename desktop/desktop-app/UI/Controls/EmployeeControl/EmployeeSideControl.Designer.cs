@@ -89,7 +89,7 @@
             gbInfo.Size = new Size(421, 666);
             gbInfo.TabIndex = 3;
             gbInfo.TabStop = false;
-            gbInfo.Text = "Personal data";
+            gbInfo.Text = "Your Profile";
             // 
             // panel1
             // 

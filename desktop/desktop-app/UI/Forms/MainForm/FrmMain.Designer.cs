@@ -40,6 +40,7 @@
             btnEmployees = new Button();
             panelRight = new Panel();
             panelMainContent = new Panel();
+            bookingControl1 = new Hotel_erp_Winforms_App.UI.Controls.BookingControl();
             lbWelcomeMainForm = new Label();
             panelHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -177,6 +178,7 @@
             btnBookings.TabIndex = 15;
             btnBookings.Text = "Bookings";
             btnBookings.UseVisualStyleBackColor = false;
+            btnBookings.Click += btnBookings_Click;
             // 
             // btnEmployees
             // 
@@ -206,12 +208,21 @@
             // 
             // panelMainContent
             // 
+            panelMainContent.Controls.Add(bookingControl1);
             panelMainContent.Controls.Add(lbWelcomeMainForm);
             panelMainContent.Dock = DockStyle.Fill;
             panelMainContent.Location = new Point(262, 116);
             panelMainContent.Name = "panelMainContent";
             panelMainContent.Size = new Size(547, 540);
             panelMainContent.TabIndex = 3;
+            // 
+            // bookingControl1
+            // 
+            bookingControl1.Dock = DockStyle.Fill;
+            bookingControl1.Location = new Point(0, 0);
+            bookingControl1.Name = "bookingControl1";
+            bookingControl1.Size = new Size(547, 540);
+            bookingControl1.TabIndex = 1;
             // 
             // lbWelcomeMainForm
             // 
@@ -225,7 +236,7 @@
             lbWelcomeMainForm.Text = "valami";
             lbWelcomeMainForm.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // MainForm
+            // FrmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -237,7 +248,7 @@
             Controls.Add(panelHeader);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MinimizeBox = false;
-            Name = "MainForm";
+            Name = "FrmMain";
             Text = "Kezdőoldal";
             WindowState = FormWindowState.Maximized;
             Load += MainForm_Load;
@@ -263,5 +274,6 @@
         private PictureBox pictureBox1;
         private Label lbControlTitle;
         private Label lbWelcomeMainForm;
+        private UI.Controls.BookingControl bookingControl1;
     }
 }

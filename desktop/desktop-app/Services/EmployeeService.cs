@@ -119,6 +119,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             } return null;
         }
+
         public bool SaveEmployeesPassword(string taxNumber, string hashedPassword)
         {
             string query = "UPDATE employees SET password_hash = @passwordHash, password_salt = @passwordSalt, updated_at = GETDATE() WHERE " +

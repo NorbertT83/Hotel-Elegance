@@ -5,6 +5,7 @@ using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
 using Hotel_erp_Winforms_App.UI;
 using System.Security.Cryptography;
 using Hotel_erp_Winforms_App.Helpers;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Hotel_erp_Winforms_App
 {
@@ -32,6 +33,7 @@ namespace Hotel_erp_Winforms_App
         private void btnBookings_Click(object sender, EventArgs e)
         {
             ShowControl(new BookingControl());
+            lbControlTitle.Text = "Bookings";
         }
 
         private void btnEmployees_Click(object sender, EventArgs e)
@@ -48,11 +50,11 @@ namespace Hotel_erp_Winforms_App
             panelRight.Controls.Add(sideControl);
             panelRight.ResumeLayout();
 
-            if(currentuser != null)
+            if (currentuser != null)
             {
                 sideControl.CurrentUserDetails(currentuser);
             }
-            else if(SessionManager.CurrentUser != null)
+            else if (SessionManager.CurrentUser != null)
             {
                 sideControl.CurrentUserDetails(SessionManager.CurrentUser);
             }
@@ -75,8 +77,6 @@ namespace Hotel_erp_Winforms_App
             FormatMenuButton(btnStatistics, sotetKek, elenkKek, feher);
             FormatMenuButton(btnStock, sotetKek, elenkKek, feher);
             FormatMenuButton(btnHousekeeping, sotetKek, elenkKek, feher);
-
-
         }
 
         private void FormatMenuButton(Button btn, Color backColor, Color hoverColor, Color textColor)
