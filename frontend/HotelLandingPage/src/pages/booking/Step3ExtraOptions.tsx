@@ -1,39 +1,82 @@
 import s from '../../styles/BookingPage.module.css';
-import { CateringType, ExtraOption } from '../../types/booking';
+import { CateringType, ExtraOption, HotelService } from '../../types/booking';
 import { bookingPageText } from '../../utils/translations';
 import { useLanguage } from '../../context/LanguageContext';
 import { roomSupportsExtra, useBooking } from '../../context/BookingProcessContext';
-import { calculateBookingPrice, EXTRA_FLAT_FEES } from '../../utils/utils';
-import { useMemo } from 'react';
+import { fmt, PriceCatalog } from '../../utils/utils';
+import { useEffect } from 'react';
+import { getData } from '../../services/apiService';
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function fmt(amount: number) {
-    return amount.toLocaleString('hu-HU') + ' Ft';
-}
+
+type FoodBeverageItem = {
+    name_en: string;
+    name_hu: string;
+    description_en: string;
+    description_hu: string;
+    price: number;
+};
 
 export default function Step3ExtraOptions() {
     const { language } = useLanguage();
     const labels = bookingPageText[language].step3;
-    const { bookingState, roomsForSelectedType, setFilteredRooms, extraOptions, prevStep, nextStep, updateBooking, filteredRooms } = useBooking();
+    const { bookingState, roomsForSelectedType, setFilteredRooms, extraOptions, prevStep, nextStep, updateBooking, pricing, setPricing } = useBooking();
 
     type Step3Keys = keyof typeof labels;
     const cateringOptions = ['breakfast', 'halfboard', 'fullboard'] as CateringType[];
 
-    // ─── Price calculation ───────────────────────────────────────────────────
-    // During Step 3 we don't have a filtered room yet — use the first available
-    // room of the chosen type as a price reference.
-    const referenceRoom = useMemo(() => {
-        return filteredRooms[0] ?? roomsForSelectedType[0] ?? null;
-    }, [filteredRooms, roomsForSelectedType]);
+    useEffect(() => {
+        let mounted = true;
 
-    const price = useMemo(
-        () => calculateBookingPrice(bookingState, referenceRoom),
-        [bookingState, referenceRoom]
-    );
+        const loadPricing = async () => {
+            try {
+                const [services, foodBeverage] = await Promise.all([
+                    getData<HotelService[]>('service/all'),
+                    getData<FoodBeverageItem[]>('foodbeverage/all'),
+                ]);
 
-    const priceLabels = labels.priceBox;
+                if (!mounted) return;
 
-    // ─── Smart checkbox handler ───────────────────────────────────────────────
+                const flatFeeExtras: NonNullable<PriceCatalog['flatFeeExtras']> = {};
+                const cateringServicePrices: NonNullable<PriceCatalog['cateringServicePrices']> = { breakfast: 0 };
+
+                const findServicePrice = (aliases: string[]) => {
+                    const normalizedAliases = aliases.map((alias) => alias.toLowerCase().trim());
+                    const match = (services ?? []).find((service) => {
+                        const names = [service.name_en, service.name_hu].filter(Boolean).map((name) => name.toLowerCase().trim());
+                        return names.some((name) => normalizedAliases.includes(name));
+                    });
+                    return match ? Number(match.price) : undefined;
+                };
+
+                const transferPrice = findServicePrice(['transfer']);
+                if (transferPrice !== undefined) flatFeeExtras.transfer = transferPrice;
+
+                const lateCheckoutPrice = findServicePrice(['late checkout', 'latecheck-out', 'latecheckout']);
+                if (lateCheckoutPrice !== undefined) flatFeeExtras.latecheckout = lateCheckoutPrice;
+
+                const halfBoardPrice = findServicePrice(['half board']);
+                if (halfBoardPrice !== undefined) cateringServicePrices.halfboard = halfBoardPrice;
+
+                const fullBoardPrice = findServicePrice(['full board']);
+                if (fullBoardPrice !== undefined) cateringServicePrices.fullboard = fullBoardPrice;
+
+                const champagneItem = (foodBeverage ?? []).find((item) => /champagne/i.test(`${item.name_en} ${item.name_hu} ${item.description_en} ${item.description_hu}`));
+                if (champagneItem) flatFeeExtras.champagne = Number(champagneItem.price);
+
+                setPricing({ flatFeeExtras, cateringServicePrices });
+            } catch (error) {
+                console.error('Failed to load booking pricing data', error);
+            }
+        };
+
+        void loadPricing();
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+
     const handleSmartCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const clickedOption = e.target.id as ExtraOption;
 
@@ -83,7 +126,14 @@ export default function Step3ExtraOptions() {
                                     checked={bookingState.cateringChosen === option}
                                     onChange={(e) => updateBooking({ cateringChosen: e.target.value as CateringType })}
                                 />
-                                {labels[option as Step3Keys] as string} <span>{labels[`${option}Note` as Step3Keys] as string}</span>
+                                {labels[option as Step3Keys] as string}
+                                <span>({
+                                    pricing.cateringServicePrices?.[option as CateringType] !== 0
+                                        ? fmt(pricing.cateringServicePrices?.[option as CateringType] ?? 0)
+                                        : ''
+                                    }
+                                    {labels[`${option}Note` as Step3Keys] as string})
+                                </span>
                             </label>
                         ))}
                     </div>
@@ -101,7 +151,7 @@ export default function Step3ExtraOptions() {
                             });
 
                             const isDisabled = !isChecked && !hasMatchingRoom;
-                            const flatFee = EXTRA_FLAT_FEES[option as ExtraOption];
+                            const flatFee = pricing.flatFeeExtras?.[option as ExtraOption];
 
                             return (
                                 <label key={option} htmlFor={option}>
@@ -124,62 +174,6 @@ export default function Step3ExtraOptions() {
                         })}
                     </div>
                 </div>
-
-                {/* ─── Live price summary ─────────────────────────────────── */}
-                {referenceRoom && (
-                    <div className={s.priceSummary}>
-                        <div className={s.priceSummaryHeader}>
-                            <span className="material-symbols-outlined">receipt_long</span>
-                            {priceLabels.title}
-                        </div>
-                        <div className={s.priceSummaryRows}>
-                            {/* Room base */}
-                            <div className={s.priceRow}>
-                                <span className={s.priceLabel}>
-                                    <span className="material-symbols-outlined">hotel</span>
-                                    {priceLabels.roomBase}
-                                    <span style={{ opacity: .65, fontSize: '.8rem' }}>
-                                        ({fmt(price.pricePerNight)}{priceLabels.perNight} × {price.nights} {priceLabels.nights})
-                                    </span>
-                                </span>
-                                <span className={s.priceAmount}>{fmt(price.roomBaseTotal)}</span>
-                            </div>
-
-                            {/* Catering surcharge (only when > 0) */}
-                            {price.cateringExtra > 0 && (
-                                <div className={s.priceRow}>
-                                    <span className={s.priceLabel}>
-                                        <span className="material-symbols-outlined">restaurant</span>
-                                        {priceLabels.catering}
-                                        <span style={{ opacity: .65, fontSize: '.8rem' }}>
-                                            (×{price.cateringMultiplier.toFixed(1)})
-                                        </span>
-                                    </span>
-                                    <span className={s.priceAmount}>+{fmt(price.cateringExtra)}</span>
-                                </div>
-                            )}
-
-                            {/* Flat-fee extras */}
-                            {price.flatFeeExtras.map(({ key, amount }) => (
-                                <div key={key} className={s.priceRow}>
-                                    <span className={s.priceLabel}>
-                                        <span className="material-symbols-outlined">add_circle</span>
-                                        {labels[key as Step3Keys] as string}
-                                    </span>
-                                    <span className={s.priceAmount}>+{fmt(amount)}</span>
-                                </div>
-                            ))}
-
-                            <div className={s.priceRowDivider} />
-
-                            {/* Total */}
-                            <div className={s.priceRowTotal}>
-                                <span>{priceLabels.total}</span>
-                                <span className={s.priceAmount}>{fmt(price.total)}</span>
-                            </div>
-                        </div>
-                    </div>
-                )}
 
                 <div className={s.extraInfo}>{labels.extraInfo}</div>
                 <div className={s.buttonContainer}>

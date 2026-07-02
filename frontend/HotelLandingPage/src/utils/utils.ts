@@ -36,6 +36,13 @@ export function getNameOfDay(date:string, language: Language) {
     return dayName
 }
 
+export function formatLocalDateKey(date: Date) {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 export function addDays(dateString:string, days:number) {
     if (!dateString) return "";
 
@@ -75,18 +82,10 @@ export function parseJwt(token: string): TokenPayload | null {
     }
 }
 
-// ─── Flat-fee extras (in HUF) that are not baked into price_per_night ──────────
-export const EXTRA_FLAT_FEES: Partial<Record<ExtraOption, number>> = {
-    champagne:    37_000,
-    transfer:     10_000,
-    latecheckout:  5_000,
-};
-
-export const CATERING_MULTIPLIERS: Record<CateringType, number> = {
-    breakfast:  1.0,
-    halfboard:  1.1,
-    fullboard:  1.2,
-};
+export interface PriceCatalog {
+    flatFeeExtras?: Partial<Record<ExtraOption, number>>;
+    cateringServicePrices?: Partial<Record<CateringType, number>>;
+}
 
 export interface PriceBreakdown {
     nights: number;
@@ -98,7 +97,11 @@ export interface PriceBreakdown {
     total: number;
 }
 
-export function calculateBookingPrice(bookingState: BookingState, filteredRoom: Room | null): PriceBreakdown {
+export function fmt(amount: number) {
+    return amount.toLocaleString('hu-HU') + ' Ft';
+}
+
+export function calculateBookingPrice(bookingState: BookingState, filteredRoom: Room | null, pricing: PriceCatalog = {}): PriceBreakdown {
     const arrival    = new Date(bookingState.arrivalDate);
     const departure  = new Date(bookingState.departureDate);
     const msPerDay   = 1_000 * 60 * 60 * 24;
@@ -107,12 +110,13 @@ export function calculateBookingPrice(bookingState: BookingState, filteredRoom: 
     const pricePerNight = filteredRoom?.price_per_night ?? 0;
     const roomBaseTotal = pricePerNight * nights;
 
-    const multiplier    = CATERING_MULTIPLIERS[bookingState.cateringChosen] ?? 1;
-    const cateringExtra = Math.round(roomBaseTotal * (multiplier - 1));
+    const adults = Math.max(1, bookingState.guests.adult ?? 1);
+    const cateringPricePerAdultPerNight = pricing.cateringServicePrices?.[bookingState.cateringChosen] ?? 0;
+    const cateringExtra = cateringPricePerAdultPerNight * adults * nights;
 
     const flatFeeExtras = bookingState.extrasChosen
-        .filter((opt) => opt in EXTRA_FLAT_FEES)
-        .map((opt) => ({ key: opt, amount: EXTRA_FLAT_FEES[opt]! }));
+        .map((opt) => ({ key: opt, amount: pricing.flatFeeExtras?.[opt] ?? 0 }))
+        .filter((entry) => entry.amount > 0);
 
     const flatTotal = flatFeeExtras.reduce((s, e) => s + e.amount, 0);
     const total     = roomBaseTotal + cateringExtra + flatTotal;
@@ -121,7 +125,7 @@ export function calculateBookingPrice(bookingState: BookingState, filteredRoom: 
         nights,
         pricePerNight,
         roomBaseTotal,
-        cateringMultiplier: multiplier,
+        cateringMultiplier: cateringPricePerAdultPerNight,
         cateringExtra,
         flatFeeExtras,
         total,

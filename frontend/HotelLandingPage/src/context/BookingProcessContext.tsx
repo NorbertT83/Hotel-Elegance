@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { createData } from '../services/apiService';
 import { useGuest } from './GuestContext';
 import countries from '../utils/countries';
+import { PriceCatalog } from '../utils/utils';
 
 interface BookingContextProps {
     step: number;
@@ -20,6 +21,8 @@ interface BookingContextProps {
     nextStep: () => void;
     prevStep: () => void;
     finishBooking: () => void;
+    pricing: PriceCatalog;
+    setPricing: React.Dispatch<React.SetStateAction<PriceCatalog>>;
     isFormValid: {
         lname: boolean;
         fname: boolean;
@@ -103,6 +106,10 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
     const { guest } = useGuest();
     const [filteredRooms, setFilteredRooms] = useState<Room[]>(bookingState.freeRooms);
     const [step, setStep] = useState(1);
+    const [pricing, setPricing] = useState<PriceCatalog>({
+        flatFeeExtras: {},
+        cateringServicePrices: { breakfast: 0 },
+    });
 
     useEffect(() => {
         if (!guest) return;
@@ -246,6 +253,8 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
             nextStep, 
             prevStep, 
             finishBooking,
+            pricing,
+            setPricing,
             isFormValid,
             handleCheckboxChange,
             handleInputChange

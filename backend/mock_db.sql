@@ -442,7 +442,9 @@ INSERT INTO `services` (`id`, `name_hu`, `description_hu`, `price`, `service_typ
 (15, 'Kerékpár bérlés', 'Kerékpár bérlés napi díj', 4000, 'Logisztika', 'Bicycle rental', 'Bicycle rental daily fee', 'Logistics'),
 (16, 'Elektromos kerékpár bérlés', 'Elektromos kerékpár bérlés napi díj', 8000, 'Logisztika', 'Electric bicycle rental', 'E-bike rental daily fee', 'Logistics'),
 (17, 'E-roller bérlés', 'Elektromos roller bérlés óradíj', 2500, 'Logisztika', 'E-scooter rental', 'Electric scooter rental hourly fee', 'Logistics'),
-(18, 'Szauna szeánsz', 'Vezetett szauna élmény különböző atmoszférákat teremtő felöntésekkel', 4500, 'Wellness', 'Sauna session', 'A guided sauna experience with infusion rituals creating different atmospheres.', 'Wellness');
+(18, 'Szauna szeánsz', 'Vezetett szauna élmény különböző atmoszférákat teremtő felöntésekkel', 4500, 'Wellness', 'Sauna session', 'A guided sauna experience with infusion rituals creating different atmospheres.', 'Wellness'),
+(19, 'Félpanzió', 'Félpanziós ellátás reggelivel és vacsorával.', 25000, NULL, 'Half board', 'Half-board service including breakfast and dinner.', NULL),
+(20, 'Teljes ellátás', 'Teljes ellátás reggelivel, ebéddel és vacsorával.', 42000, NULL, 'Full board', 'Full-board service including breakfast, lunch and dinner.', NULL);
 
 --
 -- Indexek a kiírt táblákhoz
@@ -561,7 +563,7 @@ ALTER TABLE `servicebookings`
 -- AUTO_INCREMENT a táblához `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Megkötések a kiírt táblákhoz

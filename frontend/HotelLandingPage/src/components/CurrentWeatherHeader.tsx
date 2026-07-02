@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import s from '../styles/GuestSubPages.module.css';
+import { formatLocalDateKey } from '../utils/utils';
 
 export default function CurrentWeatherHeader({ lat, lon }: { lat: number; lon: number }) {
     const [temp, setTemp] = useState<number | null>(null);
@@ -14,14 +15,19 @@ export default function CurrentWeatherHeader({ lat, lon }: { lat: number; lon: n
                 if (!mounted) return;
                 const timeseries = json?.properties?.timeseries || [];
                 const now = new Date();
-                const todayKey = now.toISOString().slice(0,10);
-                const currentHour = now.getUTCHours();
+                const todayKey = formatLocalDateKey(now);
+                const currentHour = now.getHours();
 
                 let found = timeseries.find((e:any) => {
                     const d = new Date(e.time);
-                    return d.toISOString().slice(0,10) === todayKey && d.getUTCHours() === currentHour;
+                    return formatLocalDateKey(d) === todayKey && d.getHours() === currentHour;
                 });
-                if (!found && timeseries.length) found = timeseries[0];
+                if (!found && timeseries.length) {
+                    const closest = [...timeseries]
+                        .map((entry:any) => ({ entry, diff: Math.abs(new Date(entry.time).getHours() - currentHour) }))
+                        .sort((a, b) => a.diff - b.diff)[0];
+                    found = closest?.entry || timeseries[0];
+                }
 
                 const t = found?.data?.instant?.details?.air_temperature;
                 const h = found?.data?.instant?.details?.relative_humidity;

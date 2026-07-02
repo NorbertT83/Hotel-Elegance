@@ -11,6 +11,10 @@ export default function Services() {
     const [error, setError] = useState<string | null>(null);
     const [services, setServices] = useState<HotelService[]>([]);
     const text = landingPageText[language].services;
+    const filteredServices = services.filter((service) => {
+        const serviceType = service[`service_type_${language}`];
+        return typeof serviceType === 'string' && serviceType.trim().length > 0;
+    });
 
     const fetchServices = useCallback(async (serviceId: string = "") => {
         setLoading(true);
@@ -47,7 +51,7 @@ export default function Services() {
             ) : (
             <div className={s.servicesContainer}>
 
-                {[...new Set(services.map(ser => ser[`service_type_${language}`]))].map((type) => (
+                {[...new Set(filteredServices.map(ser => ser[`service_type_${language}`]))].map((type) => (
                     
                     <div className={s.serviceCard} key={type}>
                         <h2 className={s.cardTitle}>
@@ -55,7 +59,7 @@ export default function Services() {
                         </h2>
                         
                         <div className={s.serviceList}>
-                            {services
+                            {filteredServices
                                 .filter((service) => service[`service_type_${language}`] === type)
                                 .map((service) => (
                                     <div key={service.id} className={s.serviceItem}>

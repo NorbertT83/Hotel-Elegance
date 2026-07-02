@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { formatLocalDateKey } from "../utils/utils";
 import { guestPageText } from "../utils/translations";
 
 export default function WeatherCard({ lat, lon }: { lat: number; lon: number }) {
@@ -29,25 +30,29 @@ export default function WeatherCard({ lat, lon }: { lat: number; lon: number }) 
                     const timeseries = json?.properties?.timeseries || [];
                     const byDate: Record<string, any[]> = {};
                     for (const entry of timeseries) {
-                        const date = new Date(entry.time).toISOString().slice(0,10);
+                        const date = formatLocalDateKey(new Date(entry.time));
                         if (!byDate[date]) byDate[date] = [];
                         byDate[date].push(entry);
                     }
-                    const todayKey = new Date().toISOString().slice(0,10);
+                    const todayKey = formatLocalDateKey(new Date());
                     const tomorrowDate = new Date(); tomorrowDate.setDate(tomorrowDate.getDate()+1);
-                    const tomorrowKey = tomorrowDate.toISOString().slice(0,10);
+                    const tomorrowKey = formatLocalDateKey(tomorrowDate);
                     const dayAfterTomorrowDate = new Date(); dayAfterTomorrowDate.setDate(dayAfterTomorrowDate.getDate()+2);
-                    const dayAfterTomorrowKey = dayAfterTomorrowDate.toISOString().slice(0,10);
+                    const dayAfterTomorrowKey = formatLocalDateKey(dayAfterTomorrowDate);
 
-                    const pick = (arr: any[]) => {
+                    const pick = (arr: any[], targetHour: number) => {
                         if (!arr || arr.length === 0) return null;
-                        const midday = arr.find((e:any) => new Date(e.time).getUTCHours() === 12);
-                        return midday || arr[0];
+                        const exactMatch = arr.find((e:any) => new Date(e.time).getHours() === targetHour);
+                        if (exactMatch) return exactMatch;
+                        const closest = [...arr]
+                            .map((entry) => ({ entry, diff: Math.abs(new Date(entry.time).getHours() - targetHour) }))
+                            .sort((a, b) => a.diff - b.diff)[0];
+                        return closest?.entry || arr[0];
                     }
 
-                    setToday(pick(byDate[todayKey]));
-                    setTomorrow(pick(byDate[tomorrowKey]));
-                    setDayAfterTomorrow(pick(byDate[dayAfterTomorrowKey]));
+                    setToday(pick(byDate[todayKey], new Date().getHours()));
+                    setTomorrow(pick(byDate[tomorrowKey], 12));
+                    setDayAfterTomorrow(pick(byDate[dayAfterTomorrowKey], 12));
                     setLoading(false);
                 })
                 .catch((err) => {

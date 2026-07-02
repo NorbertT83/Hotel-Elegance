@@ -5,10 +5,10 @@ import countries from '../../utils/countries';
 import s from '../../styles/BookingPage.module.css';
 
 
-export default function Step4PersonalData() {
+export default function Step5PersonalData() {
     const { language } = useLanguage();
     const { bookingState, handleInputChange, isFormValid, prevStep, finishBooking } = useBooking();
-    const labels = bookingPageText[language].step4;
+    const labels = bookingPageText[language].step5;
 
     return (
         <div className={s.cardContainer}>

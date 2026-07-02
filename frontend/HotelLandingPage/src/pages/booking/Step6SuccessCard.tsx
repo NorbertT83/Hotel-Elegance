@@ -5,12 +5,12 @@ import { useLanguage } from "../../context/LanguageContext";
 import { useBooking } from "../../context/BookingProcessContext";
 import s from '../../styles/BookingPage.module.css';
 
-export default function Step5SuccessCard() {
+export default function Step6SuccessCard() {
     const navigate = useNavigate();
     const { language } = useLanguage()
     const { bookingState } = useBooking();
     const [copied, setCopied] = useState(false);
-    const step5Text = bookingPageText[language].step5;
+    const step6Text = bookingPageText[language].step6;
 
     async function copyToClipboard() {
         try {
@@ -31,12 +31,12 @@ export default function Step5SuccessCard() {
                     </span>
                 </div>
 
-                <h2>{step5Text.header}</h2>
-                <h3>{step5Text.description}</h3>
+                <h2>{step6Text.header}</h2>
+                <h3>{step6Text.description}</h3>
 
                 <div className={s.successDetails}>
                     <p>
-                        <span>{step5Text.bookingId}</span>
+                        <span>{step6Text.bookingId}</span>
                         <span className={s.bookingId}>
                             {bookingState.bookingId}
                             <button className="material-symbols-outlined" style={{ color: copied ? "green" : "" }} onClick={copyToClipboard}>
@@ -46,18 +46,18 @@ export default function Step5SuccessCard() {
                         
                     </p>
                     <p className={s.infoText}>
-                        {step5Text.emailInfo}
+                        {step6Text.emailInfo}
                         <span className={s.highlighted}>{` ${bookingState.formData.email.value} `}</span>
-                        {step5Text.emailInfo2}
+                        {step6Text.emailInfo2}
                     </p>
                     <p className={s.spamNotice}>
-                        {step5Text.spamNotice}
+                        {step6Text.spamNotice}
                     </p>
                 </div>
 
                 <div className={s.buttonContainer}>
                     <button className="btn btn-primary" onClick={() => navigate("/")}>
-                        <span>{step5Text.backButton}</span>
+                        <span>{step6Text.backButton}</span>
                         <span className="material-symbols-outlined">home</span>
                     </button>
                 </div>

@@ -2,8 +2,9 @@ import { BookingProcessProvider, useBooking } from "../context/BookingProcessCon
 import Step1BookingDetails from "./booking/Step1BookingDetails";
 import Step2RoomSelection from "./booking/Step2RoomSelection";
 import Step3ExtraOptions from "./booking/Step3ExtraOptions";
-import Step4PersonalData from "./booking/Step4PersonalData";
-import Step5SuccessCard from "./booking/Step5SuccessCard";
+import Step4Summary from "./booking/Step4Summary";
+import Step5PersonalData from "./booking/Step5PersonalData";
+import Step6SuccessCard from "./booking/Step6SuccessCard";
 import s from '../styles/BookingPage.module.css';
 
 export default function BookingProcessPage() {
@@ -17,7 +18,7 @@ export default function BookingProcessPage() {
 function BookingSlider() {
     const { step } = useBooking();
     const sliderStyle = { transform: `translateX(-${(step - 1) * 100}%)` };
-    const progressStepStyle = { width: `calc(${(step - 1) * 25}% + 2px)` };
+    const progressStepStyle = { width: `calc(${(step - 1) * 20}% + 2px)` };
 
     return (
         <section className={s.bookingSection}>
@@ -28,8 +29,9 @@ function BookingSlider() {
                 <Step1BookingDetails />
                 <Step2RoomSelection />
                 <Step3ExtraOptions />
-                <Step4PersonalData />
-                <Step5SuccessCard />
+                <Step4Summary />
+                <Step5PersonalData />
+                <Step6SuccessCard />
             </div>
         </section>
     );
