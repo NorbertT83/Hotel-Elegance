@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
-using Microsoft.Data.SqlClient;
 
 namespace Hotel_erp_Winforms_App.UI.Controls
 {
@@ -22,7 +21,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private void BookingControl_Load(object sender, EventArgs e)
         {
             LoadBookings();
-            FillComboboxes();
         }
 
         private BookingService _bookingService = new BookingService();
@@ -30,7 +28,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             try
             {
-                List<Booking> list = _bookingService.GetAllBookings();
+                List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings");
 
                 dgvBookings.AutoGenerateColumns = false;
                 dgvBookings.DataSource = null;
@@ -42,49 +40,65 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             }
         }
 
-        public void FillComboboxes()
-        {
-            cbRoomNum.Items.Clear();
+        //private void btnCurrent_Click(object sender, EventArgs e)
+        //{
+        //    List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkin IS NOT NULL AND checkout IS NULL");
 
-            for (int i = 101; i <= 199; i++)
-            {
-                cbRoomNum.Items.Add(i);
-            }
-        }
+        //    dgvBookings.DataSource = null;
+        //    dgvBookings.DataSource = list;
+        //}
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            if (cbRoomNum.SelectedItem == null || cbRoomNum.SelectedIndex == -1)
-            {
-                MessageBox.Show("Kérjük, válassza ki a szobaszámot!");
-                return;
-            }
+        //private void btnIncoming_Click(object sender, EventArgs e)
+        //{
+        //    List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkin IS NULL");
 
-            try
-            {
-                Booking booking = new Booking(
-                    0,
-                    Convert.ToInt32(cbRoomNum.SelectedItem),
-                    Convert.ToInt32(tbGuestId.Text),
-                    dtpStart.Value,
-                    dtpEnd.Value,
-                    null,
-                    null,
-                    0,
-                    0,
-                    0,
-                    tbLevel.Text
-                );
+        //    dgvBookings.DataSource = null;
+        //    dgvBookings.DataSource = list;
+        //}
 
-                _bookingService.AddBooking(booking);
-                MessageBox.Show("Sikeres mentés!");
-                LoadBookings();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Hiba a mentésnél: " + ex.Message);
-            }
-        }
+        //private void btnFinished_Click(object sender, EventArgs e)
+        //{
+        //    List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings WHERE checkout IS NOT NULL");
+
+        //    dgvBookings.DataSource = null;
+        //    dgvBookings.DataSource = list;
+        //}
+
+        //private void btnSave_Click(object sender, EventArgs e)
+        //{
+        //    if (cbRoomNum.SelectedItem == null || cbRoomNum.SelectedIndex == -1)
+        //    {
+        //        MessageBox.Show("Kérjük, válassza ki a szobaszámot!");
+        //        return;
+        //    }
+
+        //    try
+        //    {
+        //        Booking booking = new Booking(
+        //            "",
+        //            Convert.ToInt32(cbRoomNum.SelectedItem),
+
+        //            Convert.ToInt32(tbGuestId.Text),
+        //            dtpStart.Value,
+        //            dtpEnd.Value,
+        //            null,
+        //            null,
+        //            0,
+        //            0,
+        //            0,
+        //            tbLevel.Text,
+        //            null
+        //        );
+
+        //        _bookingService.AddBooking(booking);
+        //        MessageBox.Show("Sikeres mentés!");
+        //        LoadBookings();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Hiba a mentésnél: " + ex.Message);
+        //    }
+        //}
 
     }
 }

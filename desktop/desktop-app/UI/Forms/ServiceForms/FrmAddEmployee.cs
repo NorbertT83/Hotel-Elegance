@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 {
@@ -66,23 +67,22 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (response == DialogResult.Yes)
             {
-                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=HotelDB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-                
+                string connectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=";
                 string checkQuery = "SELECT COUNT(*) FROM employees WHERE tax_number = @taxNumber";
                 string query =
                     "INSERT INTO employees (fname, lname, tax_number, paid_holidays_left, address, date_of_birth, " +
-                    "date_of_hiring, role, salary, password_hash, password_salt, created_at, updated_at) " +
+                    "date_of_hiring, role, salary, created_at, updated_at) " +
                     "VALUES(@fname, @lname, @taxNumber, @holidays, @address, @birthDate, @hiring, @role, @salary, " +
-                    "@password_hash, @password_salt, @created_at, @updated_at) ";
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                    "@created_at, @updated_at) ";
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
                     try
                     {
                         connection.Open();
-                        SqlCommand checkCmd = new SqlCommand(checkQuery, connection);
+                        MySqlCommand checkCmd = new MySqlCommand(checkQuery, connection);
                         checkCmd.Parameters.AddWithValue("taxNumber", tbAddTaxNumber.Text);
 
-                        int existingCount = (int)checkCmd.ExecuteScalar();
+                        int existingCount = Convert.ToInt32(checkCmd.ExecuteScalar());
 
                         if (existingCount > 0)
                         {
@@ -90,7 +90,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                             return;
                         }
                     
-                        SqlCommand cmd = new SqlCommand(query, connection);
+                        MySqlCommand cmd = new MySqlCommand(query, connection);
 
                         int holidays = int.TryParse(cbAddHolidays.Text, out int hResult) ? hResult : 0;
                         int salary = int.TryParse(tbAddSalary.Text, out int sResult) ? sResult : 0;
@@ -105,8 +105,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                             { "@hiring", DateTime.Now },
                             { "@role", cbAddJobTitle.Text },
                             { "@salary", salary },
-                            { "@password_hash", "" },
-                            { "@password_salt", "" },
                             { "@created_at", DateTime.Now },
                             { "@updated_at", DateTime.Now }
                         };

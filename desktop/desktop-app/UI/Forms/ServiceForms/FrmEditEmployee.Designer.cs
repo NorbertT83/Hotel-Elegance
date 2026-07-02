@@ -49,6 +49,8 @@
             cbAddJobTitle = new ComboBox();
             cbAddHolidays = new ComboBox();
             label10 = new Label();
+            tbTXholder = new TextBox();
+            label11 = new Label();
             ((System.ComponentModel.ISupportInitialize)pbAddProfilePic).BeginInit();
             SuspendLayout();
             // 
@@ -157,6 +159,7 @@
             tbAddFirstName.Name = "tbAddFirstName";
             tbAddFirstName.Size = new Size(222, 34);
             tbAddFirstName.TabIndex = 1;
+            tbAddFirstName.TextAlign = HorizontalAlignment.Center;
             tbAddFirstName.KeyPress += tbAddFirstName_KeyPress;
             // 
             // tbAddLastName
@@ -166,22 +169,27 @@
             tbAddLastName.Name = "tbAddLastName";
             tbAddLastName.Size = new Size(222, 34);
             tbAddLastName.TabIndex = 2;
+            tbAddLastName.TextAlign = HorizontalAlignment.Center;
+            tbAddLastName.KeyPress += tbAddLastName_KeyPress;
             // 
             // tbAddTaxNumber
             // 
             tbAddTaxNumber.Font = new Font("Segoe UI", 15F);
-            tbAddTaxNumber.Location = new Point(150, 332);
+            tbAddTaxNumber.Location = new Point(210, 332);
             tbAddTaxNumber.Name = "tbAddTaxNumber";
-            tbAddTaxNumber.Size = new Size(222, 34);
+            tbAddTaxNumber.Size = new Size(161, 34);
             tbAddTaxNumber.TabIndex = 3;
+            tbAddTaxNumber.TextAlign = HorizontalAlignment.Center;
+            tbAddTaxNumber.KeyPress += tbAddTaxNumber_KeyPress;
             // 
             // tbAddAddress
             // 
             tbAddAddress.Font = new Font("Segoe UI", 15F);
-            tbAddAddress.Location = new Point(150, 408);
+            tbAddAddress.Location = new Point(104, 408);
             tbAddAddress.Name = "tbAddAddress";
-            tbAddAddress.Size = new Size(222, 34);
+            tbAddAddress.Size = new Size(268, 34);
             tbAddAddress.TabIndex = 5;
+            tbAddAddress.TextAlign = HorizontalAlignment.Center;
             // 
             // tbAddSalary
             // 
@@ -190,6 +198,7 @@
             tbAddSalary.Name = "tbAddSalary";
             tbAddSalary.Size = new Size(222, 34);
             tbAddSalary.TabIndex = 8;
+            tbAddSalary.TextAlign = HorizontalAlignment.Center;
             tbAddSalary.KeyPress += tbAddSalary_KeyPress;
             // 
             // btnAddPicture
@@ -262,12 +271,34 @@
             label10.TabIndex = 17;
             label10.Text = "City, Street, Number";
             // 
+            // tbTXholder
+            // 
+            tbTXholder.Font = new Font("Segoe UI", 15F);
+            tbTXholder.Location = new Point(150, 332);
+            tbTXholder.Name = "tbTXholder";
+            tbTXholder.ReadOnly = true;
+            tbTXholder.Size = new Size(41, 34);
+            tbTXholder.TabIndex = 18;
+            tbTXholder.Text = "TX";
+            tbTXholder.TextAlign = HorizontalAlignment.Center;
+            // 
+            // label11
+            // 
+            label11.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            label11.Location = new Point(191, 332);
+            label11.Name = "label11";
+            label11.Size = new Size(13, 34);
+            label11.TabIndex = 19;
+            label11.Text = "-";
+            // 
             // FrmEditEmployee
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(384, 678);
+            Controls.Add(label11);
+            Controls.Add(tbTXholder);
             Controls.Add(label10);
             Controls.Add(cbAddHolidays);
             Controls.Add(cbAddJobTitle);
@@ -321,5 +352,7 @@
         private ComboBox cbAddJobTitle;
         private ComboBox cbAddHolidays;
         private Label label10;
+        private TextBox tbTXholder;
+        private Label label11;
     }
 }

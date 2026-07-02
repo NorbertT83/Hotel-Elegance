@@ -1,0 +1,8 @@
+﻿.vs/
+[Bb]in/
+[Oo]bj/
+*.pdb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates

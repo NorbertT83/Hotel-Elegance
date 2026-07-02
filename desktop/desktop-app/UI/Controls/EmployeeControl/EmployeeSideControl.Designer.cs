@@ -29,10 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EmployeeSideControl));
-            gbModify = new GroupBox();
-            btnAdd = new Button();
-            btnModify = new Button();
-            btnDelete = new Button();
             gbReminders = new GroupBox();
             gbInfo = new GroupBox();
             panel1 = new Panel();
@@ -53,68 +49,10 @@
             lbHolidays = new Label();
             lbTaxNumber = new Label();
             pbProfilePhoto = new PictureBox();
-            gbModify.SuspendLayout();
             gbInfo.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbProfilePhoto).BeginInit();
             SuspendLayout();
-            // 
-            // gbModify
-            // 
-            gbModify.Controls.Add(btnAdd);
-            gbModify.Controls.Add(btnModify);
-            gbModify.Controls.Add(btnDelete);
-            gbModify.Dock = DockStyle.Top;
-            gbModify.Location = new Point(10, 10);
-            gbModify.Name = "gbModify";
-            gbModify.Size = new Size(421, 121);
-            gbModify.TabIndex = 1;
-            gbModify.TabStop = false;
-            gbModify.Text = "Edit";
-            // 
-            // btnAdd
-            // 
-            btnAdd.BackColor = Color.White;
-            btnAdd.BackgroundImage = Properties.Resources.plus;
-            btnAdd.BackgroundImageLayout = ImageLayout.Zoom;
-            btnAdd.Cursor = Cursors.Hand;
-            btnAdd.FlatStyle = FlatStyle.Flat;
-            btnAdd.Location = new Point(62, 42);
-            btnAdd.Name = "btnAdd";
-            btnAdd.Padding = new Padding(2);
-            btnAdd.Size = new Size(60, 60);
-            btnAdd.TabIndex = 6;
-            btnAdd.UseVisualStyleBackColor = false;
-            btnAdd.Click += btnAdd_Click;
-            // 
-            // btnModify
-            // 
-            btnModify.BackColor = Color.White;
-            btnModify.BackgroundImage = Properties.Resources.modify;
-            btnModify.BackgroundImageLayout = ImageLayout.Zoom;
-            btnModify.Cursor = Cursors.Hand;
-            btnModify.FlatStyle = FlatStyle.Flat;
-            btnModify.Location = new Point(172, 42);
-            btnModify.Name = "btnModify";
-            btnModify.Padding = new Padding(2);
-            btnModify.Size = new Size(60, 60);
-            btnModify.TabIndex = 5;
-            btnModify.UseVisualStyleBackColor = false;
-            btnModify.Click += btnModify_Click;
-            // 
-            // btnDelete
-            // 
-            btnDelete.BackColor = Color.White;
-            btnDelete.BackgroundImage = Properties.Resources.piros_x;
-            btnDelete.BackgroundImageLayout = ImageLayout.Zoom;
-            btnDelete.Cursor = Cursors.Hand;
-            btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Location = new Point(282, 42);
-            btnDelete.Name = "btnDelete";
-            btnDelete.Padding = new Padding(2);
-            btnDelete.Size = new Size(60, 60);
-            btnDelete.TabIndex = 4;
-            btnDelete.UseVisualStyleBackColor = false;
             // 
             // gbReminders
             // 
@@ -146,12 +84,12 @@
             gbInfo.Controls.Add(lbTaxNumber);
             gbInfo.Controls.Add(pbProfilePhoto);
             gbInfo.Dock = DockStyle.Fill;
-            gbInfo.Location = new Point(10, 131);
+            gbInfo.Location = new Point(10, 10);
             gbInfo.Name = "gbInfo";
-            gbInfo.Size = new Size(421, 545);
+            gbInfo.Size = new Size(421, 666);
             gbInfo.TabIndex = 3;
             gbInfo.TabStop = false;
-            gbInfo.Text = "Personal data";
+            gbInfo.Text = "Your Profile";
             // 
             // panel1
             // 
@@ -325,14 +263,12 @@
             BackColor = Color.FromArgb(239, 246, 255);
             Controls.Add(gbInfo);
             Controls.Add(gbReminders);
-            Controls.Add(gbModify);
             Font = new Font("Segoe UI", 15F);
             Margin = new Padding(5, 6, 5, 6);
             Name = "EmployeeSideControl";
             Padding = new Padding(10);
             Size = new Size(441, 886);
             Load += EmployeeSideControl_Load;
-            gbModify.ResumeLayout(false);
             gbInfo.ResumeLayout(false);
             gbInfo.PerformLayout();
             panel1.ResumeLayout(false);
@@ -341,12 +277,8 @@
         }
 
         #endregion
-        private GroupBox gbModify;
         private GroupBox gbReminders;
         private GroupBox gbInfo;
-        private Button btnDelete;
-        private Button btnModify;
-        private Button btnAdd;
         private PictureBox pbProfilePhoto;
         private Label lbSalary;
         private Label lbJobTitle;

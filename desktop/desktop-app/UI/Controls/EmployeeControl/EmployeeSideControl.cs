@@ -85,26 +85,5 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             lbEmployeeSideJobTitle.Text = $"{user.JobTitle}";
             lbEmployeeSideSalary.Text = $"{user.Salary} Ft";
         }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            FrmAddEmployee addEmployee = new FrmAddEmployee();
-            addEmployee.ShowDialog();
-        }
-
-        private void btnModify_Click(object sender, EventArgs e)
-        {
-            if(_selectedEmployee == null)
-            {
-                MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            using (FrmEditEmployee editEmployee = new FrmEditEmployee())
-            {
-                editEmployee.DisplayEmployee(_selectedEmployee);
-                editEmployee.ShowDialog();
-            }
-        }
     }
 }
