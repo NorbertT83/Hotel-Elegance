@@ -220,8 +220,6 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
     const prevStep = () => setStep(p => p - 1);
     
     const finishBooking = async () => {
-        console.log("Küldés API-nak...", { ...bookingState });
-        
         const year = new Date(bookingState.arrivalDate).getFullYear();
         const generatedBookingId = `HE-${year}-${nanoid()}`;
         const payload = buildBookingPayload(bookingState, filteredRooms[0]?.room_number ?? null, generatedBookingId);
@@ -230,7 +228,6 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
             const response = await createData<typeof payload, BookingApiResponse>('auth/public-booking', payload);
 
             if (response.success) {
-                console.log("Sikeres foglalás rögzítve! ID:", response.booking_id);
                 setBookingState(prev => ({ ...prev, bookingId: generatedBookingId }));
                 setStep(5);
             } else {

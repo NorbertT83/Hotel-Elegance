@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Jún 26. 13:09
+-- Létrehozás ideje: 2026. Júl 03. 08:15
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -50,9 +50,10 @@ CREATE TABLE `bookings` (
 INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`, `created_at`) VALUES
 ('HE-2026-194A', 303, 'deluxe', 18, '2026-05-28', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
 ('HE-2026-194V', 102, 'standard', 19, '2026-05-29', '2026-06-04', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-29 05:40:29'),
+('HE-2026-INXI', 302, 'deluxe', 19, '2026-07-02', '2026-07-04', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-07-02 07:20:21'),
 ('HE-2026-O2R5', 203, 'deluxe', 19, '2026-06-25', '2026-06-27', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-06-25 08:28:15'),
 ('HE-2026-RLM5', 303, 'deluxe', 19, '2026-06-26', '2026-06-28', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-06-26 09:50:43'),
-('HE-2026-UCT4', 403, 'suite', 19, '2026-06-14', '2026-06-26', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-06-03 09:53:43');
+('HE-2026-UCT4', 403, 'suite', 19, '2026-06-20', '2026-07-04', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-06-03 09:53:43');
 
 --
 -- Eseményindítók `bookings`
@@ -284,8 +285,8 @@ CREATE TABLE `rate_limits` (
 --
 
 INSERT INTO `rate_limits` (`id`, `key`, `attempts`, `window_start`) VALUES
-(1, 'login:::1', 1, '2026-06-26 11:51:07'),
-(15, 'booking:::1', 1, '2026-06-26 11:50:43');
+(1, 'login:::1', 1, '2026-07-03 07:39:27'),
+(15, 'booking:::1', 1, '2026-07-02 09:20:21');
 
 -- --------------------------------------------------------
 
@@ -307,7 +308,10 @@ CREATE TABLE `refresh_tokens` (
 
 INSERT INTO `refresh_tokens` (`id`, `guest_id`, `token_id`, `expires_at`, `created_at`) VALUES
 (36, 19, '4936eb12e3b61a3769dce7fbe7f2b7a4', '2026-07-01 07:27:28', '2026-06-24 05:27:28'),
-(40, 19, '37b7f0579407c7a2ffa875043e8d559f', '2026-07-02 09:59:16', '2026-06-25 07:59:16');
+(40, 19, '37b7f0579407c7a2ffa875043e8d559f', '2026-07-02 09:59:16', '2026-06-25 07:59:16'),
+(46, 19, 'e1cfd43dc5d5ce8b71d4a6ddad91d87e', '2026-07-06 07:55:12', '2026-06-29 05:55:12'),
+(48, 19, '53b2e51f3b13d1372060cdfd74780530', '2026-07-09 06:12:51', '2026-07-02 04:12:51'),
+(50, 19, '92cf93bbdb98fa46115b24e55c9f0f97', '2026-07-10 07:39:27', '2026-07-03 05:39:27');
 
 -- --------------------------------------------------------
 
@@ -338,18 +342,18 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_balcony`, `has_view`, `max_adults`, `extras`, `status`, `price_per_night`, `door_locked`, `needs_cleaning`, `dont_disturb`, `is_cleaning`, `ac_temp`) VALUES
-(101, 'standard', 18, 'single', 0, 'city', 2, '', 'available', 22000, 1, 0, 0, 0, 0),
-(102, 'standard', 20, 'twin', 1, 'city', 2, '', 'occupied', 21000, 1, 0, 0, 0, 0),
-(103, 'standard', 22, 'twin', 1, 'garden', 2, '', 'unavailable', 24000, 1, 0, 0, 0, 0),
-(201, 'deluxe', 28, 'kingsize', 1, 'garden', 3, '', 'under_maintenance', 38000, 1, 0, 0, 0, 0),
-(202, 'deluxe', 30, 'kingsize', 1, 'city', 3, '', 'occupied', 42000, 1, 0, 0, 0, 0),
-(203, 'deluxe', 27, 'twin', 1, 'panorama', 2, '', 'occupied', 36000, 1, 0, 0, 0, 0),
-(301, 'standard', 28, 'twin', 0, 'garden', 2, '', 'available', 34500, 1, 0, 0, 0, 0),
-(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, 'jacuzzi', 'available', 42000, 1, 0, 0, 0, 0),
-(303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 29900, 1, 0, 0, 0, 0),
-(401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 76000, 1, 0, 0, 0, 0),
-(402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'unavailable', 76000, 1, 0, 0, 0, 0),
-(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'available', 62000, 1, 0, 0, 0, 0);
+(101, 'standard', 18, 'single', 0, 'city', 2, '', 'available', 47000, 1, 0, 0, 0, 0),
+(102, 'standard', 20, 'twin', 1, 'city', 2, '', 'occupied', 42000, 1, 0, 0, 0, 0),
+(103, 'standard', 22, 'twin', 1, 'garden', 2, '', 'unavailable', 48000, 1, 0, 0, 0, 0),
+(201, 'deluxe', 28, 'kingsize', 1, 'garden', 3, '', 'under_maintenance', 76000, 1, 0, 0, 0, 0),
+(202, 'deluxe', 30, 'kingsize', 1, 'city', 3, '', 'occupied', 78000, 1, 0, 0, 0, 0),
+(203, 'deluxe', 27, 'twin', 1, 'panorama', 2, '', 'occupied', 72000, 1, 0, 0, 0, 0),
+(301, 'standard', 28, 'twin', 0, 'garden', 2, '', 'available', 59000, 1, 0, 0, 0, 0),
+(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, 'jacuzzi', 'available', 84000, 1, 0, 0, 0, 0),
+(303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 65000, 1, 0, 0, 0, 0),
+(401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 152000, 1, 0, 0, 0, 0),
+(402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'unavailable', 152000, 1, 0, 0, 0, 0),
+(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'available', 172000, 1, 0, 0, 0, 23);
 
 -- --------------------------------------------------------
 
@@ -379,13 +383,15 @@ INSERT INTO `servicebookings` (`id`, `booking_id`, `service_id`, `requested_at`,
 (43, 'HE-2026-UCT4', 6, '2026-06-16 12:52:29', '2026-06-17 06:46:20', 1, 'pending', 5900),
 (55, 'HE-2026-UCT4', 6, '2026-06-16 14:12:24', '2026-06-17 06:46:29', 1, 'deleted', 11800),
 (56, 'HE-2026-UCT4', 6, '2026-06-18 11:51:30', '2026-06-24 14:21:04', 1, 'deleted', 6900),
-(61, 'HE-2026-UCT4', 18, '2026-06-24 14:04:36', '2026-06-24 14:04:36', 1, 'created', 4500),
-(62, 'HE-2026-UCT4', 12, '2026-06-24 14:04:36', '2026-06-24 14:04:36', 2, 'created', 30000),
+(61, 'HE-2026-UCT4', 18, '2026-06-24 14:04:36', '2026-06-29 07:55:31', 1, 'deleted', 4500),
+(62, 'HE-2026-UCT4', 12, '2026-06-24 14:04:36', '2026-06-29 07:55:26', 2, 'deleted', 30000),
 (63, 'HE-2026-UCT4', 10, '2026-06-24 14:04:41', '2026-06-24 14:04:41', 1, 'created', 3000),
 (64, 'HE-2026-UCT4', 4, '2026-06-24 14:04:46', '2026-06-24 14:04:46', 1, 'created', 15000),
 (65, 'HE-2026-O2R5', 3, '2026-06-25 10:28:15', '2026-06-25 10:28:15', 1, 'created', 0),
 (66, 'HE-2026-RLM5', 3, '2026-06-26 11:50:43', '2026-06-26 11:50:43', 1, 'created', 0),
-(67, 'HE-2026-RLM5', 6, '2026-06-26 11:50:43', '2026-06-26 11:50:43', 1, 'created', 37000);
+(67, 'HE-2026-RLM5', 6, '2026-06-26 11:50:43', '2026-06-26 11:50:43', 1, 'created', 37000),
+(68, 'HE-2026-INXI', 6, '2026-07-02 09:20:21', '2026-07-02 09:20:21', 1, 'created', 37000),
+(69, 'HE-2026-INXI', 3, '2026-07-02 09:20:21', '2026-07-02 09:20:21', 1, 'created', 0);
 
 --
 -- Eseményindítók `servicebookings`
@@ -443,8 +449,8 @@ INSERT INTO `services` (`id`, `name_hu`, `description_hu`, `price`, `service_typ
 (16, 'Elektromos kerékpár bérlés', 'Elektromos kerékpár bérlés napi díj', 8000, 'Logisztika', 'Electric bicycle rental', 'E-bike rental daily fee', 'Logistics'),
 (17, 'E-roller bérlés', 'Elektromos roller bérlés óradíj', 2500, 'Logisztika', 'E-scooter rental', 'Electric scooter rental hourly fee', 'Logistics'),
 (18, 'Szauna szeánsz', 'Vezetett szauna élmény különböző atmoszférákat teremtő felöntésekkel', 4500, 'Wellness', 'Sauna session', 'A guided sauna experience with infusion rituals creating different atmospheres.', 'Wellness'),
-(19, 'Félpanzió', 'Félpanziós ellátás reggelivel és vacsorával.', 25000, NULL, 'Half board', 'Half-board service including breakfast and dinner.', NULL),
-(20, 'Teljes ellátás', 'Teljes ellátás reggelivel, ebéddel és vacsorával.', 42000, NULL, 'Full board', 'Full-board service including breakfast, lunch and dinner.', NULL);
+(19, 'Félpanzió', 'Félpanziós ellátás reggelivel és vacsorával.', 17000, NULL, 'Half board', 'Half-board service including breakfast and dinner.', NULL),
+(20, 'Teljes ellátás', 'Teljes ellátás reggelivel, ebéddel és vacsorával.', 28000, NULL, 'Full board', 'Full-board service including breakfast, lunch and dinner.', NULL);
 
 --
 -- Indexek a kiírt táblákhoz
@@ -545,19 +551,19 @@ ALTER TABLE `guests`
 -- AUTO_INCREMENT a táblához `rate_limits`
 --
 ALTER TABLE `rate_limits`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT a táblához `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT a táblához `servicebookings`
 --
 ALTER TABLE `servicebookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT a táblához `services`
