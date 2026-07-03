@@ -11,47 +11,37 @@ import { GuestProvider } from './context/GuestContext'
 import LanguageSelector from './components/LanguageSelector'
 import ScrollToTop from './components/ScrollToTop'
 
-const MainLayout = () => (
+const Layout = ({ showFooter = false }: { showFooter?: boolean }) => (
     <>
         <Header />
+        <LanguageSelector />
         <Outlet />
-        <Footer />
-    </>
-);
-
-const NoFooterLayout = () => (
-    <>
-        <Header />
-        <Outlet />
+        {showFooter && <Footer />}
     </>
 );
 
 function App() {
     return (
-    <>
         <LanguageProvider>
             <GuestProvider>
                 <BrowserRouter basename="/hotelelegance">
                     <ScrollToTop />
                     <WelcomeModal />
-                    <Header />
                     <Routes>
-                        <Route element={<MainLayout />}>
+                        <Route element={<Layout showFooter />}>
                             <Route path="/" element={<HomePage />} />
                             <Route path="/booking" element={<BookingProcessPage />} />
                             <Route path="*" element={<HomePage />} />
                         </Route>
 
-                        <Route element={<NoFooterLayout />}>
+                        <Route element={<Layout />}>
                             <Route path="/guest/login" element={<GuestLoginPage />} />
                             <Route path="/guest" element={<GuestPage />} />
                         </Route>
                     </Routes>
-                    <LanguageSelector />
                 </BrowserRouter>
             </GuestProvider>
         </LanguageProvider>
-    </>
     )
 }
 

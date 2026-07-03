@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { bookingPageText } from "../../utils/translations";
+import { bookingPageText } from "../../translations";
 import { useLanguage } from "../../context/LanguageContext";
 import { useBooking } from "../../context/BookingProcessContext";
 import s from '../../styles/BookingPage.module.css';

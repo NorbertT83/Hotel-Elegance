@@ -1,6 +1,6 @@
 import { HashLink } from 'react-router-hash-link';
 import { useLanguage } from '../context/LanguageContext';
-import { landingPageText } from '../utils/translations';
+import { landingPageText } from '../translations';
 
 export default function Footer() {
     const { language } = useLanguage();

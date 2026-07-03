@@ -1,6 +1,6 @@
 import { useGuest } from "../../context/GuestContext";
 import { useLanguage } from "../../context/LanguageContext";
-import { guestPageText } from "../../utils/translations";
+import { guestPageText } from "../../translations";
 import { dateFormatter } from "../../utils/utils";
 import { BookedService } from "../../types/booking";
 import { createData } from "../../services/apiService";

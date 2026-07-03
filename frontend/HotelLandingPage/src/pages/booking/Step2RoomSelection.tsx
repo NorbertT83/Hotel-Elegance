@@ -1,6 +1,6 @@
 import { useLanguage } from '../../context/LanguageContext';
 import { useBooking } from '../../context/BookingProcessContext';
-import { bookingPageText } from '../../utils/translations';
+import { bookingPageText } from '../../translations';
 import s from '../../styles/BookingPage.module.css';
 import { RoomType } from '../../types/booking';
 

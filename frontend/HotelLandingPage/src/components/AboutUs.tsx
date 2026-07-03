@@ -1,6 +1,6 @@
 import Logo from '../assets/HE-Logo.png'
 import { useLanguage } from '../context/LanguageContext'
-import { landingPageText } from '../utils/translations'
+import { landingPageText } from '../translations'
 
 export default function AboutUs() {
     const { language } = useLanguage();

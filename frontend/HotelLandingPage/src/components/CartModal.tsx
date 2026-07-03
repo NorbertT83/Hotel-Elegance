@@ -1,6 +1,6 @@
 import FoodBevItem from './FoodBevItem';
 import { OrderItem } from '../pages/guest/RoomService';
-import { guestPageText } from '../utils/translations';
+import { guestPageText } from '../translations';
 import { useLanguage } from '../context/LanguageContext';
 import s from '../styles/GuestSubPages.module.css'
 
@@ -53,3 +53,4 @@ export default function CartModal({cart, isCartOpen, setIsCartOpen, handleCartCh
         }
     </>
 }
+

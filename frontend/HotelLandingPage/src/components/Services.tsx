@@ -3,7 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { getData } from '../services/apiService';
 import { HotelService } from '../types/booking';
 import s from '../styles/Services.module.css';
-import { landingPageText } from '../utils/translations';
+import { landingPageText } from '../translations';
 
 export default function Services() {
     const { language } = useLanguage();

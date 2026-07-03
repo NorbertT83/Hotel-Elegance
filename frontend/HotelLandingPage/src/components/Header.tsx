@@ -2,7 +2,7 @@ import { HashLink } from 'react-router-hash-link';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useGuest } from '../context/GuestContext';
-import { landingPageText } from '../utils/translations';
+import { landingPageText } from '../translations';
 import Logo from '../assets/HE-logo.png'
 
 export default function Header() {
@@ -17,9 +17,10 @@ export default function Header() {
     return (
         <header className="header">
             <div className="header-container">
-                <div className="logo"><img src={Logo} alt="Logo" />
-                    <HashLink smooth to="/#">Hotel Elegance</HashLink>
-                </div>
+                <HashLink smooth to="/#" className="logo">
+                    <img src={Logo} alt="Logo" />
+                    Hotel Elegance
+                </HashLink>
                 <nav className="nav-links">
                     <HashLink smooth to="/#rooms"> {labels.navLinks[0]} </HashLink>
                     <HashLink smooth to="/#services"> {labels.navLinks[1]} </HashLink>

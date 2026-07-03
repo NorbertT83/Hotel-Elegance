@@ -2,6 +2,9 @@ import StandardRoomImage from '../assets/standard_room.png';
 import EliteRoomImage from '../assets/elite_room.png';
 import SuiteRoomImage from '../assets/suite_room.png';
 
+export type Language = 'hu' | 'en';
+export const supportedLanguages: Language[] = ['hu', 'en'];
+
 export const landingPageText = {
     hu: {
         welcomModal: {
@@ -40,7 +43,7 @@ export const landingPageText = {
                     price: '42000',
                     priceSuffix: 'Ft/éjszaka',
                     description:
-                    'Letisztult, harmonikus szoba elegáns részletekkel, kényelmes enteriőrrel és meleg, nyugodt atmoszférával a pihentető kikapcsolódásért.',
+                        'Letisztult, harmonikus szoba elegáns részletekkel, kényelmes enteriőrrel és meleg, nyugodt atmoszférával a pihentető kikapcsolódásért.',
                     linkText: 'Szoba megtekintése',
                     imageURL: StandardRoomImage,
                     imageAlt: 'A Standard Elegance szoba',
@@ -59,7 +62,7 @@ export const landingPageText = {
                     price: '65000',
                     priceSuffix: 'Ft/éjszaka',
                     description:
-                    'Tágas saroklakosztály panorámás kilátással, privát terasszal és egyedi készítésű bútorokkal, lágy pezsgő színekben.',
+                        'Tágas saroklakosztály panorámás kilátással, privát terasszal és egyedi készítésű bútorokkal, lágy pezsgő színekben.',
                     linkText: 'Lakosztály megtekintése',
                     imageURL: EliteRoomImage,
                     imageAlt: 'A Grand Ivory lakosztály',
@@ -75,7 +78,7 @@ export const landingPageText = {
                     price: '152000',
                     priceSuffix: 'Ft/éjszaka',
                     description:
-                    'Magas szintű kényelem körbefutó erkéllyel, külön étkezővel és a visszafogott luxus iránti kivételes figyelemmel.',
+                        'Magas szintű kényelem körbefutó erkéllyel, külön étkezővel és a visszafogott luxus iránti kivételes figyelemmel.',
                     linkText: 'Lakosztály megtekintése',
                     imageURL: SuiteRoomImage,
                     imageAlt: 'A Teraszos Penthouse lakosztály',
@@ -95,8 +98,10 @@ export const landingPageText = {
         },
         aboutus: {
             title: 'Rólunk',
-            description1: 'A Hotel Elegance megalkotásakor egyetlen cél vezérelt minket: létrehozni egy olyan teret, ahol az időtlen stílus találkozik a kompromisszumok nélküli kényelemmel. Nálunk a luxus nem a hivalkodásban rejlik, hanem a finom részletekben: a tökéletesen sima lepedőben, a gondosan összeállított menüben és a személyzet észrevétlen, mégis mindig jelenlévő gondoskodásában. Lépj be a rohanó hétköznapokból egy olyan világba, ahol a pihenés valóban művészet.',
-            description2: 'A Hotel Elegance az a hely, ahol a stílus és a kényelem találkozik. Nem hiszünk a felesleges bonyodalmakban, csak a hibátlan vendéglátásban. Akár pihenni, akár dolgozni érkezel, nálunk megtalálod a tökéletes egyensúlyt. Tapasztald meg az eleganciát, amit neked teremtettünk!'
+            description1:
+                'A Hotel Elegance megalkotásakor egyetlen cél vezérelt minket: létrehozni egy olyan teret, ahol az időtlen stílus találkozik a kompromisszumok nélküli kényelemmel. Nálunk a luxus nem a hivalkodásban rejlik, hanem a finom részletekben: a tökéletesen sima lepedőben, a gondosan összeállított menüben és a személyzet észrevétlen, mégis mindig jelenlévő gondoskodásában. Lépj be a rohanó hétköznapokból egy olyan világba, ahol a pihenés valóban művészet.',
+            description2:
+                'A Hotel Elegance az a hely, ahol a stílus és a kényelem találkozik. Nem hiszünk a felesleges bonyodalmakban, csak a hibátlan vendéglátásban. Akár pihenni, akár dolgozni érkezel, nálunk megtalálod a tökéletes egyensúlyt. Tapasztald meg az eleganciát, amit neked teremtettünk!',
         },
         footer: {
             brandDescription:
@@ -146,57 +151,59 @@ export const landingPageText = {
             sectionDescription:
                 'Thoughtfully designed spaces for perfect relaxation and refined comfort.',
             types: {
-                    standard: {
-                        title: 'Standard Elegance',
-                        price: '42000',
-                        priceSuffix: 'HUF/night',
-                        description:
-                            'Sleek, harmonious design with elegant touches and cozy interiors, offering a warm and peaceful ambiance for ultimate relaxation.',
-                        linkText: 'View room',
-                        imageURL: StandardRoomImage,
-                        imageAlt: 'The Standard Elegance room',
-                        features: [
-                            'Mini bar',
-                            'Coffee and tea maker',
-                            'In-room safe',
-                            'High-speed Wi-Fi',
-                            'Luxury toiletries',
-                            '24-hour room service',
-                        ],
-                    },
-                    deluxe: {
-                        title: 'Grand Ivory',
-                        image: '../assets/',
-                        price: '65000',
-                        priceSuffix: 'HUF/night',
-                        description:
-                            'Spacious corner suite with panoramic views, private terrace, and bespoke furnishings in soft champagne tones.',
-                        linkText: 'View suite',
-                        imageURL: EliteRoomImage,
-                        imageAlt: 'The Grand Ivory suite',
-                        features: [
-                            'Private terrace',
-                            'Bespoke furnishings',
-                            'Soft champagne tones',
-                        ],
-                    },
-                    suite: {
-                        title: 'Panorama Penthouse',
-                        price: '152000',
-                        priceSuffix: 'HUF/night',
-                        description:
-                            'High-level comfort with wrap-around balcony, separate dining area, and exceptional attention to understated luxury.',
-                        linkText: 'View suite',
-                        imageURL: SuiteRoomImage,
-                        imageAlt: 'The Terrace Penthouse suite',
-                        features: [
-                            'Wrap-around balcony',
-                            'Bespoke furnishings',
-                            'Separate dining area',
-                            'Exceptional attention to understated luxury',
-                        ],
-                    },
+                standard: {
+                    roomType: 'standard',
+                    title: 'Standard Elegance',
+                    price: '42000',
+                    priceSuffix: 'HUF/night',
+                    description:
+                        'Sleek, harmonious design with elegant touches and cozy interiors, offering a warm and peaceful ambiance for ultimate relaxation.',
+                    linkText: 'View room',
+                    imageURL: StandardRoomImage,
+                    imageAlt: 'The Standard Elegance room',
+                    features: [
+                        'Mini bar',
+                        'Coffee and tea maker',
+                        'In-room safe',
+                        'High-speed Wi-Fi',
+                        'Luxury toiletries',
+                        '24-hour room service',
+                    ],
                 },
+                deluxe: {
+                    roomType: 'deluxe',
+                    title: 'Grand Ivory',
+                    price: '65000',
+                    priceSuffix: 'HUF/night',
+                    description:
+                        'Spacious corner suite with panoramic views, private terrace, and bespoke furnishings in soft champagne tones.',
+                    linkText: 'View suite',
+                    imageURL: EliteRoomImage,
+                    imageAlt: 'The Grand Ivory suite',
+                    features: [
+                        'Private terrace',
+                        'Bespoke furnishings',
+                        'Soft champagne tones',
+                    ],
+                },
+                suite: {
+                    roomType: 'suite',
+                    title: 'Panorama Penthouse',
+                    price: '152000',
+                    priceSuffix: 'HUF/night',
+                    description:
+                        'High-level comfort with wrap-around balcony, separate dining area, and exceptional attention to understated luxury.',
+                    linkText: 'View suite',
+                    imageURL: SuiteRoomImage,
+                    imageAlt: 'The Terrace Penthouse suite',
+                    features: [
+                        'Wrap-around balcony',
+                        'Bespoke furnishings',
+                        'Separate dining area',
+                        'Exceptional attention to understated luxury',
+                    ],
+                },
+            },
         },
         services: {
             sectionTitle: 'Our services',
@@ -205,8 +212,10 @@ export const landingPageText = {
         },
         aboutus: {
             title: 'About us',
-            description1: 'When creating Hotel Elegance, we were guided by a single goal: to create a space where timeless style meets uncompromising comfort. For us, luxury isn\'t about showing off; it\'s found in the fine details: the perfectly crisp linens, the carefully curated menu, and the unobtrusive yet ever-present care of our staff. Step out of the everyday rush and into a world where relaxation is truly an art form.',
-            description2: 'Hotel Elegance is where style meets comfort. We don\'t believe in unnecessary complications, only in flawless hospitality. Whether you\'re arriving to relax or to work, you\'ll find the perfect balance here. Experience the elegance we\'ve created for you.'
+            description1:
+                'When creating Hotel Elegance, we were guided by a single goal: to create a space where timeless style meets uncompromising comfort. For us, luxury isn\'t about showing off; it\'s found in the fine details: the perfectly crisp linens, the carefully curated menu, and the unobtrusive yet ever-present care of our staff. Step out of the everyday rush and into a world where relaxation is truly an art form.',
+            description2:
+                'Hotel Elegance is where style meets comfort. We don\'t believe in unnecessary complications, only in flawless hospitality. Whether you\'re arriving to relax or to work, you\'ll find the perfect balance here. Experience the elegance we\'ve created for you.',
         },
         footer: {
             brandDescription:
@@ -227,7 +236,7 @@ export const landingPageText = {
 };
 
 export const bookingPageText = {
-    hu:{
+    hu: {
         step1: {
             header: 'Foglalási adatok',
             description: 'Az Ön által eddig rögzített adatok',
@@ -253,9 +262,9 @@ export const bookingPageText = {
             breakfast: 'Reggeli',
             breakfastNote: 'Az ár tartalmazza',
             halfboard: 'Félpanzió',
-            halfboardNote: '/fő felár',
+            halfboardNote: ' / fő / éj',
             fullboard: 'Teljes ellátás',
-            fullboardNote: '/fő felár',
+            fullboardNote: ' / fő / éj',
             extras: 'Egyebek',
             balcony: 'Erkélyes szoba',
             garden: 'Udvarra néző szoba',
@@ -335,9 +344,9 @@ export const bookingPageText = {
             breakfast: 'Breakfast',
             breakfastNote: 'Included in price',
             halfboard: 'Half board',
-            halfboardNote: '/adult surcharge',
+            halfboardNote: ' / adult /night',
             fullboard: 'Full board',
-            fullboardNote: '/adult surcharge',
+            fullboardNote: ' / adult /night',
             extras: 'Extras',
             balcony: 'Room with balcony',
             garden: 'Room with courtyard view',

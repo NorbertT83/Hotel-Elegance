@@ -1,6 +1,6 @@
 import s from '../../styles/BookingPage.module.css';
 import { CateringType, ExtraOption, HotelService } from '../../types/booking';
-import { bookingPageText } from '../../utils/translations';
+import { bookingPageText } from '../../translations';
 import { useLanguage } from '../../context/LanguageContext';
 import { roomSupportsExtra, useBooking } from '../../context/BookingProcessContext';
 import { fmt, PriceCatalog } from '../../utils/utils';
@@ -127,9 +127,9 @@ export default function Step3ExtraOptions() {
                                     onChange={(e) => updateBooking({ cateringChosen: e.target.value as CateringType })}
                                 />
                                 {labels[option as Step3Keys] as string}
-                                <span>({
+                                <span style={{fontSize: '.8rem', opacity: .9}}>({
                                     pricing.cateringServicePrices?.[option as CateringType] !== 0
-                                        ? fmt(pricing.cateringServicePrices?.[option as CateringType] ?? 0)
+                                        ? `+${fmt(pricing.cateringServicePrices?.[option as CateringType] ?? 0)}`
                                         : ''
                                     }
                                     {labels[`${option}Note` as Step3Keys] as string})
@@ -165,8 +165,8 @@ export default function Step3ExtraOptions() {
                                     />
                                     {labels[option as Step3Keys] as string}
                                     {flatFee !== undefined && (
-                                        <span style={{ marginLeft: 'auto', fontSize: '.8rem', opacity: .7 }}>
-                                            +{fmt(flatFee)}
+                                        <span style={{ marginLeft: 'auto', fontSize: '.8rem', opacity: .9 }}>
+                                            (+{fmt(flatFee)})
                                         </span>
                                     )}
                                 </label>

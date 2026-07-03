@@ -7,6 +7,7 @@ export default function LanguageSelector() {
     return (
         <div className={s.languageSelector}>
             <button 
+                type="button"
                 className={`btn-subtle ${language === 'hu' ? s.active : ''}`} 
                 id="lang-hu" 
                 onClick={() => setLanguage('hu')}
@@ -17,6 +18,7 @@ export default function LanguageSelector() {
             <span style={{ color: 'lightgray', pointerEvents: 'none' }}>|</span>
             
             <button 
+                type="button"
                 className={`btn-subtle ${language === 'en' ? s.active : ''}`} 
                 id="lang-en" 
                 onClick={() => setLanguage('en')}

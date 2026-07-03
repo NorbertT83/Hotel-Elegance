@@ -12,8 +12,14 @@ export const apiServiceConfig = {
     setTokenRefreshCallback: (cb: (newToken: string) => void) => { tokenRefreshCallback = cb; }
 };
 
-export type ApiError = { success?: boolean; error?: string } & Record<string, any>;
+export type ApiError = {
+    success?: boolean;
+    error?: string;
+    message?: string;
+} & Record<string, unknown>;
 export type ApiResponse<T> = T | ApiError;
+
+const DEFAULT_TIMEOUT = 5000;
 
 export async function tryToRefreshToken(): Promise<string | null> {
     try {
@@ -33,7 +39,30 @@ export async function tryToRefreshToken(): Promise<string | null> {
     }
 }
 
-async function baseRequest(endpoint: string, options: RequestInit = {}, timeout = 5000): Promise<Response> {
+function isJsonResponse(response: Response): boolean {
+    const contentType = response.headers.get('content-type') || '';
+    return contentType.includes('application/json');
+}
+
+function buildQuery(params: Record<string, string> = {}): string {
+    const urlParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) urlParams.append(key, value);
+    });
+    const qs = urlParams.toString();
+    return qs ? `?${qs}` : '';
+}
+
+async function parseResponse<T>(response: Response): Promise<T> {
+    if (isJsonResponse(response)) {
+        return await response.json() as T;
+    }
+
+    const text = await response.text();
+    return text as unknown as T;
+}
+
+async function baseRequest(endpoint: string, options: RequestInit = {}, timeout = DEFAULT_TIMEOUT): Promise<Response> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -42,7 +71,9 @@ async function baseRequest(endpoint: string, options: RequestInit = {}, timeout 
         ...(options.headers as Record<string, string> || {}),
     };
 
-    if (currentAccessToken) headers["Authorization"] = `Bearer ${currentAccessToken}`;
+    if (currentAccessToken) {
+        headers["Authorization"] = `Bearer ${currentAccessToken}`;
+    }
 
     try {
         let response = await fetch(`${apiURL}${endpoint}`, {
@@ -69,8 +100,8 @@ async function baseRequest(endpoint: string, options: RequestInit = {}, timeout 
         }
 
         return response;
-    } catch (error: any) {
-        if (error && error.name === "AbortError") {
+    } catch (error: unknown) {
+        if (error instanceof Error && error.name === "AbortError") {
             throw new Error("Request timed out");
         }
         throw error;
@@ -79,43 +110,26 @@ async function baseRequest(endpoint: string, options: RequestInit = {}, timeout 
     }
 }
 
-async function parseResponse<T>(response: Response): Promise<T> {
-    const contentType = response.headers.get('content-type') || '';
-    if (contentType.includes('application/json')) {
-        return await response.json() as T;
-    }
-    const text = await response.text();
-    return text as unknown as T;
-}
-
-function buildQuery(params: Record<string, string> = {}): string {
-    const urlParams = new URLSearchParams();
-    Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) urlParams.append(key, value);
-    });
-    const qs = urlParams.toString();
-    return qs ? `?${qs}` : '';
-}
-
-export async function getData<T>(endpoint = "", params: Record<string, string> = {}, timeout = 5000): Promise<T> {
+export async function getData<T>(endpoint = "", params: Record<string, string> = {}, timeout = DEFAULT_TIMEOUT): Promise<T | null> {
     const fullEndpoint = `${endpoint}${buildQuery(params)}`;
     const response = await baseRequest(fullEndpoint, { method: 'GET' }, timeout);
 
-    if (response.status === 404) return null as unknown as T;
-    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+    if (response.status === 404) return null;
+    if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
 
     return await parseResponse<T>(response);
 }
 
-export async function createData<T, R = any>(endpoint = "", data: T = {} as T, timeout = 5000): Promise<R> {
+export async function createData<T, R = unknown>(endpoint = "", data: T = {} as T, timeout = DEFAULT_TIMEOUT): Promise<R> {
     const response = await baseRequest(endpoint, {
         method: 'POST',
         body: JSON.stringify(data),
     }, timeout);
 
     if (!response.ok) {
-        const contentType = response.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
+        if (isJsonResponse(response)) {
             return await response.json() as R;
         }
         const errorBody = await response.text().catch(() => 'Unknown error');
@@ -125,7 +139,7 @@ export async function createData<T, R = any>(endpoint = "", data: T = {} as T, t
     return await parseResponse<R>(response);
 }
 
-export async function updateData<T, R = any>(endpoint = "", id = "", data: T = {} as T, timeout = 5000): Promise<R> {
+export async function updateData<T, R = unknown>(endpoint = "", id = "", data: T = {} as T, timeout = DEFAULT_TIMEOUT): Promise<R> {
     const response = await baseRequest(`${endpoint}/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -139,7 +153,7 @@ export async function updateData<T, R = any>(endpoint = "", id = "", data: T = {
     return await parseResponse<R>(response);
 }
 
-export async function deleteData(endpoint = "", id = "", timeout = 5000) {
+export async function deleteData<R = unknown>(endpoint = "", id = "", timeout = DEFAULT_TIMEOUT): Promise<R> {
     const response = await baseRequest(`${endpoint}/${id}`, { method: 'DELETE' }, timeout);
 
     if (!response.ok) {
@@ -147,6 +161,9 @@ export async function deleteData(endpoint = "", id = "", timeout = 5000) {
         throw new Error(`HTTP error: ${response.status} - ${errorBody}`);
     }
 
-    if (response.status === 204) return { success: true };
-    return await parseResponse<any>(response);
+    if (response.status === 204) {
+        return { success: true } as unknown as R;
+    }
+
+    return await parseResponse<R>(response);
 }

@@ -2,7 +2,7 @@ import { useEffect, useState, CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocalStorageExpiry } from "../hooks/useLocalStorageExpiry";
 import { useGuest } from '../context/GuestContext';
-import { landingPageText } from '../utils/translations';
+import { landingPageText } from '../translations';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function WelcomeModal(): React.JSX.Element | null {

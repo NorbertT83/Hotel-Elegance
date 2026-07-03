@@ -145,7 +145,7 @@
     font-size: 0.9rem;
     color: var(--on-surface-variant);
     text-align: center;
-    margin-top: 2rem;
+    margin-block: 1rem;
 }
 
 .radioGroup {
@@ -369,7 +369,7 @@
 .priceRow .priceLabel {
     display: flex;
     align-items: center;
-    gap: .35rem;
+    gap: .5rem;
 }
 
 .priceRow .priceLabel .material-symbols-outlined {
@@ -413,8 +413,13 @@
     .card {
         width: 96%;
         height: max-content;
-        min-height: auto;
+        min-height: 80dvh;
         padding: 1.5rem 1rem;
+    }
+
+    .bookingSection h3 {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
     }
 
     .bookingDetails {
@@ -438,9 +443,14 @@
 
     .chooseExtras {
         flex-direction: column; 
-        gap: 2rem;
+        gap: 1rem;
         align-items: flex-start;
         padding-left: 2rem;
+    }
+
+    
+    .extraInfo {
+        width: 100%;
     }
 
     .personalData {
@@ -478,7 +488,7 @@
         flex-direction: column; 
         width: 100%;
         gap: 1rem;
-        margin-top: 2rem;
+        margin-top: auto;
     }
 
     .buttonContainer button {

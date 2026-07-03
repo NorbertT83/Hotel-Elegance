@@ -3,7 +3,7 @@ import s from '../styles/GuestPage.module.css'
 import { useState } from 'react';
 import { useGuest } from '../context/GuestContext'
 import { Navigate } from 'react-router-dom'
-import { guestPageText } from '../utils/translations';
+import { guestPageText } from '../translations';
 import { useLanguage } from '../context/LanguageContext';
 
 import Overview from './guest/Overview'

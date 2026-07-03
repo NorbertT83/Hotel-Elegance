@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import s from '../styles/RoomModal.module.css'
 import { RoomType } from '../types/booking';
-import { landingPageText } from '../utils/translations';
+import { landingPageText } from '../translations';
 import { useLanguage } from '../context/LanguageContext';
 
 interface Props {

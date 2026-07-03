@@ -4,7 +4,7 @@ import { createData, getData } from '../../services/apiService';
 import FoodBevItem from '../../components/FoodBevItem';
 import CartModal from '../../components/CartModal';
 import s from '../../styles/GuestSubPages.module.css';
-import { guestPageText } from '../../utils/translations';
+import { guestPageText } from '../../translations';
 import { useGuest } from '../../context/GuestContext';
 import MessageBoxModal from '../../components/MessageBoxModal';
 import { useLocalStorageState } from '../../hooks/useLocalStorage';

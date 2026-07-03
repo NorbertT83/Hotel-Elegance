@@ -25,11 +25,11 @@
 
 .serviceCard {
     justify-self: center;
-    justify-items: center;
+    justify-items: left;
     width: 90%;
     max-width: 420px;
     background-color: var(--surface-container-low);
-    padding: var(--margin-mobile);
+    padding: 1rem 3rem;
     border: 1px solid rgba(82, 68, 57, 0.2);
     border-radius: 12px;
 }
@@ -38,6 +38,8 @@
     border-color: rgba(82, 68, 57, 0.5);
 }
 .cardTitle {
+    width: 100%;
+    text-align: center;
     margin-bottom: 16px;
 }
 
@@ -51,5 +53,6 @@
     }
     .serviceCard {
         width: max(220px, 100%);
+        justify-items: center;
     }
 }

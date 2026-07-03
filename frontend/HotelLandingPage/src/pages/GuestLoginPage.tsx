@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { useGuest } from '../context/GuestContext';
-import { guestPageText } from '../utils/translations';
-import LanguageSelector from '../components/LanguageSelector';
+import { guestPageText } from '../translations';
 
 export default function GuestLoginPage() {
     const { language } = useLanguage();
@@ -49,7 +48,6 @@ export default function GuestLoginPage() {
 
     return (
         <div className={s.loginSection}>
-            <LanguageSelector />
             <h1 className={s.h1Text}>{labels.h1Text}</h1>
             <form className={s.loginForm} onSubmit={handleLogin}>
                 <input 

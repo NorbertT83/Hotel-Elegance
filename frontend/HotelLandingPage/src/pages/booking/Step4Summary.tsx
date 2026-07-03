@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { calculateBookingPrice, fmt } from "../../utils/utils";
 import s from "../../styles/BookingPage.module.css";
 import { useLanguage } from "../../context/LanguageContext";
-import { bookingPageText } from "../../utils/translations";
+import { bookingPageText } from "../../translations";
 import { roomSupportsExtra, useBooking } from "../../context/BookingProcessContext";
 
 export default function Step4Summary() {

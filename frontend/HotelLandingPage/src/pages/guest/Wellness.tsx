@@ -6,7 +6,7 @@ import { createData } from '../../services/apiService';
 import ServiceItem from '../../components/ServiceItem';
 import MessageBoxModal from '../../components/MessageBoxModal';
 import s from '../../styles/GuestSubPages.module.css';
-import { guestPageText } from '../../utils/translations';
+import { guestPageText } from '../../translations';
 import { HotelService } from '../../types/booking';
 import { useLocalStorageState } from '../../hooks/useLocalStorage';
 

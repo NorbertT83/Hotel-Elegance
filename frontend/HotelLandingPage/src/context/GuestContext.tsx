@@ -12,6 +12,12 @@ export type LoginResult =
     | { success: true } 
     | { success: false; errorType: 'noMatchingEmailOrBooking' | 'bookingExpired' | 'network' | string };
 
+type AuthLoginResponse = {
+    success: boolean;
+    accessToken?: string;
+    errorType?: string;
+};
+
 type GuestContextType = {
     guest: Guest | null;
     currentBooking: BookingContextType | null;
@@ -77,6 +83,17 @@ export const GuestProvider = ({ children }: Props) => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const { language } = useLanguage();
 
+    const sendLogoutRequest = useCallback(async () => {
+        try {
+            await createData('auth/logout', {});
+            localStorage.removeItem('pendingLogout');
+            console.log("Szerveroldali session sikeresen lezárva.");
+        } catch {
+            console.warn("Hálózati hiba! A kijelentkezés rögzítve az offline sorban.");
+            localStorage.setItem('pendingLogout', 'true');
+        }
+    }, []);
+
     const logout = useCallback(() => {
         setGuest(null);
         setAccessToken(null);
@@ -85,29 +102,13 @@ export const GuestProvider = ({ children }: Props) => {
         setCurrentBookedServices([]);
         console.log("Kijelentkezés");
 
-        (async () => {
-            try {
-                await createData<{ reviews?: string }, { success: boolean }>('auth/logout', {});
-                localStorage.removeItem('pendingLogout');
-                console.log("Szerveroldali session sikeresen lezárva.");
-            } catch (error) {
-                console.warn("Hálózati hiba! A kijelentkezés rögzítve az offline sorban.");
-                localStorage.setItem('pendingLogout', 'true');
-            }
-        })();
-
-    }, []);
+        void sendLogoutRequest();
+    }, [sendLogoutRequest]);
 
     useEffect(() => {
         const syncOfflineLogout = async () => {
             if (localStorage.getItem('pendingLogout') === 'true' && navigator.onLine) {
-                try {
-                    await createData('auth/logout', {});
-                    localStorage.removeItem('pendingLogout');
-                    console.log("Beragadt offline kijelentkezés sikeresen szinkronizálva a szerverrel.");
-                } catch (e) {
-                    // Ha a szerver még mindig áll, a "pendingLogout" marad true, legközelebb újra megpróbálja
-                }
+                await sendLogoutRequest();
             }
         };
 
@@ -115,8 +116,7 @@ export const GuestProvider = ({ children }: Props) => {
 
         window.addEventListener('online', syncOfflineLogout);
         return () => window.removeEventListener('online', syncOfflineLogout);
-    }, []);
-
+    }, [sendLogoutRequest]);
 
     useEffect(() => {
         apiServiceConfig.setLogoutCallback(logout);
@@ -129,6 +129,13 @@ export const GuestProvider = ({ children }: Props) => {
         apiServiceConfig.setToken(accessToken);
     }, [accessToken]);
 
+    const refreshBookedServices = useCallback(async () => {
+        const bookedServicesResponse: BookedService [] | null = await getData(`booking/services`);
+        if (bookedServicesResponse) {
+            setCurrentBookedServices(bookedServicesResponse);
+        }
+    }, []);
+
     const hydrateAppState = useCallback(async (token: string) => {
         const payload = parseJwt(token);
         if (!payload) {
@@ -137,13 +144,13 @@ export const GuestProvider = ({ children }: Props) => {
         }
 
         try {
-            const guestResponse: Guest = await getData(`guest/${payload.guest_id}`);
+            const guestResponse: Guest | null = await getData(`guest/${payload.guest_id}`);
             if (!guestResponse) {
                 logout();
                 return false;
             }
 
-            const bookingResponse: BookingResponseDTO = await getData(`booking/${payload.booking_id}`);
+            const bookingResponse: BookingResponseDTO | null = await getData(`booking/${payload.booking_id}`);
             if (!bookingResponse) {
                 logout();
                 return false;
@@ -156,7 +163,7 @@ export const GuestProvider = ({ children }: Props) => {
                 roomData = await getData(`room/${activeBooking.roomNumber}`);
             }
 
-            const serviceResponse = await getData<HotelService[]>('service/all', {sort: `name_${language}`});
+            const serviceResponse = await getData<HotelService[]>('service/all');
             if (serviceResponse) {
                 setServices(serviceResponse);
             }
@@ -173,7 +180,7 @@ export const GuestProvider = ({ children }: Props) => {
             logout();
             return false;
         }
-    }, [logout]);
+    }, [logout, refreshBookedServices]);
 
     useEffect(() => {
         const initGuest = async () => {
@@ -197,12 +204,24 @@ export const GuestProvider = ({ children }: Props) => {
         initGuest();
     }, [hydrateAppState, logout]);
 
-    async function refreshBookedServices() {
-        const bookedServicesResponse: BookedService [] = await getData(`booking/services`);
-        if (bookedServicesResponse) {
-            setCurrentBookedServices(bookedServicesResponse);
+    useEffect(() => {
+        if (!accessToken) {
+            return;
         }
-    }
+
+        const refreshServices = async () => {
+            try {
+                const serviceResponse = await getData<HotelService[]>(`service/all`, { sort: `name_${language}` });
+                if (serviceResponse) {
+                    setServices(serviceResponse);
+                }
+            } catch (error) {
+                console.error('Unable to refresh services for language change:', error);
+            }
+        };
+
+        void refreshServices();
+    }, [accessToken, language]);
 
     async function updateRoomFeature<K extends keyof Room>(feature: K, value: Room[K]) {
         if (!currentRoom) {
@@ -222,7 +241,7 @@ export const GuestProvider = ({ children }: Props) => {
     async function login(email: string, bookingIdAsPassword: string): Promise<LoginResult> {
         setIsLoading(true);
         try {
-            const res = await createData<{ email: string; booking_id: string }, { success: boolean; accessToken?: string; errorType?: string }>(
+            const res = await createData<{ email: string; booking_id: string }, AuthLoginResponse>(
                 'auth/login', 
                 { email, booking_id: bookingIdAsPassword }
             );

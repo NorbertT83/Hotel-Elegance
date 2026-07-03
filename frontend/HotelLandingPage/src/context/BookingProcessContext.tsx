@@ -37,6 +37,11 @@ const BookingProcessContext = createContext<BookingContextProps | undefined>(und
 
 const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4);
 
+type BookingApiResponse = {
+    success: boolean;
+    booking_id?: string;
+};
+
 const validate = {
     name: (val: string) => val.length > 1 && val.length < 30 && /^[\p{L}\s-]+$/u.test(val),
     email: (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
@@ -44,6 +49,47 @@ const validate = {
     city: (val: string) => val.length > 1 && /^[\p{L}\s-]+$/u.test(val),
     street: (val: string) => val.length > 4 && /^(?=.*\d).+$/.test(val)
 };
+
+function getDefaultBookingState(): BookingState {
+    return {
+        bookingId: "",
+        freeRooms: [],
+        guests: { adult: 2, child: 0 },
+        arrivalDate: "",
+        departureDate: "",
+        roomTypeChosen: "standard",
+        cateringChosen: "breakfast",
+        extrasChosen: [],
+        formData: {
+            lname: { value: "", isTouched: false },
+            fname: { value: "", isTouched: false },
+            email: { value: "", isTouched: false },
+            country: { value: "HU", isTouched: false },
+            zip: { value: "", isTouched: false },
+            city: { value: "", isTouched: false },
+            street: { value: "", isTouched: false }
+        }
+    };
+}
+
+function buildBookingPayload(state: BookingState, roomNumber: number | null, bookingId: string) {
+    return {
+        fname: state.formData.fname.value,
+        lname: state.formData.lname.value,
+        email: state.formData.email.value,
+        country: state.formData.country.value,
+        zip_code: state.formData.zip.value,
+        city: state.formData.city.value,
+        street: state.formData.street.value,
+        booking_id: bookingId,
+        room_number: roomNumber,
+        room_type: state.roomTypeChosen,
+        beginning_of_stay: state.arrivalDate,
+        end_of_stay: state.departureDate,
+        catering_level: state.cateringChosen,
+        services: state.extrasChosen || []
+    };
+}
 
 export function roomSupportsExtra(room: Room, option: ExtraOption): boolean {
     if (['latecheckout', 'transfer', 'champagne'].includes(option)) return true;
@@ -64,39 +110,20 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
     }, [location.state, navigate]);
 
     const [bookingState, setBookingState] = useState<BookingState>(() => {
-        const defaultDefaults = {
-            bookingId: "",
-            freeRooms: [],
-            guests: { adult: 2, child: 0 },
-            arrivalDate: "",
-            departureDate: "",
-            roomTypeChosen: "standard",
-            cateringChosen: "breakfast",
-            extrasChosen: [],
-            formData: {
-                lname: { value: "", isTouched: false },
-                fname: { value: "", isTouched: false },
-                email: { value: "", isTouched: false },
-                country: { value: "HU", isTouched: false },
-                zip: { value: "", isTouched: false },
-                city: { value: "", isTouched: false },
-                street: { value: "", isTouched: false }
-            },
-        };
+        const defaultState = getDefaultBookingState();
 
-        if (!location.state) return defaultDefaults as BookingState;
+        if (!location.state) return defaultState;
 
         const incomingState = location.state as Partial<BookingState>;
-
         return {
-            ...defaultDefaults,
+            ...defaultState,
             ...incomingState,
             formData: {
-                ...defaultDefaults.formData,
+                ...defaultState.formData,
                 ...(incomingState.formData || {})
             },
             guests: {
-                ...defaultDefaults.guests,
+                ...defaultState.guests,
                 ...(incomingState.guests || {})
             }
         } as BookingState;
@@ -110,6 +137,10 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
         flatFeeExtras: {},
         cateringServicePrices: { breakfast: 0 },
     });
+
+    useEffect(() => {
+        setFilteredRooms(bookingState.freeRooms);
+    }, [bookingState.freeRooms]);
 
     useEffect(() => {
         if (!guest) return;
@@ -157,23 +188,31 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
 
     const availableExtras = useMemo(() => {
         const keys: ExtraOption[] = ['balcony', 'garden', 'panorama', 'jacuzzi', 'kitchen'];
-        const result: Record<string, boolean> = {};
-        
+        const result: Record<ExtraOption, boolean> = {
+            balcony: false,
+            panorama: false,
+            garden: false,
+            jacuzzi: false,
+            kitchen: false,
+            latecheckout: false,
+            transfer: false,
+            champagne: false,
+        };
+
         keys.forEach(key => {
             result[key] = roomsForSelectedType.some(r => roomSupportsExtra(r, key));
         });
-        
+
         return result;
     }, [roomsForSelectedType]);
 
     const extraOptions = useMemo(() => {
-        const baseOptions = ['latecheckout', 'transfer', 'champagne'] as ExtraOption[];
-        
-        const activeExtras = Object.keys(availableExtras).filter(
-            (key) => availableExtras[key as keyof typeof availableExtras]
+        const baseOptions: ExtraOption[] = ['latecheckout', 'transfer', 'champagne'];
+        const activeExtras = (Object.keys(availableExtras) as ExtraOption[]).filter(
+            key => availableExtras[key]
         );
 
-        return [...baseOptions, ...activeExtras] as ExtraOption[];
+        return [...baseOptions, ...activeExtras];
     }, [availableExtras]);
 
 
@@ -185,36 +224,20 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
         
         const year = new Date(bookingState.arrivalDate).getFullYear();
         const generatedBookingId = `HE-${year}-${nanoid()}`;
-        console.log(generatedBookingId);
+        const payload = buildBookingPayload(bookingState, filteredRooms[0]?.room_number ?? null, generatedBookingId);
 
         try {
-            const response: any = await createData('auth/public-booking', {
-                fname: bookingState.formData.fname.value,
-                lname: bookingState.formData.lname.value,
-                email: bookingState.formData.email.value,
-                country: bookingState.formData.country.value,
-                zip_code: bookingState.formData.zip.value,
-                city: bookingState.formData.city.value,
-                street: bookingState.formData.street.value,
+            const response = await createData<typeof payload, BookingApiResponse>('auth/public-booking', payload);
 
-                booking_id: generatedBookingId,
-                room_number: filteredRooms[0]?.room_number || null,
-                room_type: bookingState.roomTypeChosen,
-                beginning_of_stay: bookingState.arrivalDate,
-                end_of_stay: bookingState.departureDate,
-                catering_level: bookingState.cateringChosen,
-                services: bookingState.extrasChosen || []
-            });
-
-            if (response && response.success) {
+            if (response.success) {
                 console.log("Sikeres foglalás rögzítve! ID:", response.booking_id);
                 setBookingState(prev => ({ ...prev, bookingId: generatedBookingId }));
                 setStep(5);
             } else {
                 console.error("Sikertelen foglalás: Nem érkezett sikeres válasz a szervertől.");
             }
-        } catch (err: any) {
-            console.error("Hiba történt a foglalási folyamat során:", err.message);
+        } catch (err) {
+            console.error("Hiba történt a foglalási folyamat során:", err);
         }
     };
 

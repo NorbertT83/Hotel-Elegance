@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { landingPageText } from '../utils/translations';
+import { landingPageText } from '../translations';
 import { addDays } from '../utils/utils';
 import { Room } from '../types/booking';
 import { getData } from '../services/apiService';
