@@ -157,7 +157,6 @@ function fetchResource($pdo, $table, $idOrAll, $idColumn, $allowedFilters = [], 
 function createResource($pdo, $table, $data, $allowedFields = null) {
     if (empty($data)) return false;
 
-    // Require an explicit whitelist to avoid blind INSERT of arbitrary keys
     if (!is_array($allowedFields) || count($allowedFields) === 0) {
         throw new \InvalidArgumentException('Insert not allowed without allowedFields list.');
     }
@@ -585,13 +584,15 @@ if ($resource === 'auth') {
                 $inputData['catering_level'] ?? null
             ]);
             
-if (!empty($inputData['services']) && is_array($inputData['services'])) {
+            if (!empty($inputData['services']) && is_array($inputData['services'])) {
                 $getServiceStmt = $pdo->prepare("SELECT `id` FROM `services` WHERE `name_en` LIKE ? LIMIT 1");
                 $insertServiceStmt = $pdo->prepare("INSERT INTO `servicebookings` (`booking_id`, `service_id`, `quantity`) VALUES (?, ?, ?)");
                 $insertChampagneStmt = $pdo->prepare("INSERT INTO `servicebookings` (`booking_id`, `service_id`, `quantity`, `price_at_booking`) VALUES (?, ?, ?, ?)");
 
                 foreach ($inputData['services'] as $serviceName) {  
-                    
+                    if (!in_array(strtolower($serviceName), ['champagne', 'transfer'])) {
+                        continue;
+                    }
                     if (strtolower($serviceName) === 'champagne') {
                         $fbStmt = $pdo->prepare("SELECT `price` FROM `food_and_beverage` WHERE `description_en` LIKE '%champagne%' LIMIT 1");
                         $fbStmt->execute();
@@ -610,7 +611,6 @@ if (!empty($inputData['services']) && is_array($inputData['services'])) {
                             ]);
                         }
                     } else {
-                        // Eredeti logika a többi, hagyományos szolgáltatásra
                         $getServiceStmt->execute([$serviceName]);
                         $serviceData = $getServiceStmt->fetch();
 

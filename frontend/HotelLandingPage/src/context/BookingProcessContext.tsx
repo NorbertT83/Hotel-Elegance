@@ -37,6 +37,13 @@ const BookingProcessContext = createContext<BookingContextProps | undefined>(und
 
 const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 4);
 
+const generateBookingId = (arrivalDate: string, existingBookingId?: string) => {
+    if (existingBookingId) return existingBookingId;
+
+    const year = new Date(arrivalDate).getFullYear();
+    return `HE-${year}-${nanoid()}`;
+};
+
 type BookingApiResponse = {
     success: boolean;
     booking_id?: string;
@@ -220,16 +227,20 @@ export function BookingProcessProvider({ children }: { children: ReactNode }) {
     const prevStep = () => setStep(p => p - 1);
     
     const finishBooking = async () => {
-        const year = new Date(bookingState.arrivalDate).getFullYear();
-        const generatedBookingId = `HE-${year}-${nanoid()}`;
-        const payload = buildBookingPayload(bookingState, filteredRooms[0]?.room_number ?? null, generatedBookingId);
+        const bookingId = generateBookingId(bookingState.arrivalDate, bookingState.bookingId);
+
+        if (!bookingState.bookingId) {
+            setBookingState(prev => ({ ...prev, bookingId }));
+        }
+
+        const payload = buildBookingPayload(bookingState, filteredRooms[0]?.room_number ?? null, bookingId);
 
         try {
             const response = await createData<typeof payload, BookingApiResponse>('auth/public-booking', payload);
 
             if (response.success) {
-                setBookingState(prev => ({ ...prev, bookingId: generatedBookingId }));
-                setStep(5);
+                setBookingState(prev => ({ ...prev, bookingId }));
+                setStep(6);
             } else {
                 console.error("Sikertelen foglalás: Nem érkezett sikeres válasz a szervertől.");
             }
