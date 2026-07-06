@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
+using Hotel_erp_Winforms_App.Models;
+using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.BC;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
-using Hotel_erp_Winforms_App.Models;
-using Org.BouncyCastle.Asn1.BC;
-using MySql.Data.MySqlClient;
 
 namespace Hotel_erp_Winforms_App.Services
 {
@@ -12,13 +13,22 @@ namespace Hotel_erp_Winforms_App.Services
     {
         private readonly string connectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=";
 
-        public List<Booking> LoadDgv(string query)
+        public List<Booking> LoadDgv(string query, Dictionary<string, object> parameters = null)
         {
             List<Booking> bookings = new List<Booking>();
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
+
+                if(parameters != null)
+                {
+                    foreach(var param in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(param.Key, param.Value);
+                    }
+                }
+
                 connection.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -58,24 +68,57 @@ namespace Hotel_erp_Winforms_App.Services
             return bookings;
         }
 
-        //public void AddBooking(Booking booking)
-        //{
-        //    string connectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=";
-        //    string query = "INSERT INTO bookings (room_number, guest_id1, beginning_of_stay, end_of_stay, level_of_service)" +
-        //                   "VALUES (@room, @guest, @start, @end, @level)";
+        public List<Booking> SearchBookings(int fieldIndex, string searchText, int statusIndex, int tabIndex, int spanIndex, DateTime fromDate, DateTime toDate)
+        {
+            string query = "SELECT * FROM bookings WHERE 1=1";
+            var parameters = new Dictionary<string, object>();
 
-        //    using (MySqlConnection connection = new MySqlConnection(connectionString))
-        //    {
-        //        MySqlCommand cmd = new MySqlCommand(query, connection);
-        //        cmd.Parameters.AddWithValue("@room", booking.RoomNumber);
-        //        cmd.Parameters.AddWithValue("@guest", booking.GuestId);
-        //        cmd.Parameters.AddWithValue("@start", booking.BeginningOfStay);
-        //        cmd.Parameters.AddWithValue("@end", booking.EndOfStay);
-        //        cmd.Parameters.AddWithValue("@level", booking.CateringLevel);
+            // MEZŐ KIVÁLASZTÁS
+            if (fieldIndex >= 0 && !string.IsNullOrEmpty(searchText))
+            {
+                switch (fieldIndex)
+                {
+                    case 0: query += " AND id LIKE @searchBar "; break;
+                    case 1: query += " AND room_number LIKE @searchBar "; break;
+                    case 2: query += " AND room_type LIKE @searchBar "; break;
+                    case 3: query += " AND beginning_of_stay LIKE @searchBar "; break;
+                    case 4: query += " AND end_of_stay LIKE @searchBar "; break;
+                    case 5: query += " AND checkin LIKE @searchBar "; break;
+                    case 6: query += " AND checkout LIKE @searchBar "; break;
+                    case 7: query += " AND catering_level LIKE @searchBar "; break;
+                }
+                parameters.Add("@searchBar", $"%{searchText}%");
+            }
 
-        //        connection.Open();
-        //        cmd.ExecuteNonQuery();
-        //    }
-        //}
+            // STÁTUSZ KIVÁLASZTÁS
+            switch (statusIndex)
+            {
+                case 1: query += " AND checkin IS NULL"; break;
+                case 2: query += " AND checkin IS NOT NULL AND checkout IS NULL"; break;
+                case 3: query += " AND checkout IS NOT NULL"; break;
+            }
+
+            if(tabIndex == 2)
+            {
+                switch (spanIndex)
+                {
+                    case 0: 
+                        query += " AND beginning_of_stay BETWEEN @from AND @to";
+                        break;
+                    case 1:
+                        query += " AND end_of_stay BETWEEN @from AND @to";
+                        break;
+                    case 2:
+                        query += " AND beginning_of_stay >= @from AND end_of_stay <= @to";
+                        break;
+                }
+                parameters.Add("@from", fromDate.Date);
+                parameters.Add("@to", toDate.Date);
+            }
+
+            query += ";";
+
+            return LoadDgv(query, parameters);
+        }
     }
 }

@@ -58,15 +58,22 @@
             label4 = new Label();
             panel3 = new Panel();
             panel1 = new Panel();
-            label9 = new Label();
-            btnSearch = new Button();
-            label1 = new Label();
-            dbSearchType = new ComboBox();
-            dtpFrom = new DateTimePicker();
+            tcSearch = new TabControl();
+            tabPage1 = new TabPage();
+            label15 = new Label();
+            label16 = new Label();
+            cbField = new ComboBox();
+            tbSearch = new TextBox();
             cbStatus = new ComboBox();
+            tabPage2 = new TabPage();
+            cbSpan = new ComboBox();
+            label14 = new Label();
+            label1 = new Label();
+            dtpFrom = new DateTimePicker();
             dtpTo = new DateTimePicker();
             label2 = new Label();
-            tbSearch = new TextBox();
+            label9 = new Label();
+            btnSearch = new Button();
             label8 = new Label();
             panel2 = new Panel();
             dgvBookings = new DataGridView();
@@ -84,6 +91,9 @@
             panel5.SuspendLayout();
             panel3.SuspendLayout();
             panel1.SuspendLayout();
+            tcSearch.SuspendLayout();
+            tabPage1.SuspendLayout();
+            tabPage2.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvBookings).BeginInit();
             SuspendLayout();
@@ -306,20 +316,166 @@
             // panel1
             // 
             panel1.BackColor = SystemColors.ButtonFace;
+            panel1.Controls.Add(tcSearch);
             panel1.Controls.Add(label9);
             panel1.Controls.Add(btnSearch);
-            panel1.Controls.Add(label1);
-            panel1.Controls.Add(dbSearchType);
-            panel1.Controls.Add(dtpFrom);
-            panel1.Controls.Add(cbStatus);
-            panel1.Controls.Add(dtpTo);
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(tbSearch);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Size = new Size(652, 141);
             panel1.TabIndex = 6;
+            // 
+            // tcSearch
+            // 
+            tcSearch.Controls.Add(tabPage1);
+            tcSearch.Controls.Add(tabPage2);
+            tcSearch.Location = new Point(1, 29);
+            tcSearch.Name = "tcSearch";
+            tcSearch.SelectedIndex = 0;
+            tcSearch.Size = new Size(528, 103);
+            tcSearch.TabIndex = 5;
+            // 
+            // tabPage1
+            // 
+            tabPage1.Controls.Add(label15);
+            tabPage1.Controls.Add(label16);
+            tabPage1.Controls.Add(cbField);
+            tabPage1.Controls.Add(tbSearch);
+            tabPage1.Controls.Add(cbStatus);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(3);
+            tabPage1.Size = new Size(520, 75);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "By Field";
+            tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Font = new Font("Microsoft Sans Serif", 13F, FontStyle.Bold);
+            label15.Location = new Point(140, 7);
+            label15.Name = "label15";
+            label15.Size = new Size(73, 22);
+            label15.TabIndex = 8;
+            label15.Text = "Status:";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Font = new Font("Microsoft Sans Serif", 13F, FontStyle.Bold);
+            label16.Location = new Point(6, 7);
+            label16.Name = "label16";
+            label16.Size = new Size(60, 22);
+            label16.TabIndex = 9;
+            label16.Text = "Field:";
+            // 
+            // cbField
+            // 
+            cbField.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbField.Font = new Font("Segoe UI", 12F);
+            cbField.FormattingEnabled = true;
+            cbField.Items.AddRange(new object[] { "Booking ID", "Room Number", "Room Type", "Booked From", "Booked To", "Check-in", "Check-out", "Catering Level" });
+            cbField.Location = new Point(6, 35);
+            cbField.Name = "cbField";
+            cbField.Size = new Size(121, 29);
+            cbField.TabIndex = 4;
+            // 
+            // tbSearch
+            // 
+            tbSearch.Font = new Font("Microsoft Sans Serif", 13F);
+            tbSearch.Location = new Point(268, 35);
+            tbSearch.Name = "tbSearch";
+            tbSearch.PlaceholderText = "Search for a booking";
+            tbSearch.Size = new Size(245, 27);
+            tbSearch.TabIndex = 3;
+            tbSearch.TextAlign = HorizontalAlignment.Right;
+            // 
+            // cbStatus
+            // 
+            cbStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbStatus.Font = new Font("Segoe UI", 12F);
+            cbStatus.FormattingEnabled = true;
+            cbStatus.Items.AddRange(new object[] { "All", "Upcoming", "Current", "Past" });
+            cbStatus.Location = new Point(140, 35);
+            cbStatus.Name = "cbStatus";
+            cbStatus.Size = new Size(115, 29);
+            cbStatus.TabIndex = 4;
+            // 
+            // tabPage2
+            // 
+            tabPage2.Controls.Add(cbSpan);
+            tabPage2.Controls.Add(label14);
+            tabPage2.Controls.Add(label1);
+            tabPage2.Controls.Add(dtpFrom);
+            tabPage2.Controls.Add(dtpTo);
+            tabPage2.Controls.Add(label2);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(3);
+            tabPage2.Size = new Size(520, 75);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "By Period";
+            tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // cbSpan
+            // 
+            cbSpan.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSpan.Font = new Font("Microsoft Sans Serif", 13F);
+            cbSpan.FormattingEnabled = true;
+            cbSpan.Items.AddRange(new object[] { "Booked From", "Booked To", "Enclosing" });
+            cbSpan.Location = new Point(360, 34);
+            cbSpan.Name = "cbSpan";
+            cbSpan.Size = new Size(154, 28);
+            cbSpan.TabIndex = 3;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Font = new Font("Microsoft Sans Serif", 13F);
+            label14.Location = new Point(360, 7);
+            label14.Name = "label14";
+            label14.Size = new Size(57, 22);
+            label14.TabIndex = 2;
+            label14.Text = "Span:";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Microsoft Sans Serif", 13F);
+            label1.Location = new Point(6, 7);
+            label1.Name = "label1";
+            label1.Size = new Size(56, 22);
+            label1.TabIndex = 0;
+            label1.Text = "From:";
+            // 
+            // dtpFrom
+            // 
+            dtpFrom.Font = new Font("Microsoft Sans Serif", 13F);
+            dtpFrom.Format = DateTimePickerFormat.Short;
+            dtpFrom.Location = new Point(6, 35);
+            dtpFrom.Name = "dtpFrom";
+            dtpFrom.Size = new Size(154, 27);
+            dtpFrom.TabIndex = 1;
+            // 
+            // dtpTo
+            // 
+            dtpTo.Font = new Font("Microsoft Sans Serif", 13F);
+            dtpTo.Format = DateTimePickerFormat.Short;
+            dtpTo.Location = new Point(192, 35);
+            dtpTo.Name = "dtpTo";
+            dtpTo.Size = new Size(136, 27);
+            dtpTo.TabIndex = 1;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Microsoft Sans Serif", 13F);
+            label2.Location = new Point(192, 7);
+            label2.Name = "label2";
+            label2.Size = new Size(37, 22);
+            label2.TabIndex = 0;
+            label2.Text = "To:";
             // 
             // label9
             // 
@@ -333,79 +489,14 @@
             // 
             // btnSearch
             // 
-            btnSearch.Font = new Font("Segoe UI", 13F);
-            btnSearch.Location = new Point(531, 80);
+            btnSearch.Font = new Font("Microsoft Sans Serif", 13F);
+            btnSearch.Location = new Point(531, 74);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(115, 41);
             btnSearch.TabIndex = 5;
             btnSearch.Text = "Search";
             btnSearch.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Microsoft Sans Serif", 13F);
-            label1.Location = new Point(9, 39);
-            label1.Name = "label1";
-            label1.Size = new Size(56, 22);
-            label1.TabIndex = 0;
-            label1.Text = "From:";
-            // 
-            // dbSearchType
-            // 
-            dbSearchType.Font = new Font("Segoe UI", 12F);
-            dbSearchType.FormattingEnabled = true;
-            dbSearchType.Location = new Point(9, 88);
-            dbSearchType.Name = "dbSearchType";
-            dbSearchType.Size = new Size(121, 29);
-            dbSearchType.TabIndex = 4;
-            // 
-            // dtpFrom
-            // 
-            dtpFrom.Font = new Font("Microsoft Sans Serif", 13F);
-            dtpFrom.Location = new Point(68, 37);
-            dtpFrom.Name = "dtpFrom";
-            dtpFrom.Size = new Size(200, 27);
-            dtpFrom.TabIndex = 1;
-            // 
-            // cbStatus
-            // 
-            cbStatus.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbStatus.Font = new Font("Segoe UI", 12F);
-            cbStatus.FormattingEnabled = true;
-            cbStatus.Items.AddRange(new object[] { "All", "Pending", "Confirmed", "Cancelled", "Completed", "Expired" });
-            cbStatus.Location = new Point(531, 35);
-            cbStatus.Name = "cbStatus";
-            cbStatus.Size = new Size(115, 29);
-            cbStatus.TabIndex = 4;
-            // 
-            // dtpTo
-            // 
-            dtpTo.Font = new Font("Microsoft Sans Serif", 13F);
-            dtpTo.Location = new Point(313, 37);
-            dtpTo.Name = "dtpTo";
-            dtpTo.Size = new Size(200, 27);
-            dtpTo.TabIndex = 1;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Microsoft Sans Serif", 13F);
-            label2.Location = new Point(274, 39);
-            label2.Name = "label2";
-            label2.Size = new Size(37, 22);
-            label2.TabIndex = 0;
-            label2.Text = "To:";
-            // 
-            // tbSearch
-            // 
-            tbSearch.Font = new Font("Microsoft Sans Serif", 13F);
-            tbSearch.Location = new Point(135, 88);
-            tbSearch.Name = "tbSearch";
-            tbSearch.Size = new Size(378, 27);
-            tbSearch.TabIndex = 3;
-            tbSearch.Text = "Search for a booking";
-            tbSearch.TextAlign = HorizontalAlignment.Right;
+            btnSearch.Click += btnSearch_Click;
             // 
             // label8
             // 
@@ -439,17 +530,18 @@
             dgvBookings.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = Color.FromArgb(30, 58, 138);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 238);
             dataGridViewCellStyle1.ForeColor = Color.White;
             dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvBookings.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvBookings.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvBookings.ColumnHeadersHeight = 35;
+            dgvBookings.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvBookings.Columns.AddRange(new DataGridViewColumn[] { BookingId, colRoomNumber, RoomType, colBegOfStay, colEndOfStay, colCheckIn, colCheckOut, colLevelOfService });
             dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle10.BackColor = SystemColors.Window;
-            dataGridViewCellStyle10.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle10.Font = new Font("Segoe UI", 9.5F);
             dataGridViewCellStyle10.ForeColor = SystemColors.ControlText;
             dataGridViewCellStyle10.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle10.SelectionForeColor = SystemColors.HighlightText;
@@ -463,6 +555,7 @@
             dgvBookings.Name = "dgvBookings";
             dgvBookings.RowHeadersVisible = false;
             dgvBookings.RowTemplate.Height = 35;
+            dgvBookings.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvBookings.Size = new Size(1191, 420);
             dgvBookings.TabIndex = 4;
             // 
@@ -557,6 +650,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panel2);
             Controls.Add(pnlTop);
+            Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Name = "BookingControl";
             Size = new Size(1191, 561);
             Load += BookingControl_Load;
@@ -570,6 +664,11 @@
             panel3.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            tcSearch.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
+            tabPage2.ResumeLayout(false);
+            tabPage2.PerformLayout();
             panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvBookings).EndInit();
             ResumeLayout(false);
@@ -587,7 +686,7 @@
         private Label label2;
         private Label label1;
         private Button button4;
-        private ComboBox dbSearchType;
+        private ComboBox cbField;
         private ComboBox cbStatus;
         private Button btnCheckout;
         private Button btnCheckin;
@@ -618,5 +717,12 @@
         private DataGridViewTextBoxColumn colCheckIn;
         private DataGridViewTextBoxColumn colCheckOut;
         private DataGridViewTextBoxColumn colLevelOfService;
+        private Label label16;
+        private Label label15;
+        private TabControl tcSearch;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        private ComboBox cbSpan;
+        private Label label14;
     }
 }
