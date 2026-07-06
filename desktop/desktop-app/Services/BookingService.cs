@@ -5,6 +5,7 @@ using Org.BouncyCastle.Asn1.BC;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Hotel_erp_Winforms_App.Services
@@ -42,8 +43,8 @@ namespace Hotel_erp_Winforms_App.Services
                         int? guest3 = reader["guest3_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest3_id"]);
                         int? guest4 = reader["guest4_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest4_id"]);
 
-                        RoomType roomTypeEnum = (RoomType)Enum.Parse(typeof(RoomType), reader["room_type"].ToString(), true);
-                        CateringLevel cateringEnum = (CateringLevel)Enum.Parse(typeof(CateringLevel), reader["catering_level"].ToString(), true);
+                        RoomType roomTypeEnum = (Hotel_erp_Winforms_App.Models.RoomType)System.Enum.Parse(typeof(RoomType), reader["room_type"].ToString(), true);
+                        CateringLevel cateringEnum = (Hotel_erp_Winforms_App.Models.CateringLevel)System.Enum.Parse(typeof(CateringLevel), reader["catering_level"].ToString(), true);
 
                         Booking booking = new Booking
                         (
@@ -74,18 +75,20 @@ namespace Hotel_erp_Winforms_App.Services
             var parameters = new Dictionary<string, object>();
 
             // MEZŐ KIVÁLASZTÁS
-            if (fieldIndex >= 0 && !string.IsNullOrEmpty(searchText))
+            if (!string.IsNullOrEmpty(searchText))
             {
                 switch (fieldIndex)
                 {
-                    case 0: query += " AND id LIKE @searchBar "; break;
-                    case 1: query += " AND room_number LIKE @searchBar "; break;
-                    case 2: query += " AND room_type LIKE @searchBar "; break;
-                    case 3: query += " AND beginning_of_stay LIKE @searchBar "; break;
-                    case 4: query += " AND end_of_stay LIKE @searchBar "; break;
-                    case 5: query += " AND checkin LIKE @searchBar "; break;
-                    case 6: query += " AND checkout LIKE @searchBar "; break;
-                    case 7: query += " AND catering_level LIKE @searchBar "; break;
+                    case -1: query += " "; break;
+                    case 0: query += " "; break;
+                    case 1: query += " AND id LIKE @searchBar "; break;
+                    case 2: query += " AND room_number LIKE @searchBar "; break;
+                    case 3: query += " AND room_type LIKE @searchBar "; break;
+                    case 4: query += " AND beginning_of_stay LIKE @searchBar "; break;
+                    case 5: query += " AND end_of_stay LIKE @searchBar "; break;
+                    case 6: query += " AND checkin LIKE @searchBar "; break;
+                    case 7: query += " AND checkout LIKE @searchBar "; break;
+                    case 8: query += " AND catering_level LIKE @searchBar "; break;
                 }
                 parameters.Add("@searchBar", $"%{searchText}%");
             }
@@ -98,6 +101,7 @@ namespace Hotel_erp_Winforms_App.Services
                 case 3: query += " AND checkout IS NOT NULL"; break;
             }
 
+            // IDŐSZAK KIVÁLASZTÁS
             if(tabIndex == 2)
             {
                 switch (spanIndex)
@@ -119,6 +123,43 @@ namespace Hotel_erp_Winforms_App.Services
             query += ";";
 
             return LoadDgv(query, parameters);
+        }
+
+        public Booking GetBookingById(string id)
+        {
+            using(MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM bookings WHERE @id = id";
+
+                using(MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    connection.Open();
+
+                    using(MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Booking(
+                                reader["id"].ToString(),
+                                Convert.ToInt32(reader["room_number"]),
+                                (Hotel_erp_Winforms_App.Models.RoomType)System.Enum.Parse(typeof(Hotel_erp_Winforms_App.Models.RoomType), reader["room_type"].ToString()),
+                                Convert.ToInt32(reader["guest1_id"]),
+                                Convert.ToDateTime(reader["beginning_of_stay"]),
+                                Convert.ToDateTime(reader["end_of_stay"]),
+                                reader["checkin"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["checkin"]),
+                                reader["checkout"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["checkout"]),
+                                reader["guest2_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest2_id"]),
+                                reader["guest3_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest3_id"]),
+                                reader["guest4_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest4_id"]),
+                                (Hotel_erp_Winforms_App.Models.CateringLevel)System.Enum.Parse(typeof(Hotel_erp_Winforms_App.Models.CateringLevel), reader["catering_level"].ToString()),
+                                Convert.ToDateTime(reader["created_at"])
+                            );
+                        }
+                    }
+                }
+            }
+            return null;
         }
     }
 }

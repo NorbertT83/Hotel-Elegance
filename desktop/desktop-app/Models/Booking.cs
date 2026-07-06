@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Hotel_erp_Winforms_App.Models
 {
-    public enum RoomType { Standard, Deluxe, Suite }
-    public enum CateringLevel { Breakfast, Halfboard, Fullboard }
+    public enum RoomType { standard, deluxe, suite }
+    public enum CateringLevel { breakfast, halfboard, fullboard }
 
     public class Booking
     {

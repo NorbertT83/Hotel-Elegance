@@ -189,7 +189,7 @@
             // 
             label11.AutoSize = true;
             label11.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            label11.Location = new Point(1, 1);
+            label11.Location = new Point(13, 1);
             label11.Name = "label11";
             label11.Size = new Size(44, 17);
             label11.TabIndex = 8;
@@ -216,6 +216,7 @@
             btnCheckin.TabIndex = 6;
             btnCheckin.Text = "Check-In";
             btnCheckin.UseVisualStyleBackColor = false;
+            btnCheckin.Click += btnCheckin_Click;
             // 
             // panel5
             // 
@@ -375,7 +376,7 @@
             cbField.DropDownStyle = ComboBoxStyle.DropDownList;
             cbField.Font = new Font("Segoe UI", 12F);
             cbField.FormattingEnabled = true;
-            cbField.Items.AddRange(new object[] { "Booking ID", "Room Number", "Room Type", "Booked From", "Booked To", "Check-in", "Check-out", "Catering Level" });
+            cbField.Items.AddRange(new object[] { "Not Selected", "Booking ID", "Room Number", "Room Type", "Booked From", "Booked To", "Check-in", "Check-out", "Catering Level" });
             cbField.Location = new Point(6, 35);
             cbField.Name = "cbField";
             cbField.Size = new Size(121, 29);
@@ -432,20 +433,20 @@
             // label14
             // 
             label14.AutoSize = true;
-            label14.Font = new Font("Microsoft Sans Serif", 13F);
+            label14.Font = new Font("Microsoft Sans Serif", 13F, FontStyle.Bold);
             label14.Location = new Point(360, 7);
             label14.Name = "label14";
-            label14.Size = new Size(57, 22);
+            label14.Size = new Size(62, 22);
             label14.TabIndex = 2;
             label14.Text = "Span:";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Microsoft Sans Serif", 13F);
+            label1.Font = new Font("Microsoft Sans Serif", 13F, FontStyle.Bold);
             label1.Location = new Point(6, 7);
             label1.Name = "label1";
-            label1.Size = new Size(56, 22);
+            label1.Size = new Size(61, 22);
             label1.TabIndex = 0;
             label1.Text = "From:";
             // 
@@ -470,10 +471,10 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Microsoft Sans Serif", 13F);
+            label2.Font = new Font("Microsoft Sans Serif", 13F, FontStyle.Bold);
             label2.Location = new Point(192, 7);
             label2.Name = "label2";
-            label2.Size = new Size(37, 22);
+            label2.Size = new Size(40, 22);
             label2.TabIndex = 0;
             label2.Text = "To:";
             // 
@@ -558,6 +559,7 @@
             dgvBookings.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvBookings.Size = new Size(1191, 420);
             dgvBookings.TabIndex = 4;
+            dgvBookings.CellClick += dgvBookings_CellClick;
             // 
             // BookingId
             // 

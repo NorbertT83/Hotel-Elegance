@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
+using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
 
 namespace Hotel_erp_Winforms_App.UI.Controls
 {
@@ -21,10 +22,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private void BookingControl_Load(object sender, EventArgs e)
         {
             LoadBookings();
-            cbStatus.SelectedIndex = 0;
+            cbStatus.SelectedIndex = 1;
         }
 
         private BookingService _bookingService = new BookingService();
+
         public void LoadBookings()
         {
             try
@@ -55,6 +57,33 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 );
 
             dgvBookings.DataSource = results;
+        }
+
+        private Booking _selectedBooking;
+
+        private void dgvBookings_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if(e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvBookings.Rows[e.RowIndex];
+                string id = row.Cells["BookingId"].Value?.ToString();
+
+                if (!string.IsNullOrEmpty(id))
+                {
+                    _selectedBooking = _bookingService.GetBookingById(id);
+                }
+            }
+        }
+
+        private void btnCheckin_Click(object sender, EventArgs e)
+        {
+            if(_selectedBooking != null && _selectedBooking.Checkin == null)
+            {
+                FrmCheckin checkinForm = new FrmCheckin(_selectedBooking);
+                checkinForm.ShowDialog();
+            }
+
+            else { MessageBox.Show("This booking is already checked in.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }
