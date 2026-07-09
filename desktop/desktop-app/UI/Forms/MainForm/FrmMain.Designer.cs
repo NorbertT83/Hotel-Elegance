@@ -38,7 +38,6 @@
             btnServices = new Button();
             btnBookings = new Button();
             btnEmployees = new Button();
-            panelRight = new Panel();
             panelMainContent = new Panel();
             bookingControl1 = new Hotel_erp_Winforms_App.UI.Controls.BookingControl();
             lbWelcomeMainForm = new Label();
@@ -210,14 +209,6 @@
             btnEmployees.UseVisualStyleBackColor = false;
             btnEmployees.Click += btnEmployees_Click;
             // 
-            // panelRight
-            // 
-            panelRight.Dock = DockStyle.Right;
-            panelRight.Location = new Point(809, 116);
-            panelRight.Name = "panelRight";
-            panelRight.Size = new Size(424, 540);
-            panelRight.TabIndex = 2;
-            // 
             // panelMainContent
             // 
             panelMainContent.Controls.Add(bookingControl1);
@@ -225,15 +216,16 @@
             panelMainContent.Dock = DockStyle.Fill;
             panelMainContent.Location = new Point(183, 116);
             panelMainContent.Name = "panelMainContent";
-            panelMainContent.Size = new Size(626, 540);
+            panelMainContent.Size = new Size(1050, 540);
             panelMainContent.TabIndex = 3;
             // 
             // bookingControl1
             // 
             bookingControl1.Dock = DockStyle.Fill;
+            bookingControl1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             bookingControl1.Location = new Point(0, 0);
             bookingControl1.Name = "bookingControl1";
-            bookingControl1.Size = new Size(626, 540);
+            bookingControl1.Size = new Size(1050, 540);
             bookingControl1.TabIndex = 1;
             // 
             // lbWelcomeMainForm
@@ -243,7 +235,7 @@
             lbWelcomeMainForm.ForeColor = Color.Teal;
             lbWelcomeMainForm.Location = new Point(0, 0);
             lbWelcomeMainForm.Name = "lbWelcomeMainForm";
-            lbWelcomeMainForm.Size = new Size(626, 540);
+            lbWelcomeMainForm.Size = new Size(1050, 540);
             lbWelcomeMainForm.TabIndex = 0;
             lbWelcomeMainForm.Text = "valami";
             lbWelcomeMainForm.TextAlign = ContentAlignment.MiddleCenter;
@@ -255,7 +247,6 @@
             BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(1233, 656);
             Controls.Add(panelMainContent);
-            Controls.Add(panelRight);
             Controls.Add(panelLeft);
             Controls.Add(panelHeader);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -281,7 +272,6 @@
         private Button btnServices;
         private Button btnHousekeeping;
         private Button btnBookings;
-        private Panel panelRight;
         private Panel panelMainContent;
         private PictureBox pictureBox1;
         private Label lbControlTitle;

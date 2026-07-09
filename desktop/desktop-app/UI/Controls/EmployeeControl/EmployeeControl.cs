@@ -42,7 +42,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             int selectedRowIndex = dgvEmployees.CurrentRow?.Index ?? -1;
             LoadData();
 
-            if(selectedRowIndex >= 0 && selectedRowIndex < dgvEmployees.Rows.Count)
+            if (selectedRowIndex >= 0 && selectedRowIndex < dgvEmployees.Rows.Count)
             {
                 dgvEmployees.ClearSelection();
                 dgvEmployees.Rows[selectedRowIndex].Selected = true;
@@ -161,7 +161,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
                 {
                     DialogResult result = MessageBox.Show("Are you sure you want to delete this employee?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                    if(result == DialogResult.Yes)
+                    if (result == DialogResult.Yes)
                     {
                         _employeeService.DeleteEmployee(selectedEmployee);
                     }
@@ -175,6 +175,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             {
                 MessageBox.Show("The table is empty or no row is selected!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void gbInfo_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

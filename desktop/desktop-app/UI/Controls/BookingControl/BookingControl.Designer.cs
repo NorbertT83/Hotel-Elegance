@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
@@ -38,6 +38,20 @@
             DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            label8 = new Label();
+            panel2 = new Panel();
+            panel9 = new Panel();
+            dgvBookings = new DataGridView();
+            BookingId = new DataGridViewTextBoxColumn();
+            colRoomNumber = new DataGridViewTextBoxColumn();
+            RoomType = new DataGridViewTextBoxColumn();
+            colBegOfStay = new DataGridViewTextBoxColumn();
+            colEndOfStay = new DataGridViewTextBoxColumn();
+            colCheckIn = new DataGridViewTextBoxColumn();
+            colCheckOut = new DataGridViewTextBoxColumn();
+            colLevelOfService = new DataGridViewTextBoxColumn();
+            pnlTopContainer = new Panel();
             pnlTop = new Panel();
             panel7 = new Panel();
             label10 = new Label();
@@ -74,17 +88,11 @@
             label2 = new Label();
             label9 = new Label();
             btnSearch = new Button();
-            label8 = new Label();
-            panel2 = new Panel();
-            dgvBookings = new DataGridView();
-            BookingId = new DataGridViewTextBoxColumn();
-            colRoomNumber = new DataGridViewTextBoxColumn();
-            RoomType = new DataGridViewTextBoxColumn();
-            colBegOfStay = new DataGridViewTextBoxColumn();
-            colEndOfStay = new DataGridViewTextBoxColumn();
-            colCheckIn = new DataGridViewTextBoxColumn();
-            colCheckOut = new DataGridViewTextBoxColumn();
-            colLevelOfService = new DataGridViewTextBoxColumn();
+            panel4 = new Panel();
+            panel2.SuspendLayout();
+            panel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvBookings).BeginInit();
+            pnlTopContainer.SuspendLayout();
             pnlTop.SuspendLayout();
             panel7.SuspendLayout();
             panel6.SuspendLayout();
@@ -94,9 +102,176 @@
             tcSearch.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
-            panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvBookings).BeginInit();
             SuspendLayout();
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.FlatStyle = FlatStyle.Flat;
+            label8.ForeColor = Color.Black;
+            label8.Location = new Point(6, 11);
+            label8.Name = "label8";
+            label8.Size = new Size(28, 21);
+            label8.TabIndex = 0;
+            label8.Text = "74";
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(panel9);
+            panel2.Controls.Add(pnlTopContainer);
+            panel2.Controls.Add(panel4);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(0, 0);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1637, 561);
+            panel2.TabIndex = 1;
+            // 
+            // panel9
+            // 
+            panel9.Controls.Add(dgvBookings);
+            panel9.Dock = DockStyle.Fill;
+            panel9.Location = new Point(0, 141);
+            panel9.Name = "panel9";
+            panel9.Size = new Size(1237, 420);
+            panel9.TabIndex = 7;
+            // 
+            // dgvBookings
+            // 
+            dgvBookings.AllowUserToAddRows = false;
+            dgvBookings.AllowUserToDeleteRows = false;
+            dgvBookings.AllowUserToOrderColumns = true;
+            dgvBookings.AllowUserToResizeColumns = false;
+            dgvBookings.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(245, 248, 253);
+            dgvBookings.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvBookings.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvBookings.BackgroundColor = Color.White;
+            dgvBookings.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 58, 138);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvBookings.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dgvBookings.ColumnHeadersHeight = 40;
+            dgvBookings.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvBookings.Columns.AddRange(new DataGridViewColumn[] { BookingId, colRoomNumber, RoomType, colBegOfStay, colEndOfStay, colCheckIn, colCheckOut, colLevelOfService });
+            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle11.BackColor = SystemColors.Window;
+            dataGridViewCellStyle11.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            dataGridViewCellStyle11.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = DataGridViewTriState.False;
+            dgvBookings.DefaultCellStyle = dataGridViewCellStyle11;
+            dgvBookings.Dock = DockStyle.Fill;
+            dgvBookings.EnableHeadersVisualStyles = false;
+            dgvBookings.GridColor = SystemColors.ControlLight;
+            dgvBookings.Location = new Point(0, 0);
+            dgvBookings.Margin = new Padding(5);
+            dgvBookings.Name = "dgvBookings";
+            dgvBookings.RowHeadersVisible = false;
+            dgvBookings.RowTemplate.Height = 35;
+            dgvBookings.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvBookings.Size = new Size(1237, 420);
+            dgvBookings.TabIndex = 4;
+            dgvBookings.CellClick += dgvBookings_CellClick;
+            // 
+            // BookingId
+            // 
+            BookingId.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            BookingId.DataPropertyName = "Id";
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            BookingId.DefaultCellStyle = dataGridViewCellStyle3;
+            BookingId.FillWeight = 120F;
+            BookingId.HeaderText = "Booking ID";
+            BookingId.Name = "BookingId";
+            BookingId.ReadOnly = true;
+            // 
+            // colRoomNumber
+            // 
+            colRoomNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colRoomNumber.DataPropertyName = "RoomNumber";
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colRoomNumber.DefaultCellStyle = dataGridViewCellStyle4;
+            colRoomNumber.HeaderText = "Room Number";
+            colRoomNumber.Name = "colRoomNumber";
+            colRoomNumber.ReadOnly = true;
+            // 
+            // RoomType
+            // 
+            RoomType.DataPropertyName = "SelectedRoomType";
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            RoomType.DefaultCellStyle = dataGridViewCellStyle5;
+            RoomType.HeaderText = "Room Type";
+            RoomType.Name = "RoomType";
+            RoomType.ReadOnly = true;
+            // 
+            // colBegOfStay
+            // 
+            colBegOfStay.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colBegOfStay.DataPropertyName = "BeginningOfStay";
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colBegOfStay.DefaultCellStyle = dataGridViewCellStyle6;
+            colBegOfStay.FillWeight = 150F;
+            colBegOfStay.HeaderText = "Booked From";
+            colBegOfStay.Name = "colBegOfStay";
+            colBegOfStay.ReadOnly = true;
+            // 
+            // colEndOfStay
+            // 
+            colEndOfStay.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colEndOfStay.DataPropertyName = "EndOfStay";
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colEndOfStay.DefaultCellStyle = dataGridViewCellStyle7;
+            colEndOfStay.FillWeight = 150F;
+            colEndOfStay.HeaderText = "Booked To";
+            colEndOfStay.Name = "colEndOfStay";
+            colEndOfStay.ReadOnly = true;
+            // 
+            // colCheckIn
+            // 
+            colCheckIn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colCheckIn.DataPropertyName = "CheckinDisplay";
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.ForeColor = Color.Black;
+            colCheckIn.DefaultCellStyle = dataGridViewCellStyle8;
+            colCheckIn.FillWeight = 150F;
+            colCheckIn.HeaderText = "Actual Check-in";
+            colCheckIn.Name = "colCheckIn";
+            colCheckIn.ReadOnly = true;
+            // 
+            // colCheckOut
+            // 
+            colCheckOut.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colCheckOut.DataPropertyName = "CheckoutDisplay";
+            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colCheckOut.DefaultCellStyle = dataGridViewCellStyle9;
+            colCheckOut.FillWeight = 150F;
+            colCheckOut.HeaderText = "Actual Check-out";
+            colCheckOut.Name = "colCheckOut";
+            colCheckOut.ReadOnly = true;
+            // 
+            // colLevelOfService
+            // 
+            colLevelOfService.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colLevelOfService.DataPropertyName = "SelectedCateringLevel";
+            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colLevelOfService.DefaultCellStyle = dataGridViewCellStyle10;
+            colLevelOfService.HeaderText = "Catering Level";
+            colLevelOfService.Name = "colLevelOfService";
+            colLevelOfService.ReadOnly = true;
+            // 
+            // pnlTopContainer
+            // 
+            pnlTopContainer.Controls.Add(pnlTop);
+            pnlTopContainer.Dock = DockStyle.Top;
+            pnlTopContainer.Location = new Point(0, 0);
+            pnlTopContainer.Name = "pnlTopContainer";
+            pnlTopContainer.Size = new Size(1237, 141);
+            pnlTopContainer.TabIndex = 6;
             // 
             // pnlTop
             // 
@@ -105,15 +280,15 @@
             pnlTop.Controls.Add(panel6);
             pnlTop.Controls.Add(panel5);
             pnlTop.Controls.Add(panel3);
-            pnlTop.Dock = DockStyle.Top;
+            pnlTop.Dock = DockStyle.Fill;
             pnlTop.Location = new Point(0, 0);
             pnlTop.Name = "pnlTop";
-            pnlTop.Size = new Size(1191, 141);
+            pnlTop.Size = new Size(1237, 141);
             pnlTop.TabIndex = 0;
             // 
             // panel7
             // 
-            panel7.BackColor = SystemColors.ButtonFace;
+            panel7.BackColor = Color.FromArgb(239, 246, 255);
             panel7.Controls.Add(label10);
             panel7.Controls.Add(btnCancel);
             panel7.Controls.Add(btnAddBooking);
@@ -176,7 +351,7 @@
             // 
             // panel6
             // 
-            panel6.BackColor = SystemColors.ButtonFace;
+            panel6.BackColor = Color.FromArgb(239, 246, 255);
             panel6.Controls.Add(label11);
             panel6.Controls.Add(btnCheckout);
             panel6.Controls.Add(btnCheckin);
@@ -220,7 +395,7 @@
             // 
             // panel5
             // 
-            panel5.BackColor = SystemColors.ButtonFace;
+            panel5.BackColor = Color.FromArgb(239, 246, 255);
             panel5.Controls.Add(label13);
             panel5.Controls.Add(label12);
             panel5.Controls.Add(label3);
@@ -230,7 +405,7 @@
             panel5.Controls.Add(label4);
             panel5.Location = new Point(1040, 0);
             panel5.Name = "panel5";
-            panel5.Size = new Size(254, 141);
+            panel5.Size = new Size(192, 141);
             panel5.TabIndex = 4;
             // 
             // label13
@@ -316,7 +491,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = SystemColors.ButtonFace;
+            panel1.BackColor = Color.FromArgb(239, 246, 255);
             panel1.Controls.Add(tcSearch);
             panel1.Controls.Add(label9);
             panel1.Controls.Add(btnSearch);
@@ -499,163 +674,28 @@
             btnSearch.UseVisualStyleBackColor = true;
             btnSearch.Click += btnSearch_Click;
             // 
-            // label8
+            // panel4
             // 
-            label8.AutoSize = true;
-            label8.FlatStyle = FlatStyle.Flat;
-            label8.ForeColor = Color.Black;
-            label8.Location = new Point(6, 11);
-            label8.Name = "label8";
-            label8.Size = new Size(28, 21);
-            label8.TabIndex = 0;
-            label8.Text = "74";
-            // 
-            // panel2
-            // 
-            panel2.Controls.Add(dgvBookings);
-            panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(0, 141);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1191, 420);
-            panel2.TabIndex = 1;
-            // 
-            // dgvBookings
-            // 
-            dgvBookings.AllowUserToAddRows = false;
-            dgvBookings.AllowUserToDeleteRows = false;
-            dgvBookings.AllowUserToOrderColumns = true;
-            dgvBookings.AllowUserToResizeColumns = false;
-            dgvBookings.AllowUserToResizeRows = false;
-            dgvBookings.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvBookings.BackgroundColor = Color.White;
-            dgvBookings.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(30, 58, 138);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvBookings.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvBookings.ColumnHeadersHeight = 35;
-            dgvBookings.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgvBookings.Columns.AddRange(new DataGridViewColumn[] { BookingId, colRoomNumber, RoomType, colBegOfStay, colEndOfStay, colCheckIn, colCheckOut, colLevelOfService });
-            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.BackColor = SystemColors.Window;
-            dataGridViewCellStyle10.Font = new Font("Segoe UI", 9.5F);
-            dataGridViewCellStyle10.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle10.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.False;
-            dgvBookings.DefaultCellStyle = dataGridViewCellStyle10;
-            dgvBookings.Dock = DockStyle.Fill;
-            dgvBookings.EnableHeadersVisualStyles = false;
-            dgvBookings.GridColor = SystemColors.ControlLight;
-            dgvBookings.Location = new Point(0, 0);
-            dgvBookings.Margin = new Padding(5);
-            dgvBookings.Name = "dgvBookings";
-            dgvBookings.RowHeadersVisible = false;
-            dgvBookings.RowTemplate.Height = 35;
-            dgvBookings.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvBookings.Size = new Size(1191, 420);
-            dgvBookings.TabIndex = 4;
-            dgvBookings.CellClick += dgvBookings_CellClick;
-            // 
-            // BookingId
-            // 
-            BookingId.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            BookingId.DataPropertyName = "Id";
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            BookingId.DefaultCellStyle = dataGridViewCellStyle2;
-            BookingId.FillWeight = 120F;
-            BookingId.HeaderText = "Booking ID";
-            BookingId.Name = "BookingId";
-            BookingId.ReadOnly = true;
-            // 
-            // colRoomNumber
-            // 
-            colRoomNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colRoomNumber.DataPropertyName = "RoomNumber";
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colRoomNumber.DefaultCellStyle = dataGridViewCellStyle3;
-            colRoomNumber.HeaderText = "Room Number";
-            colRoomNumber.Name = "colRoomNumber";
-            colRoomNumber.ReadOnly = true;
-            // 
-            // RoomType
-            // 
-            RoomType.DataPropertyName = "SelectedRoomType";
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            RoomType.DefaultCellStyle = dataGridViewCellStyle4;
-            RoomType.HeaderText = "Room Type";
-            RoomType.Name = "RoomType";
-            RoomType.ReadOnly = true;
-            // 
-            // colBegOfStay
-            // 
-            colBegOfStay.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colBegOfStay.DataPropertyName = "BeginningOfStay";
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colBegOfStay.DefaultCellStyle = dataGridViewCellStyle5;
-            colBegOfStay.FillWeight = 150F;
-            colBegOfStay.HeaderText = "Booked From";
-            colBegOfStay.Name = "colBegOfStay";
-            colBegOfStay.ReadOnly = true;
-            // 
-            // colEndOfStay
-            // 
-            colEndOfStay.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colEndOfStay.DataPropertyName = "EndOfStay";
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colEndOfStay.DefaultCellStyle = dataGridViewCellStyle6;
-            colEndOfStay.FillWeight = 150F;
-            colEndOfStay.HeaderText = "Booked To";
-            colEndOfStay.Name = "colEndOfStay";
-            colEndOfStay.ReadOnly = true;
-            // 
-            // colCheckIn
-            // 
-            colCheckIn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colCheckIn.DataPropertyName = "CheckinDisplay";
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.ForeColor = Color.Black;
-            colCheckIn.DefaultCellStyle = dataGridViewCellStyle7;
-            colCheckIn.FillWeight = 150F;
-            colCheckIn.HeaderText = "Actual Check-in";
-            colCheckIn.Name = "colCheckIn";
-            colCheckIn.ReadOnly = true;
-            // 
-            // colCheckOut
-            // 
-            colCheckOut.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colCheckOut.DataPropertyName = "CheckoutDisplay";
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.BottomCenter;
-            colCheckOut.DefaultCellStyle = dataGridViewCellStyle8;
-            colCheckOut.FillWeight = 150F;
-            colCheckOut.HeaderText = "Actual Check-out";
-            colCheckOut.Name = "colCheckOut";
-            colCheckOut.ReadOnly = true;
-            // 
-            // colLevelOfService
-            // 
-            colLevelOfService.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colLevelOfService.DataPropertyName = "SelectedCateringLevel";
-            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colLevelOfService.DefaultCellStyle = dataGridViewCellStyle9;
-            colLevelOfService.HeaderText = "Catering Level";
-            colLevelOfService.Name = "colLevelOfService";
-            colLevelOfService.ReadOnly = true;
+            panel4.BackColor = Color.White;
+            panel4.Dock = DockStyle.Right;
+            panel4.Location = new Point(1237, 0);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(400, 561);
+            panel4.TabIndex = 5;
             // 
             // BookingControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panel2);
-            Controls.Add(pnlTop);
             Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Name = "BookingControl";
-            Size = new Size(1191, 561);
+            Size = new Size(1637, 561);
             Load += BookingControl_Load;
+            panel2.ResumeLayout(false);
+            panel9.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvBookings).EndInit();
+            pnlTopContainer.ResumeLayout(false);
             pnlTop.ResumeLayout(false);
             panel7.ResumeLayout(false);
             panel7.PerformLayout();
@@ -671,46 +711,14 @@
             tabPage1.PerformLayout();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
-            panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvBookings).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
-
-        private Panel pnlTop;
         private Panel panel2;
         private DataGridView dgvBookings;
-        private Panel panel3;
-        private TextBox tbSearch;
-        private DateTimePicker dtpTo;
-        private DateTimePicker dtpFrom;
-        private Label label2;
-        private Label label1;
         private Button button4;
-        private ComboBox cbField;
-        private ComboBox cbStatus;
-        private Button btnCheckout;
-        private Button btnCheckin;
-        private Button btnSearch;
-        private Button btnCancel;
-        private Button btnEdit;
-        private Button btnAddBooking;
-        private Label label5;
-        private Label label4;
-        private Label label3;
-        private Label label6;
-        private Label label7;
         private Label label8;
-        private Panel panel1;
-        private Panel panel7;
-        private Panel panel6;
-        private Panel panel5;
-        private Label label10;
-        private Label label9;
-        private Label label11;
-        private Label label12;
-        private Label label13;
         private DataGridViewTextBoxColumn BookingId;
         private DataGridViewTextBoxColumn colRoomNumber;
         private DataGridViewTextBoxColumn RoomType;
@@ -719,12 +727,44 @@
         private DataGridViewTextBoxColumn colCheckIn;
         private DataGridViewTextBoxColumn colCheckOut;
         private DataGridViewTextBoxColumn colLevelOfService;
-        private Label label16;
-        private Label label15;
+        private Panel panel4;
+        private Panel pnlTop;
+        private Panel panel7;
+        private Label label10;
+        private Button btnCancel;
+        private Button btnAddBooking;
+        private Button btnEdit;
+        private Panel panel6;
+        private Label label11;
+        private Button btnCheckout;
+        private Button btnCheckin;
+        private Panel panel5;
+        private Label label13;
+        private Label label12;
+        private Label label3;
+        private Label label5;
+        private Label label7;
+        private Label label6;
+        private Label label4;
+        private Panel panel3;
+        private Panel panel1;
         private TabControl tcSearch;
         private TabPage tabPage1;
+        private Label label15;
+        private Label label16;
+        private ComboBox cbField;
+        private TextBox tbSearch;
+        private ComboBox cbStatus;
         private TabPage tabPage2;
         private ComboBox cbSpan;
         private Label label14;
+        private Label label1;
+        private DateTimePicker dtpFrom;
+        private DateTimePicker dtpTo;
+        private Label label2;
+        private Label label9;
+        private Button btnSearch;
+        private Panel panel9;
+        private Panel pnlTopContainer;
     }
 }

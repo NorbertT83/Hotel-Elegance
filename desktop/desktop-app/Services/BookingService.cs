@@ -74,35 +74,38 @@ namespace Hotel_erp_Winforms_App.Services
             string query = "SELECT * FROM bookings WHERE 1=1";
             var parameters = new Dictionary<string, object>();
 
-            // MEZŐ KIVÁLASZTÁS
-            if (!string.IsNullOrEmpty(searchText))
+            if(tabIndex == 0)
             {
-                switch (fieldIndex)
+                // MEZŐ KIVÁLASZTÁS
+                if (!string.IsNullOrEmpty(searchText))
                 {
-                    case -1: query += " "; break;
-                    case 0: query += " "; break;
-                    case 1: query += " AND id LIKE @searchBar "; break;
-                    case 2: query += " AND room_number LIKE @searchBar "; break;
-                    case 3: query += " AND room_type LIKE @searchBar "; break;
-                    case 4: query += " AND beginning_of_stay LIKE @searchBar "; break;
-                    case 5: query += " AND end_of_stay LIKE @searchBar "; break;
-                    case 6: query += " AND checkin LIKE @searchBar "; break;
-                    case 7: query += " AND checkout LIKE @searchBar "; break;
-                    case 8: query += " AND catering_level LIKE @searchBar "; break;
+                    switch (fieldIndex)
+                    {
+                        case -1: query += " "; break;
+                        case 0: query += " "; break;
+                        case 1: query += " AND id LIKE @searchBar "; break;
+                        case 2: query += " AND room_number LIKE @searchBar "; break;
+                        case 3: query += " AND room_type LIKE @searchBar "; break;
+                        case 4: query += " AND beginning_of_stay LIKE @searchBar "; break;
+                        case 5: query += " AND end_of_stay LIKE @searchBar "; break;
+                        case 6: query += " AND checkin LIKE @searchBar "; break;
+                        case 7: query += " AND checkout LIKE @searchBar "; break;
+                        case 8: query += " AND catering_level LIKE @searchBar "; break;
+                    }
+                    parameters.Add("@searchBar", $"%{searchText}%");
                 }
-                parameters.Add("@searchBar", $"%{searchText}%");
-            }
 
-            // STÁTUSZ KIVÁLASZTÁS
-            switch (statusIndex)
-            {
-                case 1: query += " AND checkin IS NULL"; break;
-                case 2: query += " AND checkin IS NOT NULL AND checkout IS NULL"; break;
-                case 3: query += " AND checkout IS NOT NULL"; break;
+                // STÁTUSZ KIVÁLASZTÁS
+                switch (statusIndex)
+                {
+                    case 1: query += " AND checkin IS NULL"; break;
+                    case 2: query += " AND checkin IS NOT NULL AND checkout IS NULL"; break;
+                    case 3: query += " AND checkout IS NOT NULL"; break;
+                }
             }
 
             // IDŐSZAK KIVÁLASZTÁS
-            if(tabIndex == 2)
+            if(tabIndex == 1)
             {
                 switch (spanIndex)
                 {

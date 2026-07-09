@@ -39,25 +39,9 @@ namespace Hotel_erp_Winforms_App
         private void btnEmployees_Click(object sender, EventArgs e)
         {
             EmployeeControl employeeControl = new EmployeeControl();
-            EmployeeSideControl sideControl = new EmployeeSideControl();
 
             ShowControl(employeeControl);
             lbControlTitle.Text = "Employees";
-
-            panelRight.SuspendLayout();
-            panelRight.Controls.Clear();
-            sideControl.Dock = DockStyle.Fill;
-            panelRight.Controls.Add(sideControl);
-            panelRight.ResumeLayout();
-
-            if (currentuser != null)
-            {
-                sideControl.CurrentUserDetails(currentuser);
-            }
-            else if (SessionManager.CurrentUser != null)
-            {
-                sideControl.CurrentUserDetails(SessionManager.CurrentUser);
-            }
 
             btnBookings.BackColor = Color.FromArgb(40, 70, 120);
         }
