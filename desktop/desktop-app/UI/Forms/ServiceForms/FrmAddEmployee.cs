@@ -54,6 +54,14 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             {
                 e.Handled = true;
             }
+
+            if (tbAddTaxNumber.Text.Length > 6)
+            {
+                MessageBox.Show($"Tax number contains a maximum of 6 numbers", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Handled = true;
+                tbAddTaxNumber.Text = tbAddTaxNumber.Text[0..6];
+                tbAddSalary.Focus();
+            }
         }
 
         private void btnSaveEmployee_Click(object sender, EventArgs e)
@@ -130,34 +138,16 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             bool ErrorHandling()
             {
-                if(tbAddFirstName.Text.Length < 1)
-                {
-                    MessageBox.Show($"You can't leave empty spaces!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    tbAddFirstName.Focus();
-                    return false;
-                }
-                else if(tbAddLastName.Text.Length < 1)
-                {
-                    MessageBox.Show($"You can't leave empty spaces!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    tbAddLastName.Focus();
-                    return false;
-                }
-                else if (tbAddTaxNumber.Text.Length < 1)
-                {
-                    MessageBox.Show($"You can't leave empty spaces!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    tbAddTaxNumber.Focus();
-                    return false;
-                }
-                else if (cbAddHolidays.Text.Length < 1)
+                ErrorMessageTextBox(tbAddFirstName);
+                ErrorMessageTextBox(tbAddLastName);
+                ErrorMessageTextBox(tbAddTaxNumber);
+                ErrorMessageTextBox(tbAddAddress);
+                ErrorMessageTextBox(tbAddSalary);
+
+                if (cbAddHolidays.Text.Length < 1)
                 {
                     MessageBox.Show($"You can't leave empty spaces!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     cbAddHolidays.Focus();
-                    return false;
-                }
-                else if (tbAddAddress.Text.Length < 1)
-                {
-                    MessageBox.Show($"You can't leave empty spaces!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    tbAddAddress.Focus();
                     return false;
                 }
                 else if (cbAddJobTitle.Text.Length < 1)
@@ -166,15 +156,21 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     cbAddJobTitle.Focus();
                     return false;
                 }
-                else if (tbAddSalary.Text.Length < 1)
-                {
-                    MessageBox.Show($"You can't leave empty spaces!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    tbAddSalary.Focus();
-                    return false;
-                }
-                
-                return true;
+                else { return true; }
+
             }
+        }
+
+        private bool ErrorMessageTextBox(TextBox textbox)
+        {
+            textbox = new TextBox();
+            if(textbox.Text.Length < 1)
+            {
+                MessageBox.Show($"You can't leave empty spaces!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                textbox.Focus();
+                return false;
+            }
+            else { return true; }
         }
     }
 }

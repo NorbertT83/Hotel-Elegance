@@ -164,5 +164,32 @@ namespace Hotel_erp_Winforms_App.Services
             }
             return null;
         }
+
+        public int GetTodaysArrivalsCount()
+        {
+            string query = "SELECT COUNT(*) FROM bookings WHERE beginning_of_stay = CURRENT_DATE;";
+
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    conn.Open();
+                    return (int)(long)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public int GetTodaysDeparturesCount()
+        {
+            string query = "SELECT COUNT(*) FROM bookings WHERE end_of_stay = CURRENT_DATE();";
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    conn.Open();
+                    return (int)(long)cmd.ExecuteScalar();
+                }
+            }
+        }
     }
 }

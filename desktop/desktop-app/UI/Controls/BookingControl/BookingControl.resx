@@ -141,4 +141,15 @@
   <metadata name="colLevelOfService.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="label19.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAORJREFUOE/V
+        kyEOAkEMRVdyFCQ3RCKRSCQSyRGQSCQSiURC38AnP7OdDRsw+5KfTDudbqed7SbPLvSotA2N5hBSgnNo
+        8xZr+Yn5iluIA+ti5bBHzLVYA6iyRbGGIYbYfbEaELB8LT9cQvgRa2cVwp9Cj+pNJaIKH5Cj/R5seE/U
+        yxp8XukplMUVJ1UK7GySVOMJspsVsoTZVTQ4Qc+bCXlngutngfjc36yQP8A3ZiEdZiC6qnQPKRl97KEE
+        /qDx+bPRDeYh+Y44WqgKDvwNVeQD+hnvFx8gOdN0jYb+aVCZJknXPQEDgmYKkDh4GAAAAABJRU5ErkJg
+        gg==
+</value>
+  </data>
 </root>

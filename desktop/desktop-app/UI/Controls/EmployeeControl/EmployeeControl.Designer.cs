@@ -729,8 +729,6 @@
         private Button btnDelete;
         private DataGridView dgvEmployees;
         private Panel pnlDgvContainer;
-        private Panel panel2;
-        private Label lbEmployeeSideName;
         private Panel pnlSide;
         private GroupBox gbInfo;
         private Label lbEmployeeSideSalary;

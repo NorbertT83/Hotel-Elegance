@@ -103,6 +103,16 @@ namespace Hotel_erp_Winforms_App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap email {
+            get {
+                object obj = ResourceManager.GetObject("email", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap hotel_logo {
             get {
                 object obj = ResourceManager.GetObject("hotel logo", resourceCulture);
@@ -143,9 +153,29 @@ namespace Hotel_erp_Winforms_App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap phone {
+            get {
+                object obj = ResourceManager.GetObject("phone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap plus {
             get {
                 object obj = ResourceManager.GetObject("plus", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap source {
+            get {
+                object obj = ResourceManager.GetObject("source", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

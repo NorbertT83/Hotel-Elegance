@@ -39,7 +39,8 @@
             DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            label8 = new Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BookingControl));
+            lbOccupancy = new Label();
             panel2 = new Panel();
             panel9 = new Panel();
             dgvBookings = new DataGridView();
@@ -63,12 +64,11 @@
             btnCheckout = new Button();
             btnCheckin = new Button();
             panel5 = new Panel();
-            label13 = new Label();
             label12 = new Label();
             label3 = new Label();
             label5 = new Label();
-            label7 = new Label();
-            label6 = new Label();
+            lbDepartures = new Label();
+            lbArrivals = new Label();
             label4 = new Label();
             panel3 = new Panel();
             panel1 = new Panel();
@@ -89,6 +89,27 @@
             label9 = new Label();
             btnSearch = new Button();
             panel4 = new Panel();
+            pnlSideTop = new Panel();
+            txtNotes = new TextBox();
+            label30 = new Label();
+            pnlSideBottom = new Panel();
+            label24 = new Label();
+            label25 = new Label();
+            label28 = new Label();
+            line = new Label();
+            label27 = new Label();
+            label26 = new Label();
+            label29 = new Label();
+            pnlSideCenter = new Panel();
+            label22 = new Label();
+            lbSidepanelTitle = new Label();
+            label18 = new Label();
+            label23 = new Label();
+            label19 = new Label();
+            label17 = new Label();
+            label21 = new Label();
+            label20 = new Label();
+            lbPhoneNumber = new Label();
             panel2.SuspendLayout();
             panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvBookings).BeginInit();
@@ -102,18 +123,23 @@
             tcSearch.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
+            panel4.SuspendLayout();
+            pnlSideTop.SuspendLayout();
+            pnlSideBottom.SuspendLayout();
+            pnlSideCenter.SuspendLayout();
             SuspendLayout();
             // 
-            // label8
+            // lbOccupancy
             // 
-            label8.AutoSize = true;
-            label8.FlatStyle = FlatStyle.Flat;
-            label8.ForeColor = Color.Black;
-            label8.Location = new Point(6, 11);
-            label8.Name = "label8";
-            label8.Size = new Size(28, 21);
-            label8.TabIndex = 0;
-            label8.Text = "74";
+            lbOccupancy.AutoSize = true;
+            lbOccupancy.FlatStyle = FlatStyle.Flat;
+            lbOccupancy.Font = new Font("Microsoft Sans Serif", 12.75F, FontStyle.Bold);
+            lbOccupancy.ForeColor = Color.Black;
+            lbOccupancy.Location = new Point(106, 104);
+            lbOccupancy.Name = "lbOccupancy";
+            lbOccupancy.Size = new Size(45, 20);
+            lbOccupancy.TabIndex = 10;
+            lbOccupancy.Text = "74%";
             // 
             // panel2
             // 
@@ -304,9 +330,9 @@
             label10.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 238);
             label10.Location = new Point(1, 1);
             label10.Name = "label10";
-            label10.Size = new Size(54, 17);
+            label10.Size = new Size(64, 17);
             label10.TabIndex = 7;
-            label10.Text = "Actions";
+            label10.Text = "ACTIONS";
             // 
             // btnCancel
             // 
@@ -366,9 +392,9 @@
             label11.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 238);
             label11.Location = new Point(13, 1);
             label11.Name = "label11";
-            label11.Size = new Size(44, 17);
+            label11.Size = new Size(49, 17);
             label11.TabIndex = 8;
-            label11.Text = "Check";
+            label11.Text = "CHECK";
             // 
             // btnCheckout
             // 
@@ -396,27 +422,17 @@
             // panel5
             // 
             panel5.BackColor = Color.FromArgb(239, 246, 255);
-            panel5.Controls.Add(label13);
+            panel5.Controls.Add(lbOccupancy);
             panel5.Controls.Add(label12);
             panel5.Controls.Add(label3);
             panel5.Controls.Add(label5);
-            panel5.Controls.Add(label7);
-            panel5.Controls.Add(label6);
+            panel5.Controls.Add(lbDepartures);
+            panel5.Controls.Add(lbArrivals);
             panel5.Controls.Add(label4);
             panel5.Location = new Point(1040, 0);
             panel5.Name = "panel5";
             panel5.Size = new Size(192, 141);
             panel5.TabIndex = 4;
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Font = new Font("Microsoft Sans Serif", 12.75F, FontStyle.Bold);
-            label13.Location = new Point(106, 104);
-            label13.Name = "label13";
-            label13.Size = new Size(45, 20);
-            label13.TabIndex = 10;
-            label13.Text = "74%";
             // 
             // label12
             // 
@@ -424,9 +440,9 @@
             label12.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 238);
             label12.Location = new Point(1, 1);
             label12.Name = "label12";
-            label12.Size = new Size(78, 17);
+            label12.Size = new Size(90, 17);
             label12.TabIndex = 9;
-            label12.Text = "Occupation";
+            label12.Text = "OCCUPATION";
             // 
             // label3
             // 
@@ -448,27 +464,27 @@
             label5.TabIndex = 0;
             label5.Text = "Occupancy:";
             // 
-            // label7
+            // lbDepartures
             // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Microsoft Sans Serif", 12.75F, FontStyle.Bold);
-            label7.Location = new Point(166, 68);
-            label7.Name = "label7";
-            label7.Size = new Size(19, 20);
-            label7.TabIndex = 1;
-            label7.Text = "5";
-            label7.TextAlign = ContentAlignment.MiddleRight;
+            lbDepartures.AutoSize = true;
+            lbDepartures.Font = new Font("Microsoft Sans Serif", 12.75F, FontStyle.Bold);
+            lbDepartures.Location = new Point(168, 68);
+            lbDepartures.Name = "lbDepartures";
+            lbDepartures.Size = new Size(19, 20);
+            lbDepartures.TabIndex = 1;
+            lbDepartures.Text = "5";
+            lbDepartures.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label6
+            // lbArrivals
             // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Microsoft Sans Serif", 12.75F, FontStyle.Bold);
-            label6.Location = new Point(141, 32);
-            label6.Name = "label6";
-            label6.Size = new Size(29, 20);
-            label6.TabIndex = 1;
-            label6.Text = "12";
-            label6.TextAlign = ContentAlignment.MiddleRight;
+            lbArrivals.AutoSize = true;
+            lbArrivals.Font = new Font("Microsoft Sans Serif", 12.75F, FontStyle.Bold);
+            lbArrivals.Location = new Point(140, 32);
+            lbArrivals.Name = "lbArrivals";
+            lbArrivals.Size = new Size(29, 20);
+            lbArrivals.TabIndex = 1;
+            lbArrivals.Text = "12";
+            lbArrivals.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label4
             // 
@@ -676,12 +692,271 @@
             // 
             // panel4
             // 
-            panel4.BackColor = Color.White;
+            panel4.BackColor = Color.FromArgb(245, 247, 250);
+            panel4.Controls.Add(pnlSideTop);
+            panel4.Controls.Add(pnlSideBottom);
+            panel4.Controls.Add(pnlSideCenter);
             panel4.Dock = DockStyle.Right;
             panel4.Location = new Point(1237, 0);
             panel4.Name = "panel4";
             panel4.Size = new Size(400, 561);
             panel4.TabIndex = 5;
+            // 
+            // pnlSideTop
+            // 
+            pnlSideTop.BackColor = Color.White;
+            pnlSideTop.Controls.Add(txtNotes);
+            pnlSideTop.Controls.Add(label30);
+            pnlSideTop.Dock = DockStyle.Fill;
+            pnlSideTop.Location = new Point(0, 335);
+            pnlSideTop.Margin = new Padding(10);
+            pnlSideTop.Name = "pnlSideTop";
+            pnlSideTop.Padding = new Padding(12);
+            pnlSideTop.Size = new Size(400, 226);
+            pnlSideTop.TabIndex = 0;
+            // 
+            // txtNotes
+            // 
+            txtNotes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            txtNotes.BorderStyle = BorderStyle.None;
+            txtNotes.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            txtNotes.ForeColor = Color.FromArgb(50, 50, 50);
+            txtNotes.Location = new Point(12, 38);
+            txtNotes.Margin = new Padding(3, 10, 3, 3);
+            txtNotes.Multiline = true;
+            txtNotes.Name = "txtNotes";
+            txtNotes.ReadOnly = true;
+            txtNotes.ScrollBars = ScrollBars.Vertical;
+            txtNotes.Size = new Size(376, 176);
+            txtNotes.TabIndex = 1;
+            txtNotes.Text = " Emlékeztető 2 Emlékeztető 2 Emlékeztető 2 Emlékeztető 2 Emlékeztető 2 Emlékeztető 2 Emlékeztető 2 Emlékeztető 2 Emlékeztető 2 Emlékeztető 2";
+            // 
+            // label30
+            // 
+            label30.Dock = DockStyle.Top;
+            label30.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            label30.ForeColor = Color.DimGray;
+            label30.Location = new Point(12, 12);
+            label30.Margin = new Padding(3, 0, 3, 10);
+            label30.Name = "label30";
+            label30.Size = new Size(376, 17);
+            label30.TabIndex = 0;
+            label30.Text = "SPECIAL REQUESTS & NOTES";
+            label30.UseMnemonic = false;
+            // 
+            // pnlSideBottom
+            // 
+            pnlSideBottom.BackColor = Color.FromArgb(248, 250, 253);
+            pnlSideBottom.Controls.Add(label24);
+            pnlSideBottom.Controls.Add(label25);
+            pnlSideBottom.Controls.Add(label28);
+            pnlSideBottom.Controls.Add(line);
+            pnlSideBottom.Controls.Add(label27);
+            pnlSideBottom.Controls.Add(label26);
+            pnlSideBottom.Controls.Add(label29);
+            pnlSideBottom.Dock = DockStyle.Top;
+            pnlSideBottom.Location = new Point(0, 165);
+            pnlSideBottom.Name = "pnlSideBottom";
+            pnlSideBottom.Size = new Size(400, 170);
+            pnlSideBottom.TabIndex = 1;
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label24.ForeColor = Color.DimGray;
+            label24.Location = new Point(206, 131);
+            label24.Name = "label24";
+            label24.Size = new Size(13, 20);
+            label24.TabIndex = 3;
+            label24.Text = "|";
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            label25.ForeColor = Color.DimGray;
+            label25.Location = new Point(12, 10);
+            label25.Name = "label25";
+            label25.Size = new Size(145, 17);
+            label25.TabIndex = 0;
+            label25.Text = "FINANCIAL SUMMARY";
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            label28.ForeColor = Color.Gray;
+            label28.Location = new Point(114, 41);
+            label28.Name = "label28";
+            label28.Size = new Size(129, 17);
+            label28.TabIndex = 0;
+            label28.Text = "Remaining Balance:";
+            // 
+            // line
+            // 
+            line.BackColor = Color.FromArgb(230, 235, 240);
+            line.Location = new Point(17, 119);
+            line.Name = "line";
+            line.Size = new Size(380, 1);
+            line.TabIndex = 2;
+            line.Text = "label24";
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            label27.ForeColor = Color.DimGray;
+            label27.Location = new Point(225, 134);
+            label27.Name = "label27";
+            label27.Size = new Size(98, 17);
+            label27.TabIndex = 0;
+            label27.Text = "Paid: 30.000 Ft";
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            label26.ForeColor = Color.DimGray;
+            label26.Location = new Point(96, 134);
+            label26.Name = "label26";
+            label26.Size = new Size(109, 17);
+            label26.TabIndex = 0;
+            label26.Text = "Total: 120.000 Ft";
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            label29.ForeColor = Color.FromArgb(200, 40, 40);
+            label29.Location = new Point(153, 78);
+            label29.Name = "label29";
+            label29.Size = new Size(110, 30);
+            label29.TabIndex = 0;
+            label29.Text = "90.000 Ft";
+            // 
+            // pnlSideCenter
+            // 
+            pnlSideCenter.BackColor = Color.White;
+            pnlSideCenter.Controls.Add(label22);
+            pnlSideCenter.Controls.Add(lbSidepanelTitle);
+            pnlSideCenter.Controls.Add(label18);
+            pnlSideCenter.Controls.Add(label23);
+            pnlSideCenter.Controls.Add(label19);
+            pnlSideCenter.Controls.Add(label17);
+            pnlSideCenter.Controls.Add(label21);
+            pnlSideCenter.Controls.Add(label20);
+            pnlSideCenter.Controls.Add(lbPhoneNumber);
+            pnlSideCenter.Dock = DockStyle.Top;
+            pnlSideCenter.Location = new Point(0, 0);
+            pnlSideCenter.Margin = new Padding(10);
+            pnlSideCenter.Name = "pnlSideCenter";
+            pnlSideCenter.Padding = new Padding(12);
+            pnlSideCenter.Size = new Size(400, 165);
+            pnlSideCenter.TabIndex = 2;
+            // 
+            // label22
+            // 
+            label22.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            label22.ForeColor = Color.Black;
+            label22.Location = new Point(153, 131);
+            label22.Name = "label22";
+            label22.Size = new Size(52, 20);
+            label22.TabIndex = 1;
+            label22.Text = "Source:";
+            // 
+            // lbSidepanelTitle
+            // 
+            lbSidepanelTitle.AutoSize = true;
+            lbSidepanelTitle.Dock = DockStyle.Top;
+            lbSidepanelTitle.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            lbSidepanelTitle.ForeColor = Color.DimGray;
+            lbSidepanelTitle.Location = new Point(12, 12);
+            lbSidepanelTitle.Name = "lbSidepanelTitle";
+            lbSidepanelTitle.Size = new Size(103, 17);
+            lbSidepanelTitle.TabIndex = 0;
+            lbSidepanelTitle.Text = "GUEST DETAILS";
+            // 
+            // label18
+            // 
+            label18.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            label18.ForeColor = Color.FromArgb(30, 30, 30);
+            label18.Image = Properties.Resources.phone;
+            label18.Location = new Point(121, 68);
+            label18.Margin = new Padding(3, 0, 3, 8);
+            label18.Name = "label18";
+            label18.Size = new Size(26, 32);
+            label18.TabIndex = 0;
+            label18.Text = " ";
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            label23.ForeColor = Color.Black;
+            label23.Location = new Point(202, 131);
+            label23.Name = "label23";
+            label23.Size = new Size(87, 17);
+            label23.TabIndex = 1;
+            label23.Text = "Booking.com";
+            // 
+            // label19
+            // 
+            label19.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label19.ForeColor = Color.FromArgb(30, 30, 30);
+            label19.Image = (Image)resources.GetObject("label19.Image");
+            label19.Location = new Point(120, 100);
+            label19.Margin = new Padding(3, 0, 3, 8);
+            label19.Name = "label19";
+            label19.Size = new Size(27, 25);
+            label19.TabIndex = 0;
+            label19.Text = " ";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label17.ForeColor = Color.FromArgb(30, 30, 30);
+            label17.Location = new Point(114, 39);
+            label17.Margin = new Padding(3, 0, 3, 8);
+            label17.Name = "label17";
+            label17.Size = new Size(201, 25);
+            label17.TabIndex = 0;
+            label17.Text = "Csaba Dávid Krisztián";
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            label21.ForeColor = Color.Black;
+            label21.Location = new Point(152, 103);
+            label21.Name = "label21";
+            label21.Size = new Size(166, 17);
+            label21.TabIndex = 1;
+            label21.Text = "csaba.david05@gmail.com";
+            // 
+            // label20
+            // 
+            label20.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label20.ForeColor = Color.FromArgb(30, 30, 30);
+            label20.Image = Properties.Resources.source;
+            label20.Location = new Point(121, 125);
+            label20.Margin = new Padding(3, 0, 3, 8);
+            label20.Name = "label20";
+            label20.Size = new Size(27, 25);
+            label20.TabIndex = 0;
+            label20.Text = " ";
+            // 
+            // lbPhoneNumber
+            // 
+            lbPhoneNumber.AutoSize = true;
+            lbPhoneNumber.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lbPhoneNumber.ForeColor = Color.Black;
+            lbPhoneNumber.Location = new Point(152, 75);
+            lbPhoneNumber.Name = "lbPhoneNumber";
+            lbPhoneNumber.Size = new Size(106, 17);
+            lbPhoneNumber.TabIndex = 1;
+            lbPhoneNumber.Text = "+36 30 388 9083";
             // 
             // BookingControl
             // 
@@ -711,14 +986,19 @@
             tabPage1.PerformLayout();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
+            panel4.ResumeLayout(false);
+            pnlSideTop.ResumeLayout(false);
+            pnlSideTop.PerformLayout();
+            pnlSideBottom.ResumeLayout(false);
+            pnlSideBottom.PerformLayout();
+            pnlSideCenter.ResumeLayout(false);
+            pnlSideCenter.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
         private Panel panel2;
         private DataGridView dgvBookings;
-        private Button button4;
-        private Label label8;
         private DataGridViewTextBoxColumn BookingId;
         private DataGridViewTextBoxColumn colRoomNumber;
         private DataGridViewTextBoxColumn RoomType;
@@ -739,12 +1019,10 @@
         private Button btnCheckout;
         private Button btnCheckin;
         private Panel panel5;
-        private Label label13;
         private Label label12;
         private Label label3;
         private Label label5;
-        private Label label7;
-        private Label label6;
+        private Label lbArrivals;
         private Label label4;
         private Panel panel3;
         private Panel panel1;
@@ -766,5 +1044,28 @@
         private Button btnSearch;
         private Panel panel9;
         private Panel pnlTopContainer;
+        private Panel pnlSideCenter;
+        private Panel pnlSideBottom;
+        private Panel pnlSideTop;
+        private Label lbSidepanelTitle;
+        private Label label18;
+        private Label label17;
+        private Label label20;
+        private Label label19;
+        private Label lbPhoneNumber;
+        private Label label22;
+        private Label label23;
+        private Label label21;
+        private Label line;
+        private Label label27;
+        private Label label26;
+        private Label label25;
+        private Label label28;
+        private Label label29;
+        private Label label24;
+        private Label label30;
+        private TextBox txtNotes;
+        private Label lbDepartures;
+        private Label lbOccupancy;
     }
 }

@@ -23,6 +23,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             LoadBookings();
             cbStatus.SelectedIndex = 1;
+            ShowInfo();
         }
 
         private BookingService _bookingService = new BookingService();
@@ -63,7 +64,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private void dgvBookings_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if(e.RowIndex >= 0)
+            if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvBookings.Rows[e.RowIndex];
                 string id = row.Cells["BookingId"].Value?.ToString();
@@ -77,7 +78,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private void btnCheckin_Click(object sender, EventArgs e)
         {
-            if(_selectedBooking != null && _selectedBooking.Checkin == null)
+            if (_selectedBooking != null && _selectedBooking.Checkin == null)
             {
                 FrmCheckin checkinForm = new FrmCheckin(_selectedBooking);
                 checkinForm.ShowDialog();
@@ -85,5 +86,23 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             else { MessageBox.Show("This booking is already checked in.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
+
+        private void ShowInfo()
+        {
+            string todaysArriavals = _bookingService.GetTodaysArrivalsCount().ToString();
+            string todaysDepartures = _bookingService.GetTodaysDeparturesCount().ToString();
+
+            try
+            {
+                lbArrivals.Text = todaysArriavals;
+                lbDepartures.Text = todaysDepartures;
+            }
+
+            catch (Exception ex) 
+            {
+                MessageBox.Show("There was an error while loading statistics: " + ex.Message, "Database error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }
