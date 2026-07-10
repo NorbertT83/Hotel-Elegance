@@ -21,7 +21,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void FrmCheckin_Load(object sender, EventArgs e)
         {
-            tbTest.Text = _selectedBooking.Id;
         }
     }
 }
