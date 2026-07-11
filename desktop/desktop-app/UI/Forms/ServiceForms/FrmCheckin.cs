@@ -21,6 +21,30 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void FrmCheckin_Load(object sender, EventArgs e)
         {
+            tcCheckin.SelectedIndex = 0;
+            btnBack.Visible = false;
         }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            if (tcCheckin.SelectedIndex < 4)
+            {
+                tcCheckin.SelectedIndex += 1;
+                btnBack.Visible = true;
+            }
+        }
+
+        private void btnBack_Click(object sencder, EventArgs e)
+        {
+            if (tcCheckin.SelectedIndex > 0)
+            {
+                tcCheckin.SelectedIndex -= 1;
+                if (tcCheckin.SelectedIndex == 0)
+                {
+                    btnBack.Visible = false;
+                }
+            }
+        }
+
     }
 }

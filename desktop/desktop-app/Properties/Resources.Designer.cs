@@ -73,6 +73,16 @@ namespace Hotel_erp_Winforms_App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap bed {
+            get {
+                object obj = ResourceManager.GetObject("bed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cancel {
             get {
                 object obj = ResourceManager.GetObject("cancel", resourceCulture);
@@ -133,6 +143,16 @@ namespace Hotel_erp_Winforms_App.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap money {
+            get {
+                object obj = ResourceManager.GetObject("money", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap person_icon {
             get {
                 object obj = ResourceManager.GetObject("person icon", resourceCulture);
@@ -146,6 +166,16 @@ namespace Hotel_erp_Winforms_App.Properties {
         internal static System.Drawing.Bitmap personadd {
             get {
                 object obj = ResourceManager.GetObject("personadd", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap persons {
+            get {
+                object obj = ResourceManager.GetObject("persons", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
