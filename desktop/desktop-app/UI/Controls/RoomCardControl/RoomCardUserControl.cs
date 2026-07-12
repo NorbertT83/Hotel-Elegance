@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Hotel_erp_Winforms_App.Models;
+using Hotel_erp_Winforms_App.Services;
+using Hotel_erp_Winforms_App.UI.Controls;
+using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,11 +14,34 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
 {
     public partial class RoomCardUserControl : UserControl
     {
+        private BookingControl _bookingControl;
+        private BookingService _bookingService;
+        public Room SelectedRoom { get; private set; }
+        public event EventHandler CardSelected;
+
         public RoomCardUserControl()
         {
             InitializeComponent();
         }
 
+        public void LoadCardData(Room room)
+        {
+            SelectedRoom = room;
+
+            lbRoomNumber.Text = room.Room_number.ToString();
+            lbRoomType.Text = room.RoomsRoomtype.ToString();
+            lbBedType.Text = room.RoomsBedType.ToString();
+            lbHasView.Text = room.RoomsView.ToString();
+            lbCapacity.Text = room.MaxAdults.ToString();
+            lbPrice.Text = room.Price.ToString();
+        }
+
+        public void RoomCard_Click(object sender, EventArgs e)
+        {
+            CardSelected?.Invoke(this, EventArgs.Empty);
+        }
+
+        #region Mouse effects
         private void RoomCard_MouseHover(object sender, EventArgs e)
         {
             pnlMain.BackColor = Color.FromArgb(220, 233, 255);
@@ -34,5 +61,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
         {
             pnlMain.BackColor = Color.FromArgb(220, 233, 255);
         }
+        #endregion
     }
 }

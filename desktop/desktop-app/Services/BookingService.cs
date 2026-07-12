@@ -1,5 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Hotel_erp_Winforms_App.Models;
+using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
+using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.BC;
 using System;
@@ -7,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
 
 namespace Hotel_erp_Winforms_App.Services
 {
@@ -190,6 +193,86 @@ namespace Hotel_erp_Winforms_App.Services
                     return (int)(long)cmd.ExecuteScalar();
                 }
             }
+        }
+
+        public void SaveGuest(Guest guest)
+        {
+            string query = "INSERT INTO guests " +
+                "(email, id_card_number, fname, lname, date_of_birth, country, zip_code, city, street, car_plate_number, total_nights) " +
+                "VALUES (@email, @idNumber, @fname, @lname, @birthDate, @country, @zipCode, @city, @street, @carPlateNUmber, @totalNights, @loyaltyLevel);";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using( MySqlCommand cmd = new MySqlCommand( query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", guest.Email);
+                    cmd.Parameters.AddWithValue("@idNumber", guest.IdCardNumber);
+                    cmd.Parameters.AddWithValue("@fname", guest.FName);
+                    cmd.Parameters.AddWithValue("@lname", guest.LName);
+                    cmd.Parameters.AddWithValue("@birtDate", guest.DateOfBirth);
+                    cmd.Parameters.AddWithValue("@county", guest.Country);
+                    cmd.Parameters.AddWithValue("@zipCode", guest.ZipCode);
+                    cmd.Parameters.AddWithValue("@city", guest.City);
+                    cmd.Parameters.AddWithValue("@street", guest.Street);
+                    cmd.Parameters.AddWithValue("@carPlateNumber", guest.CarPlateNumber);
+                    cmd.Parameters.AddWithValue("@totalNights", guest.TotalNights);
+                    cmd.Parameters.AddWithValue("@loyaltyLevel", guest.LoyaltyLevel);
+
+                    conn.Open();
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<Room> SelectedRoomsByBooking(Booking booking)
+        {
+            List<Room> rooms = new List<Room>();
+            string query = "SELECT * " +
+                "FROM rooms " +
+                "WHERE status = 'available' " +
+                "AND needs_cleaning = 0 " +
+                "AND is_cleaning = 0 " +
+                "AND room_type = @roomType;";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@roomType", booking.SelectedRoomType.ToString());
+                    conn.Open();
+
+                    using(MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Room room = new Room
+                            (
+                                Convert.ToInt32(reader["room_number"]),
+                                (Room.RoomType)System.Enum.Parse(typeof(Room.RoomType), reader["room_type"].ToString()),
+                                Convert.ToInt32(reader["floorspace"]),
+                                (Room.BedType)System.Enum.Parse(typeof(Room.BedType), reader["bed_type"].ToString()),
+                                Convert.ToInt32(reader["has_balcony"]),
+                                (Room.HasView)System.Enum.Parse(typeof(Room.HasView), reader["has_view"].ToString()),
+                                Convert.ToInt32(reader["max_adults"]),
+                                reader["extras"].ToString(),
+                                (Room.Status)System.Enum.Parse(typeof(Room.Status), reader["status"].ToString()),
+                                Convert.ToInt32(reader["price_per_night"]),
+                                Convert.ToInt32(reader["door_locked"]),
+                                Convert.ToInt32(reader["needs_cleaning"]),
+                                Convert.ToInt32(reader["dont_disturb"]),
+                                Convert.ToInt32(reader["is_cleaning"]),
+                                Convert.ToInt32(reader["ac_temp"])
+                            );
+
+                            rooms.Add(room);
+                        }
+                        conn.Close();
+                    }
+                }
+            }
+
+            return rooms;
         }
     }
 }

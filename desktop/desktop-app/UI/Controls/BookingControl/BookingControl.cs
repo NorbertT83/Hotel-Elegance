@@ -23,16 +23,15 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             LoadBookings();
             cbStatus.SelectedIndex = 1;
-            ShowInfo();
         }
 
-        private BookingService _bookingService = new BookingService();
+        public BookingService bookingService = new BookingService();
 
         public void LoadBookings()
         {
             try
             {
-                List<Booking> list = _bookingService.LoadDgv("SELECT * FROM bookings");
+                List<Booking> list = bookingService.LoadDgv("SELECT * FROM bookings");
 
                 dgvBookings.AutoGenerateColumns = false;
                 dgvBookings.DataSource = null;
@@ -47,7 +46,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private void btnSearch_Click(object sender, EventArgs e)
         {
 
-            var results = _bookingService.SearchBookings(
+            var results = bookingService.SearchBookings(
                 cbField.SelectedIndex,
                 tbSearch.Text,
                 cbStatus.SelectedIndex,
@@ -60,7 +59,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             dgvBookings.DataSource = results;
         }
 
-        private Booking _selectedBooking;
+        public Booking selectedBooking;
 
         private void dgvBookings_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -71,38 +70,20 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                 if (!string.IsNullOrEmpty(id))
                 {
-                    _selectedBooking = _bookingService.GetBookingById(id);
+                    selectedBooking = bookingService.GetBookingById(id);
                 }
             }
         }
 
         private void btnCheckin_Click(object sender, EventArgs e)
         {
-            if (_selectedBooking != null && _selectedBooking.Checkin == null)
+            if (selectedBooking != null && selectedBooking.Checkin == null)
             {
-                FrmCheckin checkinForm = new FrmCheckin(_selectedBooking);
+                FrmCheckin checkinForm = new FrmCheckin(selectedBooking);
                 checkinForm.ShowDialog();
             }
 
             else { MessageBox.Show("This booking is already checked in.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
-
-        private void ShowInfo()
-        {
-            string todaysArriavals = _bookingService.GetTodaysArrivalsCount().ToString();
-            string todaysDepartures = _bookingService.GetTodaysDeparturesCount().ToString();
-
-            try
-            {
-                lbArrivals.Text = todaysArriavals;
-                lbDepartures.Text = todaysDepartures;
-            }
-
-            catch (Exception ex) 
-            {
-                MessageBox.Show("There was an error while loading statistics: " + ex.Message, "Database error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
     }
 }

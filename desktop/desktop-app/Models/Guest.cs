@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Hotel_erp_Winforms_App.Models
 {
-    internal class Guest
+    public class Guest
     {
         public Guest(string email, string idCardNumber, string fName, string lName, DateTime dateOfBirth, 
-            string country, string adress, string carPlateNumber, int comulativeNights, int loyaltyLevel)
+            string country, string zipCode, string city, string street, string carPlateNumber, int totalNights, int loyaltyLevel)
         {
             Email = email;
             IdCardNumber = idCardNumber;
@@ -16,9 +16,11 @@ namespace Hotel_erp_Winforms_App.Models
             LName = lName;
             DateOfBirth = dateOfBirth;
             Country = country;
-            Adress = adress;
+            ZipCode = zipCode;
+            City = city;
+            Street = street;
             CarPlateNumber = carPlateNumber;
-            ComulativeNights = comulativeNights;
+            TotalNights = totalNights;
             LoyaltyLevel = loyaltyLevel;
         }
 
@@ -28,9 +30,11 @@ namespace Hotel_erp_Winforms_App.Models
         public string LName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Country { get; set; }
-        public string Adress { get; set; }
+        public string ZipCode { get; set; }
+        public string City { get; set; }
+        public string Street { get; set; }
         public string CarPlateNumber { get; set; }
-        public int ComulativeNights { get; set; }
+        public int TotalNights { get; set; }
         public int LoyaltyLevel { get; set; }
     }
 }

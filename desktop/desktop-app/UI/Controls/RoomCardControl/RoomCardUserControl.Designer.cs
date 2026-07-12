@@ -30,13 +30,13 @@
         {
             panel1 = new Panel();
             pnlMain = new Panel();
-            label1 = new Label();
+            lbRoomNumber = new Label();
             label2 = new Label();
-            label7 = new Label();
-            label3 = new Label();
-            label6 = new Label();
-            label4 = new Label();
-            label5 = new Label();
+            lbPrice = new Label();
+            lbRoomType = new Label();
+            lbCapacity = new Label();
+            lbBedType = new Label();
+            lbHasView = new Label();
             pnlMain.SuspendLayout();
             SuspendLayout();
             // 
@@ -48,6 +48,7 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(10, 50);
             panel1.TabIndex = 3;
+            panel1.Click += RoomCard_Click;
             panel1.MouseDown += RoomCard_MouseDown;
             panel1.MouseLeave += RoomCard_MouseLeave;
             panel1.MouseHover += RoomCard_MouseHover;
@@ -56,38 +57,40 @@
             // pnlMain
             // 
             pnlMain.BackColor = Color.FromArgb(239, 246, 255);
-            pnlMain.Controls.Add(label1);
+            pnlMain.Controls.Add(lbRoomNumber);
             pnlMain.Controls.Add(label2);
-            pnlMain.Controls.Add(label7);
-            pnlMain.Controls.Add(label3);
-            pnlMain.Controls.Add(label6);
-            pnlMain.Controls.Add(label4);
-            pnlMain.Controls.Add(label5);
+            pnlMain.Controls.Add(lbPrice);
+            pnlMain.Controls.Add(lbRoomType);
+            pnlMain.Controls.Add(lbCapacity);
+            pnlMain.Controls.Add(lbBedType);
+            pnlMain.Controls.Add(lbHasView);
             pnlMain.Dock = DockStyle.Fill;
             pnlMain.Location = new Point(10, 0);
             pnlMain.Name = "pnlMain";
             pnlMain.Padding = new Padding(10, 0, 10, 0);
             pnlMain.Size = new Size(453, 50);
             pnlMain.TabIndex = 4;
+            pnlMain.Click += RoomCard_Click;
             pnlMain.MouseDown += RoomCard_MouseDown;
             pnlMain.MouseLeave += RoomCard_MouseLeave;
             pnlMain.MouseHover += RoomCard_MouseHover;
             pnlMain.MouseUp += RoomCard_MouseUp;
             // 
-            // label1
+            // lbRoomNumber
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label1.Location = new Point(14, 12);
-            label1.Margin = new Padding(3, 0, 3, 14);
-            label1.Name = "label1";
-            label1.Size = new Size(45, 25);
-            label1.TabIndex = 3;
-            label1.Text = "101";
-            label1.MouseDown += RoomCard_MouseDown;
-            label1.MouseLeave += RoomCard_MouseLeave;
-            label1.MouseHover += RoomCard_MouseHover;
-            label1.MouseUp += RoomCard_MouseUp;
+            lbRoomNumber.AutoSize = true;
+            lbRoomNumber.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            lbRoomNumber.Location = new Point(14, 12);
+            lbRoomNumber.Margin = new Padding(3, 0, 3, 14);
+            lbRoomNumber.Name = "lbRoomNumber";
+            lbRoomNumber.Size = new Size(45, 25);
+            lbRoomNumber.TabIndex = 3;
+            lbRoomNumber.Text = "101";
+            lbRoomNumber.Click += RoomCard_Click;
+            lbRoomNumber.MouseDown += RoomCard_MouseDown;
+            lbRoomNumber.MouseLeave += RoomCard_MouseLeave;
+            lbRoomNumber.MouseHover += RoomCard_MouseHover;
+            lbRoomNumber.MouseUp += RoomCard_MouseUp;
             // 
             // label2
             // 
@@ -99,96 +102,102 @@
             label2.Size = new Size(17, 25);
             label2.TabIndex = 4;
             label2.Text = "|";
+            label2.Click += RoomCard_Click;
             label2.MouseDown += RoomCard_MouseDown;
             label2.MouseLeave += RoomCard_MouseLeave;
             label2.MouseHover += RoomCard_MouseHover;
             label2.MouseUp += RoomCard_MouseUp;
             // 
-            // label7
+            // lbPrice
             // 
-            label7.Font = new Font("Segoe UI", 10F);
-            label7.ForeColor = Color.Black;
-            label7.Image = Properties.Resources.money;
-            label7.ImageAlign = ContentAlignment.MiddleLeft;
-            label7.Location = new Point(372, 17);
-            label7.Margin = new Padding(3, 0, 3, 14);
-            label7.Name = "label7";
-            label7.Size = new Size(64, 19);
-            label7.TabIndex = 5;
-            label7.Text = "22000";
-            label7.TextAlign = ContentAlignment.MiddleRight;
-            label7.MouseDown += RoomCard_MouseDown;
-            label7.MouseLeave += RoomCard_MouseLeave;
-            label7.MouseHover += RoomCard_MouseHover;
-            label7.MouseUp += RoomCard_MouseUp;
+            lbPrice.Font = new Font("Segoe UI", 10F);
+            lbPrice.ForeColor = Color.Black;
+            lbPrice.Image = Properties.Resources.money;
+            lbPrice.ImageAlign = ContentAlignment.MiddleLeft;
+            lbPrice.Location = new Point(372, 17);
+            lbPrice.Margin = new Padding(3, 0, 3, 14);
+            lbPrice.Name = "lbPrice";
+            lbPrice.Size = new Size(64, 19);
+            lbPrice.TabIndex = 5;
+            lbPrice.Text = "22000";
+            lbPrice.TextAlign = ContentAlignment.MiddleRight;
+            lbPrice.Click += RoomCard_Click;
+            lbPrice.MouseDown += RoomCard_MouseDown;
+            lbPrice.MouseLeave += RoomCard_MouseLeave;
+            lbPrice.MouseHover += RoomCard_MouseHover;
+            lbPrice.MouseUp += RoomCard_MouseUp;
             // 
-            // label3
+            // lbRoomType
             // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 10F);
-            label3.ForeColor = Color.Black;
-            label3.Location = new Point(88, 17);
-            label3.Margin = new Padding(3, 0, 3, 14);
-            label3.Name = "label3";
-            label3.Size = new Size(64, 19);
-            label3.TabIndex = 6;
-            label3.Text = "Standard";
-            label3.MouseDown += RoomCard_MouseDown;
-            label3.MouseLeave += RoomCard_MouseLeave;
-            label3.MouseHover += RoomCard_MouseHover;
-            label3.MouseUp += RoomCard_MouseUp;
+            lbRoomType.AutoSize = true;
+            lbRoomType.Font = new Font("Segoe UI", 10F);
+            lbRoomType.ForeColor = Color.Black;
+            lbRoomType.Location = new Point(88, 17);
+            lbRoomType.Margin = new Padding(3, 0, 3, 14);
+            lbRoomType.Name = "lbRoomType";
+            lbRoomType.Size = new Size(64, 19);
+            lbRoomType.TabIndex = 6;
+            lbRoomType.Text = "Standard";
+            lbRoomType.Click += RoomCard_Click;
+            lbRoomType.MouseDown += RoomCard_MouseDown;
+            lbRoomType.MouseLeave += RoomCard_MouseLeave;
+            lbRoomType.MouseHover += RoomCard_MouseHover;
+            lbRoomType.MouseUp += RoomCard_MouseUp;
             // 
-            // label6
+            // lbCapacity
             // 
-            label6.Font = new Font("Segoe UI", 10F);
-            label6.ForeColor = Color.Black;
-            label6.Image = Properties.Resources.persons;
-            label6.ImageAlign = ContentAlignment.MiddleLeft;
-            label6.Location = new Point(325, 17);
-            label6.Margin = new Padding(3, 0, 3, 14);
-            label6.Name = "label6";
-            label6.Size = new Size(41, 19);
-            label6.TabIndex = 7;
-            label6.Text = "3";
-            label6.TextAlign = ContentAlignment.MiddleRight;
-            label6.MouseDown += RoomCard_MouseDown;
-            label6.MouseLeave += RoomCard_MouseLeave;
-            label6.MouseHover += RoomCard_MouseHover;
-            label6.MouseUp += RoomCard_MouseUp;
+            lbCapacity.Font = new Font("Segoe UI", 10F);
+            lbCapacity.ForeColor = Color.Black;
+            lbCapacity.Image = Properties.Resources.persons;
+            lbCapacity.ImageAlign = ContentAlignment.MiddleLeft;
+            lbCapacity.Location = new Point(325, 17);
+            lbCapacity.Margin = new Padding(3, 0, 3, 14);
+            lbCapacity.Name = "lbCapacity";
+            lbCapacity.Size = new Size(41, 19);
+            lbCapacity.TabIndex = 7;
+            lbCapacity.Text = "3";
+            lbCapacity.TextAlign = ContentAlignment.MiddleRight;
+            lbCapacity.Click += RoomCard_Click;
+            lbCapacity.MouseDown += RoomCard_MouseDown;
+            lbCapacity.MouseLeave += RoomCard_MouseLeave;
+            lbCapacity.MouseHover += RoomCard_MouseHover;
+            lbCapacity.MouseUp += RoomCard_MouseUp;
             // 
-            // label4
+            // lbBedType
             // 
-            label4.Font = new Font("Segoe UI", 10F);
-            label4.ForeColor = Color.Black;
-            label4.Image = Properties.Resources.bed;
-            label4.ImageAlign = ContentAlignment.MiddleLeft;
-            label4.Location = new Point(158, 17);
-            label4.Margin = new Padding(3, 0, 3, 14);
-            label4.Name = "label4";
-            label4.Size = new Size(77, 19);
-            label4.TabIndex = 8;
-            label4.Text = "Kingsize";
-            label4.TextAlign = ContentAlignment.MiddleRight;
-            label4.MouseDown += RoomCard_MouseDown;
-            label4.MouseLeave += RoomCard_MouseLeave;
-            label4.MouseHover += RoomCard_MouseHover;
-            label4.MouseUp += RoomCard_MouseUp;
+            lbBedType.Font = new Font("Segoe UI", 10F);
+            lbBedType.ForeColor = Color.Black;
+            lbBedType.Image = Properties.Resources.bed;
+            lbBedType.ImageAlign = ContentAlignment.MiddleLeft;
+            lbBedType.Location = new Point(158, 17);
+            lbBedType.Margin = new Padding(3, 0, 3, 14);
+            lbBedType.Name = "lbBedType";
+            lbBedType.Size = new Size(77, 19);
+            lbBedType.TabIndex = 8;
+            lbBedType.Text = "Kingsize";
+            lbBedType.TextAlign = ContentAlignment.MiddleRight;
+            lbBedType.Click += RoomCard_Click;
+            lbBedType.MouseDown += RoomCard_MouseDown;
+            lbBedType.MouseLeave += RoomCard_MouseLeave;
+            lbBedType.MouseHover += RoomCard_MouseHover;
+            lbBedType.MouseUp += RoomCard_MouseUp;
             // 
-            // label5
+            // lbHasView
             // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 10F);
-            label5.ForeColor = Color.Black;
-            label5.Location = new Point(241, 17);
-            label5.Margin = new Padding(3, 0, 3, 14);
-            label5.Name = "label5";
-            label5.Size = new Size(78, 19);
-            label5.TabIndex = 9;
-            label5.Text = "No Balcony";
-            label5.MouseDown += RoomCard_MouseDown;
-            label5.MouseLeave += RoomCard_MouseLeave;
-            label5.MouseHover += RoomCard_MouseHover;
-            label5.MouseUp += RoomCard_MouseUp;
+            lbHasView.AutoSize = true;
+            lbHasView.Font = new Font("Segoe UI", 10F);
+            lbHasView.ForeColor = Color.Black;
+            lbHasView.Location = new Point(241, 17);
+            lbHasView.Margin = new Padding(3, 0, 3, 14);
+            lbHasView.Name = "lbHasView";
+            lbHasView.Size = new Size(78, 19);
+            lbHasView.TabIndex = 9;
+            lbHasView.Text = "No Balcony";
+            lbHasView.Click += RoomCard_Click;
+            lbHasView.MouseDown += RoomCard_MouseDown;
+            lbHasView.MouseLeave += RoomCard_MouseLeave;
+            lbHasView.MouseHover += RoomCard_MouseHover;
+            lbHasView.MouseUp += RoomCard_MouseUp;
             // 
             // RoomCardUserControl
             // 
@@ -211,12 +220,12 @@
 
         private Panel panel1;
         private Panel pnlMain;
-        private Label label1;
+        private Label lbRoomNumber;
         private Label label2;
-        private Label label7;
-        private Label label3;
-        private Label label6;
-        private Label label4;
-        private Label label5;
+        private Label lbBedType;
+        private Label lbPrice;
+        private Label lbRoomType;
+        private Label lbCapacity;
+        private Label lbHasView;
     }
 }
