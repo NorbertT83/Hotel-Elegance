@@ -1,0 +1,194 @@
+{
+  "info": {
+    "name": "Hotel Elegance API",
+    "description": "Basic smoke tests for the hotel backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Public API",
+      "item": [
+        {
+          "name": "CORS Preflight",
+          "request": {
+            "method": "OPTIONS",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "http://localhost:5173"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:80/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Services",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:80/api/service",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "service"]
+            }
+          }
+        },
+        {
+          "name": "Get Food & Beverage Categories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:80/api/foodbeverage/categories",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "foodbeverage", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Free Rooms",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:80/api/freerooms?start_date=2026-08-01&end_date=2026-08-03",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "freerooms"],
+              "query": [
+                { "key": "start_date", "value": "2026-08-01" },
+                { "key": "end_date", "value": "2026-08-03" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth Flow",
+      "item": [
+        {
+          "name": "Get Rooms Without Token",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:80/api/room",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "room"]
+            }
+          }
+        },
+        {
+          "name": "Login Invalid Sample",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"guest@example.com\",\n  \"booking_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:80/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login With Missing Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"guest@example.com\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:80/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:80/api/auth/refresh",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:80/api/auth/logout",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Booking Demo",
+      "item": [
+        {
+          "name": "Public Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@example.com\",\n  \"fname\": \"Demo\",\n  \"lname\": \"User\",\n  \"booking_id\": \"demo-001\",\n  \"room_number\": 101,\n  \"room_type\": \"standard\",\n  \"beginning_of_stay\": \"2026-08-01\",\n  \"end_of_stay\": \"2026-08-03\",\n  \"catering_level\": \"full\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:80/api/auth/public-booking",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "80",
+              "path": ["api", "auth", "public-booking"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
