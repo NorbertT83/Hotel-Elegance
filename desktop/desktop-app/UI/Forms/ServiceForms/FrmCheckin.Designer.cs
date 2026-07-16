@@ -28,6 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             tcCheckin = new TabControl();
             tpPersonalData = new TabPage();
             dtpBirthdate = new DateTimePicker();
@@ -94,12 +102,34 @@
             label29 = new Label();
             label32 = new Label();
             tpPaymentSumm = new TabPage();
+            panel3 = new Panel();
+            dgvPaymentSum = new DataGridView();
+            colDate = new DataGridViewTextBoxColumn();
+            colNameOfService = new DataGridViewTextBoxColumn();
+            colUnitPrice = new DataGridViewTextBoxColumn();
+            colQuantity = new DataGridViewTextBoxColumn();
+            colTax = new DataGridViewTextBoxColumn();
+            colTotal = new DataGridViewTextBoxColumn();
+            panel4 = new Panel();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            label35 = new Label();
+            label36 = new Label();
             tpSummary = new TabPage();
             pnlBottom = new Panel();
             label12 = new Label();
             btnBack = new Button();
             btnConfirm = new Button();
             btnNext = new Button();
+            label37 = new Label();
+            label38 = new Label();
+            label39 = new Label();
+            panel5 = new Panel();
+            label40 = new Label();
+            label41 = new Label();
+            label42 = new Label();
+            lbNetAmount = new Label();
+            lbTaxAmount = new Label();
+            lbGrossAmount = new Label();
             tcCheckin.SuspendLayout();
             tpPersonalData.SuspendLayout();
             pnlTop.SuspendLayout();
@@ -110,7 +140,13 @@
             tpExtras.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
+            tpPaymentSumm.SuspendLayout();
+            panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvPaymentSum).BeginInit();
+            panel4.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
             pnlBottom.SuspendLayout();
+            panel5.SuspendLayout();
             SuspendLayout();
             // 
             // tcCheckin
@@ -858,13 +894,177 @@
             // 
             // tpPaymentSumm
             // 
+            tpPaymentSumm.BackColor = Color.White;
+            tpPaymentSumm.Controls.Add(panel3);
+            tpPaymentSumm.Controls.Add(panel4);
             tpPaymentSumm.Location = new Point(4, 5);
             tpPaymentSumm.Name = "tpPaymentSumm";
-            tpPaymentSumm.Padding = new Padding(3);
             tpPaymentSumm.Size = new Size(535, 588);
             tpPaymentSumm.TabIndex = 3;
             tpPaymentSumm.Text = "tabPage4";
-            tpPaymentSumm.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            panel3.Controls.Add(panel5);
+            panel3.Controls.Add(dgvPaymentSum);
+            panel3.Dock = DockStyle.Fill;
+            panel3.Location = new Point(0, 100);
+            panel3.Name = "panel3";
+            panel3.Padding = new Padding(5, 10, 5, 10);
+            panel3.Size = new Size(535, 488);
+            panel3.TabIndex = 5;
+            // 
+            // dgvPaymentSum
+            // 
+            dgvPaymentSum.AllowUserToAddRows = false;
+            dgvPaymentSum.AllowUserToDeleteRows = false;
+            dgvPaymentSum.AllowUserToResizeColumns = false;
+            dgvPaymentSum.AllowUserToResizeRows = false;
+            dgvPaymentSum.BackgroundColor = Color.White;
+            dgvPaymentSum.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvPaymentSum.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(239, 246, 255);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvPaymentSum.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dgvPaymentSum.ColumnHeadersHeight = 30;
+            dgvPaymentSum.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvPaymentSum.Columns.AddRange(new DataGridViewColumn[] { colDate, colNameOfService, colUnitPrice, colQuantity, colTax, colTotal });
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = SystemColors.Window;
+            dataGridViewCellStyle8.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle8.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
+            dgvPaymentSum.DefaultCellStyle = dataGridViewCellStyle8;
+            dgvPaymentSum.Dock = DockStyle.Top;
+            dgvPaymentSum.EnableHeadersVisualStyles = false;
+            dgvPaymentSum.GridColor = SystemColors.ButtonFace;
+            dgvPaymentSum.Location = new Point(5, 10);
+            dgvPaymentSum.Margin = new Padding(10);
+            dgvPaymentSum.Name = "dgvPaymentSum";
+            dgvPaymentSum.ReadOnly = true;
+            dgvPaymentSum.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dgvPaymentSum.RowHeadersVisible = false;
+            dgvPaymentSum.RowTemplate.Height = 30;
+            dgvPaymentSum.ScrollBars = ScrollBars.None;
+            dgvPaymentSum.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dgvPaymentSum.Size = new Size(525, 325);
+            dgvPaymentSum.TabIndex = 2;
+            dgvPaymentSum.SelectionChanged += dgvPaymentSum_SelectionChanged;
+            // 
+            // colDate
+            // 
+            colDate.DataPropertyName = "Date";
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            colDate.DefaultCellStyle = dataGridViewCellStyle2;
+            colDate.HeaderText = "Date";
+            colDate.Name = "colDate";
+            colDate.ReadOnly = true;
+            colDate.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colNameOfService
+            // 
+            colNameOfService.DataPropertyName = "Description";
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colNameOfService.DefaultCellStyle = dataGridViewCellStyle3;
+            colNameOfService.HeaderText = "Description";
+            colNameOfService.Name = "colNameOfService";
+            colNameOfService.ReadOnly = true;
+            colNameOfService.Width = 130;
+            // 
+            // colUnitPrice
+            // 
+            colUnitPrice.DataPropertyName = "UnitPrice";
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colUnitPrice.DefaultCellStyle = dataGridViewCellStyle4;
+            colUnitPrice.HeaderText = "Unit Price";
+            colUnitPrice.Name = "colUnitPrice";
+            colUnitPrice.ReadOnly = true;
+            colUnitPrice.Width = 110;
+            // 
+            // colQuantity
+            // 
+            colQuantity.DataPropertyName = "Quantity";
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colQuantity.DefaultCellStyle = dataGridViewCellStyle5;
+            colQuantity.HeaderText = "Qty";
+            colQuantity.Name = "colQuantity";
+            colQuantity.ReadOnly = true;
+            colQuantity.Width = 50;
+            // 
+            // colTax
+            // 
+            colTax.DataPropertyName = "Tax";
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colTax.DefaultCellStyle = dataGridViewCellStyle6;
+            colTax.HeaderText = "TAX";
+            colTax.Name = "colTax";
+            colTax.ReadOnly = true;
+            colTax.Width = 50;
+            // 
+            // colTotal
+            // 
+            colTotal.DataPropertyName = "Total";
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleRight;
+            colTotal.DefaultCellStyle = dataGridViewCellStyle7;
+            colTotal.HeaderText = "Total";
+            colTotal.Name = "colTotal";
+            colTotal.ReadOnly = true;
+            colTotal.SortMode = DataGridViewColumnSortMode.NotSortable;
+            colTotal.Width = 85;
+            // 
+            // panel4
+            // 
+            panel4.Controls.Add(tableLayoutPanel3);
+            panel4.Dock = DockStyle.Top;
+            panel4.Location = new Point(0, 0);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(535, 100);
+            panel4.TabIndex = 4;
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.BackColor = Color.FromArgb(239, 246, 255);
+            tableLayoutPanel3.ColumnCount = 1;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel3.Controls.Add(label35, 0, 1);
+            tableLayoutPanel3.Controls.Add(label36, 0, 0);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(0, 0);
+            tableLayoutPanel3.Margin = new Padding(0, 0, 0, 15);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 1;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 19F));
+            tableLayoutPanel3.Size = new Size(535, 100);
+            tableLayoutPanel3.TabIndex = 1;
+            // 
+            // label35
+            // 
+            label35.BackColor = Color.FromArgb(230, 235, 240);
+            label35.Location = new Point(3, 81);
+            label35.Name = "label35";
+            label35.Size = new Size(529, 1);
+            label35.TabIndex = 3;
+            label35.Text = "label24";
+            // 
+            // label36
+            // 
+            label36.Anchor = AnchorStyles.None;
+            label36.AutoSize = true;
+            label36.Font = new Font("Segoe UI", 20F);
+            label36.Location = new Point(133, 22);
+            label36.Name = "label36";
+            label36.Size = new Size(268, 37);
+            label36.TabIndex = 0;
+            label36.Text = "Payment Summonary";
             // 
             // tpSummary
             // 
@@ -948,6 +1148,111 @@
             btnNext.UseVisualStyleBackColor = false;
             btnNext.Click += btnNext_Click;
             // 
+            // label37
+            // 
+            label37.AutoSize = true;
+            label37.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label37.Location = new Point(3, 53);
+            label37.Name = "label37";
+            label37.Size = new Size(108, 21);
+            label37.TabIndex = 3;
+            label37.Text = "Net Amount:";
+            // 
+            // label38
+            // 
+            label38.AutoSize = true;
+            label38.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label38.Location = new Point(3, 85);
+            label38.Name = "label38";
+            label38.Size = new Size(40, 21);
+            label38.TabIndex = 3;
+            label38.Text = "Tax:";
+            // 
+            // label39
+            // 
+            label39.AutoSize = true;
+            label39.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label39.Location = new Point(3, 117);
+            label39.Name = "label39";
+            label39.Size = new Size(121, 21);
+            label39.TabIndex = 3;
+            label39.Text = "Gross Amount:";
+            // 
+            // panel5
+            // 
+            panel5.Controls.Add(label42);
+            panel5.Controls.Add(label41);
+            panel5.Controls.Add(label40);
+            panel5.Controls.Add(lbGrossAmount);
+            panel5.Controls.Add(lbTaxAmount);
+            panel5.Controls.Add(lbNetAmount);
+            panel5.Controls.Add(label37);
+            panel5.Controls.Add(label39);
+            panel5.Controls.Add(label38);
+            panel5.Dock = DockStyle.Fill;
+            panel5.Location = new Point(5, 335);
+            panel5.Name = "panel5";
+            panel5.Padding = new Padding(5);
+            panel5.Size = new Size(525, 143);
+            panel5.TabIndex = 4;
+            // 
+            // label40
+            // 
+            label40.BackColor = Color.FromArgb(230, 235, 240);
+            label40.Location = new Point(7, 74);
+            label40.Name = "label40";
+            label40.Size = new Size(515, 1);
+            label40.TabIndex = 3;
+            label40.Text = "label24";
+            // 
+            // label41
+            // 
+            label41.BackColor = Color.FromArgb(230, 235, 240);
+            label41.Location = new Point(7, 105);
+            label41.Name = "label41";
+            label41.Size = new Size(515, 1);
+            label41.TabIndex = 3;
+            label41.Text = "label24";
+            // 
+            // label42
+            // 
+            label42.BackColor = Color.FromArgb(230, 235, 240);
+            label42.Location = new Point(7, 137);
+            label42.Name = "label42";
+            label42.Size = new Size(515, 1);
+            label42.TabIndex = 3;
+            label42.Text = "label24";
+            // 
+            // lbNetAmount
+            // 
+            lbNetAmount.AutoSize = true;
+            lbNetAmount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lbNetAmount.Location = new Point(414, 54);
+            lbNetAmount.Name = "lbNetAmount";
+            lbNetAmount.Size = new Size(108, 21);
+            lbNetAmount.TabIndex = 3;
+            lbNetAmount.Text = "Net Amount:";
+            // 
+            // lbTaxAmount
+            // 
+            lbTaxAmount.AutoSize = true;
+            lbTaxAmount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lbTaxAmount.Location = new Point(414, 85);
+            lbTaxAmount.Name = "lbTaxAmount";
+            lbTaxAmount.Size = new Size(108, 21);
+            lbTaxAmount.TabIndex = 3;
+            lbTaxAmount.Text = "Net Amount:";
+            // 
+            // lbGrossAmount
+            // 
+            lbGrossAmount.AutoSize = true;
+            lbGrossAmount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lbGrossAmount.Location = new Point(414, 117);
+            lbGrossAmount.Name = "lbGrossAmount";
+            lbGrossAmount.Size = new Size(108, 21);
+            lbGrossAmount.TabIndex = 3;
+            lbGrossAmount.Text = "Net Amount:";
+            // 
             // FrmCheckin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -976,7 +1281,15 @@
             panel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
+            tpPaymentSumm.ResumeLayout(false);
+            panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvPaymentSum).EndInit();
+            panel4.ResumeLayout(false);
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
             pnlBottom.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -984,7 +1297,6 @@
 
         private TabControl tcCheckin;
         private TabPage tpRoomPick;
-        private TabPage tpPaymentSumm;
         private TabPage tpSummary;
         private TabPage tpPersonalData;
         private Panel pnlTop;
@@ -1054,5 +1366,28 @@
         private Button btnConfirm;
         private Label label34;
         private CheckBox ckbParking;
+        private TabPage tpPaymentSumm;
+        private Panel panel4;
+        private TableLayoutPanel tableLayoutPanel3;
+        private Label label35;
+        private Label label36;
+        private Panel panel3;
+        private DataGridView dgvPaymentSum;
+        private DataGridViewTextBoxColumn colDate;
+        private DataGridViewTextBoxColumn colNameOfService;
+        private DataGridViewTextBoxColumn colUnitPrice;
+        private DataGridViewTextBoxColumn colQuantity;
+        private DataGridViewTextBoxColumn colTax;
+        private DataGridViewTextBoxColumn colTotal;
+        private Panel panel5;
+        private Label label37;
+        private Label label39;
+        private Label label38;
+        private Label label42;
+        private Label label41;
+        private Label label40;
+        private Label lbGrossAmount;
+        private Label lbTaxAmount;
+        private Label lbNetAmount;
     }
 }

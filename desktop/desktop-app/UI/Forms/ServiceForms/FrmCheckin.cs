@@ -16,7 +16,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 {
     public partial class FrmCheckin : Form
     {
-        private Booking _selectedBooking;
+        private Booking selectedBooking;
         private BookingService _bookingService;
         public List<Service> services = new List<Service>();
         public Service service;
@@ -28,7 +28,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         public FrmCheckin(Booking booking)
         {
             InitializeComponent();
-            _selectedBooking = booking;
+            selectedBooking = booking;
             _bookingService = new BookingService();
         }
 
@@ -60,7 +60,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             // -----------
 
             // Choose Room
-            List<Room> selectedRooms = _bookingService.SelectedRoomsByBooking(_selectedBooking);
+            List<Room> selectedRooms = _bookingService.SelectedRoomsByBooking(selectedBooking);
             flpCardHolder.Controls.Clear();
 
             foreach (var room in selectedRooms)
@@ -80,11 +80,38 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             RoomCardUserControl selectedCard = (RoomCardUserControl)sender;
             Room room = selectedCard.SelectedRoom;
 
-            _selectedBooking.RoomNumber = room.Room_number;
+            selectedBooking.RoomNumber = room.Room_number;
             tcCheckin.SelectedIndex += 1;
         }
 
-        #region Special Requests
+        public void LoadBillItems()
+        {
+            List<BillingItem> items = _bookingService.MakeListOfBills(services, selectedBooking);
+            var bindingList = new BindingList<BillingItem>(items);
+
+            dgvPaymentSum.DataSource = bindingList;
+
+            // DATAGRIDVIEW STYLE
+            dgvPaymentSum.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvPaymentSum.Columns[1].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvPaymentSum.Columns[2].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvPaymentSum.Columns[3].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvPaymentSum.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvPaymentSum.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dgvPaymentSum.Columns[0].DefaultCellStyle.Format = "yyyy.MM.dd";
+
+            dgvPaymentSum.Columns[2].DefaultCellStyle.Format = "C0";
+            dgvPaymentSum.Columns[5].DefaultCellStyle.Format = "C0";
+
+            dgvPaymentSum.Columns[4].DefaultCellStyle.Format = "P0";
+            // -----------------
+        }
+
+        private void dgvPaymentSum_SelectionChanged(object sender, EventArgs e)
+        {
+            dgvPaymentSum.ClearSelection();
+        }
 
         public void tcCheckin_SeledIndexChanged(object sender, EventArgs e)
         {
@@ -92,7 +119,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             {
                 if (!_isRequestInitialized)
                 {
-                    string cateringLevel = _selectedBooking.SelectedCateringLevel.ToString();
+                    string cateringLevel = selectedBooking.SelectedCateringLevel.ToString();
                     cateringLevel = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cateringLevel.ToLower());
                     cbCateringLevel.SelectedItem = cateringLevel;
 
@@ -106,9 +133,11 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (tcCheckin.SelectedIndex == 3)
             {
-                MessageBox.Show($"{_selectedBooking.RoomNumber}: {services.Count}");
+                LoadBillItems();
             }
         }
+
+        #region Special Requests
 
         private void CbPet_SelectedIndexChanged(object? sender, EventArgs e)
         {
@@ -132,7 +161,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         public void cbCateringLevel_SelectedIndexChanges(object sender, EventArgs e)
         {
-            _selectedBooking.SelectedCateringLevel = (CateringLevel)System.Enum.Parse(typeof(CateringLevel), cbCateringLevel.SelectedItem.ToString().ToLower());
+            selectedBooking.SelectedCateringLevel = (CateringLevel)System.Enum.Parse(typeof(CateringLevel), cbCateringLevel.SelectedItem.ToString().ToLower());
         }
 
         private void cbPet_SelectedIndexChanged(object sender, EventArgs e)
@@ -224,7 +253,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         {
             services.RemoveAll(s => s.NameHu == "Késői kijelentkezés" || s.NameHu == "Korai távozás");
 
-            if(cbDepartureNotes.SelectedIndex == 1)
+            if (cbDepartureNotes.SelectedIndex == 1)
             {
                 service = new Service(
                     0,
@@ -239,7 +268,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 services.Add(service);
             }
 
-            else if(cbDepartureNotes.SelectedIndex == 2)
+            else if (cbDepartureNotes.SelectedIndex == 2)
             {
                 service = new Service(
                     0,
@@ -379,7 +408,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 e.Handled = true;
             }
         }
-
         #endregion
     }
 }

@@ -274,5 +274,93 @@ namespace Hotel_erp_Winforms_App.Services
 
             return rooms;
         }
+
+        public List<BillingItem> MakeListOfBills(List<Service> servicesList, Booking selectedBooking)
+        {
+            List<BillingItem> billingItems = new List<BillingItem>();
+
+            // SZOLGÁLTATÁS ÁRAK KISZÁMÍTÁSA
+            foreach(Service service in servicesList)
+            {
+                decimal grossPrice = Math.Ceiling(service.Price * 1.27m);
+
+                BillingItem item = new BillingItem
+                (
+                    DateTime.Now,
+                    service.NameHu,
+                    service.Price,
+                    1,
+                    0.27m,
+                    grossPrice
+                );
+                billingItems.Add(item);
+            }
+
+            // SZOBA ÁRÁNAK KISZÁMÍTÁSA
+            string getRoomQuery = "SELECT rooms.price_per_night, bookings.beginning_of_stay, bookings.end_of_stay, bookings.created_at " +
+                                "FROM bookings " +
+                                "INNER JOIN rooms ON bookings.room_number = rooms.room_number " +
+                                "WHERE rooms.room_number = @roomNumber;";
+
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(getRoomQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@roomNumber", selectedBooking.RoomNumber);
+
+                    using(MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            DateTime end = Convert.ToDateTime(reader["end_of_stay"]);
+                            DateTime beginning = Convert.ToDateTime(reader["beginning_of_stay"]);
+                            int nights = Convert.ToInt32((end - beginning).Days);
+
+                            decimal pricePerNight = Convert.ToDecimal(reader["price_per_night"]);
+                            decimal grossPricePerNight = Math.Ceiling(pricePerNight * nights * 1.05m);
+
+                            BillingItem roomItem = new BillingItem
+                            (
+                                Convert.ToDateTime(reader["created_at"]),
+                                "Price per night",
+                                Convert.ToInt32(pricePerNight),
+                                nights,
+                                0.05m,
+                                grossPricePerNight
+                            );
+                            billingItems.Add(roomItem);
+                        }
+                    }
+                }
+            }
+            return billingItems;
+        }
+
+        //public int CalculateAmounts(List<BillingItem> billingItems)
+        //{
+        //    int netAmount = 0;
+        //    int tax = 0;
+        //    int grossAmount = 0;
+
+        //    foreach(BillingItem billingItem in billingItems)
+        //    {
+        //        if(billingItem.Description == "Price per night")
+        //        {
+        //            netAmount += Convert.ToInt32(billingItem.Total / 105 * 100);
+        //            tax += Convert.ToInt32(billingItem.Total / 105 * 5);
+        //            grossAmount += Convert.ToInt32(billingItem.Total);
+        //        }
+
+        //        else
+        //        {
+        //            netAmount += Convert.ToInt32(billingItem.Total / 127 * 100);
+        //            tax += Convert.ToInt32(billingItem.Total / 127 * 27);
+        //            grossAmount = Convert.ToInt32(billingItem.Total);
+        //        }
+        //    }
+            
+        //    return netAmount, tax, grossAmount;
+        //}
     }
 }

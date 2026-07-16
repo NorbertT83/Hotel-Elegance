@@ -85,5 +85,22 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             else { MessageBox.Show("This booking is already checked in.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
+
+        private void ShowInfo()
+        {
+            string todaysArriavals = bookingService.GetTodaysArrivalsCount().ToString();
+            string todaysDepartures = bookingService.GetTodaysDeparturesCount().ToString();
+
+            try
+            {
+                lbArrivals.Text = todaysArriavals;
+                lbDepartures.Text = todaysDepartures;
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error while loading statistics: " + ex.Message, "Database error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
