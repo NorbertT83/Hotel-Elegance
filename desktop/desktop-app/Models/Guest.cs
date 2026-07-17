@@ -7,7 +7,7 @@ namespace Hotel_erp_Winforms_App.Models
 {
     public class Guest
     {
-        public Guest(string email, string idCardNumber, string fName, string lName, DateTime dateOfBirth, 
+        public Guest(string email, string idCardNumber, string fName, string lName, DateTime? dateOfBirth, 
             string country, string zipCode, string city, string street, string carPlateNumber, int totalNights, int loyaltyLevel)
         {
             Email = email;
@@ -28,7 +28,7 @@ namespace Hotel_erp_Winforms_App.Models
         public string IdCardNumber { get; set; }
         public string FName { get; set; }
         public string LName { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string Country { get; set; }
         public string ZipCode { get; set; }
         public string City { get; set; }

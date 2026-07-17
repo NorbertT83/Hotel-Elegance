@@ -1,15 +1,22 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Hotel_erp_Winforms_App.Models;
+using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.BC;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Metrics;
+using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
+using System.Xml.Linq;
+using static Hotel_erp_Winforms_App.Models.Room;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Hotel_erp_Winforms_App.Services
 {
@@ -46,7 +53,7 @@ namespace Hotel_erp_Winforms_App.Services
                         int? guest3 = reader["guest3_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest3_id"]);
                         int? guest4 = reader["guest4_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest4_id"]);
 
-                        RoomType roomTypeEnum = (Hotel_erp_Winforms_App.Models.RoomType)System.Enum.Parse(typeof(RoomType), reader["room_type"].ToString(), true);
+                        Hotel_erp_Winforms_App.Models.RoomType roomTypeEnum = System.Enum.Parse<Hotel_erp_Winforms_App.Models.RoomType>(Convert.ToString(reader["room_type"]) ?? "", true);
                         CateringLevel cateringEnum = (Hotel_erp_Winforms_App.Models.CateringLevel)System.Enum.Parse(typeof(CateringLevel), reader["catering_level"].ToString(), true);
 
                         Booking booking = new Booking
@@ -168,6 +175,51 @@ namespace Hotel_erp_Winforms_App.Services
             return null;
         }
 
+        public Room GetRoomByBookingId(Booking booking)
+        {
+            string query = "SELECT rooms.room_number, rooms.room_type, floorspace, bed_type, has_balcony, has_view, " +
+                "max_adults, extras, status, price_per_night, door_locked, needs_cleaning, dont_disturb, is_cleaning, ac_temp " +
+                "FROM rooms " +
+                "INNER JOIN bookings ON rooms.room_number = bookings.room_number " +
+                "WHERE bookings.id = @bookingID;";
+
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    conn.Open();
+                    cmd.Parameters.AddWithValue("@bookingID", booking.Id); // ------------------- booking was null
+
+                    using(MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Room
+                            (
+                                Convert.ToInt32(reader["room_number"]),
+                                (Room.RoomType)System.Enum.Parse(typeof(Room.RoomType), reader["room_type"].ToString()),
+                                Convert.ToInt32(reader["floorspace"]),
+                                (Room.BedType)System.Enum.Parse(typeof(Room.BedType), reader["bed_type"].ToString()),
+                                Convert.ToInt32(reader["has_balcony"]),
+                                (Room.HasView)System.Enum.Parse(typeof(Room.HasView), reader["has_view"].ToString()),
+                                Convert.ToInt32(reader["max_adults"]),
+                                reader["extras"] == DBNull.Value ? "" : reader["extras"].ToString(),
+                                (Room.Status)System.Enum.Parse(typeof(Room.Status), reader["status"].ToString()),
+                                Convert.ToInt32(reader["price_per_night"]),
+                                Convert.ToInt32(reader["door_locked"]),
+                                Convert.ToInt32(reader["needs_cleaning"]),
+                                Convert.ToInt32(reader["dont_disturb"]),
+                                Convert.ToInt32(reader["is_cleaning"]),
+                                Convert.ToInt32(reader["ac_temp"])
+                            );
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
         public int GetTodaysArrivalsCount()
         {
             string query = "SELECT COUNT(*) FROM bookings WHERE beginning_of_stay = CURRENT_DATE;";
@@ -193,6 +245,47 @@ namespace Hotel_erp_Winforms_App.Services
                     return (int)(long)cmd.ExecuteScalar();
                 }
             }
+        }
+
+        public Guest? FillPersonalData(Booking selectedBooking)
+        {
+            string query = "SELECT fname, lname, email, date_of_birth, country, zip_code, city, street, id_card_number, car_plate_number, total_nights, loyalty_level " +
+                "FROM guests " +
+                "INNER JOIN bookings ON guests.id = bookings.guest1_id " +
+                "WHERE bookings.id = @bookingId";
+
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    conn.Open();
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+
+                    using(MySqlDataReader reader  = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Guest
+                            (
+                                (reader["email"] as string) ?? "",
+                                (reader["id_card_number"] as string) ?? "",
+                                (reader["fname"] as string) ?? "",
+                                (reader["lname"] as string) ?? "",
+                                reader["date_of_birth"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["date_of_birth"]),
+                                (reader["country"] as string) ?? "",
+                                (reader["zip_code"] as string) ?? "",
+                                (reader["city"] as string) ?? "",
+                                (reader["street"] as string) ?? "",
+                                (reader["car_plate_number"] as string) ?? "",
+                                reader["total_nights"] == DBNull.Value ? 0 : Convert.ToInt32(reader["total_nights"]),
+                                reader["loyalty_level"] == DBNull.Value ? 0 : Convert.ToInt32(reader["loyalty_level"])
+                            );
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         public void SaveGuest(Guest guest)
@@ -225,15 +318,19 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        public List<Room> SelectedRoomsByBooking(Booking booking)
+        public List<Room> SelectedRoomsByBooking(Booking booking, string request = "")
         {
             List<Room> rooms = new List<Room>();
             string query = "SELECT * " +
-                "FROM rooms " +
-                "WHERE status = 'available' " +
-                "AND needs_cleaning = 0 " +
-                "AND is_cleaning = 0 " +
-                "AND room_type = @roomType;";
+                           "FROM rooms " +
+                           "WHERE rooms.status = 'available' " +
+                               "AND rooms.needs_cleaning = 0 " +
+                               "AND rooms.is_cleaning = 0 " +
+                               "AND rooms.room_type = @roomType " +
+                               "AND room_number NOT IN(SELECT bookings.room_number " +
+                                                      "FROM bookings) ";
+            query += request;
+            query += ";";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
@@ -282,32 +379,51 @@ namespace Hotel_erp_Winforms_App.Services
             // SZOLGÁLTATÁS ÁRAK KISZÁMÍTÁSA
             foreach(Service service in servicesList)
             {
-                decimal grossPrice = Math.Ceiling(service.Price * 1.27m);
+                decimal netPrice = service.Price / 1.27m;
 
-                BillingItem item = new BillingItem
-                (
-                    DateTime.Now,
-                    service.NameHu,
-                    service.Price,
-                    1,
-                    0.27m,
-                    grossPrice
-                );
-                billingItems.Add(item);
+                if (service.NameHu == "Parkolás")
+                {
+                    int days = (selectedBooking.EndOfStay - selectedBooking.BeginningOfStay).Days;
+
+                    BillingItem parking = new BillingItem
+                    (
+                        DateTime.Now,
+                        service.NameHu,
+                        netPrice,
+                        days,
+                        0.27m,
+                        service.Price
+                    );
+                    billingItems.Add(parking);
+                }
+
+                else
+                {
+                    BillingItem item = new BillingItem
+                    (
+                        DateTime.Now,
+                        service.NameHu,
+                        netPrice,
+                        1,
+                        0.27m,
+                        service.Price
+                    );
+                    billingItems.Add(item);
+                }
             }
 
             // SZOBA ÁRÁNAK KISZÁMÍTÁSA
             string getRoomQuery = "SELECT rooms.price_per_night, bookings.beginning_of_stay, bookings.end_of_stay, bookings.created_at " +
                                 "FROM bookings " +
                                 "INNER JOIN rooms ON bookings.room_number = rooms.room_number " +
-                                "WHERE rooms.room_number = @roomNumber;";
+                                "WHERE bookings.id = @bookingId;";
 
             using(MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(getRoomQuery, conn))
                 {
-                    cmd.Parameters.AddWithValue("@roomNumber", selectedBooking.RoomNumber);
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
 
                     using(MySqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -318,16 +434,17 @@ namespace Hotel_erp_Winforms_App.Services
                             int nights = Convert.ToInt32((end - beginning).Days);
 
                             decimal pricePerNight = Convert.ToDecimal(reader["price_per_night"]);
-                            decimal grossPricePerNight = Math.Ceiling(pricePerNight * nights * 1.05m);
+                            decimal netPricePerNight = Convert.ToDecimal(pricePerNight / 1.05m);
+                            decimal grossPrice = pricePerNight * nights;
 
                             BillingItem roomItem = new BillingItem
                             (
                                 Convert.ToDateTime(reader["created_at"]),
-                                "Price per night",
-                                Convert.ToInt32(pricePerNight),
+                                "Szoba ár",
+                                netPricePerNight,
                                 nights,
                                 0.05m,
-                                grossPricePerNight
+                                grossPrice
                             );
                             billingItems.Add(roomItem);
                         }
@@ -337,30 +454,124 @@ namespace Hotel_erp_Winforms_App.Services
             return billingItems;
         }
 
-        //public int CalculateAmounts(List<BillingItem> billingItems)
-        //{
-        //    int netAmount = 0;
-        //    int tax = 0;
-        //    int grossAmount = 0;
+        public bool GetSpecialRequestsFromDb(Booking selectedBooking, string serviceNameHu)
+        {
+            string query = "SELECT EXISTS " +
+                " (SELECT 1 " +
+                " FROM services " +
+                " JOIN servicebookings ON services.id = servicebookings.service_id " +
+                " JOIN bookings ON bookings.id = servicebookings.booking_id " +
+                " WHERE bookings.id = @bookingId " +
+                "   AND services.name_hu = @serviceName);";
 
-        //    foreach(BillingItem billingItem in billingItems)
-        //    {
-        //        if(billingItem.Description == "Price per night")
-        //        {
-        //            netAmount += Convert.ToInt32(billingItem.Total / 105 * 100);
-        //            tax += Convert.ToInt32(billingItem.Total / 105 * 5);
-        //            grossAmount += Convert.ToInt32(billingItem.Total);
-        //        }
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+                    cmd.Parameters.AddWithValue("@serviceName", serviceNameHu);
 
-        //        else
-        //        {
-        //            netAmount += Convert.ToInt32(billingItem.Total / 127 * 100);
-        //            tax += Convert.ToInt32(billingItem.Total / 127 * 27);
-        //            grossAmount = Convert.ToInt32(billingItem.Total);
-        //        }
-        //    }
-            
-        //    return netAmount, tax, grossAmount;
-        //}
+                    conn.Open();
+
+                    return Convert.ToBoolean(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        public bool IsChampagneOrdered(Booking selectedBooking)
+        {
+            string query = "SELECT EXISTS " +
+                " (SELECT 1 " +
+                " FROM servicebookings " +
+                " JOIN bookings ON bookings.id = servicebookings.booking_id " +
+                " WHERE bookings.id = @bookingId " +
+                "   AND servicebookings.price_at_booking = 37000);";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+
+                    conn.Open();
+
+                    return Convert.ToBoolean(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        public string GetCarPlateNumberByBooking(Booking selectedBooking)
+        {
+            string query = "SELECT car_plate_number FROM guests INNER JOIN bookings ON bookings.guest1_id = guests.id WHERE bookings.id = @bookingId;";
+
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using(MySqlCommand cmd =  new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+                    conn.Open();
+
+                    return cmd.ExecuteScalar()?.ToString() ?? "";
+                }
+            }
+        }
+
+        public int CalculateNetAmount(List<BillingItem> billingItems)
+        {
+            int netAmount = 0;
+
+            foreach (BillingItem item in billingItems)
+            {
+                if (item.Description == "Szoba ár")
+                {
+                    netAmount += Convert.ToInt32(item.Total / 1.05m);
+                }
+
+                else
+                {
+                    netAmount += Convert.ToInt32(item.Total / 1.27m);
+                }
+            }
+
+            return netAmount;
+        }
+
+        public int CalculateTaxAmount(List<BillingItem> billingItems)
+        {
+            int tax = 0;
+            foreach (BillingItem billingItem in billingItems)
+            {
+                if (billingItem.Description == "Szoba ár")
+                {
+                    tax += Convert.ToInt32(billingItem.Total / 105m * 5m);
+                }
+
+                else
+                {
+                    tax += Convert.ToInt32(billingItem.Total / 127m * 27m);
+                }
+            }
+
+            return tax;
+        }
+
+        public int CalculateGrossAmount(List<BillingItem> billingItems)
+        {
+            int grossAmount = 0;
+            foreach (BillingItem billingItem in billingItems)
+            {
+                if (billingItem.Description == "Szoba ár")
+                {
+                    grossAmount += Convert.ToInt32(billingItem.Total);
+                }
+
+                else
+                {
+                    grossAmount += Convert.ToInt32(billingItem.Total);
+                }
+            }
+
+            return grossAmount;
+        }
     }
 }

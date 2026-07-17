@@ -38,6 +38,8 @@
             DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             tcCheckin = new TabControl();
             tpPersonalData = new TabPage();
+            button1 = new Button();
+            ckbEditData = new CheckBox();
             dtpBirthdate = new DateTimePicker();
             cbDocumentType = new ComboBox();
             cbNationality = new ComboBox();
@@ -73,6 +75,15 @@
             line = new Label();
             label1 = new Label();
             tpRoomPick = new TabPage();
+            panel6 = new Panel();
+            ckbHotTub = new CheckBox();
+            ckbView = new CheckBox();
+            ckbBalcony = new CheckBox();
+            ckbSelectOtherRoom = new CheckBox();
+            pnlChosenRoomCardHolder = new Panel();
+            pnlChosenRoomLabelHolder = new Panel();
+            label43 = new Label();
+            label45 = new Label();
             flpCardHolder = new FlowLayoutPanel();
             panel2 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
@@ -81,8 +92,8 @@
             tpExtras = new TabPage();
             ckbParking = new CheckBox();
             tbOtherRequests = new TextBox();
-            cbPet = new ComboBox();
-            cbWellness = new ComboBox();
+            cbAirportTransfer = new ComboBox();
+            cbChampagne = new ComboBox();
             cbDepartureNotes = new ComboBox();
             cbExtraBed = new ComboBox();
             cbCateringLevel = new ComboBox();
@@ -103,6 +114,16 @@
             label32 = new Label();
             tpPaymentSumm = new TabPage();
             panel3 = new Panel();
+            panel5 = new Panel();
+            label42 = new Label();
+            label41 = new Label();
+            label40 = new Label();
+            lbGrossAmount = new Label();
+            lbTaxAmount = new Label();
+            lbNetAmount = new Label();
+            label37 = new Label();
+            label39 = new Label();
+            label38 = new Label();
             dgvPaymentSum = new DataGridView();
             colDate = new DataGridViewTextBoxColumn();
             colNameOfService = new DataGridViewTextBoxColumn();
@@ -116,25 +137,19 @@
             label36 = new Label();
             tpSummary = new TabPage();
             pnlBottom = new Panel();
+            lbCurrentPage = new Label();
+            label44 = new Label();
             label12 = new Label();
             btnBack = new Button();
             btnConfirm = new Button();
             btnNext = new Button();
-            label37 = new Label();
-            label38 = new Label();
-            label39 = new Label();
-            panel5 = new Panel();
-            label40 = new Label();
-            label41 = new Label();
-            label42 = new Label();
-            lbNetAmount = new Label();
-            lbTaxAmount = new Label();
-            lbGrossAmount = new Label();
             tcCheckin.SuspendLayout();
             tpPersonalData.SuspendLayout();
             pnlTop.SuspendLayout();
             tlpBottom.SuspendLayout();
             tpRoomPick.SuspendLayout();
+            panel6.SuspendLayout();
+            pnlChosenRoomLabelHolder.SuspendLayout();
             panel2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             tpExtras.SuspendLayout();
@@ -142,11 +157,11 @@
             tableLayoutPanel2.SuspendLayout();
             tpPaymentSumm.SuspendLayout();
             panel3.SuspendLayout();
+            panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPaymentSum).BeginInit();
             panel4.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             pnlBottom.SuspendLayout();
-            panel5.SuspendLayout();
             SuspendLayout();
             // 
             // tcCheckin
@@ -164,11 +179,13 @@
             tcCheckin.Size = new Size(543, 597);
             tcCheckin.SizeMode = TabSizeMode.FillToRight;
             tcCheckin.TabIndex = 0;
-            tcCheckin.SelectedIndexChanged += tcCheckin_SeledIndexChanged;
+            tcCheckin.SelectedIndexChanged += tcCheckin_SelectedIndexChanged;
             // 
             // tpPersonalData
             // 
             tpPersonalData.BackColor = Color.White;
+            tpPersonalData.Controls.Add(button1);
+            tpPersonalData.Controls.Add(ckbEditData);
             tpPersonalData.Controls.Add(dtpBirthdate);
             tpPersonalData.Controls.Add(cbDocumentType);
             tpPersonalData.Controls.Add(cbNationality);
@@ -206,12 +223,34 @@
             tpPersonalData.TabIndex = 0;
             tpPersonalData.Text = "Personal Data";
             // 
+            // button1
+            // 
+            button1.FlatAppearance.BorderSize = 0;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Image = Properties.Resources.print;
+            button1.Location = new Point(396, 100);
+            button1.Name = "button1";
+            button1.Size = new Size(33, 29);
+            button1.TabIndex = 14;
+            button1.UseVisualStyleBackColor = true;
+            // 
+            // ckbEditData
+            // 
+            ckbEditData.AutoSize = true;
+            ckbEditData.Location = new Point(435, 106);
+            ckbEditData.Name = "ckbEditData";
+            ckbEditData.Size = new Size(73, 19);
+            ckbEditData.TabIndex = 13;
+            ckbEditData.Text = "Edit Data";
+            ckbEditData.UseVisualStyleBackColor = true;
+            ckbEditData.CheckedChanged += ckbEditData_CheckedChanged;
+            // 
             // dtpBirthdate
             // 
             dtpBirthdate.Font = new Font("Segoe UI", 12F);
             dtpBirthdate.Format = DateTimePickerFormat.Short;
             dtpBirthdate.Location = new Point(272, 291);
-            dtpBirthdate.MaxDate = new DateTime(2026, 7, 12, 0, 0, 0, 0);
+            dtpBirthdate.MaxDate = new DateTime(2026, 7, 17, 0, 0, 0, 0);
             dtpBirthdate.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             dtpBirthdate.Name = "dtpBirthdate";
             dtpBirthdate.Size = new Size(236, 29);
@@ -559,6 +598,9 @@
             // tpRoomPick
             // 
             tpRoomPick.BackColor = Color.White;
+            tpRoomPick.Controls.Add(panel6);
+            tpRoomPick.Controls.Add(pnlChosenRoomCardHolder);
+            tpRoomPick.Controls.Add(pnlChosenRoomLabelHolder);
             tpRoomPick.Controls.Add(flpCardHolder);
             tpRoomPick.Controls.Add(panel2);
             tpRoomPick.Location = new Point(4, 5);
@@ -568,14 +610,110 @@
             tpRoomPick.TabIndex = 1;
             tpRoomPick.Text = "tabPage2";
             // 
+            // panel6
+            // 
+            panel6.Controls.Add(ckbHotTub);
+            panel6.Controls.Add(ckbView);
+            panel6.Controls.Add(ckbBalcony);
+            panel6.Controls.Add(ckbSelectOtherRoom);
+            panel6.Dock = DockStyle.Top;
+            panel6.Location = new Point(3, 228);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(529, 71);
+            panel6.TabIndex = 14;
+            // 
+            // ckbHotTub
+            // 
+            ckbHotTub.AutoSize = true;
+            ckbHotTub.Location = new Point(383, 47);
+            ckbHotTub.Name = "ckbHotTub";
+            ckbHotTub.Size = new Size(109, 19);
+            ckbHotTub.TabIndex = 1;
+            ckbHotTub.Text = "Terrace Hot Tub";
+            ckbHotTub.UseVisualStyleBackColor = true;
+            ckbHotTub.CheckedChanged += ckbHotTub_CheckedChanged;
+            // 
+            // ckbView
+            // 
+            ckbView.AutoSize = true;
+            ckbView.Location = new Point(383, 28);
+            ckbView.Name = "ckbView";
+            ckbView.Size = new Size(92, 19);
+            ckbView.TabIndex = 1;
+            ckbView.Text = "Garden View";
+            ckbView.UseVisualStyleBackColor = true;
+            ckbView.CheckedChanged += ckbView_CheckedChanged;
+            // 
+            // ckbBalcony
+            // 
+            ckbBalcony.AutoSize = true;
+            ckbBalcony.Location = new Point(383, 9);
+            ckbBalcony.Name = "ckbBalcony";
+            ckbBalcony.Size = new Size(68, 19);
+            ckbBalcony.TabIndex = 1;
+            ckbBalcony.Text = "Balcony";
+            ckbBalcony.UseVisualStyleBackColor = true;
+            ckbBalcony.CheckedChanged += ckbBalcony_CheckedChanged;
+            // 
+            // ckbSelectOtherRoom
+            // 
+            ckbSelectOtherRoom.AutoSize = true;
+            ckbSelectOtherRoom.Font = new Font("Segoe UI", 15F);
+            ckbSelectOtherRoom.Location = new Point(33, 6);
+            ckbSelectOtherRoom.Name = "ckbSelectOtherRoom";
+            ckbSelectOtherRoom.Size = new Size(203, 32);
+            ckbSelectOtherRoom.TabIndex = 0;
+            ckbSelectOtherRoom.Text = "Select Other Rooms";
+            ckbSelectOtherRoom.UseVisualStyleBackColor = true;
+            ckbSelectOtherRoom.CheckedChanged += ckbSelectOtherRoom_CheckedChanged;
+            // 
+            // pnlChosenRoomCardHolder
+            // 
+            pnlChosenRoomCardHolder.Dock = DockStyle.Top;
+            pnlChosenRoomCardHolder.Location = new Point(3, 163);
+            pnlChosenRoomCardHolder.Name = "pnlChosenRoomCardHolder";
+            pnlChosenRoomCardHolder.Padding = new Padding(33, 5, 33, 10);
+            pnlChosenRoomCardHolder.Size = new Size(529, 65);
+            pnlChosenRoomCardHolder.TabIndex = 13;
+            // 
+            // pnlChosenRoomLabelHolder
+            // 
+            pnlChosenRoomLabelHolder.Controls.Add(label43);
+            pnlChosenRoomLabelHolder.Controls.Add(label45);
+            pnlChosenRoomLabelHolder.Dock = DockStyle.Top;
+            pnlChosenRoomLabelHolder.Location = new Point(3, 103);
+            pnlChosenRoomLabelHolder.Name = "pnlChosenRoomLabelHolder";
+            pnlChosenRoomLabelHolder.Padding = new Padding(33, 15, 0, 0);
+            pnlChosenRoomLabelHolder.Size = new Size(529, 60);
+            pnlChosenRoomLabelHolder.TabIndex = 12;
+            // 
+            // label43
+            // 
+            label43.AutoSize = true;
+            label43.Dock = DockStyle.Left;
+            label43.Font = new Font("Segoe UI", 15F);
+            label43.Location = new Point(33, 15);
+            label43.Name = "label43";
+            label43.Size = new Size(147, 28);
+            label43.TabIndex = 11;
+            label43.Text = "Selected Room:";
+            // 
+            // label45
+            // 
+            label45.BackColor = Color.FromArgb(230, 235, 240);
+            label45.Location = new Point(176, 37);
+            label45.Name = "label45";
+            label45.Size = new Size(336, 1);
+            label45.TabIndex = 3;
+            // 
             // flpCardHolder
             // 
-            flpCardHolder.Dock = DockStyle.Fill;
+            flpCardHolder.Dock = DockStyle.Bottom;
             flpCardHolder.FlowDirection = FlowDirection.TopDown;
-            flpCardHolder.Location = new Point(3, 103);
+            flpCardHolder.Location = new Point(3, 298);
             flpCardHolder.Name = "flpCardHolder";
             flpCardHolder.Padding = new Padding(33, 5, 33, 10);
-            flpCardHolder.Size = new Size(529, 482);
+            flpCardHolder.Size = new Size(529, 287);
             flpCardHolder.TabIndex = 10;
             // 
             // panel2
@@ -609,7 +747,7 @@
             label30.BackColor = Color.FromArgb(230, 235, 240);
             label30.Location = new Point(3, 81);
             label30.Name = "label30";
-            label30.Size = new Size(509, 1);
+            label30.Size = new Size(523, 1);
             label30.TabIndex = 3;
             label30.Text = "label24";
             // 
@@ -618,19 +756,19 @@
             label31.Anchor = AnchorStyles.None;
             label31.AutoSize = true;
             label31.Font = new Font("Segoe UI", 20F);
-            label31.Location = new Point(173, 22);
+            label31.Location = new Point(182, 22);
             label31.Name = "label31";
-            label31.Size = new Size(183, 37);
+            label31.Size = new Size(164, 37);
             label31.TabIndex = 0;
-            label31.Text = "Choose Room";
+            label31.Text = "Select Room";
             // 
             // tpExtras
             // 
             tpExtras.BackColor = Color.White;
             tpExtras.Controls.Add(ckbParking);
             tpExtras.Controls.Add(tbOtherRequests);
-            tpExtras.Controls.Add(cbPet);
-            tpExtras.Controls.Add(cbWellness);
+            tpExtras.Controls.Add(cbAirportTransfer);
+            tpExtras.Controls.Add(cbChampagne);
             tpExtras.Controls.Add(cbDepartureNotes);
             tpExtras.Controls.Add(cbExtraBed);
             tpExtras.Controls.Add(cbCateringLevel);
@@ -657,7 +795,7 @@
             // ckbParking
             // 
             ckbParking.Font = new Font("Segoe UI", 30F);
-            ckbParking.Location = new Point(22, 240);
+            ckbParking.Location = new Point(22, 233);
             ckbParking.Name = "ckbParking";
             ckbParking.Size = new Size(14, 29);
             ckbParking.TabIndex = 23;
@@ -666,34 +804,35 @@
             // 
             // tbOtherRequests
             // 
-            tbOtherRequests.Location = new Point(22, 418);
+            tbOtherRequests.Location = new Point(22, 392);
             tbOtherRequests.Multiline = true;
             tbOtherRequests.Name = "tbOtherRequests";
-            tbOtherRequests.Size = new Size(486, 152);
+            tbOtherRequests.Size = new Size(486, 178);
             tbOtherRequests.TabIndex = 7;
             // 
-            // cbPet
+            // cbAirportTransfer
             // 
-            cbPet.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbPet.Font = new Font("Segoe UI", 12F);
-            cbPet.FormattingEnabled = true;
-            cbPet.Items.AddRange(new object[] { "Yes", "No" });
-            cbPet.Location = new Point(273, 144);
-            cbPet.Name = "cbPet";
-            cbPet.Size = new Size(235, 29);
-            cbPet.TabIndex = 2;
-            cbPet.SelectedIndexChanged += cbPet_SelectedIndexChanged;
+            cbAirportTransfer.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbAirportTransfer.Font = new Font("Segoe UI", 12F);
+            cbAirportTransfer.FormattingEnabled = true;
+            cbAirportTransfer.Items.AddRange(new object[] { "Yes", "No" });
+            cbAirportTransfer.Location = new Point(273, 144);
+            cbAirportTransfer.Name = "cbAirportTransfer";
+            cbAirportTransfer.Size = new Size(235, 29);
+            cbAirportTransfer.TabIndex = 2;
+            cbAirportTransfer.SelectedIndexChanged += cbAirportTransfer_SelectedIndexChanged;
             // 
-            // cbWellness
+            // cbChampagne
             // 
-            cbWellness.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbWellness.Font = new Font("Segoe UI", 12F);
-            cbWellness.FormattingEnabled = true;
-            cbWellness.Items.AddRange(new object[] { "Yes", "No" });
-            cbWellness.Location = new Point(273, 240);
-            cbWellness.Name = "cbWellness";
-            cbWellness.Size = new Size(235, 29);
-            cbWellness.TabIndex = 4;
+            cbChampagne.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbChampagne.Font = new Font("Segoe UI", 12F);
+            cbChampagne.FormattingEnabled = true;
+            cbChampagne.Items.AddRange(new object[] { "Yes", "No" });
+            cbChampagne.Location = new Point(273, 233);
+            cbChampagne.Name = "cbChampagne";
+            cbChampagne.Size = new Size(235, 29);
+            cbChampagne.TabIndex = 4;
+            cbChampagne.SelectedIndexChanged += cbChampagne_SelectedIndexChanged;
             // 
             // cbDepartureNotes
             // 
@@ -701,7 +840,7 @@
             cbDepartureNotes.Font = new Font("Segoe UI", 12F);
             cbDepartureNotes.FormattingEnabled = true;
             cbDepartureNotes.Items.AddRange(new object[] { "None", "Late Check-out", "Early Departure" });
-            cbDepartureNotes.Location = new Point(273, 336);
+            cbDepartureNotes.Location = new Point(273, 322);
             cbDepartureNotes.Name = "cbDepartureNotes";
             cbDepartureNotes.Size = new Size(235, 29);
             cbDepartureNotes.TabIndex = 6;
@@ -713,7 +852,7 @@
             cbExtraBed.Font = new Font("Segoe UI", 12F);
             cbExtraBed.FormattingEnabled = true;
             cbExtraBed.Items.AddRange(new object[] { "None", "Extra Bed", "Baby Cot" });
-            cbExtraBed.Location = new Point(22, 336);
+            cbExtraBed.Location = new Point(22, 322);
             cbExtraBed.Name = "cbExtraBed";
             cbExtraBed.Size = new Size(235, 29);
             cbExtraBed.TabIndex = 5;
@@ -729,12 +868,12 @@
             cbCateringLevel.Name = "cbCateringLevel";
             cbCateringLevel.Size = new Size(235, 29);
             cbCateringLevel.TabIndex = 1;
-            cbCateringLevel.SelectedIndexChanged += cbCateringLevel_SelectedIndexChanges;
+            cbCateringLevel.SelectedIndexChanged += cbCateringLevel_SelectedIndexChanged;
             // 
             // tbCarPlateNumber
             // 
             tbCarPlateNumber.Font = new Font("Segoe UI", 12F);
-            tbCarPlateNumber.Location = new Point(42, 240);
+            tbCarPlateNumber.Location = new Point(42, 233);
             tbCarPlateNumber.Name = "tbCarPlateNumber";
             tbCarPlateNumber.ReadOnly = true;
             tbCarPlateNumber.Size = new Size(215, 29);
@@ -748,16 +887,16 @@
             label16.Font = new Font("Segoe UI", 12F);
             label16.Location = new Point(273, 117);
             label16.Name = "label16";
-            label16.Size = new Size(31, 21);
+            label16.Size = new Size(117, 21);
             label16.TabIndex = 21;
-            label16.Text = "Pet";
+            label16.Text = "Airport transfer";
             // 
             // label19
             // 
             label19.AutoSize = true;
             label19.Font = new Font("Segoe UI", 8F);
             label19.ForeColor = Color.Gray;
-            label19.Location = new Point(273, 272);
+            label19.Location = new Point(273, 265);
             label19.Name = "label19";
             label19.Size = new Size(47, 13);
             label19.TabIndex = 22;
@@ -779,7 +918,7 @@
             label17.AutoSize = true;
             label17.Font = new Font("Segoe UI", 8F);
             label17.ForeColor = Color.Gray;
-            label17.Location = new Point(42, 272);
+            label17.Location = new Point(42, 265);
             label17.Name = "label17";
             label17.Size = new Size(76, 13);
             label17.TabIndex = 22;
@@ -789,17 +928,17 @@
             // 
             label24.AutoSize = true;
             label24.Font = new Font("Segoe UI", 12F);
-            label24.Location = new Point(273, 216);
+            label24.Location = new Point(273, 209);
             label24.Name = "label24";
-            label24.Size = new Size(121, 21);
+            label24.Size = new Size(94, 21);
             label24.TabIndex = 13;
-            label24.Text = "Wellness Access";
+            label24.Text = "Champagne";
             // 
             // label21
             // 
             label21.AutoSize = true;
             label21.Font = new Font("Segoe UI", 12F);
-            label21.Location = new Point(273, 309);
+            label21.Location = new Point(273, 298);
             label21.Name = "label21";
             label21.Size = new Size(125, 21);
             label21.TabIndex = 19;
@@ -809,7 +948,7 @@
             // 
             label22.AutoSize = true;
             label22.Font = new Font("Segoe UI", 12F);
-            label22.Location = new Point(19, 394);
+            label22.Location = new Point(19, 368);
             label22.Name = "label22";
             label22.Size = new Size(50, 21);
             label22.TabIndex = 19;
@@ -819,7 +958,7 @@
             // 
             label20.AutoSize = true;
             label20.Font = new Font("Segoe UI", 12F);
-            label20.Location = new Point(19, 309);
+            label20.Location = new Point(22, 298);
             label20.Name = "label20";
             label20.Size = new Size(74, 21);
             label20.TabIndex = 19;
@@ -829,7 +968,7 @@
             // 
             label25.AutoSize = true;
             label25.Font = new Font("Segoe UI", 12F);
-            label25.Location = new Point(19, 216);
+            label25.Location = new Point(19, 209);
             label25.Name = "label25";
             label25.Size = new Size(62, 21);
             label25.TabIndex = 12;
@@ -914,6 +1053,115 @@
             panel3.Size = new Size(535, 488);
             panel3.TabIndex = 5;
             // 
+            // panel5
+            // 
+            panel5.Controls.Add(label42);
+            panel5.Controls.Add(label41);
+            panel5.Controls.Add(label40);
+            panel5.Controls.Add(lbGrossAmount);
+            panel5.Controls.Add(lbTaxAmount);
+            panel5.Controls.Add(lbNetAmount);
+            panel5.Controls.Add(label37);
+            panel5.Controls.Add(label39);
+            panel5.Controls.Add(label38);
+            panel5.Dock = DockStyle.Fill;
+            panel5.Location = new Point(5, 335);
+            panel5.Name = "panel5";
+            panel5.Padding = new Padding(5);
+            panel5.Size = new Size(525, 143);
+            panel5.TabIndex = 4;
+            // 
+            // label42
+            // 
+            label42.BackColor = Color.FromArgb(230, 235, 240);
+            label42.Location = new Point(7, 137);
+            label42.Name = "label42";
+            label42.Size = new Size(515, 1);
+            label42.TabIndex = 3;
+            label42.Text = "label24";
+            // 
+            // label41
+            // 
+            label41.BackColor = Color.FromArgb(230, 235, 240);
+            label41.Location = new Point(8, 99);
+            label41.Name = "label41";
+            label41.Size = new Size(515, 1);
+            label41.TabIndex = 3;
+            label41.Text = "label24";
+            // 
+            // label40
+            // 
+            label40.BackColor = Color.FromArgb(230, 235, 240);
+            label40.Location = new Point(8, 68);
+            label40.Name = "label40";
+            label40.Size = new Size(515, 1);
+            label40.TabIndex = 3;
+            label40.Text = "label24";
+            // 
+            // lbGrossAmount
+            // 
+            lbGrossAmount.AutoSize = true;
+            lbGrossAmount.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            lbGrossAmount.Location = new Point(382, 109);
+            lbGrossAmount.Name = "lbGrossAmount";
+            lbGrossAmount.Size = new Size(132, 28);
+            lbGrossAmount.TabIndex = 3;
+            lbGrossAmount.Text = "1 111 111 Ft";
+            // 
+            // lbTaxAmount
+            // 
+            lbTaxAmount.AutoSize = true;
+            lbTaxAmount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lbTaxAmount.ForeColor = Color.DimGray;
+            lbTaxAmount.Location = new Point(421, 79);
+            lbTaxAmount.Name = "lbTaxAmount";
+            lbTaxAmount.Size = new Size(86, 21);
+            lbTaxAmount.TabIndex = 3;
+            lbTaxAmount.Text = "111 111 Ft";
+            // 
+            // lbNetAmount
+            // 
+            lbNetAmount.AutoSize = true;
+            lbNetAmount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lbNetAmount.ForeColor = Color.DimGray;
+            lbNetAmount.Location = new Point(408, 48);
+            lbNetAmount.Name = "lbNetAmount";
+            lbNetAmount.Size = new Size(99, 21);
+            lbNetAmount.TabIndex = 3;
+            lbNetAmount.Text = "1 111 111 Ft";
+            // 
+            // label37
+            // 
+            label37.AutoSize = true;
+            label37.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label37.ForeColor = Color.DimGray;
+            label37.Location = new Point(4, 47);
+            label37.Name = "label37";
+            label37.Size = new Size(108, 21);
+            label37.TabIndex = 3;
+            label37.Text = "Net Amount:";
+            // 
+            // label39
+            // 
+            label39.AutoSize = true;
+            label39.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            label39.Location = new Point(4, 109);
+            label39.Name = "label39";
+            label39.Size = new Size(151, 28);
+            label39.TabIndex = 3;
+            label39.Text = "Gross Amount:";
+            // 
+            // label38
+            // 
+            label38.AutoSize = true;
+            label38.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label38.ForeColor = Color.DimGray;
+            label38.Location = new Point(4, 79);
+            label38.Name = "label38";
+            label38.Size = new Size(40, 21);
+            label38.TabIndex = 3;
+            label38.Text = "Tax:";
+            // 
             // dgvPaymentSum
             // 
             dgvPaymentSum.AllowUserToAddRows = false;
@@ -986,7 +1234,6 @@
             colUnitPrice.HeaderText = "Unit Price";
             colUnitPrice.Name = "colUnitPrice";
             colUnitPrice.ReadOnly = true;
-            colUnitPrice.Width = 110;
             // 
             // colQuantity
             // 
@@ -1017,7 +1264,7 @@
             colTotal.Name = "colTotal";
             colTotal.ReadOnly = true;
             colTotal.SortMode = DataGridViewColumnSortMode.NotSortable;
-            colTotal.Width = 85;
+            colTotal.Width = 95;
             // 
             // panel4
             // 
@@ -1060,11 +1307,11 @@
             label36.Anchor = AnchorStyles.None;
             label36.AutoSize = true;
             label36.Font = new Font("Segoe UI", 20F);
-            label36.Location = new Point(133, 22);
+            label36.Location = new Point(149, 22);
             label36.Name = "label36";
-            label36.Size = new Size(268, 37);
+            label36.Size = new Size(237, 37);
             label36.TabIndex = 0;
-            label36.Text = "Payment Summonary";
+            label36.Text = "Payment Summary";
             // 
             // tpSummary
             // 
@@ -1079,6 +1326,8 @@
             // pnlBottom
             // 
             pnlBottom.BackColor = Color.FromArgb(239, 246, 255);
+            pnlBottom.Controls.Add(lbCurrentPage);
+            pnlBottom.Controls.Add(label44);
             pnlBottom.Controls.Add(label12);
             pnlBottom.Controls.Add(btnBack);
             pnlBottom.Controls.Add(btnConfirm);
@@ -1089,6 +1338,25 @@
             pnlBottom.Padding = new Padding(20);
             pnlBottom.Size = new Size(543, 100);
             pnlBottom.TabIndex = 3;
+            // 
+            // lbCurrentPage
+            // 
+            lbCurrentPage.AutoSize = true;
+            lbCurrentPage.Font = new Font("Segoe UI", 12F);
+            lbCurrentPage.Location = new Point(247, 46);
+            lbCurrentPage.Name = "lbCurrentPage";
+            lbCurrentPage.Size = new Size(45, 21);
+            lbCurrentPage.TabIndex = 15;
+            lbCurrentPage.Text = "1. / 5";
+            // 
+            // label44
+            // 
+            label44.BackColor = Color.FromArgb(230, 235, 240);
+            label44.Location = new Point(7, 15);
+            label44.Name = "label44";
+            label44.Size = new Size(509, 1);
+            label44.TabIndex = 3;
+            label44.Text = "label24";
             // 
             // label12
             // 
@@ -1148,111 +1416,6 @@
             btnNext.UseVisualStyleBackColor = false;
             btnNext.Click += btnNext_Click;
             // 
-            // label37
-            // 
-            label37.AutoSize = true;
-            label37.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            label37.Location = new Point(3, 53);
-            label37.Name = "label37";
-            label37.Size = new Size(108, 21);
-            label37.TabIndex = 3;
-            label37.Text = "Net Amount:";
-            // 
-            // label38
-            // 
-            label38.AutoSize = true;
-            label38.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            label38.Location = new Point(3, 85);
-            label38.Name = "label38";
-            label38.Size = new Size(40, 21);
-            label38.TabIndex = 3;
-            label38.Text = "Tax:";
-            // 
-            // label39
-            // 
-            label39.AutoSize = true;
-            label39.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            label39.Location = new Point(3, 117);
-            label39.Name = "label39";
-            label39.Size = new Size(121, 21);
-            label39.TabIndex = 3;
-            label39.Text = "Gross Amount:";
-            // 
-            // panel5
-            // 
-            panel5.Controls.Add(label42);
-            panel5.Controls.Add(label41);
-            panel5.Controls.Add(label40);
-            panel5.Controls.Add(lbGrossAmount);
-            panel5.Controls.Add(lbTaxAmount);
-            panel5.Controls.Add(lbNetAmount);
-            panel5.Controls.Add(label37);
-            panel5.Controls.Add(label39);
-            panel5.Controls.Add(label38);
-            panel5.Dock = DockStyle.Fill;
-            panel5.Location = new Point(5, 335);
-            panel5.Name = "panel5";
-            panel5.Padding = new Padding(5);
-            panel5.Size = new Size(525, 143);
-            panel5.TabIndex = 4;
-            // 
-            // label40
-            // 
-            label40.BackColor = Color.FromArgb(230, 235, 240);
-            label40.Location = new Point(7, 74);
-            label40.Name = "label40";
-            label40.Size = new Size(515, 1);
-            label40.TabIndex = 3;
-            label40.Text = "label24";
-            // 
-            // label41
-            // 
-            label41.BackColor = Color.FromArgb(230, 235, 240);
-            label41.Location = new Point(7, 105);
-            label41.Name = "label41";
-            label41.Size = new Size(515, 1);
-            label41.TabIndex = 3;
-            label41.Text = "label24";
-            // 
-            // label42
-            // 
-            label42.BackColor = Color.FromArgb(230, 235, 240);
-            label42.Location = new Point(7, 137);
-            label42.Name = "label42";
-            label42.Size = new Size(515, 1);
-            label42.TabIndex = 3;
-            label42.Text = "label24";
-            // 
-            // lbNetAmount
-            // 
-            lbNetAmount.AutoSize = true;
-            lbNetAmount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            lbNetAmount.Location = new Point(414, 54);
-            lbNetAmount.Name = "lbNetAmount";
-            lbNetAmount.Size = new Size(108, 21);
-            lbNetAmount.TabIndex = 3;
-            lbNetAmount.Text = "Net Amount:";
-            // 
-            // lbTaxAmount
-            // 
-            lbTaxAmount.AutoSize = true;
-            lbTaxAmount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            lbTaxAmount.Location = new Point(414, 85);
-            lbTaxAmount.Name = "lbTaxAmount";
-            lbTaxAmount.Size = new Size(108, 21);
-            lbTaxAmount.TabIndex = 3;
-            lbTaxAmount.Text = "Net Amount:";
-            // 
-            // lbGrossAmount
-            // 
-            lbGrossAmount.AutoSize = true;
-            lbGrossAmount.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            lbGrossAmount.Location = new Point(414, 117);
-            lbGrossAmount.Name = "lbGrossAmount";
-            lbGrossAmount.Size = new Size(108, 21);
-            lbGrossAmount.TabIndex = 3;
-            lbGrossAmount.Text = "Net Amount:";
-            // 
             // FrmCheckin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1263,7 +1426,7 @@
             Controls.Add(pnlBottom);
             Name = "FrmCheckin";
             Padding = new Padding(15);
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Check-in";
             Load += FrmCheckin_Load;
             tcCheckin.ResumeLayout(false);
@@ -1273,6 +1436,10 @@
             tlpBottom.ResumeLayout(false);
             tlpBottom.PerformLayout();
             tpRoomPick.ResumeLayout(false);
+            panel6.ResumeLayout(false);
+            panel6.PerformLayout();
+            pnlChosenRoomLabelHolder.ResumeLayout(false);
+            pnlChosenRoomLabelHolder.PerformLayout();
             panel2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
@@ -1283,13 +1450,14 @@
             tableLayoutPanel2.PerformLayout();
             tpPaymentSumm.ResumeLayout(false);
             panel3.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPaymentSum).EndInit();
             panel4.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
             pnlBottom.ResumeLayout(false);
-            panel5.ResumeLayout(false);
-            panel5.PerformLayout();
+            pnlBottom.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1336,8 +1504,8 @@
         private Button btnBack;
         private FlowLayoutPanel flpCardHolder;
         private TabPage tpExtras;
-        private ComboBox cbPet;
-        private ComboBox cbWellness;
+        private ComboBox cbAirportTransfer;
+        private ComboBox cbChampagne;
         private ComboBox cbCateringLevel;
         private TextBox tbCarPlateNumber;
         private Label label16;
@@ -1373,12 +1541,6 @@
         private Label label36;
         private Panel panel3;
         private DataGridView dgvPaymentSum;
-        private DataGridViewTextBoxColumn colDate;
-        private DataGridViewTextBoxColumn colNameOfService;
-        private DataGridViewTextBoxColumn colUnitPrice;
-        private DataGridViewTextBoxColumn colQuantity;
-        private DataGridViewTextBoxColumn colTax;
-        private DataGridViewTextBoxColumn colTotal;
         private Panel panel5;
         private Label label37;
         private Label label39;
@@ -1389,5 +1551,24 @@
         private Label lbGrossAmount;
         private Label lbTaxAmount;
         private Label lbNetAmount;
+        private DataGridViewTextBoxColumn colDate;
+        private DataGridViewTextBoxColumn colNameOfService;
+        private DataGridViewTextBoxColumn colUnitPrice;
+        private DataGridViewTextBoxColumn colQuantity;
+        private DataGridViewTextBoxColumn colTax;
+        private DataGridViewTextBoxColumn colTotal;
+        private CheckBox ckbEditData;
+        private Button button1;
+        private Label lbCurrentPage;
+        private Label label43;
+        private Panel pnlChosenRoomCardHolder;
+        private Panel pnlChosenRoomLabelHolder;
+        private Label label45;
+        private Label label44;
+        private Panel panel6;
+        private CheckBox ckbSelectOtherRoom;
+        private CheckBox ckbHotTub;
+        private CheckBox ckbView;
+        private CheckBox ckbBalcony;
     }
 }

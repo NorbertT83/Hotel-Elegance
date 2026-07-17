@@ -14,6 +14,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 {
     public partial class BookingControl : UserControl
     {
+        public Booking selectedBooking;
+
         public BookingControl()
         {
             InitializeComponent();
@@ -58,8 +60,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             dgvBookings.DataSource = results;
         }
-
-        public Booking selectedBooking;
 
         private void dgvBookings_CellClick(object sender, DataGridViewCellEventArgs e)
         {

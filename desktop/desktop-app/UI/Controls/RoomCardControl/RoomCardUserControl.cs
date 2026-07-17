@@ -14,7 +14,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
 {
     public partial class RoomCardUserControl : UserControl
     {
-        private BookingControl _bookingControl;
         private BookingService _bookingService;
         public Room SelectedRoom { get; private set; }
         public event EventHandler CardSelected;
@@ -22,6 +21,21 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
         public RoomCardUserControl()
         {
             InitializeComponent();
+        }
+
+        public void LoadSelectedRoomCardData(Booking selectedBooking)
+        {
+            _bookingService = new BookingService();
+            Room room = _bookingService.GetRoomByBookingId(selectedBooking);
+
+            SelectedRoom = room;
+
+            lbRoomNumber.Text = room.Room_number.ToString();
+            lbRoomType.Text = room.RoomsRoomtype.ToString();
+            lbBedType.Text = room.RoomsBedType.ToString();
+            lbHasView.Text = room.RoomsView.ToString();
+            lbCapacity.Text = room.MaxAdults.ToString();
+            lbPrice.Text = room.Price.ToString();
         }
 
         public void LoadCardData(Room room)
