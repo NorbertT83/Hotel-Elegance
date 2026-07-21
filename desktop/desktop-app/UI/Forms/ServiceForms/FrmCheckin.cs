@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
+using Hotel_erp_Winforms_App.UI.Controls.GuestsDataSumControl;
 using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,11 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         public List<Service> services = new List<Service>();
         public List<BillingItem> billingItems = new List<BillingItem>();
         public List<Room> selectedRooms;
+        public List<Guest> guestsOfBooking = new List<Guest>();
         public Service service;
         private bool _isRequestInitialized = false;
+        private StringBuilder sumSelectedRoomString = new StringBuilder();
+        private int _editingGuestId = 0;
         RoomCardUserControl cardControl;
         ErrorProvider _errorProvider = new ErrorProvider();
 
@@ -39,44 +43,33 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             tcCheckin.SelectedIndex = 0;
             btnBack.Visible = false;
             btnConfirm.Visible = false;
+            ckbEditData.Visible = false;
 
             #region Personal Data
 
             lbCurrentPage.Text = "1/5";
+            cbGuests.Visible = false;
 
             FillNationalityCb();
+            LoadGuestDataToUI();
+
             cbNationality.SelectedItem = "Hungary";
-
-            Guest guest = _bookingService.FillPersonalData(selectedBooking);
-
-            tbFirstName.Text = guest.FName;
-            tbLastName.Text = guest.LName;
-            tbEmail.Text = guest.Email;
-            tbCarPlateNumber.Text = guest.CarPlateNumber;
-
             dtpBirthdate.MaxDate = DateTime.Today;
-            dtpBirthdate.Value = guest.DateOfBirth ?? DateTime.Today;
-            cbNationality.Text = guest.Country;
-            tbZipCode.Text = guest.ZipCode;
-            tbCity.Text = guest.City;
-            tbStreet.Text = guest.Street;
-            tbDocumentNumber.Text = guest.IdCardNumber;
-
-            tbFirstName.ReadOnly = (tbFirstName.Text != "");
-            tbLastName.ReadOnly = (tbLastName.Text != "");
-            tbEmail.ReadOnly = (tbEmail.Text != "");
-            tbCarPlateNumber.ReadOnly = (tbCarPlateNumber.Text != "");
-            tbZipCode.ReadOnly = (tbZipCode.Text != "");
-            tbCity.ReadOnly = tbCity.Text != "";
-            tbStreet.ReadOnly = tbStreet.Text != "";
-            tbDocumentNumber.ReadOnly = tbDocumentNumber.Text != "";
-
             cbDocumentType.SelectedIndex = 0;
+
+            tbFirstName.ReadOnly = !string.IsNullOrEmpty(tbFirstName.Text);
+            tbLastName.ReadOnly = !string.IsNullOrEmpty(tbLastName.Text);
+            tbEmail.ReadOnly = !string.IsNullOrEmpty(tbEmail.Text);
+            tbCarPlateNumber.ReadOnly = !string.IsNullOrEmpty(tbCarPlateNumber.Text);
+            tbZipCode.ReadOnly = !string.IsNullOrEmpty(tbZipCode.Text);
+            tbCity.ReadOnly = !string.IsNullOrEmpty(tbCity.Text);
+            tbStreet.ReadOnly = !string.IsNullOrEmpty(tbStreet.Text);
+            tbDocumentNumber.ReadOnly = !string.IsNullOrEmpty(tbDocumentNumber.Text);
+
             #endregion
 
             // FOR TESTING!!!
             tbPhone.Text = "111";
-            tbDocumentNumber.Text = "asd";
             // --------------
 
             #region Error Handler
@@ -97,6 +90,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             cardControl = new RoomCardUserControl();
             cardControl.LoadSelectedRoomCardData(selectedBooking);
             cardControl.Dock = DockStyle.Fill;
+            cardControl.CardSelected += CardControl_CardSelected;
+
             pnlChosenRoomCardHolder.Controls.Clear();
             pnlChosenRoomCardHolder.Controls.Add(cardControl);
 
@@ -110,12 +105,24 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             #region Special Requests
             tbCarPlateNumber.ReadOnly = true;
 
-            if(_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Transzfer")) { cbAirportTransfer.SelectedIndex = 0; }
-            if(_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Pótágy")) { cbExtraBed.SelectedIndex = 1; }
-            if(_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Kiságy")) { cbExtraBed.SelectedIndex = 2; }
-            if(_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Parkolás")) 
-                { ckbParking.Checked = true; tbCarPlateNumber.Text = _bookingService.GetCarPlateNumberByBooking(selectedBooking); }
+            if (_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Transzfer")) { cbAirportTransfer.SelectedIndex = 0; }
+            else { cbAirportTransfer.SelectedIndex = 1; }
+
+            if (_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Pótágy")) { cbExtraBed.SelectedIndex = 1; }
+            else if (_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Kiságy")) { cbExtraBed.SelectedIndex = 2; }
+            else { cbExtraBed.SelectedIndex = 0; }
+
+            if (_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Parkolás"))
+            { ckbParking.Checked = true; tbCarPlateNumber.Text = _bookingService.GetCarPlateNumberByBooking(selectedBooking); }
+
             if (_bookingService.IsChampagneOrdered(selectedBooking)) { cbChampagne.SelectedIndex = 0; }
+            else { cbChampagne.SelectedIndex = 1; }
+
+            #endregion
+
+            #region Summary
+
+            tcGuests.TabPages.Clear();
 
             #endregion
         }
@@ -178,29 +185,247 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             }
         }
 
-        // ------------------
+        // TODO: TOTAL_NIGHTS & LOYALTY LEVEL KEZELÉS, KELLENE PHONE NUMBER A DB-BA
+        int guestCount = 0;
+        private void btnAddGuest_Click(object sender, EventArgs e)
+        {
+            if (!guestIsSaved)
+            {
+                MessageBox.Show("Please save the Guest details before adding a new Guest.",
+                        "Save Required",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                return;
+            }
+
+            ckbEditData.Checked = true;
+
+            guestCount += 1;
+            cbGuests.Items.Add($"Guest {guestCount}");
+            cbGuests.SelectedIndex = guestCount - 1;
+
+            tbEmail.Clear();
+            tbDocumentNumber.Clear();
+            tbFirstName.Clear();
+            tbLastName.Clear();
+            tbPhone.Clear();
+            dtpBirthdate.Value = DateTime.Today;
+            cbNationality.SelectedItem = "Hungary";
+            tbZipCode.Clear();
+            tbCity.Clear();
+            tbStreet.Clear();
+            tbCarPlateNumber.Clear();
+            ckbEditData.Checked = true;
+            guestIsSaved = false;
+        }
+
+        bool dataModified = false;
+        int modifiedGuestIndex;
+        private void btnEditGuestData_Click(object sender, EventArgs e)
+        {
+            modifiedGuestIndex = cbGuests.SelectedIndex;
+            dataModified = true;
+            guestIsSaved = false;
+            ckbEditData.Checked = true;
+        }
+
+        bool guestIsSaved = false;
+        private void btnSaveGuest_Click(object sender, EventArgs e)
+        {
+            Guest guest;
+
+            if (!PersonalDataValidationConfirm()) return;
+
+            DialogResult result = MessageBox.Show("Are you sure the details are correct?",
+               "Confirmation",
+               MessageBoxButtons.YesNo,
+               MessageBoxIcon.Question);
+
+            if (cbGuests.Visible == false) cbGuests.Visible = true;
+
+            if (result == DialogResult.Yes)
+            {
+                if (dataModified)
+                {
+                    guest = GetGuestFromInput();
+
+                    if (guestsOfBooking.Count() > 0)
+                    {
+                        guest = guestsOfBooking[modifiedGuestIndex];
+                    }
+                    else
+                    {
+                        guestsOfBooking.Add(guest);
+
+                        guestCount++;
+                        cbGuests.Items.Add($"Guest {guestCount}");
+                        cbGuests.SelectedIndex = guestCount - 1;
+                    }
+
+                    tcGuests.TabPages.Clear();
+                    foreach(var g in guestsOfBooking) AddGuestTabToSummary(g);
+
+                    dataModified = false;
+                    guestIsSaved = true;
+                    ckbEditData.Checked = false;
+                }
+
+                else if (!guestsOfBooking.Any(g => g.IdCardNumber == tbDocumentNumber.Text.Trim()))
+                {
+                    _editingGuestId = 0;
+
+                    guest = GetGuestFromInput();
+
+                    guestsOfBooking.Add(guest);
+                    AddGuestTabToSummary(guest);
+                    ckbEditData.Checked = false;
+
+                    guestIsSaved = true;
+
+                    if (guestCount == 0)
+                    {
+                        guestCount++;
+                        cbGuests.Items.Add($"Guest {guestCount}");
+                    }
+                    cbGuests.SelectedIndex = guestCount - 1;
+                }
+                else { MessageBox.Show("This ID card number is already saved!", "Already exists", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
+        }
+
+        private void cbGuests_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cbGuests.SelectedIndex >= 0)
+            {
+                FillGuestPersonalData(cbGuests.SelectedIndex);
+            }
+        }
+
+        public void FillGuestPersonalData(int i)
+        {
+            if (guestsOfBooking.Count() > i) tbFirstName.Text = guestsOfBooking[i].FName;
+            else { tbFirstName.Text = ""; }
+            if (guestsOfBooking.Count() > i) tbLastName.Text = guestsOfBooking[i].LName;
+            else { tbLastName.Text = ""; }
+            if (guestsOfBooking.Count() > i) tbEmail.Text = guestsOfBooking[i].Email;
+            else { tbEmail.Text = ""; }
+            if (guestsOfBooking.Count() > i) dtpBirthdate.Value = Convert.ToDateTime(guestsOfBooking[i].DateOfBirth);
+            else { dtpBirthdate.Value = DateTime.Today; }
+            if (guestsOfBooking.Count() > i) cbNationality.SelectedItem = guestsOfBooking[i].Country;
+            else { cbNationality.SelectedItem = "Hungary"; }
+            if (guestsOfBooking.Count() > i) tbZipCode.Text = guestsOfBooking[i].ZipCode;
+            else { tbZipCode.Text = ""; }
+            if (guestsOfBooking.Count() > i) tbCity.Text = guestsOfBooking[i].City;
+            else { tbCity.Text = ""; }
+            if (guestsOfBooking.Count() > i) tbStreet.Text = guestsOfBooking[i].Street;
+            else { tbStreet.Text = ""; }
+            if (guestsOfBooking.Count() > i) tbDocumentNumber.Text = guestsOfBooking[i].IdCardNumber;
+            else { tbDocumentNumber.Text = ""; }
+        }
+
+        public void AddGuestTabToSummary(Guest g)
+        {
+            int index = guestsOfBooking.IndexOf(g);
+
+            GuestDataSumControl guestTab = new GuestDataSumControl();
+            TabPage tp = new TabPage($"tpGuest{index}");
+
+            tp.Text = $"Guest {index + 1}";
+            tp.Controls.Add(guestTab);
+
+            guestTab.FillGuestTabData(g);
+
+            tcGuests.TabPages.Add(tp);
+        }
+
+        private Guest GetGuestFromInput()
+        {
+            return new Guest
+            (
+                _editingGuestId,
+                tbEmail.Text.Trim(),
+                tbDocumentNumber.Text.Trim(),
+                tbFirstName.Text.Trim(),
+                tbLastName.Text.Trim(),
+                dtpBirthdate.Value,
+                cbNationality.SelectedItem?.ToString() ?? "Hungary",
+                tbZipCode.Text.Trim(),
+                tbCity.Text.Trim(),
+                tbStreet.Text.Trim(),
+                tbCarPlateNumber.Text.Trim(),
+                0, 0
+            );
+        }
+
+        private void LoadGuestDataToUI()
+        {
+            dtpBirthdate.MaxDate = DateTime.Now;
+            Guest? existingGuest = _bookingService.FillPersonalData(selectedBooking);
+
+            if(existingGuest != null)
+            {
+                _editingGuestId = existingGuest.Id ?? 0;
+
+                tbEmail.Text = existingGuest.Email;
+                tbDocumentNumber.Text = string.IsNullOrWhiteSpace(existingGuest.IdCardNumber)
+                    ? _bookingService.GetIdCardNumber(selectedBooking)
+                    : existingGuest.IdCardNumber;
+                tbFirstName.Text = existingGuest.FName;
+                tbLastName.Text = existingGuest.LName;
+                dtpBirthdate.Value = existingGuest.DateOfBirth ?? DateTime.Today;
+
+                if (!string.IsNullOrEmpty(existingGuest.Country))
+                {
+                    cbNationality.SelectedItem = existingGuest.Country;
+                }
+                else { cbNationality.SelectedItem = "Hungary"; }
+
+                tbZipCode.Text = existingGuest.ZipCode ?? "";
+                tbCity.Text = existingGuest.City ?? "";
+                tbStreet.Text = existingGuest.Street ?? "";
+                tbCarPlateNumber.Text = existingGuest.CarPlateNumber ?? "";
+            }
+
+            else
+            {
+                _editingGuestId = 0;
+                cbNationality.SelectedItem = "Hungary";
+            }
+        }
+
+        // --------------------------
 
         // Select Room UI műveletek
+        bool cardIsSelected = false;
         public void CardControl_CardSelected(object sender, EventArgs e)
         {
             RoomCardUserControl selectedCard = (RoomCardUserControl)sender;
             Room room = selectedCard.SelectedRoom;
 
             selectedBooking.RoomNumber = room.Room_number;
-            tcCheckin.SelectedIndex += 1;
+
+            sumSelectedRoomString.Clear();
+            string hasBalcony = room.HasBalcony == 1 ? "Balcony" : "No Balcony";
+            sumSelectedRoomString.Append($"{room.Room_number.ToString()}  |  ");
+            sumSelectedRoomString.Append($"{room.RoomsRoomtype.ToString()}  |  ");
+            sumSelectedRoomString.Append($"{room.RoomsBedType.ToString()}  |  ");
+            sumSelectedRoomString.Append($"{hasBalcony}  |  ");
+            sumSelectedRoomString.Append($"{room.RoomsView.ToString()}");
+
+            cardIsSelected = true;
         }
 
         private void ckbSelectOtherRoom_CheckedChanged(object sender, EventArgs e)
         {
             if (ckbSelectOtherRoom.Checked)
-            { 
+            {
                 flpCardHolder.Visible = true;
                 ckbBalcony.Visible = true;
                 ckbView.Visible = true;
                 ckbHotTub.Visible = true;
             }
-            else 
-            { 
+            else
+            {
                 flpCardHolder.Visible = false;
                 ckbBalcony.Visible = false;
                 ckbView.Visible = false;
@@ -230,7 +455,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             if (ckbBalcony.Checked)
             {
                 sb.Append(" AND rooms.has_balcony = 1 ");
-                
             }
 
             if (ckbView.Checked)
@@ -250,6 +474,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         }
         // -------------------------
 
+        // ------ Payment Sum ------
         private void dgvPaymentSum_SelectionChanged(object sender, EventArgs e)
         {
             dgvPaymentSum.ClearSelection();
@@ -258,6 +483,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         public void LoadBillItems()
         {
             billingItems = _bookingService.MakeListOfBills(services, selectedBooking);
+            billingItems = billingItems.OrderByDescending(e => e.Total).ToList();
+
             var bindingList = new BindingList<BillingItem>(billingItems);
 
             dgvPaymentSum.DataSource = bindingList;
@@ -278,12 +505,16 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             dgvPaymentSum.Columns[4].DefaultCellStyle.Format = "P0";
             // -----------------
         }
+        // -------------------------
 
-        // Oldalankénti betöltés
+        // - Oldalankénti betöltés -
         public void tcCheckin_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tcCheckin.SelectedIndex == 0) lbCurrentPage.Text = "1/5";
-            if (tcCheckin.SelectedIndex == 1) lbCurrentPage.Text = "2/5";
+            if (tcCheckin.SelectedIndex == 1)
+            {
+                lbCurrentPage.Text = "2/5";
+            }
 
             if (tcCheckin.SelectedIndex == 2)
             {
@@ -310,9 +541,30 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 lbGrossAmount.Text = _bookingService.CalculateGrossAmount(billingItems).ToString("C0");
             }
 
-            if (tcCheckin.SelectedIndex == 4) lbCurrentPage.Text = "5/5";
+            if (tcCheckin.SelectedIndex == 4)
+            {
+                lbCurrentPage.Text = "5/5";
+                lbSumRoomDetails.Text = sumSelectedRoomString.ToString();
+                FillSumSpecialRequests();
+
+                tcGuests.TabPages.Clear();
+
+                if(ckbParking.Checked && guestsOfBooking.Count > 0)
+                {
+                    guestsOfBooking[0].CarPlateNumber = tbCarPlateNumber.Text.Trim();
+                }
+
+                foreach (var g in guestsOfBooking)
+                {
+                    AddGuestTabToSummary(g);
+                }
+
+                lbSumRemaining.Text = $"{_bookingService.CalculateGrossAmount(billingItems) - Convert.ToInt32(lbSumPaid.Text):C0}";
+                lbSumTotal.Text = $"{_bookingService.CalculateGrossAmount(billingItems):C0}";
+                lbSumPaid.Text = $"{Convert.ToInt32(lbSumPaid.Text)}";
+            }
         }
-        // ---------------------
+        // -------------------------
 
         #region Special Requests
 
@@ -323,7 +575,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             if (cbAirportTransfer.SelectedIndex == 0)
             {
                 service = new Service(
-                    0,
+                    3,
                     "Transzfer",
                     "Reptéri transzfer egy irányba",
                     ServiceTypeHu.Logisztika,
@@ -345,7 +597,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 if (cbCateringLevel.SelectedItem.ToString() == "Halfboard")
                 {
                     Service service = new Service(
-                        0,
+                        19,
                         "Félpanzió",
                         "Félpanziós ellátás reggelivel és vacsorával",
                         ServiceTypeHu.Logisztika,
@@ -355,12 +607,13 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                         ServiceTypeEn.Logistics
                     );
                     services.Add(service);
+                    lbSumCatering.Text = "Halfboard";
                 }
 
                 else if (cbCateringLevel.SelectedItem.ToString() == "Fullboard")
                 {
                     Service service = new Service(
-                        0,
+                        20,
                         "Teljes ellátás",
                         "Teljes ellátás reggelivel, ebéddel és vacsorával.",
                         ServiceTypeHu.Logisztika,
@@ -370,7 +623,10 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                         ServiceTypeEn.Logistics
                     );
                     services.Add(service);
+                    lbSumCatering.Text = "Fullboard";
                 }
+
+                else { lbSumCatering.Text = "Breakfast"; }
             }
 
             selectedBooking.SelectedCateringLevel = (CateringLevel)System.Enum.Parse(typeof(CateringLevel), cbCateringLevel.SelectedItem.ToString().ToLower());
@@ -383,7 +639,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             if (cbChampagne.SelectedIndex == 0)
             {
                 service = new Service(
-                    0,
+                    21,
                     "Pezsgő bekészítés",
                     "A világ legikonikusabb champagne-ja; vibrálóan friss, citrusos és briósos jegyekkel, valamint tökéletesen elegáns textúrával.",
                     ServiceTypeHu.Extrák,
@@ -409,7 +665,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 int days = (selectedBooking.EndOfStay - selectedBooking.BeginningOfStay).Days;
 
                 service = new Service(
-                    0,
+                    2,
                     "Parkolás",
                     "Zárt parkoló napidíj",
                     ServiceTypeHu.Logisztika,
@@ -421,27 +677,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 services.Add(service);
             }
 
-            else { tbCarPlateNumber.ReadOnly = true; }
-        }
-
-        private void tbCarPlateNumber_TextChanged(object sender, EventArgs e)
-        {
-            services.RemoveAll(s => s.NameHu == "Parkolás");
-
-            if (parkingChecked)
-            {
-                service = new Service(
-                    0,
-                    "Parkolás",
-                    "Zárt parkoló napi díj",
-                    ServiceTypeHu.Logisztika,
-                    3000,
-                    "Parking",
-                    "Gated parking daily fee",
-                    ServiceTypeEn.Logistics
-                );
-                services.Add(service);
-            }
+            else { tbCarPlateNumber.ReadOnly = true; tbCarPlateNumber.Clear(); }
         }
 
         private void cbExtraBed_SelectedIndexChanged(object sender, EventArgs e)
@@ -451,7 +687,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             if (cbExtraBed.SelectedIndex == 1)
             {
                 service = new Service(
-                    0,
+                    9,
                     "Pótágy",
                     "Extra ágy biztosítása",
                     ServiceTypeHu.Extrák,
@@ -466,7 +702,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             else if (cbExtraBed.SelectedIndex == 2)
             {
                 service = new Service(
-                    0,
+                    10,
                     "Kiságy",
                     "Babaágy biztosítása",
                     ServiceTypeHu.Extrák,
@@ -486,7 +722,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             if (cbDepartureNotes.SelectedIndex == 1)
             {
                 service = new Service(
-                    0,
+                    22,
                     "Késői kijelentkezés",
                     "Fizetős szobahosszabbítás a távozás napján.",
                     ServiceTypeHu.Logisztika,
@@ -501,7 +737,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             else if (cbDepartureNotes.SelectedIndex == 2)
             {
                 service = new Service(
-                    0,
+                    23,
                     "Korai távozás",
                     "Tervezettnél korábbi elutazás a szállodából.",
                     ServiceTypeHu.Logisztika,
@@ -525,6 +761,20 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 flpCardHolder.Controls.Add(roomCard);
             }
         }
+
+        private void FillSumSpecialRequests()
+        {
+            var validNames = services.Select(s => s.NameHu).Where(name => !string.IsNullOrWhiteSpace(name));
+
+            if (!validNames.Any())
+            {
+                lbSumExtras.Text = "No special requests";
+                return;
+            }
+
+            string sumRequests = string.Join(" | ", services.Select(s => s.NameHu));
+            lbSumExtras.Text = sumRequests;
+        }
         #endregion
 
         #region Buttons
@@ -535,6 +785,26 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             {
                 if (!PersonalDataValidationConfirm())
                 {
+                    return;
+                }
+
+                if (guestsOfBooking.Count() == 0 || dataModified)
+                {
+                    MessageBox.Show("Please save the guest details before proceeding.",
+                        "Guest Details Missing",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (dataModified && !guestIsSaved) return; 
+            }
+
+            if (tcCheckin.SelectedIndex == 1)
+            {
+                if (!cardIsSelected)
+                {
+                    MessageBox.Show("You must select a Room first!", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
             }
@@ -563,23 +833,27 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void btnConfirm_Click(object sender, EventArgs e)
         {
-            Guest guest = new Guest
-            (
-                tbEmail.Text,
-                tbDocumentNumber.Text,
-                tbFirstName.Text,
-                tbLastName.Text,
-                dtpBirthdate.Value,
-                cbNationality.SelectedIndex.ToString(),
-                tbZipCode.Text,
-                tbCity.Text,
-                tbStreet.Text,
-                tbCarPlateNumber.Text,
-                0,
-                0
+            DialogResult dr = MessageBox.Show(
+                "Are you sure all the details are correct?",
+                "Cofirmation",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question
             );
+            
+            if(dr == DialogResult.Yes)
+            {
+                try
+                {
+                    _bookingService.ConfirmCheckin(selectedBooking, guestsOfBooking, services);
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
 
-            _bookingService.SaveGuest(guest);
+            else { return; }
         }
 
         private bool HasValidationError(TextBox textbox)

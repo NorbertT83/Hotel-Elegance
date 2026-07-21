@@ -1,6 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Hotel_erp_Winforms_App.Models;
-using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
 using MySql.Data.MySqlClient;
@@ -249,7 +248,7 @@ namespace Hotel_erp_Winforms_App.Services
 
         public Guest? FillPersonalData(Booking selectedBooking)
         {
-            string query = "SELECT fname, lname, email, date_of_birth, country, zip_code, city, street, id_card_number, car_plate_number, total_nights, loyalty_level " +
+            string query = "SELECT guests.id, fname, lname, email, date_of_birth, country, zip_code, city, street, id_card_number, car_plate_number, total_nights, loyalty_level " +
                 "FROM guests " +
                 "INNER JOIN bookings ON guests.id = bookings.guest1_id " +
                 "WHERE bookings.id = @bookingId";
@@ -267,6 +266,7 @@ namespace Hotel_erp_Winforms_App.Services
                         {
                             return new Guest
                             (
+                                Convert.ToInt32(reader["id"]),
                                 (reader["email"] as string) ?? "",
                                 (reader["id_card_number"] as string) ?? "",
                                 (reader["fname"] as string) ?? "",
@@ -380,13 +380,13 @@ namespace Hotel_erp_Winforms_App.Services
             foreach(Service service in servicesList)
             {
                 decimal netPrice = service.Price / 1.27m;
+                int days = (selectedBooking.EndOfStay - selectedBooking.BeginningOfStay).Days;
 
                 if (service.NameHu == "Parkolás")
                 {
-                    int days = (selectedBooking.EndOfStay - selectedBooking.BeginningOfStay).Days;
-
                     BillingItem parking = new BillingItem
                     (
+                        service.Id,
                         DateTime.Now,
                         service.NameHu,
                         netPrice,
@@ -397,10 +397,41 @@ namespace Hotel_erp_Winforms_App.Services
                     billingItems.Add(parking);
                 }
 
+                else if(service.NameHu == "Teljes ellátás")
+                {
+                    BillingItem fullBoard = new BillingItem
+                    (
+                        service.Id,
+                        DateTime.Now,
+                        service.NameHu,
+                        28000 / 1.05m * GetNumberOfGuests(selectedBooking),
+                        days,
+                        0.05m,
+                        service.Price * days
+                    );
+                    billingItems.Add(fullBoard);
+                }
+
+                else if (service.NameHu == "Félpanzió")
+                {
+                    BillingItem halfBoard = new BillingItem
+                    (
+                        service.Id,
+                        DateTime.Now,
+                        service.NameHu,
+                        17000 / 1.05m * GetNumberOfGuests(selectedBooking),
+                        days,
+                        0.05m,
+                        service.Price * days
+                    );
+                    billingItems.Add(halfBoard);
+                }
+
                 else
                 {
                     BillingItem item = new BillingItem
                     (
+                        service.Id,
                         DateTime.Now,
                         service.NameHu,
                         netPrice,
@@ -439,6 +470,7 @@ namespace Hotel_erp_Winforms_App.Services
 
                             BillingItem roomItem = new BillingItem
                             (
+                                0,
                                 Convert.ToDateTime(reader["created_at"]),
                                 "Szoba ár",
                                 netPricePerNight,
@@ -516,6 +548,28 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
+        public int GetNumberOfGuests(Booking selectedBooking)
+        {
+            string query = "SELECT (" +
+                                "(guest1_id IS NOT NULL) + " +
+                                "(guest2_id IS NOT NULL) + " +
+                                "(guest3_id IS NOT NULL) + " +
+                                "(guest4_id IS NOT NULL)) as vendegek_szama " +
+                           "FROM bookings " +
+                           "WHERE bookings.id = @bookingId";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+                    conn.Open();
+
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
         public int CalculateNetAmount(List<BillingItem> billingItems)
         {
             int netAmount = 0;
@@ -572,6 +626,161 @@ namespace Hotel_erp_Winforms_App.Services
             }
 
             return grossAmount;
+        }
+
+        public string GetIdCardNumber(Booking booking)
+        {
+            string query = "SELECT guests.id_card_number " +
+                "FROM guests " +
+                "INNER JOIN bookings ON bookings.guest1_id = guests.id " +
+                "WHERE bookings.id = @bookingId";
+
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", booking.Id);
+                    conn.Open();
+
+                    object result = cmd.ExecuteScalar();
+                    return result != null ? result.ToString() : string.Empty;
+                }
+            }
+        }
+
+        public void ConfirmCheckin(Booking booking, List<Guest> guestList, List<Service> serviceItems)
+        {
+            // 1.: SAVE GUESTS
+            string saveGuestQuery = @"
+                INSERT INTO guests (id, email, id_card_number, fname, lname, date_of_birth, country, zip_code, city, street, car_plate_number, total_nights, loyalty_level)
+                VALUES (@id, @email, @idNumber, @fname, @lname, @dateOfBirth, @country, @zip, @city, @street, @carPlate, @totalNights, @loyalty)
+                ON DUPLICATE KEY UPDATE
+                    id = LAST_INSERT_ID(id),
+                    email = VALUES(email),
+                    id_card_number = VALUES(id_card_number),
+                    fname = VALUES(fname),
+                    lname = VALUES(lname),
+                    date_of_birth = VALUES(date_of_birth),
+                    country = VALUES(country),
+                    zip_code = VALUES(zip_code),
+                    city = VALUES(city),
+                    street = VALUES(street),
+                    car_plate_number = VALUES(car_plate_number),
+                    total_nights = VALUES(total_nights),
+                    loyalty_level = VALUES(loyalty_level);
+                SELECT LAST_INSERT_ID();";
+
+            // 2.: UPDATE BOOKING
+            string updateBookingQuery = @"
+                UPDATE bookings
+                SET room_number = @roomNumber,
+                    room_type = @roomType,
+                    guest1_id = @guestId1,
+                    guest2_id = @guestId2,
+                    guest3_id = @guestId3,
+                    guest4_id = @guestId4,
+                    catering_level = @cateringLevel,
+                    checkin = NOW()
+                WHERE id = @bookingId;";
+
+            // 3.: UPDATE ROOM
+            string updateRoomQuery = @"
+                UPDATE rooms
+                SET status = 'unavailable'
+                WHERE room_number = @roomNumber;";
+
+            // 4.: SAVE SERVICES
+            string updateServicesQuery = @"
+                INSERT INTO servicebookings (service_id, booking_id)
+                VALUES (@serviceId, @bookingId);";
+
+            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                using(MySqlTransaction transaction = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        List<int> savedGuestsIds = new List<int>();
+
+                        foreach(Guest guest in guestList)
+                        {
+                            // VENDÉGEK MENTÉSE
+                            using (MySqlCommand cmd = new MySqlCommand(saveGuestQuery, conn, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@id", guest.Id == 0 ? (object)DBNull.Value : guest.Id);
+                                cmd.Parameters.AddWithValue("@email", guest.Email ?? (object)DBNull.Value);
+                                cmd.Parameters.AddWithValue("@idNumber", guest.IdCardNumber);
+                                cmd.Parameters.AddWithValue("@fname", guest.FName);
+                                cmd.Parameters.AddWithValue("@lname", guest.LName);
+                                cmd.Parameters.AddWithValue("@dateOfBirth", guest.DateOfBirth);
+                                cmd.Parameters.AddWithValue("@country", guest.Country);
+                                cmd.Parameters.AddWithValue("@zip", guest.ZipCode);
+                                cmd.Parameters.AddWithValue("@city", guest.City);
+                                cmd.Parameters.AddWithValue("@street", guest.Street);
+                                cmd.Parameters.AddWithValue("@carPlate", (object)guest.CarPlateNumber ?? DBNull.Value);
+                                cmd.Parameters.AddWithValue("@totalNights", guest.TotalNights);
+                                cmd.Parameters.AddWithValue("@loyalty", guest.LoyaltyLevel);
+
+                                object result = cmd.ExecuteScalar();
+                                int currentGuestId = 0;
+
+                                if(result != null && result != DBNull.Value && Convert.ToInt32(result) != 0)
+                                {
+                                    currentGuestId = Convert.ToInt32(result);
+                                }
+                                else { currentGuestId = guest.Id ?? 0; }
+
+
+                                savedGuestsIds.Add(currentGuestId);
+                            }
+                        }
+
+                        // BOOKING UPDATE
+                        using(MySqlCommand cmd = new MySqlCommand(updateBookingQuery, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@bookingId", booking.Id);
+                            cmd.Parameters.AddWithValue("@roomNumber", booking.RoomNumber);
+                            cmd.Parameters.AddWithValue("@roomType", booking.SelectedRoomType);
+                            cmd.Parameters.AddWithValue("@cateringLevel", booking.SelectedCateringLevel);
+
+                            cmd.Parameters.AddWithValue("@guestId1", savedGuestsIds.Count > 0 ? savedGuestsIds[0] : (object)DBNull.Value);
+                            cmd.Parameters.AddWithValue("@guestId2", savedGuestsIds.Count > 1 ? savedGuestsIds[1] : (object)DBNull.Value);
+                            cmd.Parameters.AddWithValue("@guestId3", savedGuestsIds.Count > 2 ? savedGuestsIds[2] : (object)DBNull.Value);
+                            cmd.Parameters.AddWithValue("@guestId4", savedGuestsIds.Count > 3 ? savedGuestsIds[3] : (object)DBNull.Value);
+
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // ROOM UPDATE
+                        using(MySqlCommand cmd = new MySqlCommand(updateRoomQuery, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@roomNumber", booking.RoomNumber);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // SZOLGÁLTATLÁSOK
+                        foreach (var item in serviceItems)
+                        {
+                            using (MySqlCommand cmd = new MySqlCommand(updateServicesQuery, conn, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@serviceId", item.Id);
+                                cmd.Parameters.AddWithValue("@bookingId", booking.Id);
+
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        transaction.Commit();
+                    }
+
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
     }
 }

@@ -7,9 +7,10 @@ namespace Hotel_erp_Winforms_App.Models
 {
     public class Guest
     {
-        public Guest(string email, string idCardNumber, string fName, string lName, DateTime? dateOfBirth, 
+        public Guest(int id, string email, string idCardNumber, string fName, string lName, DateTime? dateOfBirth, 
             string country, string zipCode, string city, string street, string carPlateNumber, int totalNights, int loyaltyLevel)
         {
+            Id = id;
             Email = email;
             IdCardNumber = idCardNumber;
             FName = fName;
@@ -24,6 +25,7 @@ namespace Hotel_erp_Winforms_App.Models
             LoyaltyLevel = loyaltyLevel;
         }
 
+        public int? Id { get; set; }
         public string Email { get; set; }
         public string IdCardNumber { get; set; }
         public string FName { get; set; }

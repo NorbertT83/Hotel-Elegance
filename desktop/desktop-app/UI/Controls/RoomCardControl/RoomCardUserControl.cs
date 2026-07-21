@@ -17,6 +17,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
         private BookingService _bookingService;
         public Room SelectedRoom { get; private set; }
         public event EventHandler CardSelected;
+        private bool clicked = false;
 
         public RoomCardUserControl()
         {
@@ -53,6 +54,9 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
         public void RoomCard_Click(object sender, EventArgs e)
         {
             CardSelected?.Invoke(this, EventArgs.Empty);
+            clicked = true;
+
+            pnlMain.BackColor = Color.FromArgb(170, 202, 255);
         }
 
         #region Mouse effects
@@ -63,17 +67,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
 
         private void RoomCard_MouseLeave(object sender, EventArgs e)
         {
-            pnlMain.BackColor = Color.FromArgb(239, 246, 255);
-        }
-
-        private void RoomCard_MouseDown(object sender, MouseEventArgs e)
-        {
-            pnlMain.BackColor = Color.FromArgb(170, 202, 255);
-        }
-
-        private void RoomCard_MouseUp(object sender, MouseEventArgs e)
-        {
-            pnlMain.BackColor = Color.FromArgb(220, 233, 255);
+            if (!clicked) pnlMain.BackColor = Color.FromArgb(239, 246, 255);
         }
         #endregion
     }

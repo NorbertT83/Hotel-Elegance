@@ -38,6 +38,10 @@
             DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             tcCheckin = new TabControl();
             tpPersonalData = new TabPage();
+            cbGuests = new ComboBox();
+            btnEditGuestData = new Button();
+            btnSaveGuest = new Button();
+            btnAddGuest = new Button();
             button1 = new Button();
             ckbEditData = new CheckBox();
             dtpBirthdate = new DateTimePicker();
@@ -136,6 +140,31 @@
             label35 = new Label();
             label36 = new Label();
             tpSummary = new TabPage();
+            panel8 = new Panel();
+            lbSumCatering = new Label();
+            label49 = new Label();
+            tableLayoutPanel6 = new TableLayoutPanel();
+            lbSumRoomDetails = new Label();
+            tableLayoutPanel5 = new TableLayoutPanel();
+            lbSumExtras = new Label();
+            label85 = new Label();
+            label84 = new Label();
+            tcGuests = new TabControl();
+            tpGuest1 = new TabPage();
+            lbSumRemaining = new Label();
+            label80 = new Label();
+            lbSumTotal = new Label();
+            lbSumPaid = new Label();
+            label83 = new Label();
+            label79 = new Label();
+            label78 = new Label();
+            label63 = new Label();
+            label54 = new Label();
+            label48 = new Label();
+            panel7 = new Panel();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            label46 = new Label();
+            label47 = new Label();
             pnlBottom = new Panel();
             lbCurrentPage = new Label();
             label44 = new Label();
@@ -161,6 +190,13 @@
             ((System.ComponentModel.ISupportInitialize)dgvPaymentSum).BeginInit();
             panel4.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
+            tpSummary.SuspendLayout();
+            panel8.SuspendLayout();
+            tableLayoutPanel6.SuspendLayout();
+            tableLayoutPanel5.SuspendLayout();
+            tcGuests.SuspendLayout();
+            panel7.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
             pnlBottom.SuspendLayout();
             SuspendLayout();
             // 
@@ -184,6 +220,10 @@
             // tpPersonalData
             // 
             tpPersonalData.BackColor = Color.White;
+            tpPersonalData.Controls.Add(cbGuests);
+            tpPersonalData.Controls.Add(btnEditGuestData);
+            tpPersonalData.Controls.Add(btnSaveGuest);
+            tpPersonalData.Controls.Add(btnAddGuest);
             tpPersonalData.Controls.Add(button1);
             tpPersonalData.Controls.Add(ckbEditData);
             tpPersonalData.Controls.Add(dtpBirthdate);
@@ -223,12 +263,58 @@
             tpPersonalData.TabIndex = 0;
             tpPersonalData.Text = "Personal Data";
             // 
+            // cbGuests
+            // 
+            cbGuests.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbGuests.FormattingEnabled = true;
+            cbGuests.Location = new Point(272, 110);
+            cbGuests.Name = "cbGuests";
+            cbGuests.Size = new Size(88, 23);
+            cbGuests.TabIndex = 15;
+            cbGuests.SelectedIndexChanged += cbGuests_SelectedIndexChanged;
+            // 
+            // btnEditGuestData
+            // 
+            btnEditGuestData.FlatAppearance.BorderSize = 0;
+            btnEditGuestData.FlatStyle = FlatStyle.Flat;
+            btnEditGuestData.Image = Properties.Resources.Edit_25;
+            btnEditGuestData.Location = new Point(441, 106);
+            btnEditGuestData.Name = "btnEditGuestData";
+            btnEditGuestData.Size = new Size(33, 29);
+            btnEditGuestData.TabIndex = 14;
+            btnEditGuestData.UseVisualStyleBackColor = true;
+            btnEditGuestData.Click += btnEditGuestData_Click;
+            // 
+            // btnSaveGuest
+            // 
+            btnSaveGuest.FlatAppearance.BorderSize = 0;
+            btnSaveGuest.FlatStyle = FlatStyle.Flat;
+            btnSaveGuest.Image = Properties.Resources.Save;
+            btnSaveGuest.Location = new Point(365, 106);
+            btnSaveGuest.Name = "btnSaveGuest";
+            btnSaveGuest.Size = new Size(33, 29);
+            btnSaveGuest.TabIndex = 14;
+            btnSaveGuest.UseVisualStyleBackColor = true;
+            btnSaveGuest.Click += btnSaveGuest_Click;
+            // 
+            // btnAddGuest
+            // 
+            btnAddGuest.FlatAppearance.BorderSize = 0;
+            btnAddGuest.FlatStyle = FlatStyle.Flat;
+            btnAddGuest.Image = Properties.Resources.personadd;
+            btnAddGuest.Location = new Point(403, 106);
+            btnAddGuest.Name = "btnAddGuest";
+            btnAddGuest.Size = new Size(33, 29);
+            btnAddGuest.TabIndex = 14;
+            btnAddGuest.UseVisualStyleBackColor = true;
+            btnAddGuest.Click += btnAddGuest_Click;
+            // 
             // button1
             // 
             button1.FlatAppearance.BorderSize = 0;
             button1.FlatStyle = FlatStyle.Flat;
             button1.Image = Properties.Resources.print;
-            button1.Location = new Point(396, 100);
+            button1.Location = new Point(479, 106);
             button1.Name = "button1";
             button1.Size = new Size(33, 29);
             button1.TabIndex = 14;
@@ -236,13 +322,13 @@
             // 
             // ckbEditData
             // 
-            ckbEditData.AutoSize = true;
-            ckbEditData.Location = new Point(435, 106);
+            ckbEditData.Location = new Point(212, 112);
             ckbEditData.Name = "ckbEditData";
-            ckbEditData.Size = new Size(73, 19);
+            ckbEditData.Size = new Size(46, 19);
             ckbEditData.TabIndex = 13;
-            ckbEditData.Text = "Edit Data";
+            ckbEditData.Text = "Edit";
             ckbEditData.UseVisualStyleBackColor = true;
+            ckbEditData.Visible = false;
             ckbEditData.CheckedChanged += ckbEditData_CheckedChanged;
             // 
             // dtpBirthdate
@@ -250,7 +336,7 @@
             dtpBirthdate.Font = new Font("Segoe UI", 12F);
             dtpBirthdate.Format = DateTimePickerFormat.Short;
             dtpBirthdate.Location = new Point(272, 291);
-            dtpBirthdate.MaxDate = new DateTime(2026, 7, 17, 0, 0, 0, 0);
+            dtpBirthdate.MaxDate = new DateTime(2026, 7, 21, 0, 0, 0, 0);
             dtpBirthdate.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             dtpBirthdate.Name = "dtpBirthdate";
             dtpBirthdate.Size = new Size(236, 29);
@@ -879,7 +965,6 @@
             tbCarPlateNumber.Size = new Size(215, 29);
             tbCarPlateNumber.TabIndex = 3;
             tbCarPlateNumber.TextAlign = HorizontalAlignment.Right;
-            tbCarPlateNumber.TextChanged += tbCarPlateNumber_TextChanged;
             // 
             // label16
             // 
@@ -1315,13 +1400,298 @@
             // 
             // tpSummary
             // 
+            tpSummary.BackColor = Color.White;
+            tpSummary.Controls.Add(panel8);
+            tpSummary.Controls.Add(panel7);
             tpSummary.Location = new Point(4, 5);
             tpSummary.Name = "tpSummary";
             tpSummary.Padding = new Padding(3);
             tpSummary.Size = new Size(535, 588);
             tpSummary.TabIndex = 4;
             tpSummary.Text = "tabPage5";
-            tpSummary.UseVisualStyleBackColor = true;
+            // 
+            // panel8
+            // 
+            panel8.Controls.Add(lbSumCatering);
+            panel8.Controls.Add(label49);
+            panel8.Controls.Add(tableLayoutPanel6);
+            panel8.Controls.Add(tableLayoutPanel5);
+            panel8.Controls.Add(label85);
+            panel8.Controls.Add(label84);
+            panel8.Controls.Add(tcGuests);
+            panel8.Controls.Add(lbSumRemaining);
+            panel8.Controls.Add(label80);
+            panel8.Controls.Add(lbSumTotal);
+            panel8.Controls.Add(lbSumPaid);
+            panel8.Controls.Add(label83);
+            panel8.Controls.Add(label79);
+            panel8.Controls.Add(label78);
+            panel8.Controls.Add(label63);
+            panel8.Controls.Add(label54);
+            panel8.Controls.Add(label48);
+            panel8.Dock = DockStyle.Fill;
+            panel8.Location = new Point(3, 103);
+            panel8.Name = "panel8";
+            panel8.Padding = new Padding(10);
+            panel8.Size = new Size(529, 482);
+            panel8.TabIndex = 1;
+            // 
+            // lbSumCatering
+            // 
+            lbSumCatering.Font = new Font("Segoe UI", 10F);
+            lbSumCatering.Location = new Point(416, 268);
+            lbSumCatering.Name = "lbSumCatering";
+            lbSumCatering.Size = new Size(71, 20);
+            lbSumCatering.TabIndex = 11;
+            lbSumCatering.Text = "Halfboard";
+            lbSumCatering.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label49
+            // 
+            label49.AutoSize = true;
+            label49.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            label49.ForeColor = Color.DimGray;
+            label49.Location = new Point(352, 269);
+            label49.Name = "label49";
+            label49.Size = new Size(70, 19);
+            label49.TabIndex = 10;
+            label49.Text = "Catering:";
+            // 
+            // tableLayoutPanel6
+            // 
+            tableLayoutPanel6.ColumnCount = 1;
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel6.Controls.Add(lbSumRoomDetails, 0, 0);
+            tableLayoutPanel6.Location = new Point(0, 261);
+            tableLayoutPanel6.Name = "tableLayoutPanel6";
+            tableLayoutPanel6.Padding = new Padding(15, 0, 0, 0);
+            tableLayoutPanel6.RowCount = 1;
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel6.Size = new Size(337, 33);
+            tableLayoutPanel6.TabIndex = 9;
+            // 
+            // lbSumRoomDetails
+            // 
+            lbSumRoomDetails.Anchor = AnchorStyles.Left;
+            lbSumRoomDetails.Font = new Font("Segoe UI", 10F);
+            lbSumRoomDetails.Location = new Point(18, 7);
+            lbSumRoomDetails.Name = "lbSumRoomDetails";
+            lbSumRoomDetails.Size = new Size(316, 19);
+            lbSumRoomDetails.TabIndex = 6;
+            lbSumRoomDetails.Text = "Airport transfer";
+            // 
+            // tableLayoutPanel5
+            // 
+            tableLayoutPanel5.ColumnCount = 1;
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel5.Controls.Add(lbSumExtras, 0, 0);
+            tableLayoutPanel5.Location = new Point(0, 329);
+            tableLayoutPanel5.Name = "tableLayoutPanel5";
+            tableLayoutPanel5.Padding = new Padding(15, 0, 0, 0);
+            tableLayoutPanel5.RowCount = 1;
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel5.Size = new Size(529, 33);
+            tableLayoutPanel5.TabIndex = 9;
+            // 
+            // lbSumExtras
+            // 
+            lbSumExtras.Anchor = AnchorStyles.Left;
+            lbSumExtras.Font = new Font("Segoe UI", 10F);
+            lbSumExtras.Location = new Point(18, 7);
+            lbSumExtras.Name = "lbSumExtras";
+            lbSumExtras.Size = new Size(493, 19);
+            lbSumExtras.TabIndex = 6;
+            lbSumExtras.Text = "Airport transfer";
+            // 
+            // label85
+            // 
+            label85.BackColor = Color.FromArgb(230, 235, 240);
+            label85.Location = new Point(4, 365);
+            label85.Name = "label85";
+            label85.Size = new Size(523, 1);
+            label85.TabIndex = 3;
+            label85.Text = "label24";
+            // 
+            // label84
+            // 
+            label84.BackColor = Color.FromArgb(230, 235, 240);
+            label84.Location = new Point(4, 297);
+            label84.Name = "label84";
+            label84.Size = new Size(523, 1);
+            label84.TabIndex = 3;
+            label84.Text = "label24";
+            // 
+            // tcGuests
+            // 
+            tcGuests.Controls.Add(tpGuest1);
+            tcGuests.Location = new Point(0, 43);
+            tcGuests.Name = "tcGuests";
+            tcGuests.SelectedIndex = 0;
+            tcGuests.Size = new Size(529, 189);
+            tcGuests.TabIndex = 8;
+            // 
+            // tpGuest1
+            // 
+            tpGuest1.Location = new Point(4, 24);
+            tpGuest1.Name = "tpGuest1";
+            tpGuest1.Padding = new Padding(3);
+            tpGuest1.Size = new Size(521, 161);
+            tpGuest1.TabIndex = 0;
+            tpGuest1.Text = "Guest 1";
+            tpGuest1.UseVisualStyleBackColor = true;
+            // 
+            // lbSumRemaining
+            // 
+            lbSumRemaining.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            lbSumRemaining.Location = new Point(267, 446);
+            lbSumRemaining.Name = "lbSumRemaining";
+            lbSumRemaining.Size = new Size(113, 25);
+            lbSumRemaining.TabIndex = 6;
+            lbSumRemaining.Text = "2000000";
+            lbSumRemaining.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label80
+            // 
+            label80.AutoSize = true;
+            label80.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            label80.Location = new Point(163, 446);
+            label80.Name = "label80";
+            label80.Size = new Size(108, 25);
+            label80.TabIndex = 6;
+            label80.Text = "Remaining:";
+            label80.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lbSumTotal
+            // 
+            lbSumTotal.Font = new Font("Segoe UI", 11F);
+            lbSumTotal.Location = new Point(291, 392);
+            lbSumTotal.Name = "lbSumTotal";
+            lbSumTotal.Size = new Size(89, 20);
+            lbSumTotal.TabIndex = 6;
+            lbSumTotal.Text = "2163000";
+            lbSumTotal.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // lbSumPaid
+            // 
+            lbSumPaid.Font = new Font("Segoe UI", 11F);
+            lbSumPaid.Location = new Point(303, 419);
+            lbSumPaid.Name = "lbSumPaid";
+            lbSumPaid.Size = new Size(77, 20);
+            lbSumPaid.TabIndex = 6;
+            lbSumPaid.Text = "0";
+            lbSumPaid.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label83
+            // 
+            label83.AutoSize = true;
+            label83.Font = new Font("Segoe UI", 11F);
+            label83.Location = new Point(163, 392);
+            label83.Name = "label83";
+            label83.Size = new Size(45, 20);
+            label83.TabIndex = 6;
+            label83.Text = "Total:";
+            // 
+            // label79
+            // 
+            label79.AutoSize = true;
+            label79.Font = new Font("Segoe UI", 11F);
+            label79.Location = new Point(163, 419);
+            label79.Name = "label79";
+            label79.Size = new Size(40, 20);
+            label79.TabIndex = 6;
+            label79.Text = "Paid:";
+            // 
+            // label78
+            // 
+            label78.AutoSize = true;
+            label78.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label78.Location = new Point(15, 375);
+            label78.Name = "label78";
+            label78.Size = new Size(69, 21);
+            label78.TabIndex = 5;
+            label78.Text = "Finance";
+            // 
+            // label63
+            // 
+            label63.AutoSize = true;
+            label63.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label63.Location = new Point(15, 305);
+            label63.Name = "label63";
+            label63.Size = new Size(133, 21);
+            label63.TabIndex = 5;
+            label63.Text = "Special requests";
+            // 
+            // label54
+            // 
+            label54.AutoSize = true;
+            label54.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label54.Location = new Point(16, 235);
+            label54.Name = "label54";
+            label54.Size = new Size(124, 21);
+            label54.TabIndex = 5;
+            label54.Text = "Selected Room";
+            // 
+            // label48
+            // 
+            label48.AutoSize = true;
+            label48.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label48.Location = new Point(13, 10);
+            label48.Name = "label48";
+            label48.Size = new Size(133, 21);
+            label48.TabIndex = 5;
+            label48.Text = "Personal Details";
+            // 
+            // panel7
+            // 
+            panel7.BackColor = Color.FromArgb(239, 246, 255);
+            panel7.Controls.Add(tableLayoutPanel4);
+            panel7.Dock = DockStyle.Top;
+            panel7.Location = new Point(3, 3);
+            panel7.Name = "panel7";
+            panel7.Size = new Size(529, 100);
+            panel7.TabIndex = 0;
+            // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.BackColor = Color.FromArgb(239, 246, 255);
+            tableLayoutPanel4.ColumnCount = 1;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel4.Controls.Add(label46, 0, 1);
+            tableLayoutPanel4.Controls.Add(label47, 0, 0);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(0, 0);
+            tableLayoutPanel4.Margin = new Padding(0, 0, 0, 15);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 1;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 19F));
+            tableLayoutPanel4.Size = new Size(529, 100);
+            tableLayoutPanel4.TabIndex = 2;
+            // 
+            // label46
+            // 
+            label46.BackColor = Color.FromArgb(230, 235, 240);
+            label46.Location = new Point(3, 81);
+            label46.Name = "label46";
+            label46.Size = new Size(523, 1);
+            label46.TabIndex = 3;
+            label46.Text = "label24";
+            // 
+            // label47
+            // 
+            label47.Anchor = AnchorStyles.None;
+            label47.AutoSize = true;
+            label47.Font = new Font("Segoe UI", 20F);
+            label47.Location = new Point(200, 22);
+            label47.Name = "label47";
+            label47.Size = new Size(128, 37);
+            label47.TabIndex = 0;
+            label47.Text = "Summary";
             // 
             // pnlBottom
             // 
@@ -1390,14 +1760,14 @@
             btnConfirm.FlatStyle = FlatStyle.Flat;
             btnConfirm.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnConfirm.ForeColor = Color.White;
-            btnConfirm.Location = new Point(390, 36);
+            btnConfirm.Location = new Point(373, 31);
             btnConfirm.Margin = new Padding(3, 3, 20, 3);
             btnConfirm.Name = "btnConfirm";
-            btnConfirm.Size = new Size(122, 41);
+            btnConfirm.Size = new Size(143, 51);
             btnConfirm.TabIndex = 14;
             btnConfirm.Text = "Confirm";
             btnConfirm.UseVisualStyleBackColor = false;
-            btnConfirm.Click += btnNext_Click;
+            btnConfirm.Click += btnConfirm_Click;
             // 
             // btnNext
             // 
@@ -1456,6 +1826,15 @@
             panel4.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
+            tpSummary.ResumeLayout(false);
+            panel8.ResumeLayout(false);
+            panel8.PerformLayout();
+            tableLayoutPanel6.ResumeLayout(false);
+            tableLayoutPanel5.ResumeLayout(false);
+            tcGuests.ResumeLayout(false);
+            panel7.ResumeLayout(false);
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
             pnlBottom.ResumeLayout(false);
             pnlBottom.PerformLayout();
             ResumeLayout(false);
@@ -1570,5 +1949,35 @@
         private CheckBox ckbHotTub;
         private CheckBox ckbView;
         private CheckBox ckbBalcony;
+        private Panel panel7;
+        private Panel panel8;
+        private Label label48;
+        private TableLayoutPanel tableLayoutPanel4;
+        private Label label46;
+        private Label label47;
+        private Label label54;
+        private TabControl tcGuests;
+        private TabPage tpGuest1;
+        private TextBox textBox4;
+        private Label label63;
+        private Label lbSumRemaining;
+        private Label label80;
+        private Label lbSumPaid;
+        private Label label79;
+        private Label label78;
+        private Label label85;
+        private Label label84;
+        private Label lbSumTotal;
+        private Label label83;
+        private Button btnAddGuest;
+        private ComboBox cbGuests;
+        private TableLayoutPanel tableLayoutPanel5;
+        private Label lbSumExtras;
+        private TableLayoutPanel tableLayoutPanel6;
+        private Label lbSumRoomDetails;
+        private Label lbSumCatering;
+        private Label label49;
+        private Button btnSaveGuest;
+        private Button btnEditGuestData;
     }
 }

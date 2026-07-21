@@ -49,10 +49,8 @@
             panel1.Size = new Size(10, 50);
             panel1.TabIndex = 3;
             panel1.Click += RoomCard_Click;
-            panel1.MouseDown += RoomCard_MouseDown;
             panel1.MouseLeave += RoomCard_MouseLeave;
             panel1.MouseHover += RoomCard_MouseHover;
-            panel1.MouseUp += RoomCard_MouseUp;
             // 
             // pnlMain
             // 
@@ -71,10 +69,8 @@
             pnlMain.Size = new Size(453, 50);
             pnlMain.TabIndex = 4;
             pnlMain.Click += RoomCard_Click;
-            pnlMain.MouseDown += RoomCard_MouseDown;
             pnlMain.MouseLeave += RoomCard_MouseLeave;
             pnlMain.MouseHover += RoomCard_MouseHover;
-            pnlMain.MouseUp += RoomCard_MouseUp;
             // 
             // lbRoomNumber
             // 
@@ -87,10 +83,8 @@
             lbRoomNumber.TabIndex = 3;
             lbRoomNumber.Text = "101";
             lbRoomNumber.Click += RoomCard_Click;
-            lbRoomNumber.MouseDown += RoomCard_MouseDown;
             lbRoomNumber.MouseLeave += RoomCard_MouseLeave;
             lbRoomNumber.MouseHover += RoomCard_MouseHover;
-            lbRoomNumber.MouseUp += RoomCard_MouseUp;
             // 
             // label2
             // 
@@ -103,10 +97,8 @@
             label2.TabIndex = 4;
             label2.Text = "|";
             label2.Click += RoomCard_Click;
-            label2.MouseDown += RoomCard_MouseDown;
             label2.MouseLeave += RoomCard_MouseLeave;
             label2.MouseHover += RoomCard_MouseHover;
-            label2.MouseUp += RoomCard_MouseUp;
             // 
             // lbPrice
             // 
@@ -114,35 +106,31 @@
             lbPrice.ForeColor = Color.Black;
             lbPrice.Image = Properties.Resources.money;
             lbPrice.ImageAlign = ContentAlignment.MiddleLeft;
-            lbPrice.Location = new Point(372, 17);
+            lbPrice.Location = new Point(367, 17);
             lbPrice.Margin = new Padding(3, 0, 3, 14);
             lbPrice.Name = "lbPrice";
-            lbPrice.Size = new Size(64, 19);
+            lbPrice.Size = new Size(71, 19);
             lbPrice.TabIndex = 5;
             lbPrice.Text = "22000";
             lbPrice.TextAlign = ContentAlignment.MiddleRight;
             lbPrice.Click += RoomCard_Click;
-            lbPrice.MouseDown += RoomCard_MouseDown;
             lbPrice.MouseLeave += RoomCard_MouseLeave;
             lbPrice.MouseHover += RoomCard_MouseHover;
-            lbPrice.MouseUp += RoomCard_MouseUp;
             // 
             // lbRoomType
             // 
             lbRoomType.AutoSize = true;
             lbRoomType.Font = new Font("Segoe UI", 10F);
             lbRoomType.ForeColor = Color.Black;
-            lbRoomType.Location = new Point(88, 17);
+            lbRoomType.Location = new Point(79, 17);
             lbRoomType.Margin = new Padding(3, 0, 3, 14);
             lbRoomType.Name = "lbRoomType";
             lbRoomType.Size = new Size(64, 19);
             lbRoomType.TabIndex = 6;
             lbRoomType.Text = "Standard";
             lbRoomType.Click += RoomCard_Click;
-            lbRoomType.MouseDown += RoomCard_MouseDown;
             lbRoomType.MouseLeave += RoomCard_MouseLeave;
             lbRoomType.MouseHover += RoomCard_MouseHover;
-            lbRoomType.MouseUp += RoomCard_MouseUp;
             // 
             // lbCapacity
             // 
@@ -150,7 +138,7 @@
             lbCapacity.ForeColor = Color.Black;
             lbCapacity.Image = Properties.Resources.persons;
             lbCapacity.ImageAlign = ContentAlignment.MiddleLeft;
-            lbCapacity.Location = new Point(325, 17);
+            lbCapacity.Location = new Point(319, 17);
             lbCapacity.Margin = new Padding(3, 0, 3, 14);
             lbCapacity.Name = "lbCapacity";
             lbCapacity.Size = new Size(41, 19);
@@ -158,10 +146,8 @@
             lbCapacity.Text = "3";
             lbCapacity.TextAlign = ContentAlignment.MiddleRight;
             lbCapacity.Click += RoomCard_Click;
-            lbCapacity.MouseDown += RoomCard_MouseDown;
             lbCapacity.MouseLeave += RoomCard_MouseLeave;
             lbCapacity.MouseHover += RoomCard_MouseHover;
-            lbCapacity.MouseUp += RoomCard_MouseUp;
             // 
             // lbBedType
             // 
@@ -169,7 +155,7 @@
             lbBedType.ForeColor = Color.Black;
             lbBedType.Image = Properties.Resources.bed;
             lbBedType.ImageAlign = ContentAlignment.MiddleLeft;
-            lbBedType.Location = new Point(158, 17);
+            lbBedType.Location = new Point(150, 17);
             lbBedType.Margin = new Padding(3, 0, 3, 14);
             lbBedType.Name = "lbBedType";
             lbBedType.Size = new Size(77, 19);
@@ -177,27 +163,23 @@
             lbBedType.Text = "Kingsize";
             lbBedType.TextAlign = ContentAlignment.MiddleRight;
             lbBedType.Click += RoomCard_Click;
-            lbBedType.MouseDown += RoomCard_MouseDown;
             lbBedType.MouseLeave += RoomCard_MouseLeave;
             lbBedType.MouseHover += RoomCard_MouseHover;
-            lbBedType.MouseUp += RoomCard_MouseUp;
             // 
             // lbHasView
             // 
             lbHasView.AutoSize = true;
             lbHasView.Font = new Font("Segoe UI", 10F);
             lbHasView.ForeColor = Color.Black;
-            lbHasView.Location = new Point(241, 17);
+            lbHasView.Location = new Point(234, 17);
             lbHasView.Margin = new Padding(3, 0, 3, 14);
             lbHasView.Name = "lbHasView";
             lbHasView.Size = new Size(78, 19);
             lbHasView.TabIndex = 9;
             lbHasView.Text = "No Balcony";
             lbHasView.Click += RoomCard_Click;
-            lbHasView.MouseDown += RoomCard_MouseDown;
             lbHasView.MouseLeave += RoomCard_MouseLeave;
             lbHasView.MouseHover += RoomCard_MouseHover;
-            lbHasView.MouseUp += RoomCard_MouseUp;
             // 
             // RoomCardUserControl
             // 
