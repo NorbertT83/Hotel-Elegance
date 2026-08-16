@@ -23,6 +23,7 @@ namespace Hotel_erp_Winforms_App.Services
     {
         private readonly string connectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=";
 
+        #region Database actions
         public List<Booking> LoadDgv(string query, Dictionary<string, object> parameters = null)
         {
             List<Booking> bookings = new List<Booking>();
@@ -52,8 +53,11 @@ namespace Hotel_erp_Winforms_App.Services
                         int? guest3 = reader["guest3_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest3_id"]);
                         int? guest4 = reader["guest4_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest4_id"]);
 
-                        Hotel_erp_Winforms_App.Models.RoomType roomTypeEnum = System.Enum.Parse<Hotel_erp_Winforms_App.Models.RoomType>(Convert.ToString(reader["room_type"]) ?? "", true);
-                        CateringLevel cateringEnum = (Hotel_erp_Winforms_App.Models.CateringLevel)System.Enum.Parse(typeof(CateringLevel), reader["catering_level"].ToString(), true);
+                        System.Enum.TryParse<Hotel_erp_Winforms_App.Models.RoomType>(
+                            reader["room_type"]?.ToString(), true, out var roomTypeEnum);
+
+                        System.Enum.TryParse<CateringLevel>
+                            (reader["catering_level"]?.ToString(), true, out var cateringEnum);
 
                         Booking booking = new Booking
                         (
@@ -80,7 +84,8 @@ namespace Hotel_erp_Winforms_App.Services
 
         public List<Booking> SearchBookings(int fieldIndex, string searchText, int statusIndex, int tabIndex, int spanIndex, DateTime fromDate, DateTime toDate)
         {
-            string query = "SELECT * FROM bookings WHERE 1=1";
+            string joins = "";
+            string whereClause = " WHERE 1=1 ";
             var parameters = new Dictionary<string, object>();
 
             if(tabIndex == 0)
@@ -90,26 +95,71 @@ namespace Hotel_erp_Winforms_App.Services
                 {
                     switch (fieldIndex)
                     {
-                        case -1: query += " "; break;
-                        case 0: query += " "; break;
-                        case 1: query += " AND id LIKE @searchBar "; break;
-                        case 2: query += " AND room_number LIKE @searchBar "; break;
-                        case 3: query += " AND room_type LIKE @searchBar "; break;
-                        case 4: query += " AND beginning_of_stay LIKE @searchBar "; break;
-                        case 5: query += " AND end_of_stay LIKE @searchBar "; break;
-                        case 6: query += " AND checkin LIKE @searchBar "; break;
-                        case 7: query += " AND checkout LIKE @searchBar "; break;
-                        case 8: query += " AND catering_level LIKE @searchBar "; break;
+                        case -1:
+                        case 0: break;
+
+                        case 1:
+                            joins += " INNER JOIN guests ON bookings.guest1_id = guests.id ";
+                            whereClause += " AND guests.fname LIKE @fname ";
+                            parameters.Add("@fname", $"%{searchText}%");
+                            break;
+
+                        case 2:
+                            whereClause += " AND bookings.id LIKE @searchBar ";
+                            parameters.Add("@searchBar", $"%{searchText}%");
+                            break;
+
+                        case 3:
+                            whereClause += " AND bookings.room_number LIKE @searchBar ";
+                            parameters.Add("@searchBar", $"%{searchText}%");
+                            break;
+
+                        case 4:
+                            whereClause += " AND bookings.room_type LIKE @searchBar ";
+                            parameters.Add("@searchBar", $"%{searchText}%");
+                            break;
+
+                        case 5:
+                            whereClause += " AND bookings.beginning_of_stay LIKE @searchBar ";
+                            parameters.Add("@searchBar", $"%{searchText}%");
+                            break;
+
+                        case 6:
+                            whereClause += " AND bookings.end_of_stay LIKE @searchBar ";
+                            parameters.Add("@searchBar", $"%{searchText}%");
+                            break;
+
+                        case 7:
+                            whereClause += " AND bookings.checkin LIKE @searchBar ";
+                            parameters.Add("@searchBar", $"%{searchText}%");
+                            break;
+
+                        case 8:
+                            whereClause += " AND bookings.checkout LIKE @searchBar ";
+                            parameters.Add("@searchBar", $"%{searchText}%");
+                            break;
+
+                        case 9:
+                            whereClause += " AND bookings.catering_level LIKE @searchBar ";
+                            parameters.Add("@searchBar", $"%{searchText}%");
+                            break;
                     }
-                    parameters.Add("@searchBar", $"%{searchText}%");
                 }
 
                 // STÁTUSZ KIVÁLASZTÁS
                 switch (statusIndex)
                 {
-                    case 1: query += " AND checkin IS NULL"; break;
-                    case 2: query += " AND checkin IS NOT NULL AND checkout IS NULL"; break;
-                    case 3: query += " AND checkout IS NOT NULL"; break;
+                    case 1:
+                        whereClause += " AND checkin IS NULL";
+                        break;
+
+                    case 2:
+                        whereClause += " AND checkin IS NOT NULL AND checkout IS NULL";
+                        break;
+
+                    case 3:
+                        whereClause += " AND checkout IS NOT NULL";
+                        break;
                 }
             }
 
@@ -119,24 +169,80 @@ namespace Hotel_erp_Winforms_App.Services
                 switch (spanIndex)
                 {
                     case 0: 
-                        query += " AND beginning_of_stay BETWEEN @from AND @to";
+                        whereClause += " AND beginning_of_stay BETWEEN @from AND @to";
+                        parameters.Add("@from", fromDate);
+                        parameters.Add("@to", toDate);
                         break;
                     case 1:
-                        query += " AND end_of_stay BETWEEN @from AND @to";
+                        whereClause += " AND end_of_stay BETWEEN @from AND @to";
+                        parameters.Add("@from", fromDate);
+                        parameters.Add("@to", toDate);
                         break;
                     case 2:
-                        query += " AND beginning_of_stay >= @from AND end_of_stay <= @to";
+                        whereClause += " AND beginning_of_stay >= @from AND end_of_stay <= @to";
+                        parameters.Add("@from", fromDate);
+                        parameters.Add("@to", toDate);
                         break;
                 }
-                parameters.Add("@from", fromDate.Date);
-                parameters.Add("@to", toDate.Date);
             }
 
-            query += ";";
+            string query = $"SELECT bookings.* FROM bookings{joins}{whereClause};";
 
             return LoadDgv(query, parameters);
         }
+        #endregion
 
+        #region Occupancy
+        public int GetTodaysArrivalsCount()
+        {
+            string query = "SELECT COUNT(*) FROM bookings WHERE beginning_of_stay = CURRENT_DATE AND checkin = NULL ;";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    conn.Open();
+                    return (int)(long)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public int GetTodaysDeparturesCount()
+        {
+            string query = "SELECT COUNT(*) FROM bookings WHERE end_of_stay = CURRENT_DATE();";
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    conn.Open();
+                    return (int)(long)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public int GetOccupancyRate()
+        {
+            string query = "SELECT " +
+                "ROUND( " +
+                "(COUNT(CASE WHEN status NOT IN('available', 'under_maintenance') THEN 1 END) * 100.0) " +
+                "/ COUNT(*), " +
+                "2 " +
+                ") AS occupied_percentage " +
+                "FROM rooms;";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+
+        }
+        #endregion
+
+        #region Check-in
         public Booking GetBookingById(string id)
         {
             using(MySqlConnection connection = new MySqlConnection(connectionString))
@@ -152,10 +258,16 @@ namespace Hotel_erp_Winforms_App.Services
                     {
                         if (reader.Read())
                         {
+                            System.Enum.TryParse<Hotel_erp_Winforms_App.Models.RoomType>
+                                (reader["room_type"]?.ToString(), true, out var roomType);
+
+                            System.Enum.TryParse<CateringLevel>
+                                (reader["catering_level"]?.ToString(), true, out var cateringLevel);
+
                             return new Booking(
                                 reader["id"].ToString(),
                                 Convert.ToInt32(reader["room_number"]),
-                                (Hotel_erp_Winforms_App.Models.RoomType)System.Enum.Parse(typeof(Hotel_erp_Winforms_App.Models.RoomType), reader["room_type"].ToString()),
+                                roomType,
                                 Convert.ToInt32(reader["guest1_id"]),
                                 Convert.ToDateTime(reader["beginning_of_stay"]),
                                 Convert.ToDateTime(reader["end_of_stay"]),
@@ -164,7 +276,7 @@ namespace Hotel_erp_Winforms_App.Services
                                 reader["guest2_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest2_id"]),
                                 reader["guest3_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest3_id"]),
                                 reader["guest4_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest4_id"]),
-                                (Hotel_erp_Winforms_App.Models.CateringLevel)System.Enum.Parse(typeof(Hotel_erp_Winforms_App.Models.CateringLevel), reader["catering_level"].ToString()),
+                                cateringLevel,
                                 Convert.ToDateTime(reader["created_at"])
                             );
                         }
@@ -219,33 +331,6 @@ namespace Hotel_erp_Winforms_App.Services
             return null;
         }
 
-        public int GetTodaysArrivalsCount()
-        {
-            string query = "SELECT COUNT(*) FROM bookings WHERE beginning_of_stay = CURRENT_DATE;";
-
-            using(MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using(MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    conn.Open();
-                    return (int)(long)cmd.ExecuteScalar();
-                }
-            }
-        }
-
-        public int GetTodaysDeparturesCount()
-        {
-            string query = "SELECT COUNT(*) FROM bookings WHERE end_of_stay = CURRENT_DATE();";
-            using(MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using(MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    conn.Open();
-                    return (int)(long)cmd.ExecuteScalar();
-                }
-            }
-        }
-
         public Guest? FillPersonalData(Booking selectedBooking)
         {
             string query = "SELECT guests.id, fname, lname, email, date_of_birth, country, zip_code, city, street, id_card_number, car_plate_number, total_nights, loyalty_level " +
@@ -286,36 +371,6 @@ namespace Hotel_erp_Winforms_App.Services
             }
 
             return null;
-        }
-
-        public void SaveGuest(Guest guest)
-        {
-            string query = "INSERT INTO guests " +
-                "(email, id_card_number, fname, lname, date_of_birth, country, zip_code, city, street, car_plate_number, total_nights) " +
-                "VALUES (@email, @idNumber, @fname, @lname, @birthDate, @country, @zipCode, @city, @street, @carPlateNUmber, @totalNights, @loyaltyLevel);";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using( MySqlCommand cmd = new MySqlCommand( query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@email", guest.Email);
-                    cmd.Parameters.AddWithValue("@idNumber", guest.IdCardNumber);
-                    cmd.Parameters.AddWithValue("@fname", guest.FName);
-                    cmd.Parameters.AddWithValue("@lname", guest.LName);
-                    cmd.Parameters.AddWithValue("@birtDate", guest.DateOfBirth);
-                    cmd.Parameters.AddWithValue("@county", guest.Country);
-                    cmd.Parameters.AddWithValue("@zipCode", guest.ZipCode);
-                    cmd.Parameters.AddWithValue("@city", guest.City);
-                    cmd.Parameters.AddWithValue("@street", guest.Street);
-                    cmd.Parameters.AddWithValue("@carPlateNumber", guest.CarPlateNumber);
-                    cmd.Parameters.AddWithValue("@totalNights", guest.TotalNights);
-                    cmd.Parameters.AddWithValue("@loyaltyLevel", guest.LoyaltyLevel);
-
-                    conn.Open();
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                }
-            }
         }
 
         public List<Room> SelectedRoomsByBooking(Booking booking, string request = "")
@@ -691,8 +746,8 @@ namespace Hotel_erp_Winforms_App.Services
 
             // 4.: SAVE SERVICES
             string updateServicesQuery = @"
-                INSERT INTO servicebookings (service_id, booking_id)
-                VALUES (@serviceId, @bookingId);";
+                INSERT INTO servicebookings (service_id, booking_id, requested_at, updated_at, quantity, status, price_at_booking)
+                VALUES (@serviceId, @bookingId, @requested, @updated, @quantity, @status, @price);";
 
             using(MySqlConnection conn = new MySqlConnection(connectionString))
             {
@@ -762,10 +817,30 @@ namespace Hotel_erp_Winforms_App.Services
                         // SZOLGÁLTATLÁSOK
                         foreach (var item in serviceItems)
                         {
+                            int days = (booking.EndOfStay - booking.BeginningOfStay).Days;
+
                             using (MySqlCommand cmd = new MySqlCommand(updateServicesQuery, conn, transaction))
                             {
                                 cmd.Parameters.AddWithValue("@serviceId", item.Id);
                                 cmd.Parameters.AddWithValue("@bookingId", booking.Id);
+                                cmd.Parameters.AddWithValue("@requested", DateTime.Now);
+                                cmd.Parameters.AddWithValue("@updated", DateTime.Now);
+                                if(item.NameHu == "Parkolás")
+                                {
+                                    cmd.Parameters.AddWithValue("@quantity", days);
+                                    cmd.Parameters.AddWithValue("@price", item.Price);
+                                }
+                                else if(item.NameHu == "Félpanzió" || item.NameHu == "Teljes ellátás")
+                                {
+                                    cmd.Parameters.AddWithValue("@quantity", days);
+                                    cmd.Parameters.AddWithValue("@price", item.Price * days);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@quantity", 1);
+                                    cmd.Parameters.AddWithValue("@price", item.Price);
+                                }
+                                cmd.Parameters.AddWithValue("@status", "created");
 
                                 cmd.ExecuteNonQuery();
                             }
@@ -782,5 +857,53 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+        #endregion
+
+        #region Buttons
+
+        public void NextButtonClick(TabControl tc, System.Windows.Forms.Button next, System.Windows.Forms.Button back, System.Windows.Forms.Button confirm)
+        {
+            if (tc.SelectedIndex < 4)
+            {
+                tc.SelectedIndex += 1;
+            }
+
+            ButtonVisibility(tc, next, back, confirm);
+        }
+
+        public void BackButtonClick(TabControl tc, System.Windows.Forms.Button next, System.Windows.Forms.Button back, System.Windows.Forms.Button confirm)
+        {
+            if (tc.SelectedIndex > 0)
+            {
+                tc.SelectedIndex -= 1;
+            }
+
+            ButtonVisibility(tc, next, back, confirm);
+        }
+
+        private void ButtonVisibility(TabControl tc, System.Windows.Forms.Button next, System.Windows.Forms.Button back, System.Windows.Forms.Button confirm)
+        {
+            back.Visible = (tc.SelectedIndex > 0);
+            next.Visible = (tc.SelectedIndex < 4);
+            confirm.Visible = (tc.SelectedIndex == 4);
+        }
+
+        #endregion
+
+        #region UI refreshing
+
+        public void RefreshPageCount(TabControl tc,System.Windows.Forms.Label lb)
+        {
+            switch (tc.SelectedIndex)
+            {
+                case 0: lb.Text = "1/5"; return;
+                case 1: lb.Text = "2/5"; return;
+                case 2: lb.Text = "3/5"; return;
+                case 3: lb.Text = "4/5"; return;
+                case 4: lb.Text = "5/5"; return;
+            }
+        }
+
+        #endregion
     }
 }

@@ -24,6 +24,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private void BookingControl_Load(object sender, EventArgs e)
         {
             LoadBookings();
+            ShowInfo();
             cbStatus.SelectedIndex = 1;
         }
 
@@ -90,17 +91,25 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             string todaysArriavals = bookingService.GetTodaysArrivalsCount().ToString();
             string todaysDepartures = bookingService.GetTodaysDeparturesCount().ToString();
+            string occupancyRate = bookingService.GetOccupancyRate().ToString();
 
             try
             {
                 lbArrivals.Text = todaysArriavals;
                 lbDepartures.Text = todaysDepartures;
+                lbOccupancy.Text = $"{occupancyRate}%";
             }
 
             catch (Exception ex)
             {
                 MessageBox.Show("There was an error while loading statistics: " + ex.Message, "Database error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnAddBooking_Click(object sender, EventArgs e)
+        {
+            FrmAddBooking addBookingForm = new FrmAddBooking();
+            addBookingForm.Show();
         }
     }
 }

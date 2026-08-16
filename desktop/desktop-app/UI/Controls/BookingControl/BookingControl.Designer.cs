@@ -361,6 +361,7 @@
             btnAddBooking.TextAlign = ContentAlignment.MiddleRight;
             btnAddBooking.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnAddBooking.UseVisualStyleBackColor = true;
+            btnAddBooking.Click += btnAddBooking_Click;
             // 
             // btnEdit
             // 
@@ -567,7 +568,7 @@
             cbField.DropDownStyle = ComboBoxStyle.DropDownList;
             cbField.Font = new Font("Segoe UI", 12F);
             cbField.FormattingEnabled = true;
-            cbField.Items.AddRange(new object[] { "Not Selected", "Booking ID", "Room Number", "Room Type", "Booked From", "Booked To", "Check-in", "Check-out", "Catering Level" });
+            cbField.Items.AddRange(new object[] { "Not Selected", "Name", "Booking ID", "Room Number", "Room Type", "Booked From", "Booked To", "Check-in", "Check-out", "Catering Level" });
             cbField.Location = new Point(6, 35);
             cbField.Name = "cbField";
             cbField.Size = new Size(121, 29);

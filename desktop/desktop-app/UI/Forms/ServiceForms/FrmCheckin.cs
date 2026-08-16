@@ -70,6 +70,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             // FOR TESTING!!!
             tbPhone.Text = "111";
+            tbDocumentNumber.Text = "adsv";
             // --------------
 
             #region Error Handler
@@ -487,6 +488,18 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             var bindingList = new BindingList<BillingItem>(billingItems);
 
+            dgvPaymentSum.AutoGenerateColumns = false;
+            dgvPaymentSum.Columns.Clear();
+
+            LoadBillingitemToDgv("Date");
+            LoadBillingitemToDgv("Description");
+            LoadBillingitemToDgv("UnitPrice");
+            LoadBillingitemToDgv("Quantity");
+            LoadBillingitemToDgv("Tax");
+            LoadBillingitemToDgv("Total");
+
+            dgvPaymentSum.Columns[3].HeaderText = "Qty";
+
             dgvPaymentSum.DataSource = bindingList;
 
             // DATAGRIDVIEW STYLE
@@ -495,7 +508,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             dgvPaymentSum.Columns[2].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvPaymentSum.Columns[3].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvPaymentSum.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvPaymentSum.Columns[5].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             dgvPaymentSum.Columns[0].DefaultCellStyle.Format = "yyyy.MM.dd";
 
@@ -505,21 +518,25 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             dgvPaymentSum.Columns[4].DefaultCellStyle.Format = "P0";
             // -----------------
         }
+
+        private void LoadBillingitemToDgv(string description)
+        {
+            dgvPaymentSum.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = description,
+                HeaderText = description
+            });
+        }
+
         // -------------------------
 
         // - Oldalankénti betöltés -
         public void tcCheckin_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tcCheckin.SelectedIndex == 0) lbCurrentPage.Text = "1/5";
-            if (tcCheckin.SelectedIndex == 1)
-            {
-                lbCurrentPage.Text = "2/5";
-            }
+            _bookingService.RefreshPageCount(tcCheckin, lbCurrentPage);
 
             if (tcCheckin.SelectedIndex == 2)
             {
-                lbCurrentPage.Text = "3/5";
-
                 if (!_isRequestInitialized)
                 {
                     string cateringLevel = selectedBooking.SelectedCateringLevel.ToString();
@@ -532,8 +549,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (tcCheckin.SelectedIndex == 3)
             {
-                lbCurrentPage.Text = "4/5";
-
                 LoadBillItems();
 
                 lbNetAmount.Text = _bookingService.CalculateNetAmount(billingItems).ToString("C0");
@@ -543,7 +558,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (tcCheckin.SelectedIndex == 4)
             {
-                lbCurrentPage.Text = "5/5";
+                MessageBox.Show($"{selectedBooking.SelectedCateringLevel}");
+
                 lbSumRoomDetails.Text = sumSelectedRoomString.ToString();
                 FillSumSpecialRequests();
 
@@ -607,6 +623,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                         ServiceTypeEn.Logistics
                     );
                     services.Add(service);
+                    selectedBooking.SelectedCateringLevel = System.Enum.Parse<CateringLevel>("halfboard", ignoreCase: true);
                     lbSumCatering.Text = "Halfboard";
                 }
 
@@ -623,10 +640,15 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                         ServiceTypeEn.Logistics
                     );
                     services.Add(service);
+                    selectedBooking.SelectedCateringLevel = System.Enum.Parse<CateringLevel>("fullboard", ignoreCase: true);
                     lbSumCatering.Text = "Fullboard";
                 }
 
-                else { lbSumCatering.Text = "Breakfast"; }
+                else 
+                {
+                    lbSumCatering.Text = "Breakfast";
+                    selectedBooking.SelectedCateringLevel = System.Enum.Parse<CateringLevel>("breakfast", ignoreCase: true);
+                }
             }
 
             selectedBooking.SelectedCateringLevel = (CateringLevel)System.Enum.Parse(typeof(CateringLevel), cbCateringLevel.SelectedItem.ToString().ToLower());
@@ -809,26 +831,12 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 }
             }
 
-            if (tcCheckin.SelectedIndex < 4)
-            {
-                tcCheckin.SelectedIndex += 1;
-            }
-
-            btnBack.Visible = (tcCheckin.SelectedIndex > 0);
-            btnNext.Visible = (tcCheckin.SelectedIndex < 4);
-            btnConfirm.Visible = (tcCheckin.SelectedIndex == 4);
+            _bookingService.NextButtonClick(tcCheckin, btnNext, btnBack, btnConfirm);
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            if (tcCheckin.SelectedIndex > 0)
-            {
-                tcCheckin.SelectedIndex -= 1;
-            }
-
-            btnBack.Visible = (tcCheckin.SelectedIndex > 0);
-            btnNext.Visible = (tcCheckin.SelectedIndex < 4);
-            btnConfirm.Visible = (tcCheckin.SelectedIndex == 4);
+            _bookingService.BackButtonClick(tcCheckin, btnNext, btnBack, btnConfirm);
         }
 
         private void btnConfirm_Click(object sender, EventArgs e)
@@ -845,11 +853,13 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 try
                 {
                     _bookingService.ConfirmCheckin(selectedBooking, guestsOfBooking, services);
+                    MessageBox.Show("Check-in confirmation successful.", "Confirmed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    this.Close();
                 }
             }
 
