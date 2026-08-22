@@ -109,7 +109,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private void btnAddBooking_Click(object sender, EventArgs e)
         {
             FrmAddBooking addBookingForm = new FrmAddBooking();
-            addBookingForm.Show();
+            addBookingForm.ShowDialog();
         }
     }
 }

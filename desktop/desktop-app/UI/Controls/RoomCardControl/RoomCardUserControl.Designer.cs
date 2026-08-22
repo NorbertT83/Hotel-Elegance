@@ -177,6 +177,7 @@
             lbHasView.Size = new Size(78, 19);
             lbHasView.TabIndex = 9;
             lbHasView.Text = "No Balcony";
+            lbHasView.TextAlign = ContentAlignment.MiddleCenter;
             lbHasView.Click += RoomCard_Click;
             lbHasView.MouseLeave += RoomCard_MouseLeave;
             lbHasView.MouseHover += RoomCard_MouseHover;

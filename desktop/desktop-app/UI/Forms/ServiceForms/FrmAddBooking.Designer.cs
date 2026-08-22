@@ -82,7 +82,6 @@
             cbGuests = new ComboBox();
             btnEditGuestData = new Button();
             btnSaveGuest = new Button();
-            btnAddGuest = new Button();
             btnPrint = new Button();
             ckbEditData = new CheckBox();
             dtpBirthdate = new DateTimePicker();
@@ -282,6 +281,7 @@
             btnConfirm.TabIndex = 18;
             btnConfirm.Text = "Confirm";
             btnConfirm.UseVisualStyleBackColor = false;
+            btnConfirm.Click += btnConfirm_Click;
             // 
             // btnNext
             // 
@@ -365,6 +365,7 @@
             btnShowRooms.TabIndex = 18;
             btnShowRooms.Text = "Show Rooms";
             btnShowRooms.UseVisualStyleBackColor = false;
+            btnShowRooms.Click += btnShowRooms_Click;
             // 
             // tableLayoutPanel2
             // 
@@ -398,10 +399,10 @@
             // 
             lbSelectedSuite.Anchor = AnchorStyles.None;
             lbSelectedSuite.AutoSize = true;
-            lbSelectedSuite.Font = new Font("Segoe UI", 12F);
-            lbSelectedSuite.Location = new Point(238, 8);
+            lbSelectedSuite.Font = new Font("Segoe UI", 11F);
+            lbSelectedSuite.Location = new Point(264, 8);
             lbSelectedSuite.Name = "lbSelectedSuite";
-            lbSelectedSuite.Size = new Size(57, 21);
+            lbSelectedSuite.Size = new Size(55, 20);
             lbSelectedSuite.TabIndex = 5;
             lbSelectedSuite.Text = "Deluxe";
             // 
@@ -409,10 +410,10 @@
             // 
             lbUI08.Anchor = AnchorStyles.None;
             lbUI08.AutoSize = true;
-            lbUI08.Font = new Font("Segoe UI", 12F);
+            lbUI08.Font = new Font("Segoe UI", 11F);
             lbUI08.Location = new Point(3, 8);
             lbUI08.Name = "lbUI08";
-            lbUI08.Size = new Size(59, 21);
+            lbUI08.Size = new Size(55, 20);
             lbUI08.TabIndex = 5;
             lbUI08.Text = "Nights:";
             // 
@@ -420,21 +421,21 @@
             // 
             lbUI09.Anchor = AnchorStyles.None;
             lbUI09.AutoSize = true;
-            lbUI09.Font = new Font("Segoe UI", 12F);
-            lbUI09.Location = new Point(184, 8);
+            lbUI09.Font = new Font("Segoe UI", 11F);
+            lbUI09.Location = new Point(171, 8);
             lbUI09.Name = "lbUI09";
-            lbUI09.Size = new Size(48, 21);
+            lbUI09.Size = new Size(87, 20);
             lbUI09.TabIndex = 5;
-            lbUI09.Text = "Suite:";
+            lbUI09.Text = "Room Type:";
             // 
             // lbNumberOfNights
             // 
             lbNumberOfNights.Anchor = AnchorStyles.None;
             lbNumberOfNights.AutoSize = true;
-            lbNumberOfNights.Font = new Font("Segoe UI", 12F);
-            lbNumberOfNights.Location = new Point(68, 8);
+            lbNumberOfNights.Font = new Font("Segoe UI", 11F);
+            lbNumberOfNights.Location = new Point(64, 8);
             lbNumberOfNights.Name = "lbNumberOfNights";
-            lbNumberOfNights.Size = new Size(19, 21);
+            lbNumberOfNights.Size = new Size(17, 20);
             lbNumberOfNights.TabIndex = 5;
             lbNumberOfNights.Text = "7";
             // 
@@ -442,10 +443,10 @@
             // 
             lbNumberOfGuests.Anchor = AnchorStyles.None;
             lbNumberOfGuests.AutoSize = true;
-            lbNumberOfGuests.Font = new Font("Segoe UI", 12F);
-            lbNumberOfGuests.Location = new Point(159, 8);
+            lbNumberOfGuests.Font = new Font("Segoe UI", 11F);
+            lbNumberOfGuests.Location = new Point(148, 8);
             lbNumberOfGuests.Name = "lbNumberOfGuests";
-            lbNumberOfGuests.Size = new Size(19, 21);
+            lbNumberOfGuests.Size = new Size(17, 20);
             lbNumberOfGuests.TabIndex = 5;
             lbNumberOfGuests.Text = "3";
             // 
@@ -453,10 +454,10 @@
             // 
             lbUI07.Anchor = AnchorStyles.None;
             lbUI07.AutoSize = true;
-            lbUI07.Font = new Font("Segoe UI", 12F);
-            lbUI07.Location = new Point(93, 8);
+            lbUI07.Font = new Font("Segoe UI", 11F);
+            lbUI07.Location = new Point(87, 8);
             lbUI07.Name = "lbUI07";
-            lbUI07.Size = new Size(60, 21);
+            lbUI07.Size = new Size(55, 20);
             lbUI07.TabIndex = 5;
             lbUI07.Text = "Guests:";
             // 
@@ -464,31 +465,34 @@
             // 
             lbUI10.Anchor = AnchorStyles.None;
             lbUI10.AutoSize = true;
-            lbUI10.Font = new Font("Segoe UI", 12F);
-            lbUI10.Location = new Point(301, 8);
+            lbUI10.Font = new Font("Segoe UI", 11F);
+            lbUI10.Location = new Point(325, 8);
             lbUI10.Name = "lbUI10";
-            lbUI10.Size = new Size(114, 21);
+            lbUI10.Size = new Size(107, 20);
             lbUI10.TabIndex = 5;
             lbUI10.Text = "Room number:";
             // 
             // lbSelectedRoomNumber
             // 
             lbSelectedRoomNumber.Anchor = AnchorStyles.None;
-            lbSelectedRoomNumber.AutoSize = true;
-            lbSelectedRoomNumber.Font = new Font("Segoe UI", 12F);
-            lbSelectedRoomNumber.Location = new Point(440, 8);
+            lbSelectedRoomNumber.Font = new Font("Segoe UI", 11F);
+            lbSelectedRoomNumber.Location = new Point(444, 8);
             lbSelectedRoomNumber.Name = "lbSelectedRoomNumber";
-            lbSelectedRoomNumber.Size = new Size(37, 21);
+            lbSelectedRoomNumber.Size = new Size(45, 21);
             lbSelectedRoomNumber.TabIndex = 5;
             lbSelectedRoomNumber.Text = "103";
+            lbSelectedRoomNumber.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // flpSelectRoom
             // 
+            flpSelectRoom.AutoScroll = true;
             flpSelectRoom.BackColor = Color.FromArgb(249, 252, 255);
+            flpSelectRoom.FlowDirection = FlowDirection.TopDown;
             flpSelectRoom.Location = new Point(15, 234);
             flpSelectRoom.Name = "flpSelectRoom";
             flpSelectRoom.Size = new Size(499, 190);
             flpSelectRoom.TabIndex = 10;
+            flpSelectRoom.WrapContents = false;
             // 
             // tableLayoutPanel1
             // 
@@ -588,11 +592,12 @@
             cbAdults.DropDownStyle = ComboBoxStyle.DropDownList;
             cbAdults.Font = new Font("Segoe UI", 12F);
             cbAdults.FormattingEnabled = true;
-            cbAdults.Items.AddRange(new object[] { "1,", "2" });
+            cbAdults.Items.AddRange(new object[] { "1", "2" });
             cbAdults.Location = new Point(3, 4);
             cbAdults.Name = "cbAdults";
             cbAdults.Size = new Size(57, 29);
             cbAdults.TabIndex = 7;
+            cbAdults.SelectedIndexChanged += cbAdults_SelectedIndexChanged;
             // 
             // lbUI05
             // 
@@ -609,11 +614,12 @@
             cbChildren.DropDownStyle = ComboBoxStyle.DropDownList;
             cbChildren.Font = new Font("Segoe UI", 12F);
             cbChildren.FormattingEnabled = true;
-            cbChildren.Items.AddRange(new object[] { "1,", "2" });
+            cbChildren.Items.AddRange(new object[] { "0", "1", "2" });
             cbChildren.Location = new Point(113, 4);
             cbChildren.Name = "cbChildren";
             cbChildren.Size = new Size(57, 29);
             cbChildren.TabIndex = 7;
+            cbChildren.SelectedIndexChanged += cbChildren_SelectedIndexChanged;
             // 
             // cbSuite
             // 
@@ -621,12 +627,13 @@
             cbSuite.DropDownStyle = ComboBoxStyle.DropDownList;
             cbSuite.Font = new Font("Segoe UI", 12F);
             cbSuite.FormattingEnabled = true;
-            cbSuite.Items.AddRange(new object[] { "Standard", "Suite", "Deluxe" });
+            cbSuite.Items.AddRange(new object[] { "standard", "suite", "deluxe" });
             cbSuite.Location = new Point(260, 113);
             cbSuite.Margin = new Padding(3, 6, 3, 3);
             cbSuite.Name = "cbSuite";
             cbSuite.Size = new Size(222, 29);
             cbSuite.TabIndex = 7;
+            cbSuite.SelectedIndexChanged += cbSuite_SelectedIndexChanged;
             // 
             // dtpDeparture
             // 
@@ -635,10 +642,12 @@
             dtpDeparture.Format = DateTimePickerFormat.Short;
             dtpDeparture.Location = new Point(260, 40);
             dtpDeparture.Margin = new Padding(8);
+            dtpDeparture.MaxDate = new DateTime(2036, 12, 31, 0, 0, 0, 0);
             dtpDeparture.MinDate = new DateTime(2026, 8, 16, 0, 0, 0, 0);
             dtpDeparture.Name = "dtpDeparture";
             dtpDeparture.Size = new Size(222, 29);
             dtpDeparture.TabIndex = 6;
+            dtpDeparture.ValueChanged += dtpDeparture_ValueChanged;
             // 
             // tbDateOfArrival
             // 
@@ -701,7 +710,6 @@
             tpPersonalData.Controls.Add(cbGuests);
             tpPersonalData.Controls.Add(btnEditGuestData);
             tpPersonalData.Controls.Add(btnSaveGuest);
-            tpPersonalData.Controls.Add(btnAddGuest);
             tpPersonalData.Controls.Add(btnPrint);
             tpPersonalData.Controls.Add(ckbEditData);
             tpPersonalData.Controls.Add(dtpBirthdate);
@@ -789,10 +797,11 @@
             // 
             cbGuests.DropDownStyle = ComboBoxStyle.DropDownList;
             cbGuests.FormattingEnabled = true;
-            cbGuests.Location = new Point(276, 125);
+            cbGuests.Location = new Point(310, 125);
             cbGuests.Name = "cbGuests";
             cbGuests.Size = new Size(88, 23);
             cbGuests.TabIndex = 51;
+            cbGuests.SelectedIndexChanged += cbGuests_SelectedIndexChanged_1;
             // 
             // btnEditGuestData
             // 
@@ -810,29 +819,19 @@
             btnSaveGuest.FlatAppearance.BorderSize = 0;
             btnSaveGuest.FlatStyle = FlatStyle.Flat;
             btnSaveGuest.Image = Properties.Resources.Save;
-            btnSaveGuest.Location = new Point(369, 121);
+            btnSaveGuest.Location = new Point(407, 121);
             btnSaveGuest.Name = "btnSaveGuest";
             btnSaveGuest.Size = new Size(33, 29);
             btnSaveGuest.TabIndex = 49;
             btnSaveGuest.UseVisualStyleBackColor = true;
-            // 
-            // btnAddGuest
-            // 
-            btnAddGuest.FlatAppearance.BorderSize = 0;
-            btnAddGuest.FlatStyle = FlatStyle.Flat;
-            btnAddGuest.Image = Properties.Resources.personadd;
-            btnAddGuest.Location = new Point(407, 121);
-            btnAddGuest.Name = "btnAddGuest";
-            btnAddGuest.Size = new Size(33, 29);
-            btnAddGuest.TabIndex = 48;
-            btnAddGuest.UseVisualStyleBackColor = true;
+            btnSaveGuest.Click += btnSaveGuest_Click;
             // 
             // btnPrint
             // 
             btnPrint.FlatAppearance.BorderSize = 0;
             btnPrint.FlatStyle = FlatStyle.Flat;
             btnPrint.Image = Properties.Resources.print;
-            btnPrint.Location = new Point(483, 121);
+            btnPrint.Location = new Point(482, 121);
             btnPrint.Name = "btnPrint";
             btnPrint.Size = new Size(33, 29);
             btnPrint.TabIndex = 47;
@@ -840,7 +839,7 @@
             // 
             // ckbEditData
             // 
-            ckbEditData.Location = new Point(216, 127);
+            ckbEditData.Location = new Point(255, 127);
             ckbEditData.Name = "ckbEditData";
             ckbEditData.Size = new Size(46, 19);
             ckbEditData.TabIndex = 46;
@@ -898,6 +897,7 @@
             tbLastName.Name = "tbLastName";
             tbLastName.Size = new Size(236, 29);
             tbLastName.TabIndex = 17;
+            tbLastName.KeyPress += tbLastName_KeyPress;
             // 
             // tbPhone
             // 
@@ -906,6 +906,7 @@
             tbPhone.Name = "tbPhone";
             tbPhone.Size = new Size(186, 29);
             tbPhone.TabIndex = 38;
+            tbPhone.KeyPress += tbPhone_KeyPress;
             // 
             // tbDocumentNumber
             // 
@@ -930,6 +931,7 @@
             tbCity.Name = "tbCity";
             tbCity.Size = new Size(132, 29);
             tbCity.TabIndex = 42;
+            tbCity.KeyPress += tbCity_KeyPress;
             // 
             // tbZipCode
             // 
@@ -938,6 +940,7 @@
             tbZipCode.Name = "tbZipCode";
             tbZipCode.Size = new Size(98, 29);
             tbZipCode.TabIndex = 41;
+            tbZipCode.KeyPress += tbZipCode_KeyPress;
             // 
             // tbEmail
             // 
@@ -954,6 +957,7 @@
             tbFirstName.Name = "tbFirstName";
             tbFirstName.Size = new Size(238, 29);
             tbFirstName.TabIndex = 16;
+            tbFirstName.KeyPress += tbFirstName_KeyPress;
             // 
             // lbUI24
             // 
@@ -1227,6 +1231,7 @@
             ckbParking.Size = new Size(14, 29);
             ckbParking.TabIndex = 41;
             ckbParking.UseVisualStyleBackColor = true;
+            ckbParking.CheckedChanged += ckbParking_CheckedChanged;
             // 
             // tbOtherRequests
             // 
@@ -1246,6 +1251,7 @@
             cbAirportTransfer.Name = "cbAirportTransfer";
             cbAirportTransfer.Size = new Size(235, 29);
             cbAirportTransfer.TabIndex = 25;
+            cbAirportTransfer.SelectedIndexChanged += cbAirportTransfer_SelectedIndexChanged;
             // 
             // cbChampagne
             // 
@@ -1257,6 +1263,7 @@
             cbChampagne.Name = "cbChampagne";
             cbChampagne.Size = new Size(235, 29);
             cbChampagne.TabIndex = 27;
+            cbChampagne.SelectedIndexChanged += cbChampagne_SelectedIndexChanged;
             // 
             // cbDepartureNotes
             // 
@@ -1268,6 +1275,7 @@
             cbDepartureNotes.Name = "cbDepartureNotes";
             cbDepartureNotes.Size = new Size(235, 29);
             cbDepartureNotes.TabIndex = 29;
+            cbDepartureNotes.SelectedIndexChanged += cbDepartureNotes_SelectedIndexChanged;
             // 
             // cbExtraBed
             // 
@@ -1279,6 +1287,7 @@
             cbExtraBed.Name = "cbExtraBed";
             cbExtraBed.Size = new Size(235, 29);
             cbExtraBed.TabIndex = 28;
+            cbExtraBed.SelectedIndexChanged += cbExtraBed_SelectedIndexChanged;
             // 
             // cbCateringLevel
             // 
@@ -1290,6 +1299,7 @@
             cbCateringLevel.Name = "cbCateringLevel";
             cbCateringLevel.Size = new Size(235, 29);
             cbCateringLevel.TabIndex = 24;
+            cbCateringLevel.SelectedIndexChanged += cbCateringLevel_SelectedIndexChanged;
             // 
             // tbCarPlateNumber
             // 
@@ -1768,7 +1778,6 @@
             lbSumRoomDetails.Name = "lbSumRoomDetails";
             lbSumRoomDetails.Size = new Size(316, 19);
             lbSumRoomDetails.TabIndex = 6;
-            lbSumRoomDetails.Text = "Airport transfer";
             // 
             // tableLayoutPanel9
             // 
@@ -2076,7 +2085,6 @@
         private ComboBox cbGuests;
         private Button btnEditGuestData;
         private Button btnSaveGuest;
-        private Button btnAddGuest;
         private Button btnPrint;
         private CheckBox ckbEditData;
         private DateTimePicker dtpBirthdate;

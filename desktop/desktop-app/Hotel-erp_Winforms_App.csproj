@@ -14,6 +14,7 @@
     <PackageReference Include="bcrypt.net-next" Version="4.2.0" />
     <PackageReference Include="microsoft.data.sqlclient" Version="7.0.1" />
     <PackageReference Include="MySql.Data" Version="9.7.0" />
+    <PackageReference Include="Nanoid" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>

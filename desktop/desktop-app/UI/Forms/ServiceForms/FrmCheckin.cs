@@ -18,20 +18,38 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 {
     public partial class FrmCheckin : Form
     {
+        #region TODO:
+
+        /*
+            - Csak akkor lehessen rányomni egy foglalásnál a check-inre, ha aznap van az érkezési dátum
+            - Ha már létezik a vendég az adatbázisban, akkor ne mentse újra a check in confirm
+        */
+
+        #endregion
+
+        #region variables
+
         private Booking selectedBooking;
         private BookingService _bookingService;
+        public Service service;
+
         public List<Service> services = new List<Service>();
         public List<BillingItem> billingItems = new List<BillingItem>();
         public List<Room> selectedRooms;
         public List<Guest> guestsOfBooking = new List<Guest>();
-        public Service service;
+
         private bool _isRequestInitialized = false;
-        private StringBuilder sumSelectedRoomString = new StringBuilder();
+
         private int _editingGuestId = 0;
+        private Room selectedRoom;
+
         RoomCardUserControl cardControl;
         ErrorProvider _errorProvider = new ErrorProvider();
+        private StringBuilder sumSelectedRoomString = new StringBuilder();
 
-        public FrmCheckin(Booking booking)
+        #endregion
+
+        public FrmCheckin(Booking? booking = null)
         {
             InitializeComponent();
             selectedBooking = booking;
@@ -128,7 +146,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             #endregion
         }
 
-        // Personal Data UI műveletek
+        #region Personal data UI actions
 
         private void FillNationalityCb()
         {
@@ -264,7 +282,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     }
 
                     tcGuests.TabPages.Clear();
-                    foreach(var g in guestsOfBooking) AddGuestTabToSummary(g);
+                    foreach(var g in guestsOfBooking) _bookingService.AddGuestTabToSummary(g, guestsOfBooking, tcGuests);
 
                     dataModified = false;
                     guestIsSaved = true;
@@ -278,7 +296,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     guest = GetGuestFromInput();
 
                     guestsOfBooking.Add(guest);
-                    AddGuestTabToSummary(guest);
+                    _bookingService.AddGuestTabToSummary(guest, guestsOfBooking, tcGuests);
                     ckbEditData.Checked = false;
 
                     guestIsSaved = true;
@@ -324,21 +342,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             else { tbDocumentNumber.Text = ""; }
         }
 
-        public void AddGuestTabToSummary(Guest g)
-        {
-            int index = guestsOfBooking.IndexOf(g);
-
-            GuestDataSumControl guestTab = new GuestDataSumControl();
-            TabPage tp = new TabPage($"tpGuest{index}");
-
-            tp.Text = $"Guest {index + 1}";
-            tp.Controls.Add(guestTab);
-
-            guestTab.FillGuestTabData(g);
-
-            tcGuests.TabPages.Add(tp);
-        }
-
         private Guest GetGuestFromInput()
         {
             return new Guest
@@ -358,7 +361,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             );
         }
 
-        private void LoadGuestDataToUI()
+        private async void LoadGuestDataToUI()
         {
             dtpBirthdate.MaxDate = DateTime.Now;
             Guest? existingGuest = _bookingService.FillPersonalData(selectedBooking);
@@ -369,7 +372,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
                 tbEmail.Text = existingGuest.Email;
                 tbDocumentNumber.Text = string.IsNullOrWhiteSpace(existingGuest.IdCardNumber)
-                    ? _bookingService.GetIdCardNumber(selectedBooking)
+                    ? await _bookingService.GetIdCardNumberAsync(selectedBooking)
                     : existingGuest.IdCardNumber;
                 tbFirstName.Text = existingGuest.FName;
                 tbLastName.Text = existingGuest.LName;
@@ -394,9 +397,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             }
         }
 
-        // --------------------------
+        #endregion
 
-        // Select Room UI műveletek
+        #region Room selections UI actions
         bool cardIsSelected = false;
         public void CardControl_CardSelected(object sender, EventArgs e)
         {
@@ -404,14 +407,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             Room room = selectedCard.SelectedRoom;
 
             selectedBooking.RoomNumber = room.Room_number;
-
-            sumSelectedRoomString.Clear();
-            string hasBalcony = room.HasBalcony == 1 ? "Balcony" : "No Balcony";
-            sumSelectedRoomString.Append($"{room.Room_number.ToString()}  |  ");
-            sumSelectedRoomString.Append($"{room.RoomsRoomtype.ToString()}  |  ");
-            sumSelectedRoomString.Append($"{room.RoomsBedType.ToString()}  |  ");
-            sumSelectedRoomString.Append($"{hasBalcony}  |  ");
-            sumSelectedRoomString.Append($"{room.RoomsView.ToString()}");
+            selectedRoom = room;
 
             cardIsSelected = true;
         }
@@ -473,112 +469,64 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             RefreshRoomCards();
         }
-        // -------------------------
+        #endregion
 
-        // ------ Payment Sum ------
+        #region Payment summary
         private void dgvPaymentSum_SelectionChanged(object sender, EventArgs e)
         {
             dgvPaymentSum.ClearSelection();
         }
-
-        public void LoadBillItems()
-        {
-            billingItems = _bookingService.MakeListOfBills(services, selectedBooking);
-            billingItems = billingItems.OrderByDescending(e => e.Total).ToList();
-
-            var bindingList = new BindingList<BillingItem>(billingItems);
-
-            dgvPaymentSum.AutoGenerateColumns = false;
-            dgvPaymentSum.Columns.Clear();
-
-            LoadBillingitemToDgv("Date");
-            LoadBillingitemToDgv("Description");
-            LoadBillingitemToDgv("UnitPrice");
-            LoadBillingitemToDgv("Quantity");
-            LoadBillingitemToDgv("Tax");
-            LoadBillingitemToDgv("Total");
-
-            dgvPaymentSum.Columns[3].HeaderText = "Qty";
-
-            dgvPaymentSum.DataSource = bindingList;
-
-            // DATAGRIDVIEW STYLE
-            dgvPaymentSum.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dgvPaymentSum.Columns[1].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[2].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[3].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[5].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            dgvPaymentSum.Columns[0].DefaultCellStyle.Format = "yyyy.MM.dd";
-
-            dgvPaymentSum.Columns[2].DefaultCellStyle.Format = "C0";
-            dgvPaymentSum.Columns[5].DefaultCellStyle.Format = "C0";
-
-            dgvPaymentSum.Columns[4].DefaultCellStyle.Format = "P0";
-            // -----------------
-        }
-
-        private void LoadBillingitemToDgv(string description)
-        {
-            dgvPaymentSum.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = description,
-                HeaderText = description
-            });
-        }
-
-        // -------------------------
+        #endregion
 
         // - Oldalankénti betöltés -
-        public void tcCheckin_SelectedIndexChanged(object sender, EventArgs e)
+        public async void tcCheckin_SelectedIndexChanged(object sender, EventArgs e)
         {
             _bookingService.RefreshPageCount(tcCheckin, lbCurrentPage);
+            billingItems = await _bookingService.MakeListOfBillsAsync(services, selectedBooking);
 
-            if (tcCheckin.SelectedIndex == 2)
+            switch (tcCheckin.SelectedIndex)
             {
-                if (!_isRequestInitialized)
-                {
-                    string cateringLevel = selectedBooking.SelectedCateringLevel.ToString();
-                    cateringLevel = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cateringLevel.ToLower());
-                    cbCateringLevel.SelectedItem = cateringLevel;
+                case 2:
+                    if (!_isRequestInitialized)
+                    {
+                        string cateringLevel = selectedBooking.SelectedCateringLevel.ToString();
+                        cateringLevel = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cateringLevel.ToLower());
+                        cbCateringLevel.SelectedItem = cateringLevel;
 
-                    _isRequestInitialized = true;
-                }
-            }
+                        _isRequestInitialized = true;
+                    }
+                break;
 
-            if (tcCheckin.SelectedIndex == 3)
-            {
-                LoadBillItems();
+                case 3:
+                    await _bookingService.LoadBillItemsAsync(dgvPaymentSum, services, selectedBooking);
 
-                lbNetAmount.Text = _bookingService.CalculateNetAmount(billingItems).ToString("C0");
-                lbTaxAmount.Text = _bookingService.CalculateTaxAmount(billingItems).ToString("C0");
-                lbGrossAmount.Text = _bookingService.CalculateGrossAmount(billingItems).ToString("C0");
-            }
+                    lbNetAmount.Text = _bookingService.CalculateNetAmount(billingItems).ToString("C0");
+                    lbTaxAmount.Text = _bookingService.CalculateTaxAmount(billingItems).ToString("C0");
+                    lbGrossAmount.Text = _bookingService.CalculateGrossAmount(billingItems).ToString("C0");
+                break;
 
-            if (tcCheckin.SelectedIndex == 4)
-            {
-                MessageBox.Show($"{selectedBooking.SelectedCateringLevel}");
+                case 4:
+                    lbSumRoomDetails.Text = sumSelectedRoomString.ToString();
+                    _bookingService.FillSumSpecialRequests(services, lbSumExtras);
 
-                lbSumRoomDetails.Text = sumSelectedRoomString.ToString();
-                FillSumSpecialRequests();
+                    tcGuests.TabPages.Clear();
 
-                tcGuests.TabPages.Clear();
+                    if (ckbParking.Checked && guestsOfBooking.Count > 0)
+                    {
+                        guestsOfBooking[0].CarPlateNumber = tbCarPlateNumber.Text.Trim();
+                    }
 
-                if(ckbParking.Checked && guestsOfBooking.Count > 0)
-                {
-                    guestsOfBooking[0].CarPlateNumber = tbCarPlateNumber.Text.Trim();
-                }
+                    foreach (var g in guestsOfBooking)
+                    {
+                        _bookingService.AddGuestTabToSummary(g, guestsOfBooking, tcGuests);
+                    }
 
-                foreach (var g in guestsOfBooking)
-                {
-                    AddGuestTabToSummary(g);
-                }
-
-                lbSumRemaining.Text = $"{_bookingService.CalculateGrossAmount(billingItems) - Convert.ToInt32(lbSumPaid.Text):C0}";
-                lbSumTotal.Text = $"{_bookingService.CalculateGrossAmount(billingItems):C0}";
-                lbSumPaid.Text = $"{Convert.ToInt32(lbSumPaid.Text)}";
-            }
+                    lbSumRoomDetails.Text = _bookingService.BuildSelectedRoomDetailsString(selectedRoom);
+                    lbSumRemaining.Text = $"{_bookingService.CalculateGrossAmount(billingItems) - Convert.ToInt32(lbSumPaid.Text):C0}";
+                    lbSumTotal.Text = $"{_bookingService.CalculateGrossAmount(billingItems):C0}";
+                    lbSumPaid.Text = $"{Convert.ToInt32(lbSumPaid.Text)}";
+                break;
+            } 
         }
         // -------------------------
 
@@ -590,17 +538,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (cbAirportTransfer.SelectedIndex == 0)
             {
-                service = new Service(
-                    3,
-                    "Transzfer",
-                    "Reptéri transzfer egy irányba",
-                    ServiceTypeHu.Logisztika,
-                    10000,
-                    "Transfer",
-                    "Airport transfer one way",
-                    ServiceTypeEn.Logistics
-                );
-                services.Add(service);
+                _bookingService.CreateNewService("Transzfer", services);
             }
         }
 
@@ -612,34 +550,14 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
                 if (cbCateringLevel.SelectedItem.ToString() == "Halfboard")
                 {
-                    Service service = new Service(
-                        19,
-                        "Félpanzió",
-                        "Félpanziós ellátás reggelivel és vacsorával",
-                        ServiceTypeHu.Logisztika,
-                        17000,
-                        "Half board",
-                        "Half-board service including breakfast and dinner.",
-                        ServiceTypeEn.Logistics
-                    );
-                    services.Add(service);
+                    _bookingService.CreateNewService("Halfboard", services);
                     selectedBooking.SelectedCateringLevel = System.Enum.Parse<CateringLevel>("halfboard", ignoreCase: true);
                     lbSumCatering.Text = "Halfboard";
                 }
 
                 else if (cbCateringLevel.SelectedItem.ToString() == "Fullboard")
                 {
-                    Service service = new Service(
-                        20,
-                        "Teljes ellátás",
-                        "Teljes ellátás reggelivel, ebéddel és vacsorával.",
-                        ServiceTypeHu.Logisztika,
-                        28000,
-                        "Full board",
-                        "Full-board service including breakfast, lunch and dinner.",
-                        ServiceTypeEn.Logistics
-                    );
-                    services.Add(service);
+                    _bookingService.CreateNewService("Fullboard", services);
                     selectedBooking.SelectedCateringLevel = System.Enum.Parse<CateringLevel>("fullboard", ignoreCase: true);
                     lbSumCatering.Text = "Fullboard";
                 }
@@ -660,17 +578,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (cbChampagne.SelectedIndex == 0)
             {
-                service = new Service(
-                    21,
-                    "Pezsgő bekészítés",
-                    "A világ legikonikusabb champagne-ja; vibrálóan friss, citrusos és briósos jegyekkel, valamint tökéletesen elegáns textúrával.",
-                    ServiceTypeHu.Extrák,
-                    37000,
-                    "Champagne",
-                    "The world's most iconic champagne; vibrantly fresh with notes of citrus, brioche, and a perfectly elegant texture.",
-                    ServiceTypeEn.Extras
-                );
-                services.Add(service);
+                _bookingService.CreateNewService("Pezsgő bekészítés", services);
             }
         }
 
@@ -686,17 +594,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
                 int days = (selectedBooking.EndOfStay - selectedBooking.BeginningOfStay).Days;
 
-                service = new Service(
-                    2,
-                    "Parkolás",
-                    "Zárt parkoló napidíj",
-                    ServiceTypeHu.Logisztika,
-                    3000 * days,
-                    "Parking",
-                    "Gated parking daily fee",
-                    ServiceTypeEn.Logistics
-                );
-                services.Add(service);
+                _bookingService.CreateNewService("Parkolás", services, days);
             }
 
             else { tbCarPlateNumber.ReadOnly = true; tbCarPlateNumber.Clear(); }
@@ -708,32 +606,12 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (cbExtraBed.SelectedIndex == 1)
             {
-                service = new Service(
-                    9,
-                    "Pótágy",
-                    "Extra ágy biztosítása",
-                    ServiceTypeHu.Extrák,
-                    7000,
-                    "Extra bed",
-                    "Provision of an extra bed",
-                    ServiceTypeEn.Extras
-                );
-                services.Add(service);
+                _bookingService.CreateNewService("Pótágy", services);
             }
 
             else if (cbExtraBed.SelectedIndex == 2)
             {
-                service = new Service(
-                    10,
-                    "Kiságy",
-                    "Babaágy biztosítása",
-                    ServiceTypeHu.Extrák,
-                    3000,
-                    "Baby cot",
-                    "Provision of a baby cot",
-                    ServiceTypeEn.Extras
-                );
-                services.Add(service);
+                _bookingService.CreateNewService("Kiságy", services);
             }
         }
 
@@ -743,32 +621,12 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (cbDepartureNotes.SelectedIndex == 1)
             {
-                service = new Service(
-                    22,
-                    "Késői kijelentkezés",
-                    "Fizetős szobahosszabbítás a távozás napján.",
-                    ServiceTypeHu.Logisztika,
-                    20000,
-                    "Late check-out",
-                    "Paid room extension upon departure.",
-                    ServiceTypeEn.Logistics
-                );
-                services.Add(service);
+                _bookingService.CreateNewService("Késői kijelentkezés", services);
             }
 
             else if (cbDepartureNotes.SelectedIndex == 2)
             {
-                service = new Service(
-                    23,
-                    "Korai távozás",
-                    "Tervezettnél korábbi elutazás a szállodából.",
-                    ServiceTypeHu.Logisztika,
-                    30000,
-                    "Early departure",
-                    "eaving the hotel before schedule.",
-                    ServiceTypeEn.Logistics
-                );
-                services.Add(service);
+                _bookingService.CreateNewService("Korai távozás", services);
             }
         }
 
@@ -784,51 +642,39 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             }
         }
 
-        private void FillSumSpecialRequests()
-        {
-            var validNames = services.Select(s => s.NameHu).Where(name => !string.IsNullOrWhiteSpace(name));
-
-            if (!validNames.Any())
-            {
-                lbSumExtras.Text = "No special requests";
-                return;
-            }
-
-            string sumRequests = string.Join(" | ", services.Select(s => s.NameHu));
-            lbSumExtras.Text = sumRequests;
-        }
         #endregion
 
         #region Buttons
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            if (tcCheckin.SelectedIndex == 0)
+            switch (tcCheckin.SelectedIndex)
             {
-                if (!PersonalDataValidationConfirm())
-                {
-                    return;
-                }
+                case 0:
+                    if (!PersonalDataValidationConfirm())
+                    {
+                        return;
+                    }
 
-                if (guestsOfBooking.Count() == 0 || dataModified)
-                {
-                    MessageBox.Show("Please save the guest details before proceeding.",
-                        "Guest Details Missing",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    return;
-                }
+                    if (guestsOfBooking.Count() == 0 || dataModified)
+                    {
+                        MessageBox.Show("Please save the guest details before proceeding.",
+                            "Guest Details Missing",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
 
-                if (dataModified && !guestIsSaved) return; 
-            }
+                    if (dataModified && !guestIsSaved) return;
+                break;
 
-            if (tcCheckin.SelectedIndex == 1)
-            {
-                if (!cardIsSelected)
-                {
-                    MessageBox.Show("You must select a Room first!", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                case 1:
+                    if (!cardIsSelected)
+                    {
+                        MessageBox.Show("You must select a Room first!", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                break;
             }
 
             _bookingService.NextButtonClick(tcCheckin, btnNext, btnBack, btnConfirm);
@@ -866,26 +712,15 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             else { return; }
         }
 
-        private bool HasValidationError(TextBox textbox)
-        {
-
-            if (string.IsNullOrEmpty(textbox.Text.Trim()))
-            {
-                _errorProvider.SetError(textbox, "You can't leave empty spaces!");
-                return true;
-            }
-            else { _errorProvider.SetError(textbox, ""); return false; }
-        }
-
         private bool PersonalDataValidationConfirm()
         {
-            bool isFirstNameValid = !HasValidationError(tbFirstName);
-            bool isLastNameValid = !HasValidationError(tbLastName);
-            bool isEmailValid = !HasValidationError(tbEmail);
-            bool isPhoneValid = !HasValidationError(tbPhone);
-            bool isZipValid = !HasValidationError(tbZipCode);
-            bool isCityValid = !HasValidationError(tbCity);
-            bool isDocValid = !HasValidationError(tbDocumentNumber);
+            bool isFirstNameValid = !_bookingService.HasValidationError(tbFirstName, _errorProvider);
+            bool isLastNameValid = !_bookingService.HasValidationError(tbLastName, _errorProvider);
+            bool isEmailValid = !_bookingService.HasValidationError(tbEmail, _errorProvider);
+            bool isPhoneValid = !_bookingService.HasValidationError(tbPhone, _errorProvider);
+            bool isZipValid = !_bookingService.HasValidationError(tbZipCode, _errorProvider);
+            bool isCityValid = !_bookingService.HasValidationError(tbCity, _errorProvider);
+            bool isDocValid = !_bookingService.HasValidationError(tbDocumentNumber, _errorProvider);
 
             return isFirstNameValid && isLastNameValid && isEmailValid && isPhoneValid && isZipValid && isCityValid && isDocValid;
         }
@@ -896,42 +731,27 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void tbFirstName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            BookingService.InputValidationService.BlockDigits(e);
         }
 
         private void tbLastName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            BookingService.InputValidationService.BlockDigits(e);
         }
 
         private void tbPhone_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsLetter(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            BookingService.InputValidationService.BlockLetters(e);
         }
 
         private void tbZipCode_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsLetter(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            BookingService.InputValidationService.BlockLetters(e);
         }
 
         private void tbCity_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            BookingService.InputValidationService.BlockDigits(e);
         }
         #endregion
     }

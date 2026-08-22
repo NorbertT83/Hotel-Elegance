@@ -24,19 +24,24 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
             InitializeComponent();
         }
 
+        private void RegisterControlEvents(Control parent)
+        {
+            foreach(Control c in parent.Controls)
+            {
+                c.Click += RoomCard_Click;
+                c.MouseEnter += RoomCard_MouseHover;
+                c.MouseLeave += RoomCard_MouseLeave;
+
+                if (c.HasChildren) RegisterControlEvents(c);
+            }
+        }
+
         public void LoadSelectedRoomCardData(Booking selectedBooking)
         {
             _bookingService = new BookingService();
             Room room = _bookingService.GetRoomByBookingId(selectedBooking);
 
-            SelectedRoom = room;
-
-            lbRoomNumber.Text = room.Room_number.ToString();
-            lbRoomType.Text = room.RoomsRoomtype.ToString();
-            lbBedType.Text = room.RoomsBedType.ToString();
-            lbHasView.Text = room.RoomsView.ToString();
-            lbCapacity.Text = room.MaxAdults.ToString();
-            lbPrice.Text = room.Price.ToString();
+            LoadCardData(room);
         }
 
         public void LoadCardData(Room room)
@@ -54,15 +59,18 @@ namespace Hotel_erp_Winforms_App.UI.Controls.RoomCardControl
         public void RoomCard_Click(object sender, EventArgs e)
         {
             CardSelected?.Invoke(this, EventArgs.Empty);
-            clicked = true;
+        }
 
-            pnlMain.BackColor = Color.FromArgb(170, 202, 255);
+        public void SetSelected(bool isSelected)
+        {
+            clicked = isSelected;
+            pnlMain.BackColor = isSelected ? Color.FromArgb(170, 202, 255): Color.White;
         }
 
         #region Mouse effects
         private void RoomCard_MouseHover(object sender, EventArgs e)
         {
-            pnlMain.BackColor = Color.FromArgb(220, 233, 255);
+            if (!clicked) pnlMain.BackColor = Color.FromArgb(220, 233, 255);
         }
 
         private void RoomCard_MouseLeave(object sender, EventArgs e)
