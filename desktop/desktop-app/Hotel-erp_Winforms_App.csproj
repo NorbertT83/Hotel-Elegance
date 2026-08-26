@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <BaseOutputPath>C:\Users\Dávid\Desktop\Hotel-erp_Winforms_App\Hotel-erp_Winforms_App\bin\Debug</BaseOutputPath>
+    <BaseOutputPath>$(MSBuildProjectDirectory)\bin\Debug\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
