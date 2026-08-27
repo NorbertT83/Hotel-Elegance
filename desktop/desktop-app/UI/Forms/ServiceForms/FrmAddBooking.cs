@@ -3,6 +3,7 @@ using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.UI.Controls;
 using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
+using K4os.Compression.LZ4.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,9 +11,13 @@ using System.Data;
 using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Numerics;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 {
@@ -23,6 +28,19 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         // special requests műveleteket egységesíteni az frmCheckin-ével (ln117)
         // ha már létezik az adatbázisban a vendég, akkor ki lehessen választani
         // Airport transfer oda, vissza vagy oda-vissza
+        // a payment summnál a szoba ne egyesével jelenjen meg a táblázatban hanem csak egyszer, rosszul is van kiszámolva az ára
+        // personal data-ban még mindig nem lehet kiválasztani nationalityt
+        // document type-nak egyelőre semmi értelme
+        // A birthdate - re legyen valami kiemelés
+        // personal data edit még nincs kidolgozva
+        // phone number format ellenőzés
+        // email legyen textbox + @ + textbox
+        // car plate number format ellenorzes
+        // other fullel kezdeni valamit
+        // pezsgő bekészítés service kezelése
+        // departure notes service kezelése
+        // egy vendéget ne lehesse többször menteni
+        // a price_at_booking az egységár vagy összeg?
 
         // a selected Room a buttons->OnCardSelected-ben mentődik és a variables-ben van tárolva
 
