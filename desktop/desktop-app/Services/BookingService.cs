@@ -32,92 +32,71 @@ namespace Hotel_erp_Winforms_App.Services
             2.: filters bookings by the parameters
             3.: confirms the check-in, updates database
             4.: confirms the new booking, updates database
-        */ 
+        */
         #endregion
         #region Database actions
         // 1.
-        public List<Booking> LoadDgv(string query, Dictionary<string, object> parameters = null)
+        public async Task<List<Booking>> LoadDgvAsync(string query = "SELECT * FROM bookings", Dictionary<string, object> parameters = null)
         {
             List<Booking> bookings = new List<Booking>();
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            await using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                await connection.OpenAsync();
 
-                if(parameters != null)
+                await using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
-                    foreach(var param in parameters)
+                    if (parameters != null)
                     {
-                        cmd.Parameters.AddWithValue(param.Key, param.Value);
+                        foreach (var param in parameters)
+                        {
+                            cmd.Parameters.AddWithValue(param.Key, param.Value ?? DBNull.Value);
+                        }
                     }
-                }
 
-                connection.Open();
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        DateTime? checkinValue = reader["checkin"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["checkin"]);
-                        DateTime? checkoutValue = reader["checkout"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["checkout"]);
-                        DateTime? createdAtValue = reader["created_at"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["created_at"]);
+                        while (await reader.ReadAsync())
+                        {
+                            DateTime? checkinValue = reader["checkin"] == DBNull.Value ? null : Convert.ToDateTime(reader["checkin"]);
+                            DateTime? checkoutValue = reader["checkout"] == DBNull.Value ? null : Convert.ToDateTime(reader["checkout"]);
+                            DateTime? createdAtValue = reader["created_at"] == DBNull.Value ? null : Convert.ToDateTime(reader["created_at"]);
 
-                        int? guest2 = reader["guest2_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest2_id"]);
-                        int? guest3 = reader["guest3_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest3_id"]);
-                        int? guest4 = reader["guest4_id"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["guest4_id"]);
+                            int? guest2 = reader["guest2_id"] == DBNull.Value ? null : Convert.ToInt32(reader["guest2_id"]);
+                            int? guest3 = reader["guest3_id"] == DBNull.Value ? null : Convert.ToInt32(reader["guest3_id"]);
+                            int? guest4 = reader["guest4_id"] == DBNull.Value ? null : Convert.ToInt32(reader["guest4_id"]);
 
-                        System.Enum.TryParse<Hotel_erp_Winforms_App.Models.RoomType>(
-                            reader["room_type"]?.ToString(), true, out var roomTypeEnum);
+                            Enum.TryParse<Hotel_erp_Winforms_App.Models.RoomType>(
+                                reader["room_type"]?.ToString(), true, out var roomTypeEnum);
 
-                        System.Enum.TryParse<CateringLevel>
-                            (reader["catering_level"]?.ToString(), true, out var cateringEnum);
+                            Enum.TryParse<CateringLevel>(
+                                reader["catering_level"]?.ToString(), true, out var cateringEnum);
 
-                        Booking booking = new Booking
-                        (
-                            reader["id"].ToString() ?? string.Empty,
-                            Convert.ToInt32(reader["room_number"]),
-                            roomTypeEnum,
-                            Convert.ToInt32(reader["guest1_id"]),
-                            Convert.ToDateTime(reader["beginning_of_stay"]),
-                            Convert.ToDateTime(reader["end_of_stay"]),
-                            checkinValue,
-                            checkoutValue,
-                            guest2,
-                            guest3,
-                            guest4,
-                            cateringEnum,
-                            createdAtValue
-                        );
-
-                        //if (isBookingQuery)
-                        //{
-                        //    if (reader["guest1_id"] != DBNull.Value)
-                        //    {
-                        //        booking.MainGuest = new Guest
-                        //        (
-                        //            Convert.ToInt32(reader["guest1_id"]),
-                        //            reader["email"].ToString() ?? string.Empty,
-                        //            reader["id_card_number"]?.ToString() ?? string.Empty,
-                        //            reader["fname"].ToString() ?? string.Empty,
-                        //            reader["lname"].ToString() ?? string.Empty,
-                        //            reader["date_of_birth"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["date_of_birth"]),
-                        //            reader["country"].ToString() ?? string.Empty,
-                        //            reader["zip_code"].ToString() ?? string.Empty,
-                        //            reader["city"].ToString() ?? string.Empty,
-                        //            reader["street"].ToString() ?? string.Empty,
-                        //            reader["car_plate_number"]?.ToString() ?? string.Empty,
-                        //            reader["total_nights"] == DBNull.Value ? 0 : Convert.ToInt32(reader["total_nights"]),
-                        //            reader["loyalty_level"] == DBNull.Value ? 0 : Convert.ToInt32(reader["loyalty_level"])
-                        //        );
-                        //    }
-                        //}
-                        bookings.Add(booking);
+                            Booking booking = new Booking
+                            (
+                                reader["id"].ToString() ?? string.Empty,
+                                reader["room_number"] == DBNull.Value ? 0 : Convert.ToInt32(reader["room_number"]),
+                                roomTypeEnum,
+                                Convert.ToInt32(reader["guest1_id"]),
+                                Convert.ToDateTime(reader["beginning_of_stay"]),
+                                Convert.ToDateTime(reader["end_of_stay"]),
+                                checkinValue,
+                                checkoutValue,
+                                guest2,
+                                guest3,
+                                guest4,
+                                cateringEnum,
+                                createdAtValue
+                            );
+                            bookings.Add(booking);
+                        }
                     }
                 }
             }
             return bookings;
         }
         // 2.
-        public List<Booking> SearchBookings(int fieldIndex, string searchText, int statusIndex, int tabIndex, int spanIndex, DateTime fromDate, DateTime toDate)
+        public async Task<List<Booking>> SearchBookings(int fieldIndex, string searchText, int statusIndex, int tabIndex, int spanIndex, DateTime fromDate, DateTime toDate)
         {
             string joins = "";
             string whereClause = " WHERE 1=1 ";
@@ -223,7 +202,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             string query = $"SELECT bookings.* FROM bookings{joins}{whereClause};";
 
-            return LoadDgv(query, parameters);
+            return await LoadDgvAsync(query, parameters);
         }
         // 3.
         public void ConfirmCheckin(Booking booking, List<Guest> guestList, List<Service> serviceItems)

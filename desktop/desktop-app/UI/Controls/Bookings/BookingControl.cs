@@ -30,11 +30,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         public BookingService bookingService = new BookingService();
 
-        public void LoadBookings()
+        public async void LoadBookings()
         {
             try
             {
-                List<Booking> list = bookingService.LoadDgv("SELECT * FROM bookings");
+                List<Booking> list = await bookingService.LoadDgvAsync("SELECT * FROM bookings");
 
                 dgvBookings.AutoGenerateColumns = false;
                 dgvBookings.DataSource = null;
