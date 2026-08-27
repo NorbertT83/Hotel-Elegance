@@ -42,8 +42,8 @@ export default function RoomService() {
 
     useEffect(() => {
         const hydrateFoodBev = async () => {
-            const foodBevResponse: FoodBev[] = await getData('foodbeverage/all');
-            if (foodBevResponse) setFoodAndBeverage(foodBevResponse);
+            const foodBevResponse = await getData('foodbeverage/all');
+            if (foodBevResponse) setFoodAndBeverage(foodBevResponse as FoodBev[]);
         };
         hydrateFoodBev();
     }, []);
@@ -76,14 +76,16 @@ export default function RoomService() {
 
     function handleCartChange(id: FoodBev["id"], quantity: number) {
         setCart(prev => {
+            const currentCart = prev ?? [];
+
             if (quantity <= 0) {
-                return prev.filter(orderItem => orderItem.item.id !== id);
+                return currentCart.filter(orderItem => orderItem.item.id !== id);
             }
 
-            const existingItemIndex = prev.findIndex(orderItem => orderItem.item.id === id);
+            const existingItemIndex = currentCart.findIndex(orderItem => orderItem.item.id === id);
 
             if (existingItemIndex > -1) {
-                const updatedCart = [...prev];
+                const updatedCart = [...currentCart];
                 updatedCart[existingItemIndex] = {
                     ...updatedCart[existingItemIndex],
                     quantity
@@ -91,9 +93,9 @@ export default function RoomService() {
                 return updatedCart;
             } else {
                 const foodItem = foodAndBeverage.find(food => food.id === id);
-                if (!foodItem) return prev;
+                if (!foodItem) return currentCart;
                 
-                return [...prev, { item: foodItem, quantity }];
+                return [...currentCart, { item: foodItem, quantity }];
             }
         });
     }
@@ -121,7 +123,7 @@ export default function RoomService() {
     }
 
 
-    const totalItemsInCart = cart.reduce((sum, current) => sum + current.quantity, 0);
+    const totalItemsInCart = (cart ?? []).reduce((sum, current) => sum + current.quantity, 0);
 
     useEffect(() => {
         if (!totalItemsInCart) setIsCartOpen(false);
@@ -130,14 +132,14 @@ export default function RoomService() {
     return ( <>
         {showSuccessModal && 
             <MessageBoxModal
-                headerText='Információ'
-                message='Sikeres rendelés! Köszönjük!'
+                headerText={language === 'hu' ? 'Információ' : 'Information'}
+                message={language === 'hu' ? 'Sikeres szobaszerviz rendelés! Köszönjük!' : 'Room service order placed successfully! Thank you!'}
                 timeout={2500}
                 onClose={() => setShowSuccessModal(false)}
             />
         }
         {isCartOpen && <CartModal
-            cart={cart}
+            cart={cart ?? []}
             isCartOpen={isCartOpen}
             setIsCartOpen={setIsCartOpen}
             handleCartChange={handleCartChange}
@@ -169,7 +171,7 @@ export default function RoomService() {
                                 
                                 <div className={s.categoryItems}>
                                     {categoryItems.map(item => {
-                                        const cartItem = cart.find(orderItem => orderItem.item.id === item.id);
+                                        const cartItem = (cart ?? []).find(orderItem => orderItem.item.id === item.id);
                                         const currentAmount = cartItem ? cartItem.quantity : 0;
                                         return <FoodBevItem
                                                 key={item.id}
