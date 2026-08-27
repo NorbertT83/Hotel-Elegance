@@ -134,7 +134,7 @@ export default function RoomService() {
             <MessageBoxModal
                 headerText={language === 'hu' ? 'Információ' : 'Information'}
                 message={language === 'hu' ? 'Sikeres szobaszerviz rendelés! Köszönjük!' : 'Room service order placed successfully! Thank you!'}
-                timeout={2500}
+                timeout={3500}
                 onClose={() => setShowSuccessModal(false)}
             />
         }

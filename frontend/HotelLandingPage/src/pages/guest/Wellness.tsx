@@ -95,7 +95,7 @@ export default function Wellness() {
                             ? 'Sikeres wellness rendelés! Köszönjük!'
                             : 'Wellness order placed successfully! Thank you!'
                     }
-                    timeout={2500}
+                    timeout={3500}
                     onClose={() => setShowSuccessModal(false)}
                 />
             )}

@@ -88,7 +88,7 @@ export default function Extras() {
                             ? 'Sikeres extra szolgáltatás rendelés! Köszönjük!'
                             : 'Extra service order placed successfully! Thank you!'
                     }
-                    timeout={2500}
+                    timeout={3500}
                     onClose={() => setShowSuccessModal(false)}
                 />
             )}

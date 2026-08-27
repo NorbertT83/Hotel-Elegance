@@ -88,7 +88,7 @@ export default function Logistics() {
                             ? 'Sikeres logisztikai szolgáltatás rendelés! Köszönjük!'
                             : 'Logistics service order placed successfully! Thank you!'
                     }
-                    timeout={2500}
+                    timeout={3500}
                     onClose={() => setShowSuccessModal(false)}
                 />
             )}
