@@ -87,6 +87,29 @@ namespace Hotel_erp_Winforms_App.Services
                             cateringEnum,
                             createdAtValue
                         );
+
+                        //if (isBookingQuery)
+                        //{
+                        //    if (reader["guest1_id"] != DBNull.Value)
+                        //    {
+                        //        booking.MainGuest = new Guest
+                        //        (
+                        //            Convert.ToInt32(reader["guest1_id"]),
+                        //            reader["email"].ToString() ?? string.Empty,
+                        //            reader["id_card_number"]?.ToString() ?? string.Empty,
+                        //            reader["fname"].ToString() ?? string.Empty,
+                        //            reader["lname"].ToString() ?? string.Empty,
+                        //            reader["date_of_birth"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(reader["date_of_birth"]),
+                        //            reader["country"].ToString() ?? string.Empty,
+                        //            reader["zip_code"].ToString() ?? string.Empty,
+                        //            reader["city"].ToString() ?? string.Empty,
+                        //            reader["street"].ToString() ?? string.Empty,
+                        //            reader["car_plate_number"]?.ToString() ?? string.Empty,
+                        //            reader["total_nights"] == DBNull.Value ? 0 : Convert.ToInt32(reader["total_nights"]),
+                        //            reader["loyalty_level"] == DBNull.Value ? 0 : Convert.ToInt32(reader["loyalty_level"])
+                        //        );
+                        //    }
+                        //}
                         bookings.Add(booking);
                     }
                 }

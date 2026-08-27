@@ -6,11 +6,11 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Hotel_erp_Winforms_App.UI.Controls
+namespace Hotel_erp_Winforms_App.UI.Controls.Settings
 {
-    public partial class StockControl : UserControl
+    public partial class SettingsControl : UserControl
     {
-        public StockControl()
+        public SettingsControl()
         {
             InitializeComponent();
         }

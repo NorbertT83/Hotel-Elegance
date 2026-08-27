@@ -676,9 +676,9 @@
             label9.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 238);
             label9.Location = new Point(1, 1);
             label9.Name = "label9";
-            label9.Size = new Size(40, 17);
+            label9.Size = new Size(48, 17);
             label9.TabIndex = 6;
-            label9.Text = "Filter";
+            label9.Text = "FILTER";
             // 
             // btnSearch
             // 
