@@ -21,6 +21,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         #region TODO
         /*
          * tabindexeket beállítani
+         * rendezési lehetőségeket hozzáadni
         */
 
         #endregion
@@ -57,7 +58,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             #region key performance indicators
 
-            lbKpiTotalGuestsValue.Text = guests.Count.ToString();
             lbKpiVipValue.Text = _guestService.GetNumberOfVipGuests(guests).ToString();
             lbKpiInHouseValue.Text = _guestService.GetNumberOfCurrentlyStayers(await _bookingService.LoadDgvAsync()).ToString();
             lbKpiReturningValue.Text = _guestService.GetNumberOfReturningGuests(await _bookingService.LoadDgvAsync()).ToString();
@@ -78,8 +78,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 Cursor.Current = Cursors.Default;
             }
+
             dgvGuests.DataSource = guests;
             dgvGuests.CellFormatting += dgvGuests_CellFormatting;
+
+            lbKpiTotalGuestsValue.Text = guests.Count.ToString();
 
             if (dgvGuests.Rows.Count > 0)
             {
@@ -214,7 +217,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
-            if(result == DialogResult.Yes)
+            if (result == DialogResult.Yes)
             {
                 try
                 {
