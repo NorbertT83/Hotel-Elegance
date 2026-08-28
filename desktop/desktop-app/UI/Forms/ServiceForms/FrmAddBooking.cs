@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.UI.Controls;
@@ -49,6 +50,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         private BookingService bookingService = new BookingService();
         private RoomCardUserControl? selectedCard = null;
         private ErrorProvider _errorProvider = new ErrorProvider();
+        private CommonHelper _commonHelper = new CommonHelper();
 
         public Room? selectedRoom { get; private set; } = null;
 
@@ -564,38 +566,38 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void tbFirstName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockDigits(e);
+            CommonHelper.InputValidationService.BlockDigits(e);
         }
 
         private void tbLastName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockDigits(e);
+            CommonHelper.InputValidationService.BlockDigits(e);
         }
 
         private void tbPhone_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockLetters(e);
+            CommonHelper.InputValidationService.BlockLetters(e);
         }
 
         private void tbZipCode_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockLetters(e);
+            CommonHelper.InputValidationService.BlockLetters(e);
         }
 
         private void tbCity_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockDigits(e);
+            CommonHelper.InputValidationService.BlockDigits(e);
         }
 
         private bool PersonalDataValidationConfirm()
         {
-            bool isFirstNameValid = !bookingService.HasValidationError(tbFirstName, _errorProvider);
-            bool isLastNameValid = !bookingService.HasValidationError(tbLastName, _errorProvider);
-            bool isEmailValid = !bookingService.HasValidationError(tbEmail, _errorProvider);
-            bool isPhoneValid = !bookingService.HasValidationError(tbPhone, _errorProvider);
-            bool isZipValid = !bookingService.HasValidationError(tbZipCode, _errorProvider);
-            bool isCityValid = !bookingService.HasValidationError(tbCity, _errorProvider);
-            bool isDocValid = !bookingService.HasValidationError(tbDocumentNumber, _errorProvider);
+            bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
+            bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
+            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider);
+            bool isPhoneValid = !_commonHelper.HasValidationError(tbPhone, _errorProvider);
+            bool isZipValid = !_commonHelper.HasValidationError(tbZipCode, _errorProvider);
+            bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
+            bool isDocValid = !_commonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
 
             return isFirstNameValid && isLastNameValid && isEmailValid && isPhoneValid && isZipValid && isCityValid && isDocValid;
         }

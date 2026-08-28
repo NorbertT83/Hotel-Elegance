@@ -1,4 +1,5 @@
-﻿using Hotel_erp_Winforms_App.Models;
+﻿using Hotel_erp_Winforms_App.Helpers;
+using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         #region TODO
         /*
-         * loyalty category uj vendegnel default 0
-         * hibakezeles: vagy csak szamok vagy csak betuk uj vendeg mentesnel
          * tabindexeket beállítani
-         * true false részekből methodot csinálni
         */
 
         #endregion
@@ -31,10 +29,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private GuestService _guestService = new GuestService();
         private BookingService _bookingService = new BookingService();
+        private CommonHelper _commonHelper = new CommonHelper();
 
         private List<Guest> guests = new List<Guest>();
 
         private Guest _selectedGuest;
+        private ErrorProvider _errorProvider = new ErrorProvider();
 
         bool addGuestClicked = false;
 
@@ -45,24 +45,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             #region textboxes, buttons
 
-            tbFullName.ReadOnly = true;
-            tbEmail.ReadOnly = true;
-            tbIdCard.ReadOnly = true;
-            tbAddress.ReadOnly = true;
-            tbNotes.ReadOnly = true;
-            cbCategory.Enabled = false;
-
-            btnSaveGuest.Visible = false;
-
-            tbFname.Visible = false;
-            tbLname.Visible = false;
-            tbZip.Visible = false;
-            tbCity.Visible = false;
-            tbStreet.Visible = false;
-            lbBirthdateTitle.Visible = false;
-            dtpBirthdate.Visible = false;
-            lbCountryTitle.Visible = false;
-            tbCountry.Visible = false;
+            ReadOnlyAndVisibility(false);
 
             #endregion
 
@@ -158,45 +141,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 4.
         private void btnNewGuest_Click(object sender, EventArgs e)
         {
-            addGuestClicked = true;
-
-            dgvGuests.ClearSelection();
-
-            tbFullName.Clear();
-            tbEmail.Clear();
-            tbIdCard.Clear();
-            tbAddress.Clear();
-            tbNotes.Clear();
-
-            btnSaveGuest.Visible = true;
-            cbCategory.Enabled = true;
-            cbCategory.SelectedIndex = 0;
-
-            tbFullName.Visible = false;
-            tbEmail.ReadOnly = false;
-            tbIdCard.ReadOnly = false;
-            tbNotes.ReadOnly = false;
-            tbAddress.Visible = false;
-
-            tbFname.Visible = true;
-            tbLname.Visible = true;
-            tbZip.Visible = true;
-            tbCity.Visible = true;
-            tbStreet.Visible = true;
-            lbBirthdateTitle.Visible = true;
-            dtpBirthdate.Visible = true;
-            lbCountryTitle.Visible = true;
-            tbCountry.Visible = true;
-
-            lbCategoryTitle.Location = new Point(lbCategoryTitle.Location.X, lbCategoryTitle.Location.Y + 55);
-            cbCategory.Location = new Point(lbCategoryTitle.Location.X, 340);
-            lbNotesTitle.Location = new Point(lbCategoryTitle.Location.X, lbCategoryTitle.Location.Y + 55);
-            tbNotes.Location = new Point(lbCategoryTitle.Location.X, lbCategoryTitle.Location.Y + 55);
+            ReadOnlyAndVisibility(true);
         }
 
         // 5.
         private async void btnSaveGuest_Click(object sender, EventArgs e)
         {
+            if (!PersonalDataValidationConfirm()) return;
+
             DialogResult result = MessageBox.Show(
                 "Are you sure all the details are correct?",
                 "Confirmation",
@@ -249,12 +201,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 }
             }
         }
+
         #endregion
 
         #region INFO
         /*
             1.: dgv loyalty level cell formatting
             2.: fill textboxes and comboxes
+            3.: sets the visibility and isReadOnly true or false depending on whether its a new guest or an existing
         */
         #endregion
         #region Helpers
@@ -296,32 +250,16 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             if (_selectedGuest == null) return;
 
-            tbFullName.ReadOnly = true;
             tbFullName.Visible = true;
-            tbEmail.ReadOnly = true;
-            tbIdCard.ReadOnly = true;
-            tbAddress.ReadOnly = true;
             tbAddress.Visible = true;
-            tbNotes.ReadOnly = true;
-            cbCategory.Enabled = false;
+
+            ReadOnlyAndVisibility(false);
 
             tbFname.Clear();
             tbLname.Clear();
             tbZip.Clear();
             tbCity.Clear();
             tbStreet.Clear();
-
-            tbFname.Visible = false;
-            tbLname.Visible = false;
-            tbZip.Visible = false;
-            tbCity.Visible = false;
-            tbStreet.Visible = false;
-            lbBirthdateTitle.Visible = false;
-            dtpBirthdate.Visible = false;
-            lbCountryTitle.Visible = false;
-            tbCountry.Visible = false;
-
-            btnSaveGuest.Visible = false;
 
             if (addGuestClicked)
             {
@@ -349,6 +287,123 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 case 2: cbCategory.SelectedIndex = 1; break;
             }
         }
+
+        // 3.
+        private void ReadOnlyAndVisibility(bool addingNewGuest)
+        {
+            if (addingNewGuest)
+            {
+                addGuestClicked = true;
+
+                dgvGuests.ClearSelection();
+
+                tbFullName.Clear();
+                tbEmail.Clear();
+                tbIdCard.Clear();
+                tbAddress.Clear();
+                tbNotes.Clear();
+
+                btnSaveGuest.Visible = true;
+                cbCategory.SelectedIndex = 0;
+
+                tbFullName.Visible = false;
+                tbEmail.ReadOnly = false;
+                tbIdCard.ReadOnly = false;
+                tbNotes.ReadOnly = false;
+                tbAddress.Visible = false;
+
+                tbFname.Visible = true;
+                tbLname.Visible = true;
+                tbZip.Visible = true;
+                tbCity.Visible = true;
+                tbStreet.Visible = true;
+                lbBirthdateTitle.Visible = true;
+                dtpBirthdate.Visible = true;
+                lbCountryTitle.Visible = true;
+                tbCountry.Visible = true;
+
+                lbCategoryTitle.Location = new Point(lbCategoryTitle.Location.X, lbCategoryTitle.Location.Y + 55);
+                cbCategory.Location = new Point(lbCategoryTitle.Location.X, 340);
+                lbNotesTitle.Location = new Point(lbCategoryTitle.Location.X, lbCategoryTitle.Location.Y + 55);
+                tbNotes.Location = new Point(lbCategoryTitle.Location.X, lbCategoryTitle.Location.Y + 55);
+            }
+
+            else
+            {
+                tbFullName.Visible = true;
+                tbAddress.Visible = true;
+
+                // RowSelection
+                // -----------------------
+                // OnLoad
+
+                tbFullName.ReadOnly = true;
+                tbEmail.ReadOnly = true;
+                tbIdCard.ReadOnly = true;
+                tbAddress.ReadOnly = true;
+                tbNotes.ReadOnly = true;
+                cbCategory.Enabled = false;
+
+                btnSaveGuest.Visible = false;
+
+                tbFname.Visible = false;
+                tbLname.Visible = false;
+                tbZip.Visible = false;
+                tbCity.Visible = false;
+                tbStreet.Visible = false;
+                lbBirthdateTitle.Visible = false;
+                dtpBirthdate.Visible = false;
+                lbCountryTitle.Visible = false;
+                tbCountry.Visible = false;
+            }
+        }
+        #endregion
+
+        #region INFO
+        /*
+            * KeyPress events
+            * Validation Confirm
+        */
+        #endregion
+        #region Foolproofing
+
+        private void tbFirstName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockDigits(e);
+        }
+
+        private void tbLastName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockDigits(e);
+        }
+
+        private void tbZipCode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockLetters(e);
+        }
+
+        private void tbCity_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockDigits(e);
+        }
+
+        private void tbCountry_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockDigits(e);
+        }
+
+        private bool PersonalDataValidationConfirm()
+        {
+            bool isFirstNameValid = !_commonHelper.HasValidationError(tbFname, _errorProvider);
+            bool isLastNameValid = !_commonHelper.HasValidationError(tbLname, _errorProvider);
+            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider);
+            bool isZipValid = !_commonHelper.HasValidationError(tbZip, _errorProvider);
+            bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
+            bool isDocValid = !_commonHelper.HasValidationError(tbIdCard, _errorProvider);
+
+            return isFirstNameValid && isLastNameValid && isEmailValid && isZipValid && isCityValid && isDocValid;
+        }
+
         #endregion
     }
 }

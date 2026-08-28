@@ -205,7 +205,7 @@ namespace Hotel_erp_Winforms_App.Services
             return await LoadDgvAsync(query, parameters);
         }
         // 3.
-        public void ConfirmCheckin(Booking booking, List<Guest> guestList, List<Service> serviceItems)
+        public async Task ConfirmCheckinAsync(Booking booking, List<Guest> guestList, List<Service> serviceItems)
         {
             // 1.: SAVE GUESTS
             string saveGuestQuery = @"
@@ -251,10 +251,10 @@ namespace Hotel_erp_Winforms_App.Services
                 INSERT INTO servicebookings (service_id, booking_id, requested_at, updated_at, quantity, status, price_at_booking)
                 VALUES (@serviceId, @bookingId, @requested, @updated, @quantity, @status, @price);";
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                using (MySqlTransaction transaction = conn.BeginTransaction())
+                await conn.OpenAsync();
+                await using (MySqlTransaction transaction = await conn.BeginTransactionAsync())
                 {
                     try
                     {
@@ -263,7 +263,7 @@ namespace Hotel_erp_Winforms_App.Services
                         foreach (Guest guest in guestList)
                         {
                             // VENDÉGEK MENTÉSE
-                            using (MySqlCommand cmd = new MySqlCommand(saveGuestQuery, conn, transaction))
+                            await using (MySqlCommand cmd = new MySqlCommand(saveGuestQuery, conn, transaction))
                             {
                                 cmd.Parameters.AddWithValue("@id", guest.Id == 0 ? (object)DBNull.Value : guest.Id);
                                 cmd.Parameters.AddWithValue("@email", guest.Email ?? (object)DBNull.Value);
@@ -279,7 +279,7 @@ namespace Hotel_erp_Winforms_App.Services
                                 cmd.Parameters.AddWithValue("@totalNights", guest.TotalNights);
                                 cmd.Parameters.AddWithValue("@loyalty", guest.LoyaltyLevel);
 
-                                object result = cmd.ExecuteScalar();
+                                object result = await cmd.ExecuteScalarAsync();
                                 int currentGuestId = 0;
 
                                 if (result != null && result != DBNull.Value && Convert.ToInt32(result) != 0)
@@ -294,7 +294,7 @@ namespace Hotel_erp_Winforms_App.Services
                         }
 
                         // BOOKING UPDATE
-                        using (MySqlCommand cmd = new MySqlCommand(updateBookingQuery, conn, transaction))
+                        await using (MySqlCommand cmd = new MySqlCommand(updateBookingQuery, conn, transaction))
                         {
                             cmd.Parameters.AddWithValue("@bookingId", booking.Id);
                             cmd.Parameters.AddWithValue("@roomNumber", booking.RoomNumber);
@@ -306,14 +306,14 @@ namespace Hotel_erp_Winforms_App.Services
                             cmd.Parameters.AddWithValue("@guestId3", savedGuestsIds.Count > 2 ? savedGuestsIds[2] : (object)DBNull.Value);
                             cmd.Parameters.AddWithValue("@guestId4", savedGuestsIds.Count > 3 ? savedGuestsIds[3] : (object)DBNull.Value);
 
-                            cmd.ExecuteNonQuery();
+                            await cmd.ExecuteNonQueryAsync();
                         }
 
                         // ROOM UPDATE
-                        using (MySqlCommand cmd = new MySqlCommand(updateRoomQuery, conn, transaction))
+                        await using (MySqlCommand cmd = new MySqlCommand(updateRoomQuery, conn, transaction))
                         {
                             cmd.Parameters.AddWithValue("@roomNumber", booking.RoomNumber);
-                            cmd.ExecuteNonQuery();
+                            await cmd.ExecuteNonQueryAsync();
                         }
 
                         // SZOLGÁLTATLÁSOK
@@ -321,7 +321,7 @@ namespace Hotel_erp_Winforms_App.Services
                         {
                             int days = (booking.EndOfStay - booking.BeginningOfStay).Days;
 
-                            using (MySqlCommand cmd = new MySqlCommand(updateServicesQuery, conn, transaction))
+                            await using (MySqlCommand cmd = new MySqlCommand(updateServicesQuery, conn, transaction))
                             {
                                 cmd.Parameters.AddWithValue("@serviceId", item.Id);
                                 cmd.Parameters.AddWithValue("@bookingId", booking.Id);
@@ -344,16 +344,16 @@ namespace Hotel_erp_Winforms_App.Services
                                 }
                                 cmd.Parameters.AddWithValue("@status", "created");
 
-                                cmd.ExecuteNonQuery();
+                                await cmd.ExecuteNonQueryAsync();
                             }
                         }
 
-                        transaction.Commit();
+                        await transaction.CommitAsync();
                     }
 
                     catch (Exception)
                     {
-                        transaction.Rollback();
+                        await transaction.RollbackAsync();
                         throw;
                     }
                 }
@@ -1280,8 +1280,6 @@ namespace Hotel_erp_Winforms_App.Services
 
         #region INFO
         /*
-            1.: Keypress Handlers
-            2.: returns true if the parameter textbox remains blank
             3.: creates a service of the parameter serviceName, adds to the parameter list
             4.: replaces the parameter label with the names of the items in the parameter list
             5.: adds the parameter guest as a control to the parameter tabControl
@@ -1289,35 +1287,6 @@ namespace Hotel_erp_Winforms_App.Services
         */
         #endregion
         #region Common
-        // 1.
-        public static class InputValidationService
-        {
-            public static void BlockDigits(KeyPressEventArgs e)
-            {
-                if (char.IsDigit(e.KeyChar))
-                {
-                    e.Handled = true;
-                }
-            }
-
-            public static void BlockLetters(KeyPressEventArgs e)
-            {
-                if (char.IsLetter(e.KeyChar))
-                {
-                    e.Handled = true;
-                }
-            }
-        }
-        // 2.
-        public bool HasValidationError(System.Windows.Forms.TextBox tb, ErrorProvider ep)
-        {
-            if (string.IsNullOrEmpty(tb.Text.Trim()))
-            {
-                ep.SetError(tb, "You can't leave empty spaces!");
-                return true;
-            }
-            else { ep.SetError(tb, ""); return false; }
-        }
         // 3.
         public void CreateNewService(string serviceName, List<Service> serviceList, int days = 1, Room? room = null)
         {

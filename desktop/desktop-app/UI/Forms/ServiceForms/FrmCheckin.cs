@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.UI.Controls.GuestsDataSumControl;
@@ -31,6 +32,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private Booking selectedBooking;
         private BookingService _bookingService;
+        private CommonHelper _commonHelper;
         public Service service;
 
         public List<Service> services = new List<Service>();
@@ -685,7 +687,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             _bookingService.BackButtonClick(tcCheckin, btnNext, btnBack, btnConfirm);
         }
 
-        private void btnConfirm_Click(object sender, EventArgs e)
+        private async void btnConfirm_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show(
                 "Are you sure all the details are correct?",
@@ -698,7 +700,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             {
                 try
                 {
-                    _bookingService.ConfirmCheckin(selectedBooking, guestsOfBooking, services);
+                    await _bookingService.ConfirmCheckinAsync(selectedBooking, guestsOfBooking, services);
                     MessageBox.Show("Check-in confirmation successful.", "Confirmed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
@@ -714,13 +716,13 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private bool PersonalDataValidationConfirm()
         {
-            bool isFirstNameValid = !_bookingService.HasValidationError(tbFirstName, _errorProvider);
-            bool isLastNameValid = !_bookingService.HasValidationError(tbLastName, _errorProvider);
-            bool isEmailValid = !_bookingService.HasValidationError(tbEmail, _errorProvider);
-            bool isPhoneValid = !_bookingService.HasValidationError(tbPhone, _errorProvider);
-            bool isZipValid = !_bookingService.HasValidationError(tbZipCode, _errorProvider);
-            bool isCityValid = !_bookingService.HasValidationError(tbCity, _errorProvider);
-            bool isDocValid = !_bookingService.HasValidationError(tbDocumentNumber, _errorProvider);
+            bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
+            bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
+            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider);
+            bool isPhoneValid = !_commonHelper.HasValidationError(tbPhone, _errorProvider);
+            bool isZipValid = !_commonHelper.HasValidationError(tbZipCode, _errorProvider);
+            bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
+            bool isDocValid = !_commonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
 
             return isFirstNameValid && isLastNameValid && isEmailValid && isPhoneValid && isZipValid && isCityValid && isDocValid;
         }
@@ -731,27 +733,27 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void tbFirstName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockDigits(e);
+            CommonHelper.InputValidationService.BlockDigits(e);
         }
 
         private void tbLastName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockDigits(e);
+            CommonHelper.InputValidationService.BlockDigits(e);
         }
 
         private void tbPhone_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockLetters(e);
+            CommonHelper.InputValidationService.BlockLetters(e);
         }
 
         private void tbZipCode_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockLetters(e);
+            CommonHelper.InputValidationService.BlockLetters(e);
         }
 
         private void tbCity_KeyPress(object sender, KeyPressEventArgs e)
         {
-            BookingService.InputValidationService.BlockDigits(e);
+            CommonHelper.InputValidationService.BlockDigits(e);
         }
         #endregion
     }
