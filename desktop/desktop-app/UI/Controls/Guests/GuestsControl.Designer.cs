@@ -33,22 +33,23 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle16 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle17 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle30 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle18 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle19 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle20 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle21 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle22 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle23 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle24 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle25 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle26 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle27 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle28 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle29 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle15 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             pnlTop = new Panel();
+            btnDelete = new Button();
             btnNewGuest = new Button();
             btnRefresh = new Button();
             lbUtility = new Label();
@@ -128,6 +129,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlTop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlTop.BackColor = Color.FromArgb(245, 245, 248);
             pnlTop.BorderStyle = BorderStyle.FixedSingle;
+            pnlTop.Controls.Add(btnDelete);
             pnlTop.Controls.Add(btnNewGuest);
             pnlTop.Controls.Add(btnRefresh);
             pnlTop.Controls.Add(lbUtility);
@@ -142,12 +144,27 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlTop.Size = new Size(1350, 75);
             pnlTop.TabIndex = 0;
             // 
+            // btnDelete
+            // 
+            btnDelete.BackColor = SystemColors.ButtonFace;
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnDelete.ForeColor = Color.DarkRed;
+            btnDelete.Location = new Point(1210, 33);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(130, 30);
+            btnDelete.TabIndex = 5;
+            btnDelete.Text = "Delete";
+            btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
+            // 
             // btnNewGuest
             // 
             btnNewGuest.BackColor = SystemColors.ButtonFace;
             btnNewGuest.FlatStyle = FlatStyle.Flat;
             btnNewGuest.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnNewGuest.Location = new Point(1200, 33);
+            btnNewGuest.ForeColor = Color.DarkGreen;
+            btnNewGuest.Location = new Point(1070, 33);
             btnNewGuest.Name = "btnNewGuest";
             btnNewGuest.Size = new Size(130, 30);
             btnNewGuest.TabIndex = 5;
@@ -160,7 +177,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             btnRefresh.BackColor = SystemColors.ButtonFace;
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRefresh.Location = new Point(1080, 33);
+            btnRefresh.Location = new Point(950, 33);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(110, 30);
             btnRefresh.TabIndex = 4;
@@ -173,7 +190,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             lbUtility.AutoSize = true;
             lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbUtility.ForeColor = Color.DimGray;
-            lbUtility.Location = new Point(1080, 10);
+            lbUtility.Location = new Point(950, 10);
             lbUtility.Name = "lbUtility";
             lbUtility.Size = new Size(70, 19);
             lbUtility.TabIndex = 6;
@@ -437,31 +454,31 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             dgvGuests.AllowUserToOrderColumns = true;
             dgvGuests.AllowUserToResizeColumns = false;
             dgvGuests.AllowUserToResizeRows = false;
-            dataGridViewCellStyle16.BackColor = Color.FromArgb(245, 248, 253);
-            dgvGuests.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(245, 248, 253);
+            dgvGuests.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvGuests.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvGuests.BackgroundColor = Color.White;
             dgvGuests.BorderStyle = BorderStyle.None;
             dgvGuests.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle17.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle17.BackColor = Color.FromArgb(30, 58, 138);
-            dataGridViewCellStyle17.Font = new Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle17.ForeColor = Color.White;
-            dataGridViewCellStyle17.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = DataGridViewTriState.True;
-            dgvGuests.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 58, 138);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvGuests.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvGuests.ColumnHeadersHeight = 40;
             dgvGuests.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvGuests.Columns.AddRange(new DataGridViewColumn[] { colGuestId, colFirstName, colLastName, colEmail, colIdCardNumber, colBirthdate, colCountry, colZip, colCity, colStreet, colCarPlate, colTotalNights, colLoyalty });
-            dataGridViewCellStyle30.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle30.BackColor = SystemColors.Window;
-            dataGridViewCellStyle30.Font = new Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle30.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle30.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle30.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle30.WrapMode = DataGridViewTriState.False;
-            dgvGuests.DefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle15.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle15.BackColor = SystemColors.Window;
+            dataGridViewCellStyle15.Font = new Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle15.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle15.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = DataGridViewTriState.False;
+            dgvGuests.DefaultCellStyle = dataGridViewCellStyle15;
             dgvGuests.Dock = DockStyle.Fill;
             dgvGuests.EnableHeadersVisualStyles = false;
             dgvGuests.GridColor = SystemColors.ControlLight;
@@ -489,8 +506,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colFirstName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colFirstName.DataPropertyName = "Fname";
-            dataGridViewCellStyle18.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colFirstName.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colFirstName.DefaultCellStyle = dataGridViewCellStyle3;
             colFirstName.FillWeight = 90F;
             colFirstName.HeaderText = "First Name";
             colFirstName.Name = "colFirstName";
@@ -500,8 +517,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colLastName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colLastName.DataPropertyName = "Lname";
-            dataGridViewCellStyle19.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colLastName.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colLastName.DefaultCellStyle = dataGridViewCellStyle4;
             colLastName.FillWeight = 90F;
             colLastName.HeaderText = "Last Name";
             colLastName.Name = "colLastName";
@@ -511,8 +528,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colEmail.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colEmail.DataPropertyName = "Email";
-            dataGridViewCellStyle20.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colEmail.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colEmail.DefaultCellStyle = dataGridViewCellStyle5;
             colEmail.FillWeight = 120F;
             colEmail.HeaderText = "Email Address";
             colEmail.Name = "colEmail";
@@ -522,8 +539,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colIdCardNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colIdCardNumber.DataPropertyName = "IdCardNumber";
-            dataGridViewCellStyle21.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colIdCardNumber.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colIdCardNumber.DefaultCellStyle = dataGridViewCellStyle6;
             colIdCardNumber.FillWeight = 90F;
             colIdCardNumber.HeaderText = "ID Number";
             colIdCardNumber.Name = "colIdCardNumber";
@@ -533,8 +550,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colBirthdate.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colBirthdate.DataPropertyName = "DateOfBirth";
-            dataGridViewCellStyle22.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colBirthdate.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colBirthdate.DefaultCellStyle = dataGridViewCellStyle7;
             colBirthdate.FillWeight = 85F;
             colBirthdate.HeaderText = "Birthdate";
             colBirthdate.Name = "colBirthdate";
@@ -544,8 +561,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colCountry.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colCountry.DataPropertyName = "Country";
-            dataGridViewCellStyle23.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colCountry.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colCountry.DefaultCellStyle = dataGridViewCellStyle8;
             colCountry.FillWeight = 80F;
             colCountry.HeaderText = "Country";
             colCountry.Name = "colCountry";
@@ -555,8 +572,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colZip.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colZip.DataPropertyName = "ZipCode";
-            dataGridViewCellStyle24.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colZip.DefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colZip.DefaultCellStyle = dataGridViewCellStyle9;
             colZip.FillWeight = 65F;
             colZip.HeaderText = "Zip code";
             colZip.Name = "colZip";
@@ -566,8 +583,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colCity.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colCity.DataPropertyName = "City";
-            dataGridViewCellStyle25.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colCity.DefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colCity.DefaultCellStyle = dataGridViewCellStyle10;
             colCity.FillWeight = 85F;
             colCity.HeaderText = "City";
             colCity.Name = "colCity";
@@ -577,8 +594,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colStreet.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colStreet.DataPropertyName = "Street";
-            dataGridViewCellStyle26.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colStreet.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colStreet.DefaultCellStyle = dataGridViewCellStyle11;
             colStreet.FillWeight = 110F;
             colStreet.HeaderText = "Street";
             colStreet.Name = "colStreet";
@@ -588,8 +605,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colCarPlate.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colCarPlate.DataPropertyName = "CarPlateNumber";
-            dataGridViewCellStyle27.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colCarPlate.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colCarPlate.DefaultCellStyle = dataGridViewCellStyle12;
             colCarPlate.FillWeight = 80F;
             colCarPlate.HeaderText = "Car Plate Number";
             colCarPlate.Name = "colCarPlate";
@@ -599,8 +616,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colTotalNights.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colTotalNights.DataPropertyName = "TotalNights";
-            dataGridViewCellStyle28.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colTotalNights.DefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle13.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colTotalNights.DefaultCellStyle = dataGridViewCellStyle13;
             colTotalNights.FillWeight = 65F;
             colTotalNights.HeaderText = "Total Nights";
             colTotalNights.Name = "colTotalNights";
@@ -610,8 +627,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             colLoyalty.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colLoyalty.DataPropertyName = "LoyaltyLevel";
-            dataGridViewCellStyle29.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colLoyalty.DefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle14.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colLoyalty.DefaultCellStyle = dataGridViewCellStyle14;
             colLoyalty.FillWeight = 60F;
             colLoyalty.HeaderText = "Loyalty";
             colLoyalty.Name = "colLoyalty";
@@ -666,6 +683,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             btnSaveGuest.BackColor = SystemColors.ButtonFace;
             btnSaveGuest.FlatStyle = FlatStyle.Flat;
             btnSaveGuest.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnSaveGuest.ForeColor = Color.DarkGreen;
             btnSaveGuest.Location = new Point(15, 550);
             btnSaveGuest.Name = "btnSaveGuest";
             btnSaveGuest.Size = new Size(320, 45);
@@ -974,5 +992,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private DateTimePicker dtpBirthdate;
         private Label lbCountryTitle;
         private TextBox tbCountry;
+        private Button btnDelete;
     }
 }

@@ -128,6 +128,27 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
+        // 4.
+        public async Task DeleteGuestFromDbAsync(Guest g)
+        {
+            string query = @"
+                DELETE FROM guests
+                WHERE id = @id;
+            ";
+
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", g.Id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
         // ---- HELPERS ----
         private string? GetStringOrNull(object dbValue)
         {

@@ -96,6 +96,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             3.: Dgv cellclick
             4.: Add guest
             5.: Save guest
+            6.: Delete guest
         */
         #endregion
         #region buttons
@@ -156,7 +157,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 MessageBoxIcon.Question
                 );
 
-            if(result == DialogResult.Yes)
+            if (result == DialogResult.Yes)
             {
                 try
                 {
@@ -191,6 +192,51 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occured while trying to save the Guest into the database: " + ex.Message,
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+        }
+
+        // 6.
+        private async void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (_selectedGuest == null) return;
+
+            DialogResult result = MessageBox.Show(
+                "Are you sure you wish to delete this guest record?",
+                "Confirmation",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if(result == DialogResult.Yes)
+            {
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    _guestService.DeleteGuestFromDbAsync(_selectedGuest);
+
+                    MessageBox.Show(
+                        "Guest deletet successfully!",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    guests = await _guestService.GetAllGuestsFromDbAsync();
+                    dgvGuests.DataSource = guests;
+                    dgvGuests.CellFormatting += dgvGuests_CellFormatting;
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "An error occured while trying to delete the Guest from database: " + ex.Message,
                         "Error",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
