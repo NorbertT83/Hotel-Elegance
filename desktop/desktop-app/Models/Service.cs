@@ -9,25 +9,25 @@ namespace Hotel_erp_Winforms_App.Models
 
     public class Service
     {
-        public Service(int id, string nameHu, string desciptionHu, ServiceTypeHu selectedServiceTypeHu, decimal price, string nameEn, string desciptionEn, ServiceTypeEn selectedServiceTypeEn)
+        public Service(int id, string nameHu, string descriptionHu, ServiceTypeHu selectedServiceTypeHu, decimal price, string nameEn, string descriptionEn, ServiceTypeEn selectedServiceTypeEn)
         {
             Id = id;
             NameHu = nameHu;
-            DesciptionHu = desciptionHu;
+            DescriptionHu = descriptionHu;
             SelectedServiceTypeHu = selectedServiceTypeHu;
             Price = price;
             NameEn = nameEn;
-            DesciptionEn = desciptionEn;
+            DescriptionEn = descriptionEn;
             SelectedServiceTypeEn = selectedServiceTypeEn;
         }
 
         public int Id { get; set; }
         public string NameHu { get; set; }
-        public string DesciptionHu { get; set; }
+        public string DescriptionHu { get; set; }
         public ServiceTypeHu SelectedServiceTypeHu { get; set; }
         public decimal Price { get; set; }
         public string NameEn { get; set; }
-        public string DesciptionEn { get; set; }
+        public string DescriptionEn { get; set; }
         public ServiceTypeEn SelectedServiceTypeEn { get; set; }
     }
 }

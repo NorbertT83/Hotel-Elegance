@@ -11,14 +11,18 @@ namespace Hotel_erp_Winforms_App
 {
     public partial class FrmMain : Form
     {
-        public readonly Employee currentuser;
-
         public FrmMain(Employee loggedInEmployee)
         {
             InitializeComponent();
             currentuser = loggedInEmployee;
             lbWelcomeMainForm.Text = $"Welcome {loggedInEmployee.FName}!";
         }
+
+        #region variables
+
+        public readonly Employee currentuser;
+
+        #endregion
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -45,7 +49,7 @@ namespace Hotel_erp_Winforms_App
             btn.BackColor = Color.Transparent;
             btn.ForeColor = textColor;
             btn.FlatAppearance.MouseOverBackColor = hoverColor;
-            btn.FlatAppearance.MouseDownBackColor = hoverColor;
+            //    btn.FlatAppearance.MouseDownBackColor = hoverColor;
         }
 
         #region Menu buttons

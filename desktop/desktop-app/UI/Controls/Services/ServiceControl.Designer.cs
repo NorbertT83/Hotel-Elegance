@@ -28,15 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             pnlTop = new Panel();
             btnSearch = new Button();
             cbTypeFilter = new ComboBox();
             txtSearch = new TextBox();
             btnDeleteService = new Button();
             lbTypeFilter = new Label();
-            btnSaveService = new Button();
+            btnUpdateService = new Button();
             lbActiveServices = new Label();
             lbTotalServices = new Label();
             lbStats = new Label();
@@ -56,11 +57,14 @@
             colId = new DataGridViewTextBoxColumn();
             colNameHu = new DataGridViewTextBoxColumn();
             colTypeHu = new DataGridViewTextBoxColumn();
+            colDescHu = new DataGridViewTextBoxColumn();
             colPrice = new DataGridViewTextBoxColumn();
             colNameEn = new DataGridViewTextBoxColumn();
             colTypeEn = new DataGridViewTextBoxColumn();
-            colDescHu = new DataGridViewTextBoxColumn();
+            colDescEn = new DataGridViewTextBoxColumn();
             pnlEditor = new Panel();
+            pnlSideBottom = new Panel();
+            btnSaveService = new Button();
             chkIsActive = new CheckBox();
             tabControlLang = new TabControl();
             tabHun = new TabPage();
@@ -84,6 +88,7 @@
             pnlGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
             pnlEditor.SuspendLayout();
+            pnlSideBottom.SuspendLayout();
             tabControlLang.SuspendLayout();
             tabHun.SuspendLayout();
             tabEn.SuspendLayout();
@@ -100,7 +105,7 @@
             pnlTop.Controls.Add(txtSearch);
             pnlTop.Controls.Add(btnDeleteService);
             pnlTop.Controls.Add(lbTypeFilter);
-            pnlTop.Controls.Add(btnSaveService);
+            pnlTop.Controls.Add(btnUpdateService);
             pnlTop.Controls.Add(lbActiveServices);
             pnlTop.Controls.Add(lbTotalServices);
             pnlTop.Controls.Add(lbStats);
@@ -120,56 +125,6 @@
             pnlTop.Size = new Size(1350, 110);
             pnlTop.TabIndex = 0;
             // 
-            // lbFilter
-            // 
-            lbFilter.AutoSize = true;
-            lbFilter.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbFilter.ForeColor = Color.DimGray;
-            lbFilter.Location = new Point(15, 12);
-            lbFilter.Name = "lbFilter";
-            lbFilter.Size = new Size(54, 19);
-            lbFilter.TabIndex = 0;
-            lbFilter.Text = "FILTER";
-            // 
-            // lbSearch
-            // 
-            lbSearch.AutoSize = true;
-            lbSearch.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbSearch.Location = new Point(15, 48);
-            lbSearch.Name = "lbSearch";
-            lbSearch.Size = new Size(59, 19);
-            lbSearch.TabIndex = 0;
-            lbSearch.Text = "Search:";
-            // 
-            // txtSearch
-            // 
-            txtSearch.Font = new Font("Segoe UI", 10F);
-            txtSearch.Location = new Point(80, 45);
-            txtSearch.Name = "txtSearch";
-            txtSearch.Size = new Size(150, 27);
-            txtSearch.TabIndex = 1;
-            // 
-            // lbTypeFilter
-            // 
-            lbTypeFilter.AutoSize = true;
-            lbTypeFilter.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbTypeFilter.Location = new Point(245, 48);
-            lbTypeFilter.Name = "lbTypeFilter";
-            lbTypeFilter.Size = new Size(45, 19);
-            lbTypeFilter.TabIndex = 0;
-            lbTypeFilter.Text = "Type:";
-            // 
-            // cbTypeFilter
-            // 
-            cbTypeFilter.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbTypeFilter.Font = new Font("Segoe UI", 10F);
-            cbTypeFilter.FormattingEnabled = true;
-            cbTypeFilter.Items.AddRange(new object[] { "All", "Wellness", "Extras", "Logistics" });
-            cbTypeFilter.Location = new Point(295, 45);
-            cbTypeFilter.Name = "cbTypeFilter";
-            cbTypeFilter.Size = new Size(130, 28);
-            cbTypeFilter.TabIndex = 2;
-            // 
             // btnSearch
             // 
             btnSearch.BackColor = SystemColors.ButtonFace;
@@ -181,6 +136,141 @@
             btnSearch.TabIndex = 3;
             btnSearch.Text = "Search";
             btnSearch.UseVisualStyleBackColor = false;
+            btnSearch.Click += btnSearch_Click;
+            // 
+            // cbTypeFilter
+            // 
+            cbTypeFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbTypeFilter.Font = new Font("Segoe UI", 10F);
+            cbTypeFilter.FormattingEnabled = true;
+            cbTypeFilter.Items.AddRange(new object[] { "All", "Wellness", "Extras", "Logistics" });
+            cbTypeFilter.Location = new Point(295, 45);
+            cbTypeFilter.Name = "cbTypeFilter";
+            cbTypeFilter.Size = new Size(130, 25);
+            cbTypeFilter.TabIndex = 2;
+            // 
+            // txtSearch
+            // 
+            txtSearch.Font = new Font("Segoe UI", 10F);
+            txtSearch.Location = new Point(80, 45);
+            txtSearch.Name = "txtSearch";
+            txtSearch.Size = new Size(150, 25);
+            txtSearch.TabIndex = 1;
+            // 
+            // btnDeleteService
+            // 
+            btnDeleteService.BackColor = SystemColors.ButtonFace;
+            btnDeleteService.FlatStyle = FlatStyle.Flat;
+            btnDeleteService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnDeleteService.ForeColor = Color.DarkRed;
+            btnDeleteService.Location = new Point(940, 38);
+            btnDeleteService.Name = "btnDeleteService";
+            btnDeleteService.Size = new Size(100, 50);
+            btnDeleteService.TabIndex = 0;
+            btnDeleteService.Text = "Delete";
+            btnDeleteService.UseVisualStyleBackColor = false;
+            btnDeleteService.Click += btnDeleteService_Click;
+            // 
+            // lbTypeFilter
+            // 
+            lbTypeFilter.AutoSize = true;
+            lbTypeFilter.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbTypeFilter.Location = new Point(245, 48);
+            lbTypeFilter.Name = "lbTypeFilter";
+            lbTypeFilter.Size = new Size(45, 19);
+            lbTypeFilter.TabIndex = 0;
+            lbTypeFilter.Text = "Type:";
+            // 
+            // btnUpdateService
+            // 
+            btnUpdateService.BackColor = SystemColors.ButtonFace;
+            btnUpdateService.FlatStyle = FlatStyle.Flat;
+            btnUpdateService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnUpdateService.Location = new Point(810, 38);
+            btnUpdateService.Name = "btnUpdateService";
+            btnUpdateService.Size = new Size(120, 50);
+            btnUpdateService.TabIndex = 0;
+            btnUpdateService.Text = "Update";
+            btnUpdateService.UseVisualStyleBackColor = false;
+            btnUpdateService.Click += btnUpdateService_Click;
+            // 
+            // lbActiveServices
+            // 
+            lbActiveServices.AutoSize = true;
+            lbActiveServices.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbActiveServices.ForeColor = Color.Green;
+            lbActiveServices.Location = new Point(1210, 65);
+            lbActiveServices.Name = "lbActiveServices";
+            lbActiveServices.Size = new Size(67, 19);
+            lbActiveServices.TabIndex = 0;
+            lbActiveServices.Text = "Active: 0";
+            // 
+            // lbTotalServices
+            // 
+            lbTotalServices.AutoSize = true;
+            lbTotalServices.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbTotalServices.ForeColor = Color.Black;
+            lbTotalServices.Location = new Point(1210, 38);
+            lbTotalServices.Name = "lbTotalServices";
+            lbTotalServices.Size = new Size(116, 19);
+            lbTotalServices.TabIndex = 0;
+            lbTotalServices.Text = "Total services: 0";
+            // 
+            // lbStats
+            // 
+            lbStats.AutoSize = true;
+            lbStats.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbStats.ForeColor = Color.DimGray;
+            lbStats.Location = new Point(1210, 12);
+            lbStats.Name = "lbStats";
+            lbStats.Size = new Size(82, 19);
+            lbStats.TabIndex = 0;
+            lbStats.Text = "STATISTICS";
+            // 
+            // lbActions
+            // 
+            lbActions.AutoSize = true;
+            lbActions.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbActions.ForeColor = Color.DimGray;
+            lbActions.Location = new Point(680, 12);
+            lbActions.Name = "lbActions";
+            lbActions.Size = new Size(70, 19);
+            lbActions.TabIndex = 0;
+            lbActions.Text = "ACTIONS";
+            // 
+            // btnNewService
+            // 
+            btnNewService.BackColor = SystemColors.ButtonFace;
+            btnNewService.FlatStyle = FlatStyle.Flat;
+            btnNewService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnNewService.Location = new Point(680, 38);
+            btnNewService.Name = "btnNewService";
+            btnNewService.Size = new Size(120, 50);
+            btnNewService.TabIndex = 0;
+            btnNewService.Text = "+ New";
+            btnNewService.UseVisualStyleBackColor = false;
+            btnNewService.Click += btnNewService_Click;
+            // 
+            // lbFilter
+            // 
+            lbFilter.AutoSize = true;
+            lbFilter.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbFilter.ForeColor = Color.DimGray;
+            lbFilter.Location = new Point(15, 12);
+            lbFilter.Name = "lbFilter";
+            lbFilter.Size = new Size(50, 19);
+            lbFilter.TabIndex = 0;
+            lbFilter.Text = "FILTER";
+            // 
+            // lbSearch
+            // 
+            lbSearch.AutoSize = true;
+            lbSearch.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbSearch.Location = new Point(15, 48);
+            lbSearch.Name = "lbSearch";
+            lbSearch.Size = new Size(58, 19);
+            lbSearch.TabIndex = 0;
+            lbSearch.Text = "Search:";
             // 
             // lbStatusFilter
             // 
@@ -189,7 +279,7 @@
             lbStatusFilter.ForeColor = Color.DimGray;
             lbStatusFilter.Location = new Point(560, 12);
             lbStatusFilter.Name = "lbStatusFilter";
-            lbStatusFilter.Size = new Size(60, 19);
+            lbStatusFilter.Size = new Size(59, 19);
             lbStatusFilter.TabIndex = 0;
             lbStatusFilter.Text = "STATUS";
             // 
@@ -205,6 +295,7 @@
             rbStatusAll.TabStop = true;
             rbStatusAll.Text = "All";
             rbStatusAll.UseVisualStyleBackColor = true;
+            rbStatusAll.CheckedChanged += rbStatusAll_CheckedChanged;
             // 
             // rbStatusActive
             // 
@@ -216,6 +307,7 @@
             rbStatusActive.TabIndex = 5;
             rbStatusActive.Text = "Active";
             rbStatusActive.UseVisualStyleBackColor = true;
+            rbStatusActive.CheckedChanged += rbStatusActive_CheckedChanged;
             // 
             // rbStatusInactive
             // 
@@ -227,54 +319,7 @@
             rbStatusInactive.TabIndex = 6;
             rbStatusInactive.Text = "Inactive";
             rbStatusInactive.UseVisualStyleBackColor = true;
-            // 
-            // lbActions
-            // 
-            lbActions.AutoSize = true;
-            lbActions.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbActions.ForeColor = Color.DimGray;
-            lbActions.Location = new Point(680, 12);
-            lbActions.Name = "lbActions";
-            lbActions.Size = new Size(69, 19);
-            lbActions.TabIndex = 0;
-            lbActions.Text = "ACTIONS";
-            // 
-            // btnNewService
-            // 
-            btnNewService.BackColor = SystemColors.ButtonFace;
-            btnNewService.FlatStyle = FlatStyle.Flat;
-            btnNewService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnNewService.Location = new Point(680, 38);
-            btnNewService.Name = "btnNewService";
-            btnNewService.Size = new Size(120, 50);
-            btnNewService.TabIndex = 0;
-            btnNewService.Text = "+ New";
-            btnNewService.UseVisualStyleBackColor = false;
-            // 
-            // btnSaveService
-            // 
-            btnSaveService.BackColor = SystemColors.ButtonFace;
-            btnSaveService.FlatStyle = FlatStyle.Flat;
-            btnSaveService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnSaveService.Location = new Point(810, 38);
-            btnSaveService.Name = "btnSaveService";
-            btnSaveService.Size = new Size(120, 50);
-            btnSaveService.TabIndex = 0;
-            btnSaveService.Text = "Save / Update";
-            btnSaveService.UseVisualStyleBackColor = false;
-            // 
-            // btnDeleteService
-            // 
-            btnDeleteService.BackColor = SystemColors.ButtonFace;
-            btnDeleteService.FlatStyle = FlatStyle.Flat;
-            btnDeleteService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnDeleteService.ForeColor = Color.DarkRed;
-            btnDeleteService.Location = new Point(940, 38);
-            btnDeleteService.Name = "btnDeleteService";
-            btnDeleteService.Size = new Size(100, 50);
-            btnDeleteService.TabIndex = 0;
-            btnDeleteService.Text = "Delete";
-            btnDeleteService.UseVisualStyleBackColor = false;
+            rbStatusInactive.CheckedChanged += rbStatusInactive_CheckedChanged;
             // 
             // lbUtility
             // 
@@ -283,7 +328,7 @@
             lbUtility.ForeColor = Color.DimGray;
             lbUtility.Location = new Point(1080, 12);
             lbUtility.Name = "lbUtility";
-            lbUtility.Size = new Size(62, 19);
+            lbUtility.Size = new Size(67, 19);
             lbUtility.TabIndex = 0;
             lbUtility.Text = "REFRESH";
             // 
@@ -298,6 +343,7 @@
             btnRefresh.TabIndex = 7;
             btnRefresh.Text = "Reload";
             btnRefresh.UseVisualStyleBackColor = false;
+            btnRefresh.Click += btnRefresh_Click;
             // 
             // btnResetFilters
             // 
@@ -310,39 +356,7 @@
             btnResetFilters.TabIndex = 8;
             btnResetFilters.Text = "Reset Filters";
             btnResetFilters.UseVisualStyleBackColor = false;
-            // 
-            // lbStats
-            // 
-            lbStats.AutoSize = true;
-            lbStats.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbStats.ForeColor = Color.DimGray;
-            lbStats.Location = new Point(1210, 12);
-            lbStats.Name = "lbStats";
-            lbStats.Size = new Size(84, 19);
-            lbStats.TabIndex = 0;
-            lbStats.Text = "STATISTICS";
-            // 
-            // lbTotalServices
-            // 
-            lbTotalServices.AutoSize = true;
-            lbTotalServices.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbTotalServices.ForeColor = Color.Black;
-            lbTotalServices.Location = new Point(1210, 38);
-            lbTotalServices.Name = "lbTotalServices";
-            lbTotalServices.Size = new Size(117, 19);
-            lbTotalServices.TabIndex = 0;
-            lbTotalServices.Text = "Total services: 0";
-            // 
-            // lbActiveServices
-            // 
-            lbActiveServices.AutoSize = true;
-            lbActiveServices.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbActiveServices.ForeColor = Color.Green;
-            lbActiveServices.Location = new Point(1210, 65);
-            lbActiveServices.Name = "lbActiveServices";
-            lbActiveServices.Size = new Size(67, 19);
-            lbActiveServices.TabIndex = 0;
-            lbActiveServices.Text = "Active: 0";
+            btnResetFilters.Click += btnResetFilters_Click;
             // 
             // pnlGrid
             // 
@@ -358,30 +372,37 @@
             // 
             dgvServices.AllowUserToAddRows = false;
             dgvServices.AllowUserToDeleteRows = false;
+            dgvServices.AllowUserToResizeColumns = false;
+            dgvServices.AllowUserToResizeRows = false;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(245, 248, 253);
+            dgvServices.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvServices.BackgroundColor = Color.White;
             dgvServices.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(24, 60, 142);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(24, 60, 142);
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvServices.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvServices.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(24, 60, 142);
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            dataGridViewCellStyle5.ForeColor = Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(24, 60, 142);
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
+            dgvServices.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             dgvServices.ColumnHeadersHeight = 40;
-            dgvServices.RowTemplate.Height = 35;
-            dgvServices.Columns.AddRange(new DataGridViewColumn[] { colId, colNameHu, colTypeHu, colPrice, colNameEn, colTypeEn, colDescHu });
+            dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvServices.Columns.AddRange(new DataGridViewColumn[] { colId, colNameHu, colTypeHu, colDescHu, colPrice, colNameEn, colTypeEn, colDescEn });
             dgvServices.Dock = DockStyle.Fill;
             dgvServices.EnableHeadersVisualStyles = false;
+            dgvServices.GridColor = SystemColors.ControlLight;
             dgvServices.Location = new Point(0, 0);
             dgvServices.MultiSelect = false;
             dgvServices.Name = "dgvServices";
             dgvServices.ReadOnly = true;
             dgvServices.RowHeadersVisible = false;
+            dgvServices.RowTemplate.Height = 35;
             dgvServices.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvServices.Size = new Size(1350, 490);
             dgvServices.TabIndex = 0;
+            dgvServices.CellClick += dgvServices_CellClick;
             // 
             // colId
             // 
@@ -394,6 +415,7 @@
             // colNameHu
             // 
             colNameHu.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colNameHu.DataPropertyName = "NameHu";
             colNameHu.FillWeight = 20F;
             colNameHu.HeaderText = "Name (HU)";
             colNameHu.Name = "colNameHu";
@@ -402,16 +424,27 @@
             // colTypeHu
             // 
             colTypeHu.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colTypeHu.DataPropertyName = "SelectedServiceTypeHu";
             colTypeHu.FillWeight = 12F;
             colTypeHu.HeaderText = "Type (HU)";
             colTypeHu.Name = "colTypeHu";
             colTypeHu.ReadOnly = true;
             // 
+            // colDescHu
+            // 
+            colDescHu.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colDescHu.DataPropertyName = "DescriptionHu";
+            colDescHu.FillWeight = 26F;
+            colDescHu.HeaderText = "Description (HU)";
+            colDescHu.Name = "colDescHu";
+            colDescHu.ReadOnly = true;
+            // 
             // colPrice
             // 
-            dataGridViewCellStyle2.NullValue = null;
-            colPrice.DefaultCellStyle = dataGridViewCellStyle2;
             colPrice.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colPrice.DataPropertyName = "Price";
+            dataGridViewCellStyle6.NullValue = null;
+            colPrice.DefaultCellStyle = dataGridViewCellStyle6;
             colPrice.FillWeight = 10F;
             colPrice.HeaderText = "Price (HUF)";
             colPrice.Name = "colPrice";
@@ -420,6 +453,7 @@
             // colNameEn
             // 
             colNameEn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colNameEn.DataPropertyName = "NameEn";
             colNameEn.FillWeight = 20F;
             colNameEn.HeaderText = "Name (EN)";
             colNameEn.Name = "colNameEn";
@@ -428,42 +462,73 @@
             // colTypeEn
             // 
             colTypeEn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colTypeEn.DataPropertyName = "SelectedServiceTypeEn";
             colTypeEn.FillWeight = 12F;
             colTypeEn.HeaderText = "Type (EN)";
             colTypeEn.Name = "colTypeEn";
             colTypeEn.ReadOnly = true;
             // 
-            // colDescHu
+            // colDescEn
             // 
-            colDescHu.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colDescHu.FillWeight = 26F;
-            colDescHu.HeaderText = "Description (HU)";
-            colDescHu.Name = "colDescHu";
-            colDescHu.ReadOnly = true;
+            colDescEn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colDescEn.DataPropertyName = "DescriptionEn";
+            colDescEn.FillWeight = 26F;
+            colDescEn.HeaderText = "Description (EN)";
+            colDescEn.Name = "colDescEn";
+            colDescEn.ReadOnly = true;
             // 
             // pnlEditor
             // 
             pnlEditor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             pnlEditor.BorderStyle = BorderStyle.FixedSingle;
+            pnlEditor.Controls.Add(pnlSideBottom);
             pnlEditor.Controls.Add(chkIsActive);
             pnlEditor.Controls.Add(tabControlLang);
             pnlEditor.Controls.Add(numPrice);
             pnlEditor.Controls.Add(lbServiceDetails);
             pnlEditor.Controls.Add(lbPrice);
             pnlEditor.Location = new Point(1370, 10);
+            pnlEditor.Margin = new Padding(0);
             pnlEditor.Name = "pnlEditor";
             pnlEditor.Size = new Size(355, 610);
             pnlEditor.TabIndex = 2;
+            // 
+            // pnlSideBottom
+            // 
+            pnlSideBottom.Controls.Add(btnSaveService);
+            pnlSideBottom.Dock = DockStyle.Bottom;
+            pnlSideBottom.Location = new Point(0, 428);
+            pnlSideBottom.Name = "pnlSideBottom";
+            pnlSideBottom.Padding = new Padding(10, 65, 10, 65);
+            pnlSideBottom.Size = new Size(353, 180);
+            pnlSideBottom.TabIndex = 5;
+            // 
+            // btnSaveService
+            // 
+            btnSaveService.BackColor = SystemColors.ButtonFace;
+            btnSaveService.Dock = DockStyle.Fill;
+            btnSaveService.FlatStyle = FlatStyle.Flat;
+            btnSaveService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnSaveService.ForeColor = Color.DarkGreen;
+            btnSaveService.Location = new Point(10, 65);
+            btnSaveService.Margin = new Padding(10);
+            btnSaveService.Name = "btnSaveService";
+            btnSaveService.Size = new Size(333, 50);
+            btnSaveService.TabIndex = 0;
+            btnSaveService.Text = "Save Service";
+            btnSaveService.UseVisualStyleBackColor = false;
+            btnSaveService.Click += btnSaveService_Click;
             // 
             // chkIsActive
             // 
             chkIsActive.AutoSize = true;
             chkIsActive.Checked = true;
             chkIsActive.CheckState = CheckState.Checked;
+            chkIsActive.Enabled = false;
             chkIsActive.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkIsActive.Location = new Point(250, 44);
             chkIsActive.Name = "chkIsActive";
-            chkIsActive.Size = new Size(65, 21);
+            chkIsActive.Size = new Size(70, 23);
             chkIsActive.TabIndex = 4;
             chkIsActive.Text = "Active";
             chkIsActive.UseVisualStyleBackColor = true;
@@ -512,17 +577,19 @@
             tbNameHu.Name = "tbNameHu";
             tbNameHu.Size = new Size(307, 25);
             tbNameHu.TabIndex = 2;
+            tbNameHu.KeyPress += tbNameHu_KeyPress;
             // 
             // cbTypeHu
             // 
             cbTypeHu.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             cbTypeHu.DropDownStyle = ComboBoxStyle.DropDownList;
             cbTypeHu.FormattingEnabled = true;
-            cbTypeHu.Items.AddRange(new object[] { "Wellness", "Extrák", "Logisztika" });
+            cbTypeHu.Items.AddRange(new object[] { "Not set", "Wellness", "Extrák", "Logisztika" });
             cbTypeHu.Location = new Point(10, 35);
             cbTypeHu.Name = "cbTypeHu";
             cbTypeHu.Size = new Size(307, 25);
             cbTypeHu.TabIndex = 1;
+            cbTypeHu.SelectedIndexChanged += cbTypeHu_SelectedIndexChanged;
             // 
             // lbDescHu
             // 
@@ -530,7 +597,7 @@
             lbDescHu.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbDescHu.Location = new Point(10, 125);
             lbDescHu.Name = "lbDescHu";
-            lbDescHu.Size = new Size(100, 15);
+            lbDescHu.Size = new Size(124, 19);
             lbDescHu.TabIndex = 0;
             lbDescHu.Text = "Description (HU):";
             // 
@@ -540,7 +607,7 @@
             lbNameHu.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbNameHu.Location = new Point(10, 70);
             lbNameHu.Name = "lbNameHu";
-            lbNameHu.Size = new Size(72, 15);
+            lbNameHu.Size = new Size(88, 19);
             lbNameHu.TabIndex = 0;
             lbNameHu.Text = "Name (HU):";
             // 
@@ -550,7 +617,7 @@
             lbTypeHu.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbTypeHu.Location = new Point(10, 15);
             lbTypeHu.Name = "lbTypeHu";
-            lbTypeHu.Size = new Size(65, 15);
+            lbTypeHu.Size = new Size(80, 19);
             lbTypeHu.TabIndex = 0;
             lbTypeHu.Text = "Type (HU):";
             // 
@@ -577,7 +644,7 @@
             tbDescEn.Multiline = true;
             tbDescEn.Name = "tbDescEn";
             tbDescEn.ScrollBars = ScrollBars.Vertical;
-            tbDescEn.Size = new Size(307, 330);
+            tbDescEn.Size = new Size(307, 326);
             tbDescEn.TabIndex = 7;
             // 
             // tbNameEn
@@ -587,17 +654,19 @@
             tbNameEn.Name = "tbNameEn";
             tbNameEn.Size = new Size(307, 25);
             tbNameEn.TabIndex = 8;
+            tbNameEn.KeyPress += tbNameEn_KeyPress;
             // 
             // cbTypeEn
             // 
             cbTypeEn.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             cbTypeEn.DropDownStyle = ComboBoxStyle.DropDownList;
             cbTypeEn.FormattingEnabled = true;
-            cbTypeEn.Items.AddRange(new object[] { "Wellness", "Extras", "Logistics" });
+            cbTypeEn.Items.AddRange(new object[] { "Not set", "Wellness", "Extras", "Logistics" });
             cbTypeEn.Location = new Point(10, 35);
             cbTypeEn.Name = "cbTypeEn";
             cbTypeEn.Size = new Size(307, 25);
             cbTypeEn.TabIndex = 6;
+            cbTypeEn.SelectedIndexChanged += cbTypeEn_SelectedIndexChanged;
             // 
             // lbDescEn
             // 
@@ -605,7 +674,7 @@
             lbDescEn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbDescEn.Location = new Point(10, 125);
             lbDescEn.Name = "lbDescEn";
-            lbDescEn.Size = new Size(103, 15);
+            lbDescEn.Size = new Size(121, 19);
             lbDescEn.TabIndex = 3;
             lbDescEn.Text = "Description (EN):";
             // 
@@ -615,7 +684,7 @@
             lbNameEn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbNameEn.Location = new Point(10, 70);
             lbNameEn.Name = "lbNameEn";
-            lbNameEn.Size = new Size(69, 15);
+            lbNameEn.Size = new Size(85, 19);
             lbNameEn.TabIndex = 4;
             lbNameEn.Text = "Name (EN):";
             // 
@@ -625,7 +694,7 @@
             lbTypeEn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbTypeEn.Location = new Point(10, 15);
             lbTypeEn.Name = "lbTypeEn";
-            lbTypeEn.Size = new Size(62, 15);
+            lbTypeEn.Size = new Size(77, 19);
             lbTypeEn.TabIndex = 5;
             lbTypeEn.Text = "Type (EN):";
             // 
@@ -636,6 +705,7 @@
             numPrice.Name = "numPrice";
             numPrice.Size = new Size(130, 25);
             numPrice.TabIndex = 2;
+            numPrice.TextAlign = HorizontalAlignment.Right;
             numPrice.ThousandsSeparator = true;
             // 
             // lbServiceDetails
@@ -655,7 +725,7 @@
             lbPrice.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbPrice.Location = new Point(15, 45);
             lbPrice.Name = "lbPrice";
-            lbPrice.Size = new Size(82, 17);
+            lbPrice.Size = new Size(89, 19);
             lbPrice.TabIndex = 1;
             lbPrice.Text = "Price (HUF):";
             // 
@@ -670,12 +740,14 @@
             Font = new Font("Segoe UI", 9.75F);
             Name = "ProductContol";
             Size = new Size(1740, 639);
+            Load += ProductContol_Load;
             pnlTop.ResumeLayout(false);
             pnlTop.PerformLayout();
             pnlGrid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvServices).EndInit();
             pnlEditor.ResumeLayout(false);
             pnlEditor.PerformLayout();
+            pnlSideBottom.ResumeLayout(false);
             tabControlLang.ResumeLayout(false);
             tabHun.ResumeLayout(false);
             tabHun.PerformLayout();
@@ -695,22 +767,14 @@
         private Label lbSearch;
         private Panel pnlGrid;
         private DataGridView dgvServices;
-        private DataGridViewTextBoxColumn colId;
-        private DataGridViewTextBoxColumn colNameHu;
-        private DataGridViewTextBoxColumn colTypeHu;
-        private DataGridViewTextBoxColumn colPrice;
-        private DataGridViewTextBoxColumn colNameEn;
-        private DataGridViewTextBoxColumn colTypeEn;
-        private DataGridViewTextBoxColumn colDescHu;
         private Panel pnlEditor;
         private Button btnNewService;
         private Button btnDeleteService;
-        private Button btnSaveService;
+        private Button btnUpdateService;
         private Label lbPrice;
         private TabControl tabControlLang;
         private TabPage tabHun;
         private TabPage tabEn;
-        private NumericUpDown numPrice;
         private Label lbTypeHu;
         private ComboBox cbTypeHu;
         private Label lbNameHu;
@@ -737,5 +801,16 @@
         private Label lbUtility;
         private Button btnRefresh;
         private Button btnResetFilters;
+        private DataGridViewTextBoxColumn colId;
+        private DataGridViewTextBoxColumn colNameHu;
+        private DataGridViewTextBoxColumn colTypeHu;
+        private DataGridViewTextBoxColumn colDescHu;
+        private DataGridViewTextBoxColumn colPrice;
+        private DataGridViewTextBoxColumn colNameEn;
+        private DataGridViewTextBoxColumn colTypeEn;
+        private DataGridViewTextBoxColumn colDescEn;
+        private NumericUpDown numPrice;
+        private Button btnSaveService;
+        private Panel pnlSideBottom;
     }
 }
