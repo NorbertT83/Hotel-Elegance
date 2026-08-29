@@ -9,15 +9,15 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using static Hotel_erp_Winforms_App.Helpers.CommonHelper;
+using static Hotel_erp_Winforms_App.Services.HousekeepingService;
 
 namespace Hotel_erp_Winforms_App.UI.Controls
 {
     public partial class HousekeepingControl : UserControl
     {
         /* TODO:
-         * side panel comboboxon szoba státusz állítása és mentése
          * reset all buttonnel kezdeni valamit
-         * floor és status cb-knek legyen defaultja
+         * a high prio akkor is legyen kiirva ha ki van kapcsolva a color code
         */
 
         public HousekeepingControl()
@@ -36,13 +36,31 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private Dictionary<int, string> assignedCleaners = new Dictionary<int, string>();
 
         private Room _selectedRoom;
-
         #endregion
 
         #region onLoad events
 
         private async void HousekeepingControl_Load(object sender, EventArgs e)
         {
+            #region UI defaults before await
+
+            lbPrioTitle.Visible = false;
+            lbPrioColor.Visible = false;
+            lbNeedsCleaningTitle.Visible = false;
+            lbNeedsCleaningColor.Visible = false;
+            lbUnderMaintenanceTitle.Visible = false;
+            lbUnderMaintenanceColor.Visible = false;
+            lbCleanTitle.Visible = false;
+            lbCleanColor.Visible = false;
+
+            btnSaveRoomStatus.Visible = false;
+
+            cbAssignCleaner.SelectedIndex = 0;
+            cbFloorFilter.SelectedIndex = 0;
+            cbStatusFilter.SelectedIndex = 0;
+
+            #endregion
+
             #region data
 
             try
@@ -68,21 +86,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             #region UI defaults
 
-            lbPrioTitle.Visible = false;
-            lbPrioColor.Visible = false;
-            lbNeedsCleaningTitle.Visible = false;
-            lbNeedsCleaningColor.Visible = false;
-            lbUnderMaintenanceTitle.Visible = false;
-            lbUnderMaintenanceColor.Visible = false;
-            lbCleanTitle.Visible = false;
-            lbCleanColor.Visible = false;
-
-            btnSaveRoomStatus.Visible = false;
-
-            lbKpiDirtyValue.Text = rooms.Count(r => r.NeedsCleaning == 1).ToString();
-            lbKpiProgressValue.Text = rooms.Count(r => r.IsCleaning == 1).ToString();
-            lbKpiCleanValue.Text = rooms.Count(r => r.NeedsCleaning == 0).ToString();
-            lbKpiStaffValue.Text = cleaners.Count().ToString();
+            SetKpiBoxes();
 
             cbAssignCleaner.SelectedIndex = 0;
 
@@ -127,6 +131,9 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             rooms = await _hkService.GetAllRoomsFromDbAsync();
             dgvRooms.DataSource = rooms;
+
+            SetColorLabelVisibility(false);
+
         }
 
         // 3.
@@ -142,6 +149,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             }
 
             lbSelectedRoomValue.Text = _selectedRoom.Room_number.ToString();
+
             cbSetStatus.Text = _selectedRoom.IsCleaning == 1 ? "In Progress" : _selectedRoom.NeedsCleaning switch
             {
                 0 => "Clean",
@@ -152,26 +160,60 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         }
 
         // 4.
-        private void btnSaveRoomStatus_Click(object sender, EventArgs e)
+        private async void btnSaveRoomStatus_Click(object sender, EventArgs e)
         {
-            if (cbAssignCleaner.SelectedIndex < 1)
+            // assign cleaner to room (into a dictionary)
+            if (cbAssignCleaner.SelectedIndex > 0)
             {
-                MessageBox.Show(
-                    "You must assign a Cleaner first!",
-                    "Error",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Error);
-
-                return;
+                assignedCleaners[_selectedRoom.Room_number] = cbAssignCleaner.Text;
             }
 
-            assignedCleaners[_selectedRoom.Room_number] = cbAssignCleaner.Text;
+            // update db with clean status
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
 
-            MessageBox.Show(
-                    "Cleaner assigned successfully",
+                string cleanStatus = cbSetStatus.Text switch
+                {
+                    "Dirty" => "Dirty",
+                    "Clean" => "Clean",
+                    "In Progress" => "Pending"
+                };
+
+                CleanStatus status = Enum.Parse<CleanStatus>(cleanStatus, ignoreCase: true);
+
+                await _hkService.UpdateCleanStatusInDbAsync(status, _selectedRoom.Room_number);
+
+                MessageBox.Show(
+                    "Rooms status was updated successfully!",
                     "Success",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+
+                rooms = await _hkService.GetAllRoomsFromDbAsync();
+                dgvRooms.DataSource = rooms;
+                SetKpiBoxes();
+
+                // Color coding if checkbox was checked
+                if (cbColorCodes.Checked)
+                {
+                    List<Room> needsCleaning = rooms.Where(r => r.NeedsCleaning == 1).ToList();
+                    List<Room> isCleaning = rooms.Where(r => r.IsCleaning == 1).ToList();
+                    List<Room> cleans = rooms.Where(r => r.NeedsCleaning == 0).ToList();
+
+                    _hkService.ColorCoding(dgvRooms, needsCleaning, isCleaning, cleans);
+                }
+                // ------------------------------------
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "An error occured while trying to update the rooms status: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally { Cursor.Current = Cursors.Default; }
         }
 
         // 5.
@@ -185,28 +227,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 _hkService.ColorCoding(dgvRooms, needsCleaning, isCleaning, cleans);
 
-                lbPrioTitle.Visible = true;
-                lbPrioColor.Visible = true;
-                lbNeedsCleaningTitle.Visible = true;
-                lbNeedsCleaningColor.Visible = true;
-                lbUnderMaintenanceTitle.Visible = true;
-                lbUnderMaintenanceColor.Visible = true;
-                lbCleanTitle.Visible = true;
-                lbCleanColor.Visible = true;
+                SetColorLabelVisibility(true);
             }
 
             else if (!cbColorCodes.Checked)
             {
                 _hkService.ResetDataGridViewRowColors(dgvRooms);
 
-                lbPrioTitle.Visible = false;
-                lbPrioColor.Visible = false;
-                lbNeedsCleaningTitle.Visible = false;
-                lbNeedsCleaningColor.Visible = false;
-                lbUnderMaintenanceTitle.Visible = false;
-                lbUnderMaintenanceColor.Visible = false;
-                lbCleanTitle.Visible = false;
-                lbCleanColor.Visible = false;
+                SetColorLabelVisibility(false);
             }
         }
 
@@ -227,6 +255,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         #region INFO
         /*
          * 1.: dgv cells formatting
+         * 2.: kpi value setting
+         * 3.: color label visibility setting
         */
         #endregion
         #region helpers
@@ -236,6 +266,41 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             foreach (var room in list)
             {
                 dic.Add(room.Room_number, "Unassigned");
+            }
+        }
+
+        private void SetKpiBoxes()
+        {
+            lbKpiDirtyValue.Text = rooms.Count(r => r.NeedsCleaning == 1).ToString();
+            lbKpiProgressValue.Text = rooms.Count(r => r.IsCleaning == 1).ToString();
+            lbKpiCleanValue.Text = rooms.Count(r => r.NeedsCleaning == 0).ToString();
+            lbKpiStaffValue.Text = cleaners.Count().ToString();
+        }
+
+        private void SetColorLabelVisibility(bool visible)
+        {
+            if (visible)
+            {
+                lbPrioTitle.Visible = true;
+                lbPrioColor.Visible = true;
+                lbNeedsCleaningTitle.Visible = true;
+                lbNeedsCleaningColor.Visible = true;
+                lbUnderMaintenanceTitle.Visible = true;
+                lbUnderMaintenanceColor.Visible = true;
+                lbCleanTitle.Visible = true;
+                lbCleanColor.Visible = true;
+            }
+
+            else
+            {
+                lbPrioTitle.Visible = false;
+                lbPrioColor.Visible = false;
+                lbNeedsCleaningTitle.Visible = false;
+                lbNeedsCleaningColor.Visible = false;
+                lbUnderMaintenanceTitle.Visible = false;
+                lbUnderMaintenanceColor.Visible = false;
+                lbCleanTitle.Visible = false;
+                lbCleanColor.Visible = false;
             }
         }
 

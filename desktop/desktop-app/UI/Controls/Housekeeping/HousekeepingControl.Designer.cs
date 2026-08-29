@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             pnlTop = new Panel();
             btnMarkAllClean = new Button();
             btnRefresh = new Button();
@@ -439,30 +439,30 @@
             dgvRooms.AllowUserToDeleteRows = false;
             dgvRooms.AllowUserToResizeColumns = false;
             dgvRooms.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(245, 248, 253);
-            dgvRooms.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(245, 248, 253);
+            dgvRooms.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvRooms.BackgroundColor = Color.White;
             dgvRooms.BorderStyle = BorderStyle.None;
             dgvRooms.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 58, 138);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvRooms.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(30, 58, 138);
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle5.ForeColor = Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
+            dgvRooms.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             dgvRooms.ColumnHeadersHeight = 40;
             dgvRooms.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvRooms.Columns.AddRange(new DataGridViewColumn[] { colRoomId, colRoomNumber, colFloor, colRoomType, colCurrentStatus, colCleaningStatus, colDisturb, colIsCleaning });
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = SystemColors.Window;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvRooms.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = SystemColors.Window;
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle6.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
+            dgvRooms.DefaultCellStyle = dataGridViewCellStyle6;
             dgvRooms.Dock = DockStyle.Fill;
             dgvRooms.EnableHeadersVisualStyles = false;
             dgvRooms.GridColor = SystemColors.ControlLight;
@@ -572,9 +572,9 @@
             cbColorCodes.ForeColor = Color.DarkGreen;
             cbColorCodes.Location = new Point(1200, 16);
             cbColorCodes.Name = "cbColorCodes";
-            cbColorCodes.Size = new Size(134, 21);
+            cbColorCodes.Size = new Size(142, 21);
             cbColorCodes.TabIndex = 4;
-            cbColorCodes.Text = "Show color codes";
+            cbColorCodes.Text = "Enable color codes";
             cbColorCodes.UseVisualStyleBackColor = true;
             cbColorCodes.CheckedChanged += cbColorCodes_CheckedChanged;
             // 
@@ -600,7 +600,7 @@
             // 
             // lbUnderMaintenanceColor
             // 
-            lbUnderMaintenanceColor.BackColor = Color.LightCyan;
+            lbUnderMaintenanceColor.BackColor = Color.PaleTurquoise;
             lbUnderMaintenanceColor.BorderStyle = BorderStyle.FixedSingle;
             lbUnderMaintenanceColor.ForeColor = SystemColors.ControlText;
             lbUnderMaintenanceColor.Location = new Point(760, 10);
@@ -640,7 +640,7 @@
             // 
             // lbPrioColor
             // 
-            lbPrioColor.BackColor = Color.Salmon;
+            lbPrioColor.BackColor = Color.FromArgb(236, 163, 163);
             lbPrioColor.BorderStyle = BorderStyle.FixedSingle;
             lbPrioColor.Location = new Point(285, 10);
             lbPrioColor.Name = "lbPrioColor";

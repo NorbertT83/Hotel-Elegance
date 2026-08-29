@@ -13,6 +13,13 @@ namespace Hotel_erp_Winforms_App.Services
 
         private readonly string _connectionString = "server=localhost;port=3306;database=hotelelegancedb;uid=root;pwd=";
 
+        public enum CleanStatus
+        {
+            Clean,
+            Dirty,
+            Pending
+        }
+
         #endregion
 
         #region INFO
@@ -174,6 +181,34 @@ namespace Hotel_erp_Winforms_App.Services
             return rooms;
         }
 
+        // 5.
+        public async Task UpdateCleanStatusInDbAsync(CleanStatus status, int roomNumber)
+        {
+            StringBuilder querySb = new StringBuilder("UPDATE rooms SET ");
+
+            switch (status)
+            {
+                case CleanStatus.Clean: querySb.Append("needs_cleaning = 0, is_cleaning = 0 "); break;
+                case CleanStatus.Dirty: querySb.Append("needs_cleaning = 1, is_cleaning = 0 "); break;
+                case CleanStatus.Pending: querySb.Append("is_cleaning = 1, needs_cleaning = 1 "); break;
+                default: throw new ArgumentOutOfRangeException(nameof(status), status, "Unknown CleanStatus value.");
+            }
+
+            querySb.Append("WHERE room_number = @roomNumber;");
+
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (MySqlCommand cmd = new MySqlCommand(querySb.ToString(), conn))
+                {
+                    cmd.Parameters.AddWithValue("@roomNumber", roomNumber);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
         #region helpers
 
         private Room MakeNewRoom(System.Data.Common.DbDataReader reader)
@@ -201,6 +236,25 @@ namespace Hotel_erp_Winforms_App.Services
             return room;
         }
 
+        private void ColorCodingHelper(DataGridView dgvRooms, List<Room> roomList, Color color)
+        {
+            for (int i = 0; i < dgvRooms.Rows.Count; i++)
+            {
+                if (dgvRooms.Rows[i].IsNewRow) continue;
+
+                int roomNumber = Convert.ToInt32(dgvRooms.Rows[i].Cells["colRoomNumber"].Value);
+
+                List<int> list = roomList.Select(r => r.Room_number).ToList();
+
+                bool stateDefine = list.Contains(roomNumber);
+
+                if (stateDefine)
+                {
+                    dgvRooms.Rows[i].DefaultCellStyle.BackColor = color;
+                }
+            }
+        }
+
         #endregion
 
         #endregion
@@ -209,6 +263,7 @@ namespace Hotel_erp_Winforms_App.Services
         /*
          * 1.: formatting dgv cells
          * 2.: color code
+         * 3.: setting dgv row colors to default
         */
         #endregion
         #region UI
@@ -269,72 +324,16 @@ namespace Hotel_erp_Winforms_App.Services
             List<Room> highPrioRooms = await GetHighPriorityRooms();
 
             // Clean color
-            for (int i = 0; i < dgvRooms.Rows.Count; i++)
-            {
-                if (dgvRooms.Rows[i].IsNewRow) continue;
-
-                int roomNumber = Convert.ToInt32(dgvRooms.Rows[i].Cells["colRoomNumber"].Value);
-
-                List<int> cleanRoomNumbers = cleans.Select(r => r.Room_number).ToList();
-
-                bool isClean = cleanRoomNumbers.Contains(roomNumber);
-
-                if (isClean)
-                {
-                    dgvRooms.Rows[i].DefaultCellStyle.BackColor = Color.Honeydew;
-                }
-            }
-
-            // Is Cleaning color
-            for (int i = 0; i < dgvRooms.Rows.Count; i++)
-            {
-                if (dgvRooms.Rows[i].IsNewRow) continue;
-
-                int roomNumber = Convert.ToInt32(dgvRooms.Rows[i].Cells["colRoomNumber"].Value);
-
-                List<int> isCleaningRoomNumbers = isCleaning.Select(r => r.Room_number).ToList();
-
-                bool isCurrentlyCleaning = isCleaningRoomNumbers.Contains(roomNumber);
-
-                if (isCurrentlyCleaning)
-                {
-                    dgvRooms.Rows[i].DefaultCellStyle.BackColor = Color.LightCyan;
-                }
-            }
+            ColorCodingHelper(dgvRooms, cleans, Color.Honeydew);
 
             // Needs Cleaning color
-            for (int i = 0; i < dgvRooms.Rows.Count; i++)
-            {
-                if (dgvRooms.Rows[i].IsNewRow) continue;
+            ColorCodingHelper(dgvRooms, needsCleaning, Color.PapayaWhip);
 
-                int roomNumber = Convert.ToInt32(dgvRooms.Rows[i].Cells["colRoomNumber"].Value);
-
-                List<int> needsCleaningRoomNumbers = needsCleaning.Select(r => r.Room_number).ToList();
-
-                bool isCleaningNeeded = needsCleaningRoomNumbers.Contains(roomNumber);
-
-                if (isCleaningNeeded)
-                {
-                    dgvRooms.Rows[i].DefaultCellStyle.BackColor = Color.PapayaWhip;
-                }
-            }
+            // Is Cleaning color
+            ColorCodingHelper(dgvRooms, isCleaning, Color.PaleTurquoise);
 
             // High prio color
-            for (int i = 0; i < dgvRooms.Rows.Count; i++)
-            {
-                if (dgvRooms.Rows[i].IsNewRow) continue;
-
-                int roomNumber = Convert.ToInt32(dgvRooms.Rows[i].Cells["colRoomNumber"].Value);
-
-                List<int> highPrioRoomNumbers = highPrioRooms.Select(r => r.Room_number).ToList();
-
-                bool roomIsHighPrio = highPrioRoomNumbers.Contains(roomNumber);
-
-                if (roomIsHighPrio)
-                {
-                    dgvRooms.Rows[i].DefaultCellStyle.BackColor = Color.MistyRose;
-                }
-            }
+            ColorCodingHelper(dgvRooms, highPrioRooms, Color.FromArgb(236, 163, 163));
         }
 
         // 3.
