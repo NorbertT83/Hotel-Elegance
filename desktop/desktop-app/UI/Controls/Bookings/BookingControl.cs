@@ -48,7 +48,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-
             var results = bookingService.SearchBookings(
                 cbField.SelectedIndex,
                 tbSearch.Text,

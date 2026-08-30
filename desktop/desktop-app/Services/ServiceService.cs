@@ -22,6 +22,7 @@ namespace Hotel_erp_Winforms_App.Services
          * 4.: saves a new service to db
          * 5.: updates the parameter service in db
          * 6.: deletes the parameter service from db
+         * 7.: gets all service bookings from db
         */
         #endregion
         #region database actions
@@ -115,13 +116,15 @@ namespace Hotel_erp_Winforms_App.Services
                 SELECT *
                 FROM services s
                 WHERE s.id IN (SELECT service_id 
-                               FROM servicebookings);";
+                               FROM servicebookings
+                               WHERE status = 'created'
+                                   OR status = 'pending');";
 
             string inactiveQuery = @"
                 SELECT *
                 FROM services s
-                WHERE s.id NOT IN (SELECT service_id 
-                                   FROM servicebookings);";
+                WHERE s.id IN (SELECT service_id 
+                               FROM servicebookings);";
 
             await using(MySqlConnection conn = new MySqlConnection(_connectionString))
             {
@@ -224,6 +227,45 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
+        // 7.
+        public async Task<List<RequestedService>> GetServiceDataByServicebookingAsync(bool all = false)
+        {
+            List<RequestedService> reqServices = new List<RequestedService>();
+
+            string query = @"
+                SELECT b.room_number AS room_number, sb.status AS status, sb.requested_at, s.name_en AS name, s.service_type_en AS service_type, sb.price_at_booking AS price
+                FROM servicebookings sb
+                INNER JOIN bookings b ON sb.booking_id = b.id
+                INNER JOIN services s ON sb.service_id = s.id ";
+
+            if (!all)
+            {
+                query += "WHERE status IN('created', 'pending')";
+            }
+
+            query += ';';
+
+            await using(MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    await using(var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while(await reader.ReadAsync())
+                        {
+                            RequestedService service = MakeNewRequestedService(reader);
+
+                            reqServices.Add(service);
+                        }
+                    }
+                }
+            }
+
+            return reqServices;
+        }
+
         #endregion
 
         #region INFO
@@ -258,6 +300,48 @@ namespace Hotel_erp_Winforms_App.Services
             );
 
             return service;
+        }
+
+        // 2.
+        private ServiceBooking MakeNewServiceBooking(System.Data.Common.DbDataReader reader)
+        {
+            ServiceBooking serviceBooking = new ServiceBooking(
+                Convert.ToInt32(reader["id"]),
+                reader["booking_id"].ToString(),
+                Convert.ToInt32(reader["service_id"]),
+                Convert.ToDateTime(reader["requested_at"]),
+                reader["updated_at"] != DBNull.Value ? Convert.ToDateTime(reader["updated_at"]) : DateTime.MinValue,
+                Convert.ToInt32(reader["quantity"]),
+                (Status)Enum.Parse(
+                    typeof(Status),
+                    reader["status"] != DBNull.Value ? reader["status"].ToString() : "created",
+                    ignoreCase: true
+                ),
+                Convert.ToInt32(reader["price_at_booking"])
+            );
+
+            return serviceBooking;
+        }
+
+        // 3.
+        private RequestedService MakeNewRequestedService(System.Data.Common.DbDataReader reader)
+        {
+            return new RequestedService(
+                reader["room_number"] != DBNull.Value ? Convert.ToInt32(reader["room_number"]) : 0,
+                (ServiceStatus)Enum.Parse(
+                    typeof(ServiceStatus),
+                    reader["status"] != DBNull.Value ? reader["status"].ToString() : "created",
+                    ignoreCase: true
+                ),
+                Convert.ToDateTime(reader["requested_at"]),
+                reader["name"] != DBNull.Value ? reader["name"].ToString() : string.Empty,
+                (ServiceType)Enum.Parse(
+                    typeof(ServiceType),
+                    reader["service_type"] != DBNull.Value ? reader["service_type"].ToString() : "Extras",
+                    ignoreCase: true
+                ),
+                Convert.ToInt32(reader["price"])
+            );
         }
 
         #endregion

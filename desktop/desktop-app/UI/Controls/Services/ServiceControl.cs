@@ -31,9 +31,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         ServiceService _serviceService = new ServiceService();
         List<Service> services = new List<Service>();
         List<Service> filteredServices = new List<Service>();
+        List<RequestedService> serviceBookings;
 
         Service _selectedService;
         CommonHelper _commonHelper = new CommonHelper();
+        BookingService _bookingService = new BookingService();
 
         ErrorProvider _errorProvider = new ErrorProvider();
         bool resized = false;
@@ -67,12 +69,15 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             #region datagridview
 
+            dgvServices.AutoGenerateColumns = false;
+
+            dgvServices.Columns["colPrice"].DisplayIndex = 10;
+
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
 
                 services = await _serviceService.GetAllServicesFromDbAsync();
-                dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = services;
             }
             catch (Exception ex)
@@ -125,29 +130,76 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 1.
         private async void btnSearch_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            if (rbStatusActive.Checked)
+            {
+                bool includeHistory = chkShowHistory.Checked;
+                serviceBookings = await _serviceService.GetServiceDataByServicebookingAsync(includeHistory);
 
-            List<Service> filteredServices = await _serviceService.GetFilteredSerivicesAsync(cbTypeFilter.SelectedIndex, txtSearch.Text);
+                List<RequestedService> result = rbOrderBy.Checked
+                    ? serviceBookings.OrderBy(s => s.RequestedAt).ToList()
+                    : serviceBookings.OrderByDescending(s => s.RequestedAt).ToList();
 
-            dgvServices.AutoGenerateColumns = false;
-            dgvServices.DataSource = filteredServices;
+                if (int.TryParse(cbRoomNumbers.Text.Trim(), out int searchedRoom))
+                {
+                    result = result.Where(s => s.RoomNumber == searchedRoom).ToList();
+                }
 
-            Cursor.Current = Cursors.Default;
+                dgvServices.DataSource = null;
+                dgvServices.DataSource = result;
+            }
+
+            else
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                SetDgvVisibility(false);
+                rbStatusAll.Checked = true;
+
+                List<Service> filteredServices = await _serviceService.GetFilteredSerivicesAsync(cbTypeFilter.SelectedIndex, txtSearch.Text);
+
+                dgvServices.DataSource = filteredServices;
+
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         // 2.
         private async void rbStatusActive_CheckedChanged(object sender, EventArgs e)
         {
+            DataGridViewTextBoxColumn roomNumberCol;
+
             if (rbStatusActive.Checked)
             {
-                Cursor.Current = Cursors.WaitCursor;
+                try
+                {
+                    cbRoomNumbers.Text = string.Empty;
 
-                filteredServices = await _serviceService.GetActiveOrInactiveServicesAsync(true);
+                    Cursor.Current = Cursors.WaitCursor;
 
-                dgvServices.AutoGenerateColumns = false;
-                dgvServices.DataSource = filteredServices;
+                    serviceBookings = await _serviceService.GetServiceDataByServicebookingAsync();
+                    List<RequestedService> orderedSBList = serviceBookings.OrderByDescending(s => s.RequestedAt).ToList();
 
-                Cursor.Current = Cursors.Default;
+                    dgvServices.DataSource = orderedSBList;
+
+                    SetDgvVisibility(true);
+
+                    cbRoomNumbers.Items.Clear();
+                    foreach (RequestedService rs in serviceBookings)
+                    {
+                        cbRoomNumbers.Items.Add(rs.RoomNumber);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "An error occurred while trying to load the database: " + ex.Message,
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
 
@@ -162,6 +214,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                 dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = filteredServices;
+
+                SetDgvVisibility(false);
 
                 Cursor.Current = Cursors.Default;
             }
@@ -179,8 +233,22 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = services;
 
+                SetDgvVisibility(false);
+
                 Cursor.Current = Cursors.Default;
             }
+        }
+
+        // 5.
+        private async void chkShowHistory_CheckedChanged(object sender, EventArgs e)
+        {
+            ApplyFiltersAsync();
+        }
+
+        // 6.
+        private async void rbOrderBy_CheckedChanged(object sender, EventArgs e)
+        {
+            ApplyFiltersAsync();
         }
 
         #endregion
@@ -189,33 +257,48 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 5.
         private async void dgvServices_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            List<Service> actives = await _serviceService.GetActiveOrInactiveServicesAsync(true);
-
-            if (e.RowIndex >= 0)
+            if (rbStatusActive.Checked)
             {
-                pnlSideBottom.Visible = false;
-
-                chkIsActive.Visible = true;
-
-                _selectedService = dgvServices.Rows[e.RowIndex].DataBoundItem as Service;
-
-                numPrice.Value = _selectedService.Price;
-                cbTypeHu.Text = _selectedService.SelectedServiceTypeHu.ToString();
-                tbNameHu.Text = _selectedService.NameHu;
-                tbDescHu.Text = _selectedService.DescriptionHu;
-
-                cbTypeEn.Text = _selectedService.SelectedServiceTypeEn.ToString();
-                tbNameEn.Text = _selectedService.NameEn;
-                tbDescEn.Text = _selectedService.DescriptionEn;
-
-                chkIsActive.Checked = actives.Any(s => s.Id == _selectedService.Id);
-
-                SetBoxesReadonlibility(true);
-
-                if (resized)
+                if(e.RowIndex >= 0)
                 {
-                    tabControlLang.Height = tabControlLang.Height + 175;
-                    resized = false;
+                    RequestedService requested = dgvServices.Rows[e.RowIndex].DataBoundItem as RequestedService;
+
+                    lbUpdateServiceName.Text = requested.Name;
+                    lbUpdateServiceRoomNumber.Text = requested.RoomNumber.ToString();
+                    cbUpdateServiceStatus.SelectedItem = requested.CurrentServiceStatus;
+                }
+            }
+
+            else
+            {
+                List<Service> actives = await _serviceService.GetActiveOrInactiveServicesAsync(true);
+
+                if (e.RowIndex >= 0)
+                {
+                    pnlSideBottom.Visible = false;
+
+                    chkIsActive.Visible = true;
+
+                    _selectedService = dgvServices.Rows[e.RowIndex].DataBoundItem as Service;
+
+                    numPrice.Value = _selectedService.Price;
+                    cbTypeHu.Text = _selectedService.SelectedServiceTypeHu.ToString();
+                    tbNameHu.Text = _selectedService.NameHu;
+                    tbDescHu.Text = _selectedService.DescriptionHu;
+
+                    cbTypeEn.Text = _selectedService.SelectedServiceTypeEn.ToString();
+                    tbNameEn.Text = _selectedService.NameEn;
+                    tbDescEn.Text = _selectedService.DescriptionEn;
+
+                    chkIsActive.Checked = actives.Any(s => s.Id == _selectedService.Id);
+
+                    SetBoxesReadonlibility(true);
+
+                    if (resized)
+                    {
+                        tabControlLang.Height = tabControlLang.Height + 175;
+                        resized = false;
+                    }
                 }
             }
         }
@@ -360,15 +443,21 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 10.
         private async void btnRefresh_Click(object sender, EventArgs e)
         {
+            rbStatusAll.Checked = true;
+
             services = await _serviceService.GetAllServicesFromDbAsync();
             dgvServices.AutoGenerateColumns = false;
             dgvServices.DataSource = services;
             _selectedService = null;
+
+            SetDgvVisibility(false);
         }
 
         // 11.
         private void btnResetFilters_Click(object sender, EventArgs e)
         {
+            rbStatusAll.Checked = true;
+
             txtSearch.Clear();
             cbTypeFilter.SelectedIndex = 0;
             rbStatusAll.Checked = true;
@@ -396,6 +485,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         #endregion
 
         #region Foolproofing
+
+        private void cbRoomNumbers_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (rbStatusActive.Checked)
+            {
+                CommonHelper.InputValidationService.BlockLetters(e);
+            }
+        }
 
         private void tbNameHu_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -574,6 +671,121 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 }
             }
             finally { Cursor.Current = Cursors.Default; }
+        }
+
+        private void SetDgvVisibility(bool isActivesFiltered)
+        {
+            if (isActivesFiltered)
+            {
+                colRoomNumber.Visible = true;
+                colStatus.Visible = true;
+                colRequestDate.Visible = true;
+
+                colNameHu.Visible = false;
+                colTypeHu.Visible = false;
+                colDescHu.Visible = false;
+                colDescEn.Visible = false;
+
+                dgvServices.Columns["colNameEn"].DisplayIndex = 4;
+                dgvServices.Columns["colTypeEn"].DisplayIndex = 5;
+                dgvServices.Columns["colPrice"].DisplayIndex = 6;
+
+                colNameEn.DataPropertyName = "Name";
+                colTypeEn.DataPropertyName = "SelectedServiceType";
+
+                colNameEn.FillWeight = 150;
+                colTypeEn.FillWeight = 80;
+                colPrice.FillWeight = 60;
+
+                lbRoomNumber.Visible = true;
+                cbRoomNumbers.Visible = true;
+
+                lbSearch.Visible = false;
+                txtSearch.Visible = false;
+                cbTypeFilter.Visible = false;
+                lbTypeFilter.Visible = false;
+
+                btnNewService.Enabled = false;
+                btnUpdateService.Enabled = false;
+                btnDeleteService.Enabled = false;
+
+                lbHistory.Visible = true;
+                chkShowHistory.Visible = true;
+                pnlRbHolder.Visible = true;
+
+                pnlStatusEditor.Visible = true;
+                pnlEditor.Visible = false;
+
+                btnSearch.Location = new Point(btnSearch.Location.X - 205, btnSearch.Location.Y);
+            }
+
+            else
+            {
+                colRoomNumber.Visible = false;
+                colStatus.Visible = false;
+                colRequestDate.Visible = false;
+
+                colNameHu.Visible = true;
+                colTypeHu.Visible = true;
+                colDescHu.Visible = true;
+                colDescEn.Visible = true;
+
+                dgvServices.Columns["colNameEn"].DisplayIndex = 5;
+                dgvServices.Columns["colTypeEn"].DisplayIndex = 6;
+                dgvServices.Columns["colPrice"].DisplayIndex = 10;
+
+                colNameEn.DataPropertyName = "NameEn";
+                colTypeEn.DataPropertyName = "SelectedServiceTypeEn";
+
+                colNameEn.FillWeight = 20;
+                colTypeEn.FillWeight = 12;
+                colPrice.FillWeight = 10;
+
+                lbRoomNumber.Visible = false;
+                cbRoomNumbers.Visible = false;
+
+                lbSearch.Visible = true;
+                txtSearch.Visible = true;
+                cbTypeFilter.Visible = true;
+                lbTypeFilter.Visible = true;
+
+                btnNewService.Enabled = true;
+                btnUpdateService.Enabled = true;
+                btnDeleteService.Enabled = true;
+
+                lbHistory.Visible = false;
+                chkShowHistory.Visible = false;
+                pnlRbHolder.Visible = false;
+
+                pnlStatusEditor.Visible = false;
+                pnlEditor.Visible = true;
+
+                if (btnSearch.Location.X < 435)
+                {
+                    btnSearch.Location = new Point(btnSearch.Location.X + 205, btnSearch.Location.Y);
+                }
+            }
+        }
+
+        private async void ApplyFiltersAsync()
+        {
+            bool includeHistory = chkShowHistory.Checked;
+            serviceBookings = await _serviceService.GetServiceDataByServicebookingAsync(includeHistory);
+
+            IEnumerable<RequestedService> filtered = serviceBookings;
+
+            if (!string.IsNullOrWhiteSpace(cbRoomNumbers.Text) &&
+                int.TryParse(cbRoomNumbers.Text.Trim(), out int selectedRoom))
+            {
+                filtered = filtered.Where(s => s.RoomNumber == selectedRoom);
+            }
+
+            List<RequestedService> result = rbOrderBy.Checked
+                ? filtered.OrderBy(s => s.RequestedAt).ToList()
+                : filtered.OrderByDescending(s => s.RequestedAt).ToList();
+
+            dgvServices.DataSource = null;
+            dgvServices.DataSource = result;
         }
 
         #endregion

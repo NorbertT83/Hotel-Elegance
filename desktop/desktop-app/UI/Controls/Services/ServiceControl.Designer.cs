@@ -28,10 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             pnlTop = new Panel();
+            pnlRbHolder = new Panel();
+            rbOrderBy = new RadioButton();
+            rbOrderByDesc = new RadioButton();
+            chkShowHistory = new CheckBox();
+            lbRoomNumber = new Label();
+            cbRoomNumbers = new ComboBox();
             btnSearch = new Button();
             cbTypeFilter = new ComboBox();
             txtSearch = new TextBox();
@@ -45,6 +51,7 @@
             btnNewService = new Button();
             lbFilter = new Label();
             lbSearch = new Label();
+            lbHistory = new Label();
             lbStatusFilter = new Label();
             rbStatusAll = new RadioButton();
             rbStatusActive = new RadioButton();
@@ -55,6 +62,9 @@
             pnlGrid = new Panel();
             dgvServices = new DataGridView();
             colId = new DataGridViewTextBoxColumn();
+            colRoomNumber = new DataGridViewTextBoxColumn();
+            colStatus = new DataGridViewTextBoxColumn();
+            colRequestDate = new DataGridViewTextBoxColumn();
             colNameHu = new DataGridViewTextBoxColumn();
             colTypeHu = new DataGridViewTextBoxColumn();
             colDescHu = new DataGridViewTextBoxColumn();
@@ -84,7 +94,17 @@
             numPrice = new NumericUpDown();
             lbServiceDetails = new Label();
             lbPrice = new Label();
+            pnlStatusEditor = new Panel();
+            btnUpdateServiceStatus = new Button();
+            cbUpdateServiceStatus = new ComboBox();
+            lbUpdateServiceRoomNumberTitle = new Label();
+            lbUpdateServiceName = new Label();
+            lbUpdateServiceRoomNumber = new Label();
+            lbUpdateServiceNameTitle = new Label();
+            lbUpdateServiceStatusTitle = new Label();
+            lpUpdateServiceStatus = new Label();
             pnlTop.SuspendLayout();
+            pnlRbHolder.SuspendLayout();
             pnlGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
             pnlEditor.SuspendLayout();
@@ -93,6 +113,7 @@
             tabHun.SuspendLayout();
             tabEn.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numPrice).BeginInit();
+            pnlStatusEditor.SuspendLayout();
             SuspendLayout();
             // 
             // pnlTop
@@ -100,6 +121,10 @@
             pnlTop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlTop.BackColor = Color.FromArgb(245, 245, 248);
             pnlTop.BorderStyle = BorderStyle.FixedSingle;
+            pnlTop.Controls.Add(pnlRbHolder);
+            pnlTop.Controls.Add(chkShowHistory);
+            pnlTop.Controls.Add(lbRoomNumber);
+            pnlTop.Controls.Add(cbRoomNumbers);
             pnlTop.Controls.Add(btnSearch);
             pnlTop.Controls.Add(cbTypeFilter);
             pnlTop.Controls.Add(txtSearch);
@@ -113,6 +138,7 @@
             pnlTop.Controls.Add(btnNewService);
             pnlTop.Controls.Add(lbFilter);
             pnlTop.Controls.Add(lbSearch);
+            pnlTop.Controls.Add(lbHistory);
             pnlTop.Controls.Add(lbStatusFilter);
             pnlTop.Controls.Add(rbStatusAll);
             pnlTop.Controls.Add(rbStatusActive);
@@ -124,6 +150,78 @@
             pnlTop.Name = "pnlTop";
             pnlTop.Size = new Size(1350, 110);
             pnlTop.TabIndex = 0;
+            // 
+            // pnlRbHolder
+            // 
+            pnlRbHolder.Controls.Add(rbOrderBy);
+            pnlRbHolder.Controls.Add(rbOrderByDesc);
+            pnlRbHolder.Location = new Point(357, 57);
+            pnlRbHolder.Name = "pnlRbHolder";
+            pnlRbHolder.Size = new Size(174, 42);
+            pnlRbHolder.TabIndex = 14;
+            pnlRbHolder.Visible = false;
+            // 
+            // rbOrderBy
+            // 
+            rbOrderBy.Anchor = AnchorStyles.Left;
+            rbOrderBy.AutoSize = true;
+            rbOrderBy.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            rbOrderBy.Location = new Point(0, 0);
+            rbOrderBy.Name = "rbOrderBy";
+            rbOrderBy.Size = new Size(159, 23);
+            rbOrderBy.TabIndex = 12;
+            rbOrderBy.TabStop = true;
+            rbOrderBy.Text = "Order by ascending";
+            rbOrderBy.UseVisualStyleBackColor = true;
+            rbOrderBy.CheckedChanged += rbOrderBy_CheckedChanged;
+            // 
+            // rbOrderByDesc
+            // 
+            rbOrderByDesc.AutoSize = true;
+            rbOrderByDesc.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            rbOrderByDesc.Location = new Point(0, 21);
+            rbOrderByDesc.Name = "rbOrderByDesc";
+            rbOrderByDesc.Size = new Size(168, 23);
+            rbOrderByDesc.TabIndex = 13;
+            rbOrderByDesc.TabStop = true;
+            rbOrderByDesc.Text = "Order by descending";
+            rbOrderByDesc.UseVisualStyleBackColor = true;
+            rbOrderByDesc.Click += rbOrderBy_CheckedChanged;
+            // 
+            // chkShowHistory
+            // 
+            chkShowHistory.AutoSize = true;
+            chkShowHistory.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            chkShowHistory.Location = new Point(357, 36);
+            chkShowHistory.Name = "chkShowHistory";
+            chkShowHistory.Size = new Size(115, 23);
+            chkShowHistory.TabIndex = 11;
+            chkShowHistory.Text = "Show history";
+            chkShowHistory.UseVisualStyleBackColor = true;
+            chkShowHistory.Visible = false;
+            chkShowHistory.CheckedChanged += chkShowHistory_CheckedChanged;
+            // 
+            // lbRoomNumber
+            // 
+            lbRoomNumber.AutoSize = true;
+            lbRoomNumber.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbRoomNumber.Location = new Point(15, 48);
+            lbRoomNumber.Name = "lbRoomNumber";
+            lbRoomNumber.Size = new Size(110, 19);
+            lbRoomNumber.TabIndex = 10;
+            lbRoomNumber.Text = "Room number:";
+            lbRoomNumber.Visible = false;
+            // 
+            // cbRoomNumbers
+            // 
+            cbRoomNumbers.FormattingEnabled = true;
+            cbRoomNumbers.Location = new Point(130, 45);
+            cbRoomNumbers.MaxLength = 3;
+            cbRoomNumbers.Name = "cbRoomNumbers";
+            cbRoomNumbers.Size = new Size(90, 25);
+            cbRoomNumbers.TabIndex = 9;
+            cbRoomNumbers.Visible = false;
+            cbRoomNumbers.KeyPress += cbRoomNumbers_KeyPress;
             // 
             // btnSearch
             // 
@@ -272,6 +370,18 @@
             lbSearch.TabIndex = 0;
             lbSearch.Text = "Search:";
             // 
+            // lbHistory
+            // 
+            lbHistory.AutoSize = true;
+            lbHistory.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbHistory.ForeColor = Color.DimGray;
+            lbHistory.Location = new Point(357, 12);
+            lbHistory.Name = "lbHistory";
+            lbHistory.Size = new Size(68, 19);
+            lbHistory.TabIndex = 0;
+            lbHistory.Text = "HISTORY";
+            lbHistory.Visible = false;
+            // 
             // lbStatusFilter
             // 
             lbStatusFilter.AutoSize = true;
@@ -374,22 +484,22 @@
             dgvServices.AllowUserToDeleteRows = false;
             dgvServices.AllowUserToResizeColumns = false;
             dgvServices.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.BackColor = Color.FromArgb(245, 248, 253);
-            dgvServices.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(245, 248, 253);
+            dgvServices.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvServices.BackgroundColor = Color.White;
             dgvServices.BorderStyle = BorderStyle.None;
             dgvServices.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = Color.FromArgb(24, 60, 142);
-            dataGridViewCellStyle5.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            dataGridViewCellStyle5.ForeColor = Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(24, 60, 142);
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
-            dgvServices.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(24, 60, 142);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(24, 60, 142);
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvServices.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvServices.ColumnHeadersHeight = 40;
             dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgvServices.Columns.AddRange(new DataGridViewColumn[] { colId, colNameHu, colTypeHu, colDescHu, colPrice, colNameEn, colTypeEn, colDescEn });
+            dgvServices.Columns.AddRange(new DataGridViewColumn[] { colId, colRoomNumber, colStatus, colRequestDate, colNameHu, colTypeHu, colDescHu, colPrice, colNameEn, colTypeEn, colDescEn });
             dgvServices.Dock = DockStyle.Fill;
             dgvServices.EnableHeadersVisualStyles = false;
             dgvServices.GridColor = SystemColors.ControlLight;
@@ -411,6 +521,36 @@
             colId.ReadOnly = true;
             colId.Visible = false;
             colId.Width = 50;
+            // 
+            // colRoomNumber
+            // 
+            colRoomNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colRoomNumber.DataPropertyName = "RoomNumber";
+            colRoomNumber.FillWeight = 50F;
+            colRoomNumber.HeaderText = "Room #";
+            colRoomNumber.Name = "colRoomNumber";
+            colRoomNumber.ReadOnly = true;
+            colRoomNumber.Visible = false;
+            // 
+            // colStatus
+            // 
+            colStatus.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colStatus.DataPropertyName = "CurrentServiceStatus";
+            colStatus.FillWeight = 70F;
+            colStatus.HeaderText = "Status";
+            colStatus.Name = "colStatus";
+            colStatus.ReadOnly = true;
+            colStatus.Visible = false;
+            // 
+            // colRequestDate
+            // 
+            colRequestDate.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colRequestDate.DataPropertyName = "RequestedAt";
+            colRequestDate.FillWeight = 90F;
+            colRequestDate.HeaderText = "Requested";
+            colRequestDate.Name = "colRequestDate";
+            colRequestDate.ReadOnly = true;
+            colRequestDate.Visible = false;
             // 
             // colNameHu
             // 
@@ -443,8 +583,8 @@
             // 
             colPrice.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colPrice.DataPropertyName = "Price";
-            dataGridViewCellStyle6.NullValue = null;
-            colPrice.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.NullValue = null;
+            colPrice.DefaultCellStyle = dataGridViewCellStyle3;
             colPrice.FillWeight = 10F;
             colPrice.HeaderText = "Price (HUF)";
             colPrice.Name = "colPrice";
@@ -729,11 +869,116 @@
             lbPrice.TabIndex = 1;
             lbPrice.Text = "Price (HUF):";
             // 
+            // pnlStatusEditor
+            // 
+            pnlStatusEditor.Controls.Add(btnUpdateServiceStatus);
+            pnlStatusEditor.Controls.Add(cbUpdateServiceStatus);
+            pnlStatusEditor.Controls.Add(lbUpdateServiceRoomNumberTitle);
+            pnlStatusEditor.Controls.Add(lbUpdateServiceName);
+            pnlStatusEditor.Controls.Add(lbUpdateServiceRoomNumber);
+            pnlStatusEditor.Controls.Add(lbUpdateServiceNameTitle);
+            pnlStatusEditor.Controls.Add(lbUpdateServiceStatusTitle);
+            pnlStatusEditor.Controls.Add(lpUpdateServiceStatus);
+            pnlStatusEditor.Location = new Point(1371, 7);
+            pnlStatusEditor.Name = "pnlStatusEditor";
+            pnlStatusEditor.Padding = new Padding(10);
+            pnlStatusEditor.Size = new Size(355, 609);
+            pnlStatusEditor.TabIndex = 6;
+            pnlStatusEditor.Visible = false;
+            // 
+            // btnUpdateServiceStatus
+            // 
+            btnUpdateServiceStatus.BackColor = Color.DarkGreen;
+            btnUpdateServiceStatus.FlatStyle = FlatStyle.Flat;
+            btnUpdateServiceStatus.Font = new Font("Segoe UI", 15F);
+            btnUpdateServiceStatus.ForeColor = Color.White;
+            btnUpdateServiceStatus.Location = new Point(20, 200);
+            btnUpdateServiceStatus.Name = "btnUpdateServiceStatus";
+            btnUpdateServiceStatus.Size = new Size(315, 50);
+            btnUpdateServiceStatus.TabIndex = 2;
+            btnUpdateServiceStatus.Text = "Update";
+            btnUpdateServiceStatus.UseVisualStyleBackColor = false;
+            // 
+            // cbUpdateServiceStatus
+            // 
+            cbUpdateServiceStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbUpdateServiceStatus.Font = new Font("Segoe UI", 15F);
+            cbUpdateServiceStatus.FormattingEnabled = true;
+            cbUpdateServiceStatus.Items.AddRange(new object[] { "pending", "completed" });
+            cbUpdateServiceStatus.Location = new Point(85, 132);
+            cbUpdateServiceStatus.Name = "cbUpdateServiceStatus";
+            cbUpdateServiceStatus.Size = new Size(258, 36);
+            cbUpdateServiceStatus.TabIndex = 1;
+            // 
+            // lbUpdateServiceRoomNumberTitle
+            // 
+            lbUpdateServiceRoomNumberTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbUpdateServiceRoomNumberTitle.ForeColor = Color.Black;
+            lbUpdateServiceRoomNumberTitle.Location = new Point(10, 85);
+            lbUpdateServiceRoomNumberTitle.Name = "lbUpdateServiceRoomNumberTitle";
+            lbUpdateServiceRoomNumberTitle.Size = new Size(110, 20);
+            lbUpdateServiceRoomNumberTitle.TabIndex = 0;
+            lbUpdateServiceRoomNumberTitle.Text = "Room number:";
+            // 
+            // lbUpdateServiceName
+            // 
+            lbUpdateServiceName.AutoSize = true;
+            lbUpdateServiceName.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbUpdateServiceName.ForeColor = Color.Black;
+            lbUpdateServiceName.Location = new Point(75, 50);
+            lbUpdateServiceName.Name = "lbUpdateServiceName";
+            lbUpdateServiceName.Size = new Size(53, 19);
+            lbUpdateServiceName.TabIndex = 0;
+            lbUpdateServiceName.Text = "Name:";
+            // 
+            // lbUpdateServiceRoomNumber
+            // 
+            lbUpdateServiceRoomNumber.AutoSize = true;
+            lbUpdateServiceRoomNumber.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbUpdateServiceRoomNumber.ForeColor = Color.Black;
+            lbUpdateServiceRoomNumber.Location = new Point(130, 85);
+            lbUpdateServiceRoomNumber.Name = "lbUpdateServiceRoomNumber";
+            lbUpdateServiceRoomNumber.Size = new Size(53, 19);
+            lbUpdateServiceRoomNumber.TabIndex = 0;
+            lbUpdateServiceRoomNumber.Text = "Name:";
+            // 
+            // lbUpdateServiceNameTitle
+            // 
+            lbUpdateServiceNameTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbUpdateServiceNameTitle.ForeColor = Color.Black;
+            lbUpdateServiceNameTitle.Location = new Point(10, 50);
+            lbUpdateServiceNameTitle.Name = "lbUpdateServiceNameTitle";
+            lbUpdateServiceNameTitle.Size = new Size(55, 20);
+            lbUpdateServiceNameTitle.TabIndex = 0;
+            lbUpdateServiceNameTitle.Text = "Name:";
+            // 
+            // lbUpdateServiceStatusTitle
+            // 
+            lbUpdateServiceStatusTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbUpdateServiceStatusTitle.ForeColor = Color.Black;
+            lbUpdateServiceStatusTitle.Location = new Point(10, 140);
+            lbUpdateServiceStatusTitle.Name = "lbUpdateServiceStatusTitle";
+            lbUpdateServiceStatusTitle.Size = new Size(65, 20);
+            lbUpdateServiceStatusTitle.TabIndex = 0;
+            lbUpdateServiceStatusTitle.Text = "STATUS:";
+            // 
+            // lpUpdateServiceStatus
+            // 
+            lpUpdateServiceStatus.AutoSize = true;
+            lpUpdateServiceStatus.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lpUpdateServiceStatus.ForeColor = Color.FromArgb(24, 60, 142);
+            lpUpdateServiceStatus.Location = new Point(10, 10);
+            lpUpdateServiceStatus.Name = "lpUpdateServiceStatus";
+            lpUpdateServiceStatus.Size = new Size(187, 20);
+            lpUpdateServiceStatus.TabIndex = 0;
+            lpUpdateServiceStatus.Text = "UPDATE SERVICE STATUS";
+            // 
             // ProductContol
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 249, 250);
+            Controls.Add(pnlStatusEditor);
             Controls.Add(pnlEditor);
             Controls.Add(pnlGrid);
             Controls.Add(pnlTop);
@@ -743,6 +988,8 @@
             Load += ProductContol_Load;
             pnlTop.ResumeLayout(false);
             pnlTop.PerformLayout();
+            pnlRbHolder.ResumeLayout(false);
+            pnlRbHolder.PerformLayout();
             pnlGrid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvServices).EndInit();
             pnlEditor.ResumeLayout(false);
@@ -754,6 +1001,8 @@
             tabEn.ResumeLayout(false);
             tabEn.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numPrice).EndInit();
+            pnlStatusEditor.ResumeLayout(false);
+            pnlStatusEditor.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -801,7 +1050,13 @@
         private Label lbUtility;
         private Button btnRefresh;
         private Button btnResetFilters;
+        private NumericUpDown numPrice;
+        private Button btnSaveService;
+        private Panel pnlSideBottom;
         private DataGridViewTextBoxColumn colId;
+        private DataGridViewTextBoxColumn colRoomNumber;
+        private DataGridViewTextBoxColumn colStatus;
+        private DataGridViewTextBoxColumn colRequestDate;
         private DataGridViewTextBoxColumn colNameHu;
         private DataGridViewTextBoxColumn colTypeHu;
         private DataGridViewTextBoxColumn colDescHu;
@@ -809,8 +1064,21 @@
         private DataGridViewTextBoxColumn colNameEn;
         private DataGridViewTextBoxColumn colTypeEn;
         private DataGridViewTextBoxColumn colDescEn;
-        private NumericUpDown numPrice;
-        private Button btnSaveService;
-        private Panel pnlSideBottom;
+        private Label lbRoomNumber;
+        private ComboBox cbRoomNumbers;
+        private CheckBox chkShowHistory;
+        private RadioButton rbOrderByDesc;
+        private RadioButton rbOrderBy;
+        private Label lbHistory;
+        private Panel pnlRbHolder;
+        private Panel pnlStatusEditor;
+        private ComboBox cbUpdateServiceStatus;
+        private Label lbUpdateServiceRoomNumberTitle;
+        private Label lbUpdateServiceNameTitle;
+        private Label lbUpdateServiceStatusTitle;
+        private Label lpUpdateServiceStatus;
+        private Button btnUpdateServiceStatus;
+        private Label lbUpdateServiceName;
+        private Label lbUpdateServiceRoomNumber;
     }
 }

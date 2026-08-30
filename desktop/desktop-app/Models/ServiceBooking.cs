@@ -6,9 +6,9 @@ namespace Hotel_erp_Winforms_App.Models
 {
     public enum Status { created, pending, completed, deleted }
 
-    public class ServiceBookings
+    public class ServiceBooking
     {
-        public ServiceBookings(int id, string bookingId, int serviceId, DateTime requestedAt, DateTime updatedAt, int quantity, Status currentStatus, int price)
+        public ServiceBooking(int id, string bookingId, int serviceId, DateTime requestedAt, DateTime updatedAt, int quantity, Status currentStatus, int price)
         {
             Id = id;
             BookingId = bookingId;
