@@ -33,7 +33,7 @@
             lbControlTitle = new Label();
             panelLeft = new Panel();
             btnSettings = new Button();
-            btnMaintenance = new Button();
+            btnRooms = new Button();
             btnBilling = new Button();
             btnGuests = new Button();
             btnHousekeeping = new Button();
@@ -86,7 +86,7 @@
             panelLeft.Controls.Add(btnSettings);
             panelLeft.Controls.Add(btnStatistics);
             panelLeft.Controls.Add(btnEmployees);
-            panelLeft.Controls.Add(btnMaintenance);
+            panelLeft.Controls.Add(btnRooms);
             panelLeft.Controls.Add(btnBilling);
             panelLeft.Controls.Add(btnServices);
             panelLeft.Controls.Add(btnHousekeeping);
@@ -118,25 +118,25 @@
             btnSettings.UseVisualStyleBackColor = false;
             btnSettings.Click += btnSettings_Click;
             // 
-            // btnMaintenance
+            // btnRooms
             // 
-            btnMaintenance.BackColor = Color.FromArgb(30, 58, 138);
-            btnMaintenance.Cursor = Cursors.Hand;
-            btnMaintenance.Dock = DockStyle.Top;
-            btnMaintenance.FlatAppearance.BorderSize = 0;
-            btnMaintenance.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
-            btnMaintenance.FlatStyle = FlatStyle.Flat;
-            btnMaintenance.Font = new Font("Segoe UI", 15F);
-            btnMaintenance.ForeColor = Color.White;
-            btnMaintenance.Location = new Point(0, 265);
-            btnMaintenance.Name = "btnMaintenance";
-            btnMaintenance.Padding = new Padding(20, 0, 0, 0);
-            btnMaintenance.Size = new Size(183, 53);
-            btnMaintenance.TabIndex = 16;
-            btnMaintenance.Text = "Maintenance";
-            btnMaintenance.TextAlign = ContentAlignment.MiddleLeft;
-            btnMaintenance.UseVisualStyleBackColor = false;
-            btnMaintenance.Click += btnMaintenance_Click;
+            btnRooms.BackColor = Color.FromArgb(30, 58, 138);
+            btnRooms.Cursor = Cursors.Hand;
+            btnRooms.Dock = DockStyle.Top;
+            btnRooms.FlatAppearance.BorderSize = 0;
+            btnRooms.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
+            btnRooms.FlatStyle = FlatStyle.Flat;
+            btnRooms.Font = new Font("Segoe UI", 15F);
+            btnRooms.ForeColor = Color.White;
+            btnRooms.Location = new Point(0, 106);
+            btnRooms.Name = "btnRooms";
+            btnRooms.Padding = new Padding(20, 0, 0, 0);
+            btnRooms.Size = new Size(183, 53);
+            btnRooms.TabIndex = 16;
+            btnRooms.Text = "Rooms";
+            btnRooms.TextAlign = ContentAlignment.MiddleLeft;
+            btnRooms.UseVisualStyleBackColor = false;
+            btnRooms.Click += btnRooms_Click;
             // 
             // btnBilling
             // 
@@ -333,7 +333,7 @@
         private PictureBox pictureBox1;
         private Label lbControlTitle;
         private Label lbWelcomeMainForm;
-        private Button btnMaintenance;
+        private Button btnRooms;
         private Button btnBilling;
         private Button btnGuests;
         private Button btnSettings;

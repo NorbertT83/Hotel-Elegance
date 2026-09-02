@@ -13,6 +13,8 @@
   <ItemGroup>
     <PackageReference Include="bcrypt.net-next" Version="4.2.0" />
     <PackageReference Include="microsoft.data.sqlclient" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" />
     <PackageReference Include="MySql.Data" Version="9.7.0" />
     <PackageReference Include="Nanoid" Version="3.1.0" />
   </ItemGroup>
@@ -33,9 +35,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="UI\Controls\Rooms\RoomsControl.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\SQL\mock_db.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

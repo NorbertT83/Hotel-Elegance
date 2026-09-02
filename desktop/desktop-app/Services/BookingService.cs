@@ -22,7 +22,7 @@ namespace Hotel_erp_Winforms_App.Services
 
         #region variables
 
-        private readonly string connectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=";
+        private readonly string connectionString = DbConfig.ConnectionString;
 
         #endregion
 
@@ -96,108 +96,103 @@ namespace Hotel_erp_Winforms_App.Services
             return bookings;
         }
         // 2.
-        public async Task<List<Booking>> SearchBookings(int fieldIndex, string searchText, int statusIndex, int tabIndex, int spanIndex, DateTime fromDate, DateTime toDate)
+        public async Task<List<Booking>> SearchBookings(int fieldIndex, string searchText, int statusIndex, int spanIndex, DateTime fromDate, DateTime toDate)
         {
             string joins = "";
             string whereClause = " WHERE 1=1 ";
             var parameters = new Dictionary<string, object>();
 
-            if(tabIndex == 0)
+            // MEZŐ KIVÁLASZTÁS
+            if (!string.IsNullOrEmpty(searchText))
             {
-                // MEZŐ KIVÁLASZTÁS
-                if (!string.IsNullOrEmpty(searchText))
+                switch (fieldIndex)
                 {
-                    switch (fieldIndex)
-                    {
-                        case -1:
-                        case 0: break;
+                    case -1:
+                    case 0: break;
 
-                        case 1:
-                            joins += " INNER JOIN guests ON bookings.guest1_id = guests.id ";
-                            whereClause += " AND guests.fname LIKE @fname ";
-                            parameters.Add("@fname", $"%{searchText}%");
-                            break;
-
-                        case 2:
-                            whereClause += " AND bookings.id LIKE @searchBar ";
-                            parameters.Add("@searchBar", $"%{searchText}%");
-                            break;
-
-                        case 3:
-                            whereClause += " AND bookings.room_number LIKE @searchBar ";
-                            parameters.Add("@searchBar", $"%{searchText}%");
-                            break;
-
-                        case 4:
-                            whereClause += " AND bookings.room_type LIKE @searchBar ";
-                            parameters.Add("@searchBar", $"%{searchText}%");
-                            break;
-
-                        case 5:
-                            whereClause += " AND bookings.beginning_of_stay LIKE @searchBar ";
-                            parameters.Add("@searchBar", $"%{searchText}%");
-                            break;
-
-                        case 6:
-                            whereClause += " AND bookings.end_of_stay LIKE @searchBar ";
-                            parameters.Add("@searchBar", $"%{searchText}%");
-                            break;
-
-                        case 7:
-                            whereClause += " AND bookings.checkin LIKE @searchBar ";
-                            parameters.Add("@searchBar", $"%{searchText}%");
-                            break;
-
-                        case 8:
-                            whereClause += " AND bookings.checkout LIKE @searchBar ";
-                            parameters.Add("@searchBar", $"%{searchText}%");
-                            break;
-
-                        case 9:
-                            whereClause += " AND bookings.catering_level LIKE @searchBar ";
-                            parameters.Add("@searchBar", $"%{searchText}%");
-                            break;
-                    }
-                }
-
-                // STÁTUSZ KIVÁLASZTÁS
-                switch (statusIndex)
-                {
                     case 1:
-                        whereClause += " AND checkin IS NULL";
+                        joins += " INNER JOIN guests ON bookings.guest1_id = guests.id ";
+                        whereClause += " AND guests.fname LIKE @fname ";
+                        parameters.Add("@fname", $"%{searchText}%");
                         break;
 
                     case 2:
-                        whereClause += " AND checkin IS NOT NULL AND checkout IS NULL";
+                        whereClause += " AND bookings.id LIKE @searchBar ";
+                        parameters.Add("@searchBar", $"%{searchText}%");
                         break;
 
                     case 3:
-                        whereClause += " AND checkout IS NOT NULL";
+                        whereClause += " AND bookings.room_number LIKE @searchBar ";
+                        parameters.Add("@searchBar", $"%{searchText}%");
                         break;
-                }
-            }
 
-            // IDŐSZAK KIVÁLASZTÁS
-            if(tabIndex == 1)
-            {
-                switch (spanIndex)
-                {
-                    case 0: 
-                        whereClause += " AND beginning_of_stay BETWEEN @from AND @to";
-                        parameters.Add("@from", fromDate);
-                        parameters.Add("@to", toDate);
+                    case 4:
+                        whereClause += " AND bookings.room_type LIKE @searchBar ";
+                        parameters.Add("@searchBar", $"%{searchText}%");
                         break;
-                    case 1:
-                        whereClause += " AND end_of_stay BETWEEN @from AND @to";
-                        parameters.Add("@from", fromDate);
-                        parameters.Add("@to", toDate);
+
+                    case 5:
+                        whereClause += " AND bookings.beginning_of_stay LIKE @searchBar ";
+                        parameters.Add("@searchBar", $"%{searchText}%");
                         break;
-                    case 2:
-                        whereClause += " AND beginning_of_stay >= @from AND end_of_stay <= @to";
-                        parameters.Add("@from", fromDate);
-                        parameters.Add("@to", toDate);
+
+                    case 6:
+                        whereClause += " AND bookings.end_of_stay LIKE @searchBar ";
+                        parameters.Add("@searchBar", $"%{searchText}%");
+                        break;
+
+                    case 7:
+                        whereClause += " AND bookings.checkin LIKE @searchBar ";
+                        parameters.Add("@searchBar", $"%{searchText}%");
+                        break;
+
+                    case 8:
+                        whereClause += " AND bookings.checkout LIKE @searchBar ";
+                        parameters.Add("@searchBar", $"%{searchText}%");
+                        break;
+
+                    case 9:
+                        whereClause += " AND bookings.catering_level LIKE @searchBar ";
+                        parameters.Add("@searchBar", $"%{searchText}%");
                         break;
                 }
+            
+
+            // STÁTUSZ KIVÁLASZTÁS
+            switch (statusIndex)
+            {
+                case 1:
+                    whereClause += " AND checkin IS NULL";
+                    break;
+
+                case 2:
+                    whereClause += " AND checkin IS NOT NULL AND checkout IS NULL";
+                    break;
+
+                case 3:
+                    whereClause += " AND checkout IS NOT NULL";
+                    break;
+            }
+        }
+
+        // IDŐSZAK KIVÁLASZTÁS
+            switch (spanIndex)
+            {
+                case 0:
+                    whereClause += " AND beginning_of_stay BETWEEN @from AND @to";
+                    parameters.Add("@from", fromDate);
+                    parameters.Add("@to", toDate);
+                    break;
+                case 1:
+                    whereClause += " AND end_of_stay BETWEEN @from AND @to";
+                    parameters.Add("@from", fromDate);
+                    parameters.Add("@to", toDate);
+                    break;
+                case 2:
+                    whereClause += " AND beginning_of_stay >= @from AND end_of_stay <= @to";
+                    parameters.Add("@from", fromDate);
+                    parameters.Add("@to", toDate);
+                    break;
             }
 
             string query = $"SELECT bookings.* FROM bookings{joins}{whereClause};";
@@ -616,16 +611,16 @@ namespace Hotel_erp_Winforms_App.Services
         // 1.
         public Booking GetBookingById(string id)
         {
-            using(MySqlConnection connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 string query = "SELECT * FROM bookings WHERE @id = id";
 
-                using(MySqlCommand cmd = new MySqlCommand(query, connection))
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@id", id);
                     connection.Open();
 
-                    using(MySqlDataReader reader = cmd.ExecuteReader())
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -665,14 +660,14 @@ namespace Hotel_erp_Winforms_App.Services
                 "INNER JOIN bookings ON rooms.room_number = bookings.room_number " +
                 "WHERE bookings.id = @bookingID;";
 
-            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@bookingID", booking.Id); // ------------------- booking was null
 
-                    using(MySqlDataReader reader = cmd.ExecuteReader())
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -709,14 +704,14 @@ namespace Hotel_erp_Winforms_App.Services
                 "INNER JOIN bookings ON guests.id = bookings.guest1_id " +
                 "WHERE bookings.id = @bookingId";
 
-            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
 
-                    using(MySqlDataReader reader  = cmd.ExecuteReader())
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -765,7 +760,7 @@ namespace Hotel_erp_Winforms_App.Services
                     cmd.Parameters.AddWithValue("@roomType", booking.SelectedRoomType.ToString());
                     conn.Open();
 
-                    using(MySqlDataReader reader = cmd.ExecuteReader())
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -830,7 +825,7 @@ namespace Hotel_erp_Winforms_App.Services
                     billingItems.Add(parking);
                 }
 
-                else if(service.NameHu == "Teljes ellátás")
+                else if (service.NameHu == "Teljes ellátás")
                 {
                     BillingItem fullBoard = new BillingItem
                     (
@@ -877,7 +872,7 @@ namespace Hotel_erp_Winforms_App.Services
             }
 
             // SZOBA ÁRÁNAK KISZÁMÍTÁSA
-            if(selectedBooking != null)
+            if (selectedBooking != null)
             {
                 string getRoomQuery = "SELECT rooms.price_per_night, bookings.beginning_of_stay, bookings.end_of_stay, bookings.created_at " +
                                 "FROM bookings " +
@@ -933,9 +928,9 @@ namespace Hotel_erp_Winforms_App.Services
                 " WHERE bookings.id = @bookingId " +
                 "   AND services.name_hu = @serviceName);";
 
-            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
                     cmd.Parameters.AddWithValue("@serviceName", serviceNameHu);
@@ -973,9 +968,9 @@ namespace Hotel_erp_Winforms_App.Services
         {
             string query = "SELECT car_plate_number FROM guests INNER JOIN bookings ON bookings.guest1_id = guests.id WHERE bookings.id = @bookingId;";
 
-            using(MySqlConnection conn = new MySqlConnection(connectionString))
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using(MySqlCommand cmd =  new MySqlCommand(query, conn))
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
                     conn.Open();
@@ -997,7 +992,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
                     conn.Open();
@@ -1072,9 +1067,9 @@ namespace Hotel_erp_Winforms_App.Services
                 "INNER JOIN bookings ON bookings.guest1_id = guests.id " +
                 "WHERE bookings.id = @bookingId";
 
-            await using(MySqlConnection conn = new MySqlConnection(connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@bookingId", booking.Id);
                     await conn.OpenAsync();
@@ -1264,7 +1259,7 @@ namespace Hotel_erp_Winforms_App.Services
         #endregion
         #region UI refreshing
 
-        public void RefreshPageCount(TabControl tc,System.Windows.Forms.Label lb)
+        public void RefreshPageCount(TabControl tc, System.Windows.Forms.Label lb)
         {
             switch (tc.SelectedIndex)
             {
@@ -1292,7 +1287,7 @@ namespace Hotel_erp_Winforms_App.Services
         {
             var service = serviceName switch
             {
-                
+
                 "Szoba" when room != null => new Service(0, "Szoba", "Szoba ára éjszakánként", ServiceTypeHu.Logisztika, room.Price * days, "Room", "Price of room per night", ServiceTypeEn.Logistics),
                 "Halfboard" => new Service(19, "Félpanzió", "Félpanziós ellátás reggelivel és vacsorával", ServiceTypeHu.Logisztika, 17000, "Half board", "Half-board service including breakfast and dinner.", ServiceTypeEn.Logistics),
                 "Fullboard" => new Service(20, "Teljes ellátás", "Teljes ellátás reggelivel, ebéddel és vacsorával.", ServiceTypeHu.Logisztika, 28000, "Full board", "Full-board service including breakfast, lunch and dinner.", ServiceTypeEn.Logistics),
@@ -1306,7 +1301,7 @@ namespace Hotel_erp_Winforms_App.Services
                 _ => null
             };
 
-            if(service != null)
+            if (service != null)
             {
                 serviceList.Add(service);
             }

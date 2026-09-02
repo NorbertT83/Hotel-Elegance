@@ -1,24 +1,18 @@
 ﻿using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
-using Hotel_erp_Winforms_App.UI.Controls;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
-
 
 namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 {
     public partial class EmployeeControl : UserControl
     {
         private List<Employee> _employees = new List<Employee>();
-        private EmployeeService _employeeService = new EmployeeService();
-        private System.Windows.Forms.Timer _dbRefreshTimer = new System.Windows.Forms.Timer();
+        private readonly EmployeeService _employeeService = new EmployeeService();
+        private Employee? _selectedEmployee;
 
         public EmployeeControl()
         {
@@ -27,161 +21,151 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 
         private void EmployeeControl_Load(object sender, EventArgs e)
         {
+            cbJobTitleFilter.SelectedIndex = 0;
             LoadData();
-            cbJobTitle.SelectedIndex = 0;
-
-            _dbRefreshTimer.Interval = 10000;
-            _dbRefreshTimer.Tick += DbRefreshTimer_Tick;
-            _dbRefreshTimer.Start();
-        }
-
-        private void DbRefreshTimer_Tick(object? sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(tbSearch.Text)) return;
-
-            int selectedRowIndex = dgvEmployees.CurrentRow?.Index ?? -1;
-            LoadData();
-
-            if (selectedRowIndex >= 0 && selectedRowIndex < dgvEmployees.Rows.Count)
-            {
-                dgvEmployees.ClearSelection();
-                dgvEmployees.Rows[selectedRowIndex].Selected = true;
-            }
         }
 
         private void LoadData()
         {
             try
             {
-                string query = "SELECT * FROM employees";
-
-                _employees = _employeeService.LoadDgv(query);
+                Cursor.Current = Cursors.WaitCursor;
+                _employees = _employeeService.LoadDgv("SELECT * FROM employees");
                 dgvEmployees.AutoGenerateColumns = false;
-                dgvEmployees.DataSource = null;
                 dgvEmployees.DataSource = _employees;
 
+                UpdateKpis();
+
+                if (dgvEmployees.Rows.Count > 0)
+                {
+                    RowSelection(0);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Hiba az adatok betöltésekor: " + ex.Message);
+                MessageBox.Show("Error loading employees: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
         }
 
-        private void RadioButtonChanged()
+        private void UpdateKpis()
         {
-            string sortBy = "";
-            if (rbName.Checked) sortBy = "Name";
-            else if (rbJobTitle.Checked) sortBy = "JobTitle";
-
-            var sortedList = _employeeService.GetSortedEmployees(_employees, sortBy);
-
-            dgvEmployees.DataSource = null;
-            dgvEmployees.DataSource = sortedList;
+            lbKpiTotalValue.Text = _employees.Count.ToString();
+            lbKpiManagersValue.Text = _employees.Count(e => (e.JobTitle ?? "").Contains("Manager", StringComparison.OrdinalIgnoreCase)).ToString();
+            lbKpiStaffValue.Text = _employees.Count(e => (e.JobTitle ?? "").Contains("Receptionist", StringComparison.OrdinalIgnoreCase) || (e.JobTitle ?? "").Contains("Service", StringComparison.OrdinalIgnoreCase)).ToString();
+            lbKpiCleanersValue.Text = _employees.Count(e => (e.JobTitle ?? "").Contains("Cleaner", StringComparison.OrdinalIgnoreCase)).ToString();
         }
 
-        public void rbName_CheckedChanged(object sender, EventArgs e)
+        private void RowSelection(int index)
         {
-            RadioButtonChanged();
+            if (index < 0 || index >= dgvEmployees.Rows.Count) return;
+
+            _selectedEmployee = dgvEmployees.Rows[index].DataBoundItem as Employee;
+            if (_selectedEmployee == null) return;
+
+            pbProfilePhoto.Image = Properties.Resources.person_icon;
+
+            tbFirstName.Text = _selectedEmployee.FName;
+            tbLastName.Text = _selectedEmployee.LName;
+            cbJobTitle.Text = _selectedEmployee.JobTitle ?? "";
+            tbTaxNumber.Text = _selectedEmployee.TaxNumber;
+            dtpBirthdate.Value = _selectedEmployee.DateOfBirth > DateTime.MinValue ? _selectedEmployee.DateOfBirth : DateTime.Today;
+            dtpHiringDate.Value = _selectedEmployee.DateOfHiring > DateTime.MinValue ? _selectedEmployee.DateOfHiring : DateTime.Today;
+            tbAddress.Text = _selectedEmployee.Address ?? "";
+            tbHolidays.Text = _selectedEmployee.PaidHolidaysLeft.ToString();
+            tbSalary.Text = _selectedEmployee.Salary.ToString();
         }
 
-        public void rbJobTitle_CheckedChanged(object sender, EventArgs e)
+        private void dgvEmployees_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            RadioButtonChanged();
-        }
-
-        private void tbSearch_TextChanged(object sender, EventArgs e)
-        {
-            string query = "SELECT * FROM employees WHERE lname LIKE @search ";
-
-            var parameters = new Dictionary<string, object>
+            if (e.RowIndex >= 0)
             {
-                { "@search", tbSearch.Text + "%" }
-            };
+                RowSelection(e.RowIndex);
+            }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string query = "SELECT * FROM employees WHERE 1=1 ";
+            var parameters = new Dictionary<string, object>();
+
+            if (!string.IsNullOrWhiteSpace(txtSearch.Text))
+            {
+                query += "AND (fname LIKE @search OR lname LIKE @search OR tax_number LIKE @search) ";
+                parameters.Add("@search", $"%{txtSearch.Text.Trim()}%");
+            }
+
+            if (cbJobTitleFilter.SelectedIndex > 0)
+            {
+                query += "AND role = @role ";
+                parameters.Add("@role", cbJobTitleFilter.SelectedItem.ToString());
+            }
 
             _employees = _employeeService.LoadDgv(query, parameters);
-            dgvEmployees.DataSource = null;
             dgvEmployees.DataSource = _employees;
-
+            UpdateKpis();
         }
 
-        private void cbJobTitle_SelectedIndexChanged(object sender, EventArgs e)
+        private void btnRefresh_Click(object sender, EventArgs e)
         {
-            string query = "";
-
-            switch (cbJobTitle.SelectedIndex)
-            {
-                case 0: query = "SELECT * FROM employees"; break;
-                case 1: query = "SELECT * FROM employees WHERE role = 'HK Manager'"; break;
-                case 2: query = "SELECT * FROM employees WHERE role = 'Receptionist'"; break;
-                case 3: query = "SELECT * FROM employees WHERE role = 'Room Service'"; break;
-                case 4: query = "SELECT * FROM employees WHERE role = 'Front Office Manager'"; break;
-                case 5: query = "SELECT * FROM employees WHERE role = 'F&B Manager'"; break;
-                case 6: query = "SELECT * FROM employees WHERE role = 'Cleaner'"; break;
-            }
-
-            dgvEmployees.DataSource = null;
-            dgvEmployees.DataSource = _employeeService.LoadDgv(query);
+            txtSearch.Clear();
+            cbJobTitleFilter.SelectedIndex = 0;
+            LoadData();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
             FrmAddEmployee addEmployee = new FrmAddEmployee();
             addEmployee.ShowDialog();
+            LoadData();
         }
 
         private void btnModify_Click(object sender, EventArgs e)
         {
-            if (dgvEmployees.CurrentRow != null)
+            if (_selectedEmployee != null)
             {
-                Employee? selectedEmployee = dgvEmployees.CurrentRow.DataBoundItem as Employee;
-
-                if (selectedEmployee != null)
-                {
-                    FrmEditEmployee editEmployee = new FrmEditEmployee(selectedEmployee);
-                    editEmployee.ShowDialog();
-                }
-                else
-                {
-                    MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                FrmEditEmployee editEmployee = new FrmEditEmployee(_selectedEmployee);
+                editEmployee.ShowDialog();
+                LoadData();
             }
             else
             {
-                MessageBox.Show("The table is empty or no row is selected!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (dgvEmployees.CurrentRow != null)
+            if (_selectedEmployee != null)
             {
-                Employee? selectedEmployee = dgvEmployees.CurrentRow.DataBoundItem as Employee;
-
-                if (selectedEmployee != null)
+                DialogResult result = MessageBox.Show($"Are you sure you want to delete {_selectedEmployee.FName} {_selectedEmployee.LName}?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
                 {
-                    DialogResult result = MessageBox.Show("Are you sure you want to delete this employee?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                    if (result == DialogResult.Yes)
-                    {
-                        _employeeService.DeleteEmployee(selectedEmployee);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _employeeService.DeleteEmployee(_selectedEmployee);
+                    LoadData();
                 }
             }
             else
             {
-                MessageBox.Show("The table is empty or no row is selected!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Please select an employee first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        private void gbInfo_Enter(object sender, EventArgs e)
+        private void btnSaveEmployee_Click(object sender, EventArgs e)
         {
-
+            if (_selectedEmployee != null)
+            {
+                FrmEditEmployee editEmployee = new FrmEditEmployee(_selectedEmployee);
+                editEmployee.ShowDialog();
+                LoadData();
+            }
+            else
+            {
+                btnAdd_Click(sender, e);
+            }
         }
     }
 }
-
-

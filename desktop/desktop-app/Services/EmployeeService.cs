@@ -14,7 +14,7 @@ namespace Hotel_erp_Winforms_App.Services
 {
     public class EmployeeService
     {
-        private readonly string connectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=";
+        private readonly string connectionString = DbConfig.ConnectionString;
 
         public List<Employee> LoadDgv(string query, Dictionary<string, object>? parameters = null)
         {

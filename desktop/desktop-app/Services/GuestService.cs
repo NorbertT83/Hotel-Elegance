@@ -13,7 +13,7 @@ namespace Hotel_erp_Winforms_App.Services
     {
         #region variables
 
-        private readonly string _connectionString = "server=localhost;port=3306;database=hotelelegancedb;uid=root;pwd=";
+        private readonly string _connectionString = DbConfig.ConnectionString;
 
         #endregion
 
