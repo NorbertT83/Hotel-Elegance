@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Hotel_erp_Winforms_App.UI.Controls
 {
@@ -21,7 +23,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         #region TODO:
 
         /*
-         * 1.: order by-okat csinálni
+         * NEW SERVICE BOOKINGOT BEFEJEZNI
+         * -> NEM FRISSUL AZ ÁR, NAGYON SOKSZOR VAN UGYANAZ A SZOBASZÁM A COMBOBOXBAN
         */
 
         #endregion
@@ -34,8 +37,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         List<RequestedService> serviceBookings;
 
         Service _selectedService;
+        Service? _selectedServiceForServiceBooking;
+        RequestedService _selectedRequestedService;
+
         CommonHelper _commonHelper = new CommonHelper();
         BookingService _bookingService = new BookingService();
+        RoomService _roomService = new RoomService();
 
         ErrorProvider _errorProvider = new ErrorProvider();
         bool resized = false;
@@ -79,6 +86,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                 services = await _serviceService.GetAllServicesFromDbAsync();
                 dgvServices.DataSource = services;
+
+                dgvServices.ClearSelection();
             }
             catch (Exception ex)
             {
@@ -95,10 +104,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             #endregion
 
             #region UI defaults
-            List<Service> actives = await _serviceService.GetActiveOrInactiveServicesAsync(true);
 
-            lbTotalServices.Text = "Total services: " + services.Count().ToString();
-            lbActiveServices.Text = "Active: " + actives.Count();
+            RefreshActiveOrInactiveCountAsync();
 
             #endregion
         }
@@ -146,6 +153,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                 dgvServices.DataSource = null;
                 dgvServices.DataSource = result;
+
+                dgvServices.ClearSelection();
             }
 
             else
@@ -178,11 +187,21 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     serviceBookings = await _serviceService.GetServiceDataByServicebookingAsync();
                     List<RequestedService> orderedSBList = serviceBookings.OrderByDescending(s => s.RequestedAt).ToList();
 
+                    _commonHelper.EmptyListMessageBox(orderedSBList.Count(), "service bookings");
+
                     dgvServices.DataSource = orderedSBList;
+                    colId.DataPropertyName = "Id";
+
+                    pnlStatusEditor.Visible = true;
+                    btnUpdateStatus.Enabled = false;
+
+                    ClearEditorBoxes();
+                    dgvServices.ClearSelection();
 
                     SetDgvVisibility(true);
 
                     cbRoomNumbers.Items.Clear();
+
                     foreach (RequestedService rs in serviceBookings)
                     {
                         cbRoomNumbers.Items.Add(rs.RoomNumber);
@@ -195,6 +214,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                         "Error",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
+
+                    return;
                 }
                 finally
                 {
@@ -210,14 +231,24 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                filteredServices = await _serviceService.GetActiveOrInactiveServicesAsync(false);
+                List<Service> inActiveServices = await _serviceService.GetActiveOrInactiveServicesAsync("notUsed");
 
                 dgvServices.AutoGenerateColumns = false;
-                dgvServices.DataSource = filteredServices;
+                dgvServices.DataSource = inActiveServices;
+
+                _commonHelper.EmptyListMessageBox(inActiveServices.Count(), "services");
+
+                ClearEditorBoxes();
+                dgvServices.ClearSelection();
 
                 SetDgvVisibility(false);
 
                 Cursor.Current = Cursors.Default;
+
+                pnlEditor.Visible = true;
+                pnlNewServiceBooking.Visible = false;
+                pnlStatusEditor.Visible = false;
+                pnlDeleteEditor.Visible = false;
             }
         }
 
@@ -233,16 +264,38 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = services;
 
+                _commonHelper.EmptyListMessageBox(services.Count(), "services");
+
+                ClearEditorBoxes();
+                dgvServices.ClearSelection();
+
                 SetDgvVisibility(false);
 
                 Cursor.Current = Cursors.Default;
+
+                pnlEditor.Visible = true;
+                pnlNewServiceBooking.Visible = false;
+                pnlStatusEditor.Visible = false;
+                pnlDeleteEditor.Visible = false;
             }
         }
 
         // 5.
         private async void chkShowHistory_CheckedChanged(object sender, EventArgs e)
         {
-            ApplyFiltersAsync();
+            try
+            {
+                await ApplyFiltersAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "An error occurred while applying filters: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         // 6.
@@ -259,19 +312,64 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             if (rbStatusActive.Checked)
             {
-                if(e.RowIndex >= 0)
+                if (e.RowIndex >= 0)
                 {
-                    RequestedService requested = dgvServices.Rows[e.RowIndex].DataBoundItem as RequestedService;
+                    _selectedRequestedService = dgvServices.Rows[e.RowIndex].DataBoundItem as RequestedService;
 
-                    lbUpdateServiceName.Text = requested.Name;
-                    lbUpdateServiceRoomNumber.Text = requested.RoomNumber.ToString();
-                    cbUpdateServiceStatus.SelectedItem = requested.CurrentServiceStatus;
+                    btnUpdateService.Enabled = _selectedRequestedService.CurrentServiceStatus == ServiceStatus.created ||
+                        _selectedRequestedService.CurrentServiceStatus == ServiceStatus.pending;
+
+                    cbNewStatus.Enabled = false;
+                    btnUpdateStatus.Enabled = false;
+
+                    if (!cbNewStatus.Items.Contains("Created") && !cbNewStatus.Items.Contains("Deleted"))
+                    {
+                        cbNewStatus.Items.Add("Created");
+                        cbNewStatus.Items.Add("Deleted");
+                    }
+
+                    if (_selectedRequestedService != null)
+                    {
+                        // UPDATE SERVICE PANEL
+                        lbServiceNameValue.Text = _selectedRequestedService.Name;
+                        lbRoomNumberValue.Text = _selectedRequestedService.RoomNumber.ToString();
+
+                        lbCurrentStatusValue.Text = _selectedRequestedService.CurrentServiceStatus switch
+                        {
+                            ServiceStatus.created => "CREATED",
+                            ServiceStatus.pending => "PENDING",
+                            ServiceStatus.deleted => "DELETED",
+                            ServiceStatus.completed => "COMPLETED"
+                        };
+
+                        cbNewStatus.Text = _selectedRequestedService.CurrentServiceStatus switch
+                        {
+                            ServiceStatus.created => "Created",
+                            ServiceStatus.pending => "Pending",
+                            ServiceStatus.deleted => "Deleted",
+                            ServiceStatus.completed => "Completed"
+                        };
+
+                        // DELETE SERVICE PANEL
+                        lbDeleteServiceNameValue.Text = _selectedRequestedService.Name;
+                        lbDeleteRoomNumberValue.Text = _selectedRequestedService.RoomNumber.ToString();
+                        lbDeleteQuantityValue.Text = _selectedRequestedService.Quantity.ToString();
+                        lbDeletePriceValue.Text = _selectedRequestedService.Price.ToString();
+                        lbDeleteCurrentStatusValue.Text = _selectedRequestedService.CurrentServiceStatus switch
+                        {
+                            ServiceStatus.created => "Created",
+                            ServiceStatus.pending => "Pending",
+                            ServiceStatus.deleted => "Deleted",
+                            ServiceStatus.completed => "Completed"
+                        };
+                        lbDeleteReqDateValue.Text = _selectedRequestedService.RequestedAt.ToString();
+                    }
                 }
             }
 
             else
             {
-                List<Service> actives = await _serviceService.GetActiveOrInactiveServicesAsync(true);
+                List<Service> actives = await _serviceService.GetActiveOrInactiveServicesAsync("active");
 
                 if (e.RowIndex >= 0)
                 {
@@ -307,32 +405,82 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         #region Actions buttons
         // 6.
-        private void btnNewService_Click(object sender, EventArgs e)
+        private async void btnNewService_Click(object sender, EventArgs e)
         {
-            _selectedService = null;
-
-            pnlSideBottom.Visible = true;
-
-            dgvServices.ClearSelection();
-
-            chkIsActive.Visible = false;
-            SetBoxesReadonlibility(false);
-
-            numPrice.Value = 0;
-            cbTypeHu.SelectedIndex = 0;
-            tbNameHu.Clear();
-            tbDescHu.Clear();
-
-            cbTypeEn.SelectedIndex = 0;
-            tbNameEn.Clear();
-            tbDescEn.Clear();
-
-            tabControlLang.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-
-            if (!resized)
+            if (rbStatusActive.Checked)
             {
-                tabControlLang.Height = tabControlLang.Height - 175;
-                resized = true;
+                pnlEditor.Visible = false;
+                pnlStatusEditor.Visible = false;
+                pnlDeleteEditor.Visible = false;
+
+                pnlNewServiceBooking.Visible = true;
+
+                dgvServices.ClearSelection();
+
+                _selectedRequestedService = null;
+
+                cbSelectRoom.Items.Clear();
+
+                List<Booking> bookings = await _bookingService.LoadDgvAsync();
+                List<Room> rooms = await _roomService.GetAllRoomsAsync();
+
+                List<Booking> currentBookings = bookings
+                    .Where(b => b.Checkin != null && b.Checkout == null)
+                    .ToList();
+
+                List<int> currentRoomNumbers = currentBookings
+                    .Select(c => c.RoomNumber)
+                    .ToList();
+
+                List<Room> currentRooms = rooms
+                    .Where(r => currentRoomNumbers.Contains(r.Room_number))
+                    .ToList();
+
+                foreach (var c in currentRooms)
+                {
+                    cbSelectRoom.Items.Add(c.Room_number.ToString());
+                }
+
+                cbSelectService.Items.Clear();
+                foreach (var s in services)
+                {
+                    cbSelectService.Items.Add(s.NameEn);
+                }
+            }
+
+            else
+            {
+                pnlStatusEditor.Visible = false;
+                pnlNewServiceBooking.Visible = false;
+
+                pnlEditor.Visible = true;
+
+
+                _selectedService = null;
+
+                pnlSideBottom.Visible = true;
+
+                dgvServices.ClearSelection();
+
+                chkIsActive.Visible = false;
+                SetBoxesReadonlibility(false);
+
+                numPrice.Value = 0;
+                cbTypeHu.SelectedIndex = 0;
+                tbNameHu.Clear();
+                tbDescHu.Clear();
+
+                cbTypeEn.SelectedIndex = 0;
+                tbNameEn.Clear();
+                tbDescEn.Clear();
+
+                tabControlLang.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+                if (!resized)
+                {
+                    tabControlLang.Height = tabControlLang.Height - 175;
+                    resized = true;
+                }
             }
         }
 
@@ -353,89 +501,287 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 8.
         private async void btnUpdateService_Click(object sender, EventArgs e)
         {
-            if (_selectedService == null)
+            if (rbStatusActive.Checked)
             {
-                MessageBox.Show(
-                    "You must select a service first!",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                MBSelectionRequired(_selectedRequestedService);
 
-                return;
+                if (_selectedRequestedService != null)
+                {
+                    pnlEditor.Visible = false;
+                    pnlNewServiceBooking.Visible = false;
+                    pnlDeleteEditor.Visible = false;
+                    pnlStatusEditor.Visible = true;
+
+                    btnUpdateStatus.Enabled = true;
+                    cbNewStatus.Enabled = true;
+
+                    cbNewStatus.Items.Remove("Created");
+                    cbNewStatus.Items.Remove("Deleted");
+
+                    cbNewStatus.Text = _selectedRequestedService.CurrentServiceStatus switch
+                    {
+                        ServiceStatus.created => "Pending",
+                        ServiceStatus.pending => "Completed"
+                    };
+                }
             }
 
-            SetBoxesReadonlibility(false);
-
-            tabControlLang.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-
-            if (!resized)
+            else
             {
-                tabControlLang.Height = tabControlLang.Height - 175;
-                resized = true;
-            }
+                pnlStatusEditor.Visible = false;
+                pnlNewServiceBooking.Visible = false;
 
-            pnlSideBottom.Visible = true;
+                pnlEditor.Visible = true;
+
+                MBSelectionRequired(_selectedService);
+
+                SetBoxesReadonlibility(false);
+
+                tabControlLang.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+                if (!resized)
+                {
+                    tabControlLang.Height = tabControlLang.Height - 175;
+                    resized = true;
+                }
+
+                pnlSideBottom.Visible = true;
+            }
         }
 
         // 9.
         private async void btnDeleteService_Click(object sender, EventArgs e)
         {
-            if (_selectedService == null)
+            // AKTÍV SERVICE BOOKINGS
+            if (rbStatusActive.Checked)
+            {
+                MBSelectionRequired(_selectedRequestedService);
+
+                if (_selectedRequestedService != null)
+                {
+                    pnlEditor.Visible = false;
+                    pnlNewServiceBooking.Visible = false;
+                    pnlStatusEditor.Visible = false;
+                    pnlDeleteEditor.Visible = true;
+
+                    if (_selectedRequestedService.CurrentServiceStatus == ServiceStatus.completed
+                    || _selectedRequestedService.CurrentServiceStatus == ServiceStatus.deleted)
+                    {
+                        MBCantDeleteService(_selectedRequestedService);
+                    }
+                }
+            }
+
+            // MINDEN SERVICE
+            else
+            {
+                MBSelectionRequired(_selectedService);
+
+                DialogResult result = MessageBox.Show(
+                    "Are you sure you want to delete this service?",
+                    "Confirmation",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (result == DialogResult.No) return;
+
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    await _serviceService.DeleteSelectedServiceFromDbAsync(_selectedService);
+
+                    MBSuccessfulDbAction();
+                }
+                catch (Exception ex)
+                {
+                    _commonHelper.MBErrorMessage(ex);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+
+                    services = await _serviceService.GetAllServicesFromDbAsync();
+                    dgvServices.AutoGenerateColumns = false;
+                    dgvServices.DataSource = services;
+
+                    _selectedService = null;
+                    dgvServices.ClearSelection();
+                }
+            }
+        }
+
+        // 10.
+        private async void btnUpdateStatus_Click(object sender, EventArgs e)
+        {
+            if (cbNewStatus.Text.ToLower() == _selectedRequestedService.CurrentServiceStatus.ToString())
             {
                 MessageBox.Show(
-                    "You must select a service first!",
-                    "Error",
+                    "No changes were made",
+                    "No Changes Detected",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
+                    MessageBoxIcon.Information);
+
+                return;
+            }
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                if (Enum.TryParse<ServiceStatus>(cbNewStatus.Text, true, out var serviceStatus))
+                {
+                    _selectedRequestedService.CurrentServiceStatus = serviceStatus;
+                }
+
+                await _serviceService.UpdateServiceBookingStatusAsync(_selectedRequestedService);
+
+                MBSuccessfulDbAction(default, "updated");
+
+                List<RequestedService> source = await _serviceService.GetServiceDataByServicebookingAsync(chkShowHistory.Checked);
+                List<RequestedService> orderedSource = rbOrderBy.Checked
+                    ? source.OrderBy(s => s.RequestedAt).ToList()
+                    : source.OrderByDescending(s => s.RequestedAt).ToList();
+
+                dgvServices.DataSource = null;
+                dgvServices.DataSource = orderedSource;
+                dgvServices.ClearSelection();
+
+                RefreshActiveOrInactiveCountAsync();
+            }
+            catch (Exception ex)
+            {
+                _commonHelper.MBErrorMessage(ex);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        // 11.
+        private async void btnAddBooking_Click(object sender, EventArgs e)
+        {
+            string name = cbSelectService.Text;
+
+            Service? selectedService = services.Find(s =>
+                string.Equals(s.NameEn, name, StringComparison.OrdinalIgnoreCase));
+
+            if (selectedService == null)
+            {
+                MessageBox.Show(
+                    "The selected service does not exist. Please choose a valid service from the list.",
+                    "Service Not Found",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
+                return;
+            }
+
+            if (!int.TryParse(cbSelectRoom.Text, out int roomNumber))
+            {
+                MessageBox.Show(
+                    "Please select a room.",
+                    "Room Required",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
                 );
 
                 return;
             }
 
             DialogResult result = MessageBox.Show(
-                "Are you sure you want to delete this service?",
+                "Are you sure all the details are correct?",
                 "Confirmation",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
-            );
-
-            if (result == DialogResult.No) return;
-
-            try
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                await _serviceService.DeleteSelectedServiceFromDbAsync(_selectedService);
-
-                MessageBox.Show(
-                    "Service deleted successfully",
-                    "Information",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
                 );
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    "An error occurred while trying to delete this service: " + ex.Message,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
 
-                services = await _serviceService.GetAllServicesFromDbAsync();
-                dgvServices.AutoGenerateColumns = false;
-                dgvServices.DataSource = services;
+            if (result == DialogResult.No)
+            {
+                return;
+            }
 
-                _selectedService = null;
+            else
+            {
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    ServiceBooking sb = await MakeNewServiceBookingAsync(roomNumber, selectedService);
+
+                    await _serviceService.SaveNewServiceBookingAsync(sb);
+
+                    MBSuccessfulDbAction(default, "saved");
+
+                    serviceBookings = await _serviceService.GetServiceDataByServicebookingAsync(chkShowHistory.Checked);
+
+                    dgvServices.DataSource = null;
+                    dgvServices.DataSource = serviceBookings;
+                    dgvServices.ClearSelection();
+                    RefreshActiveOrInactiveCountAsync();
+                }
+                catch (Exception ex)
+                {
+                    _commonHelper.MBErrorMessage(ex);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
 
+        // 12.
+        private async void btnDeleteServiceBooking_Click(object sender, EventArgs e)
+        {
+            bool isPending = _selectedRequestedService?.CurrentServiceStatus == ServiceStatus.pending;
+
+            string message = isPending
+                ? "This service booking is currently pending. Are you sure you want to delete it?"
+                : "Are you sure you want to delete this service booking?";
+
+            string title = isPending
+                ? "Delete Pending Service Booking"
+                : "Delete Service Booking";
+
+            DialogResult result = MessageBox.Show(
+                message,
+                title,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    if(_selectedRequestedService != null)
+                    {
+                        await _serviceService.SetServiceBookingStatusToDeletedAsync(_selectedRequestedService.Id);
+
+                        MBSuccessfulDbAction();
+
+                        pnlDeleteEditor.Visible = false;
+                        pnlStatusEditor.Visible = true;
+
+                        await ReloadDbDataSourceAsync();
+                        await RefreshActiveOrInactiveCountAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _commonHelper.MBErrorMessage(ex);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+        }
         #endregion
 
         #region Refresh buttons
@@ -449,6 +795,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             dgvServices.AutoGenerateColumns = false;
             dgvServices.DataSource = services;
             _selectedService = null;
+            dgvServices.ClearSelection();
 
             SetDgvVisibility(false);
         }
@@ -477,6 +824,36 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private void cbTypeEn_SelectedIndexChanged(object sender, EventArgs e)
         {
             cbTypeHu.SelectedIndex = cbTypeEn.SelectedIndex;
+        }
+
+        // 10.
+        private void cbSelectService_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _selectedServiceForServiceBooking = services.Find(s =>
+                string.Equals(s.NameEn, cbSelectService.Text, StringComparison.OrdinalIgnoreCase));
+
+            if (_selectedServiceForServiceBooking != null)
+            {
+                RefreshNewServiceBookingPrice(_selectedServiceForServiceBooking);
+            }
+        }
+
+        // 11.
+        private void numQuantity_ValueChanged(object sender, EventArgs e)
+        {
+            if (cbSelectService.SelectedItem != null)
+            {
+                RefreshNewServiceBookingPrice(_selectedServiceForServiceBooking);
+            }
+        }
+
+        // 12.
+        private void btnNewServiceClear_Click(object sender, EventArgs e)
+        {
+            cbSelectRoom.SelectedIndex = -1;
+            cbSelectService.Text = "";
+            numQuantity.Value = 1;
+            lbTotalPriceValue.Text = "0 HUF";
         }
 
         #endregion
@@ -647,6 +1024,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 services = await _serviceService.GetAllServicesFromDbAsync();
                 dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = services;
+
+                dgvServices.ClearSelection();
             }
             catch (Exception ex)
             {
@@ -680,6 +1059,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 colRoomNumber.Visible = true;
                 colStatus.Visible = true;
                 colRequestDate.Visible = true;
+                colQuantity.Visible = true;
 
                 colNameHu.Visible = false;
                 colTypeHu.Visible = false;
@@ -688,14 +1068,16 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                 dgvServices.Columns["colNameEn"].DisplayIndex = 4;
                 dgvServices.Columns["colTypeEn"].DisplayIndex = 5;
-                dgvServices.Columns["colPrice"].DisplayIndex = 6;
+                dgvServices.Columns["colQuantity"].DisplayIndex = 6;
+                dgvServices.Columns["colPrice"].DisplayIndex = 7;
 
                 colNameEn.DataPropertyName = "Name";
                 colTypeEn.DataPropertyName = "SelectedServiceType";
 
-                colNameEn.FillWeight = 150;
+                colNameEn.FillWeight = 100;
                 colTypeEn.FillWeight = 80;
                 colPrice.FillWeight = 60;
+                colQuantity.FillWeight = 50;
 
                 lbRoomNumber.Visible = true;
                 cbRoomNumbers.Visible = true;
@@ -705,18 +1087,15 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 cbTypeFilter.Visible = false;
                 lbTypeFilter.Visible = false;
 
-                btnNewService.Enabled = false;
-                btnUpdateService.Enabled = false;
-                btnDeleteService.Enabled = false;
-
                 lbHistory.Visible = true;
                 chkShowHistory.Visible = true;
                 pnlRbHolder.Visible = true;
 
-                pnlStatusEditor.Visible = true;
                 pnlEditor.Visible = false;
 
                 btnSearch.Location = new Point(btnSearch.Location.X - 205, btnSearch.Location.Y);
+
+                _selectedRequestedService = null;
             }
 
             else
@@ -724,6 +1103,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 colRoomNumber.Visible = false;
                 colStatus.Visible = false;
                 colRequestDate.Visible = false;
+                colQuantity.Visible = false;
 
                 colNameHu.Visible = true;
                 colTypeHu.Visible = true;
@@ -749,15 +1129,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 cbTypeFilter.Visible = true;
                 lbTypeFilter.Visible = true;
 
-                btnNewService.Enabled = true;
-                btnUpdateService.Enabled = true;
-                btnDeleteService.Enabled = true;
-
                 lbHistory.Visible = false;
                 chkShowHistory.Visible = false;
                 pnlRbHolder.Visible = false;
 
-                pnlStatusEditor.Visible = false;
                 pnlEditor.Visible = true;
 
                 if (btnSearch.Location.X < 435)
@@ -767,7 +1142,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             }
         }
 
-        private async void ApplyFiltersAsync()
+        private async Task ApplyFiltersAsync()
         {
             bool includeHistory = chkShowHistory.Checked;
             serviceBookings = await _serviceService.GetServiceDataByServicebookingAsync(includeHistory);
@@ -786,8 +1161,133 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             dgvServices.DataSource = null;
             dgvServices.DataSource = result;
+
+            dgvServices.ClearSelection();
         }
 
+        private void ClearEditorBoxes()
+        {
+            tbNameHu.Clear();
+            tbNameEn.Clear();
+            cbTypeHu.SelectedIndex = 0;
+            cbTypeEn.SelectedIndex = 0;
+            tbDescHu.Clear();
+            tbDescEn.Clear();
+            numPrice.Value = 0;
+            chkIsActive.Checked = false;
+        }
+
+        private void RefreshNewServiceBookingPrice(Service selectedService)
+        {
+            if (selectedService != null)
+            {
+                int price = (int)selectedService.Price * (int)numQuantity.Value;
+
+                lbTotalPriceValue.Text = $"{price} HUF";
+            }
+        }
+
+        private async Task RefreshActiveOrInactiveCountAsync()
+        {
+            List<RequestedService> activesList = await _serviceService.GetServiceDataByServicebookingAsync(false);
+
+            lbTotalServices.Text = "Total services: " + services.Count();
+            lbActiveServices.Text = "In progress: " + activesList.Count();
+        }
+
+        private void MBSelectionRequired(object obj)
+        {
+            if (obj == null)
+            {
+                MessageBox.Show(
+                    "You must select a service first!",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+
+                return;
+            }
+        }
+
+        private void MBCantDeleteService(RequestedService service)
+        {
+            string mbStatus = service.CurrentServiceStatus switch
+            {
+                ServiceStatus.completed => "completed",
+                ServiceStatus.deleted => "deleted",
+                _ => "unknown"
+            };
+
+            MessageBox.Show(
+                $"Cannot delete this service booking because it is already {mbStatus}.",
+                "Cannot Delete Booking",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+
+            return;
+        }
+
+        private void MBSuccessfulDbAction(Status status = Status.deleted, string statusString = "")
+        {
+            if (statusString != "")
+            {
+                MessageBox.Show(
+                    $"Service booking {statusString.ToString()} successfully.",
+                    "Success",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+
+            else
+            {
+                MessageBox.Show(
+                    $"Service booking {status.ToString()} successfully.",
+                    "Success",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+        private async Task<ServiceBooking> MakeNewServiceBookingAsync(int roomNumber, Service selectedService)
+        {
+            List<Booking> bookings = await _bookingService.LoadDgvAsync();
+            Booking? selectedBooking = bookings.Find(b =>
+                b.RoomNumber == roomNumber &&
+                b.Checkin.HasValue &&
+                !b.Checkout.HasValue
+            );
+
+            int price = (int)selectedService.Price * (int)numQuantity.Value;
+
+            ServiceBooking sb = new ServiceBooking(
+                0,
+                selectedBooking.Id,
+                selectedService.Id,
+                DateTime.Now,
+                DateTime.Now,
+                (int)numQuantity.Value,
+                Status.created,
+                price
+            );
+
+            return sb;
+        }
+
+        private async Task ReloadDbDataSourceAsync()
+        {
+            List<RequestedService> source = await _serviceService.GetServiceDataByServicebookingAsync(chkShowHistory.Checked);
+            List<RequestedService> orderedSource = rbOrderBy.Checked
+                ? source.OrderBy(s => s.RequestedAt).ToList()
+                : source.OrderByDescending(s => s.RequestedAt).ToList();
+
+            dgvServices.DataSource = null;
+            dgvServices.DataSource = orderedSource;
+
+            _selectedRequestedService = null;
+
+            dgvServices.ClearSelection();
+        }
         #endregion
     }
 }

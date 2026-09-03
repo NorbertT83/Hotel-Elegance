@@ -1,4 +1,5 @@
-﻿using Hotel_erp_Winforms_App.Models;
+﻿using Hotel_erp_Winforms_App.Helpers;
+using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
         #region variables
 
         private List<Room> _roomsList = new List<Room>();
+
         private RoomService _roomService = new RoomService();
+        private CommonHelper _commonHelper = new CommonHelper();
+
         private Room? _selectedRoom;
         private bool _isAddingNew = false;
 
@@ -95,16 +99,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
                     cbStatusFilter.SelectedItem?.ToString() ?? "All Statuses"
                 );
 
-                if (_roomsList.Count == 0)
-                {
-                    MessageBox.Show(
-                        "No matching rooms found.",
-                        "Search Results",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-
-                    return;
-                }
+                _commonHelper.EmptyListMessageBox(_roomsList.Count(), "rooms");
 
                 dgvRooms.DataSource = _roomsList;
                 UpdateKpis();

@@ -1,4 +1,4 @@
-﻿namespace Hotel_erp_Winforms_App.UI.Controls
+﻿ namespace Hotel_erp_Winforms_App.UI.Controls
 {
     partial class ProductContol
     {
@@ -68,6 +68,7 @@
             colNameHu = new DataGridViewTextBoxColumn();
             colTypeHu = new DataGridViewTextBoxColumn();
             colDescHu = new DataGridViewTextBoxColumn();
+            colQuantity = new DataGridViewTextBoxColumn();
             colPrice = new DataGridViewTextBoxColumn();
             colNameEn = new DataGridViewTextBoxColumn();
             colTypeEn = new DataGridViewTextBoxColumn();
@@ -95,14 +96,46 @@
             lbServiceDetails = new Label();
             lbPrice = new Label();
             pnlStatusEditor = new Panel();
-            btnUpdateServiceStatus = new Button();
-            cbUpdateServiceStatus = new ComboBox();
-            lbUpdateServiceRoomNumberTitle = new Label();
-            lbUpdateServiceName = new Label();
-            lbUpdateServiceRoomNumber = new Label();
-            lbUpdateServiceNameTitle = new Label();
-            lbUpdateServiceStatusTitle = new Label();
-            lpUpdateServiceStatus = new Label();
+            pnlStatusBottom = new Panel();
+            btnUpdateStatus = new Button();
+            cbNewStatus = new ComboBox();
+            lbNewStatusTitle = new Label();
+            lbCurrentStatusValue = new Label();
+            lbCurrentStatusTitle = new Label();
+            lbRoomNumberValue = new Label();
+            lbRoomNumberTitle = new Label();
+            lbServiceNameValue = new Label();
+            lbServiceNameTitle = new Label();
+            lbStatusEditorHeader = new Label();
+            pnlNewServiceBooking = new Panel();
+            pnlBookingBottom = new Panel();
+            btnAddBooking = new Button();
+            lbTotalPriceValue = new Label();
+            lbTotalPriceTitle = new Label();
+            numQuantity = new NumericUpDown();
+            lbQuantityTitle = new Label();
+            cbSelectService = new ComboBox();
+            lbSelectServiceTitle = new Label();
+            cbSelectRoom = new ComboBox();
+            lbSelectRoomTitle = new Label();
+            lbBookingHeader = new Label();
+            btnNewServiceClear = new Button();
+            pnlDeleteEditor = new Panel();
+            pnlDeleteBottom = new Panel();
+            btnDeleteServiceBooking = new Button();
+            lbDeleteReqDateValue = new Label();
+            lbDeleteReqDateTitle = new Label();
+            lbDeletePriceValue = new Label();
+            lbDeletePriceTitle = new Label();
+            lbDeleteQuantityValue = new Label();
+            lbDeleteQuantityTitle = new Label();
+            lbDeleteCurrentStatusValue = new Label();
+            lbDeleteCurrentStatusTitle = new Label();
+            lbDeleteRoomNumberValue = new Label();
+            lbDeleteRoomNumberTitle = new Label();
+            lbDeleteServiceNameValue = new Label();
+            lbDeleteServiceNameTitle = new Label();
+            lbDeleteEditorHeader = new Label();
             pnlTop.SuspendLayout();
             pnlRbHolder.SuspendLayout();
             pnlGrid.SuspendLayout();
@@ -114,6 +147,12 @@
             tabEn.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numPrice).BeginInit();
             pnlStatusEditor.SuspendLayout();
+            pnlStatusBottom.SuspendLayout();
+            pnlNewServiceBooking.SuspendLayout();
+            pnlBookingBottom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numQuantity).BeginInit();
+            pnlDeleteEditor.SuspendLayout();
+            pnlDeleteBottom.SuspendLayout();
             SuspendLayout();
             // 
             // pnlTop
@@ -413,9 +452,9 @@
             rbStatusActive.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             rbStatusActive.Location = new Point(560, 57);
             rbStatusActive.Name = "rbStatusActive";
-            rbStatusActive.Size = new Size(64, 21);
+            rbStatusActive.Size = new Size(83, 21);
             rbStatusActive.TabIndex = 5;
-            rbStatusActive.Text = "Active";
+            rbStatusActive.Text = "Bookings";
             rbStatusActive.UseVisualStyleBackColor = true;
             rbStatusActive.CheckedChanged += rbStatusActive_CheckedChanged;
             // 
@@ -491,7 +530,7 @@
             dgvServices.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = Color.FromArgb(24, 60, 142);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.75F);
             dataGridViewCellStyle2.ForeColor = Color.White;
             dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(24, 60, 142);
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
@@ -499,7 +538,7 @@
             dgvServices.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvServices.ColumnHeadersHeight = 40;
             dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgvServices.Columns.AddRange(new DataGridViewColumn[] { colId, colRoomNumber, colStatus, colRequestDate, colNameHu, colTypeHu, colDescHu, colPrice, colNameEn, colTypeEn, colDescEn });
+            dgvServices.Columns.AddRange(new DataGridViewColumn[] { colId, colRoomNumber, colStatus, colRequestDate, colNameHu, colTypeHu, colDescHu, colQuantity, colPrice, colNameEn, colTypeEn, colDescEn });
             dgvServices.Dock = DockStyle.Fill;
             dgvServices.EnableHeadersVisualStyles = false;
             dgvServices.GridColor = SystemColors.ControlLight;
@@ -578,6 +617,14 @@
             colDescHu.HeaderText = "Description (HU)";
             colDescHu.Name = "colDescHu";
             colDescHu.ReadOnly = true;
+            // 
+            // colQuantity
+            // 
+            colQuantity.DataPropertyName = "Quantity";
+            colQuantity.HeaderText = "Quantity";
+            colQuantity.Name = "colQuantity";
+            colQuantity.ReadOnly = true;
+            colQuantity.Visible = false;
             // 
             // colPrice
             // 
@@ -871,107 +918,493 @@
             // 
             // pnlStatusEditor
             // 
-            pnlStatusEditor.Controls.Add(btnUpdateServiceStatus);
-            pnlStatusEditor.Controls.Add(cbUpdateServiceStatus);
-            pnlStatusEditor.Controls.Add(lbUpdateServiceRoomNumberTitle);
-            pnlStatusEditor.Controls.Add(lbUpdateServiceName);
-            pnlStatusEditor.Controls.Add(lbUpdateServiceRoomNumber);
-            pnlStatusEditor.Controls.Add(lbUpdateServiceNameTitle);
-            pnlStatusEditor.Controls.Add(lbUpdateServiceStatusTitle);
-            pnlStatusEditor.Controls.Add(lpUpdateServiceStatus);
-            pnlStatusEditor.Location = new Point(1371, 7);
+            pnlStatusEditor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            pnlStatusEditor.BorderStyle = BorderStyle.FixedSingle;
+            pnlStatusEditor.Controls.Add(pnlStatusBottom);
+            pnlStatusEditor.Controls.Add(cbNewStatus);
+            pnlStatusEditor.Controls.Add(lbNewStatusTitle);
+            pnlStatusEditor.Controls.Add(lbCurrentStatusValue);
+            pnlStatusEditor.Controls.Add(lbCurrentStatusTitle);
+            pnlStatusEditor.Controls.Add(lbRoomNumberValue);
+            pnlStatusEditor.Controls.Add(lbRoomNumberTitle);
+            pnlStatusEditor.Controls.Add(lbServiceNameValue);
+            pnlStatusEditor.Controls.Add(lbServiceNameTitle);
+            pnlStatusEditor.Controls.Add(lbStatusEditorHeader);
+            pnlStatusEditor.Location = new Point(1371, 10);
+            pnlStatusEditor.Margin = new Padding(0);
             pnlStatusEditor.Name = "pnlStatusEditor";
-            pnlStatusEditor.Padding = new Padding(10);
-            pnlStatusEditor.Size = new Size(355, 609);
-            pnlStatusEditor.TabIndex = 6;
+            pnlStatusEditor.Size = new Size(355, 610);
+            pnlStatusEditor.TabIndex = 2;
             pnlStatusEditor.Visible = false;
             // 
-            // btnUpdateServiceStatus
+            // pnlStatusBottom
             // 
-            btnUpdateServiceStatus.BackColor = Color.DarkGreen;
-            btnUpdateServiceStatus.FlatStyle = FlatStyle.Flat;
-            btnUpdateServiceStatus.Font = new Font("Segoe UI", 15F);
-            btnUpdateServiceStatus.ForeColor = Color.White;
-            btnUpdateServiceStatus.Location = new Point(20, 200);
-            btnUpdateServiceStatus.Name = "btnUpdateServiceStatus";
-            btnUpdateServiceStatus.Size = new Size(315, 50);
-            btnUpdateServiceStatus.TabIndex = 2;
-            btnUpdateServiceStatus.Text = "Update";
-            btnUpdateServiceStatus.UseVisualStyleBackColor = false;
+            pnlStatusBottom.Controls.Add(btnUpdateStatus);
+            pnlStatusBottom.Dock = DockStyle.Bottom;
+            pnlStatusBottom.Location = new Point(0, 428);
+            pnlStatusBottom.Name = "pnlStatusBottom";
+            pnlStatusBottom.Padding = new Padding(15, 65, 15, 65);
+            pnlStatusBottom.Size = new Size(353, 180);
+            pnlStatusBottom.TabIndex = 2;
             // 
-            // cbUpdateServiceStatus
+            // btnUpdateStatus
             // 
-            cbUpdateServiceStatus.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbUpdateServiceStatus.Font = new Font("Segoe UI", 15F);
-            cbUpdateServiceStatus.FormattingEnabled = true;
-            cbUpdateServiceStatus.Items.AddRange(new object[] { "pending", "completed" });
-            cbUpdateServiceStatus.Location = new Point(85, 132);
-            cbUpdateServiceStatus.Name = "cbUpdateServiceStatus";
-            cbUpdateServiceStatus.Size = new Size(258, 36);
-            cbUpdateServiceStatus.TabIndex = 1;
+            btnUpdateStatus.BackColor = Color.FromArgb(24, 60, 142);
+            btnUpdateStatus.Dock = DockStyle.Fill;
+            btnUpdateStatus.FlatAppearance.BorderSize = 0;
+            btnUpdateStatus.FlatStyle = FlatStyle.Flat;
+            btnUpdateStatus.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnUpdateStatus.ForeColor = Color.White;
+            btnUpdateStatus.Location = new Point(15, 65);
+            btnUpdateStatus.Name = "btnUpdateStatus";
+            btnUpdateStatus.Size = new Size(323, 50);
+            btnUpdateStatus.TabIndex = 0;
+            btnUpdateStatus.Text = "UPDATE STATUS";
+            btnUpdateStatus.UseVisualStyleBackColor = false;
+            btnUpdateStatus.Click += btnUpdateStatus_Click;
             // 
-            // lbUpdateServiceRoomNumberTitle
+            // cbNewStatus
             // 
-            lbUpdateServiceRoomNumberTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbUpdateServiceRoomNumberTitle.ForeColor = Color.Black;
-            lbUpdateServiceRoomNumberTitle.Location = new Point(10, 85);
-            lbUpdateServiceRoomNumberTitle.Name = "lbUpdateServiceRoomNumberTitle";
-            lbUpdateServiceRoomNumberTitle.Size = new Size(110, 20);
-            lbUpdateServiceRoomNumberTitle.TabIndex = 0;
-            lbUpdateServiceRoomNumberTitle.Text = "Room number:";
+            cbNewStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbNewStatus.Enabled = false;
+            cbNewStatus.Font = new Font("Segoe UI", 14F);
+            cbNewStatus.FormattingEnabled = true;
+            cbNewStatus.Items.AddRange(new object[] { "Created", "Deleted", "Pending", "Completed" });
+            cbNewStatus.Location = new Point(15, 255);
+            cbNewStatus.Name = "cbNewStatus";
+            cbNewStatus.Size = new Size(323, 33);
+            cbNewStatus.TabIndex = 1;
             // 
-            // lbUpdateServiceName
+            // lbNewStatusTitle
             // 
-            lbUpdateServiceName.AutoSize = true;
-            lbUpdateServiceName.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbUpdateServiceName.ForeColor = Color.Black;
-            lbUpdateServiceName.Location = new Point(75, 50);
-            lbUpdateServiceName.Name = "lbUpdateServiceName";
-            lbUpdateServiceName.Size = new Size(53, 19);
-            lbUpdateServiceName.TabIndex = 0;
-            lbUpdateServiceName.Text = "Name:";
+            lbNewStatusTitle.AutoSize = true;
+            lbNewStatusTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbNewStatusTitle.Location = new Point(15, 230);
+            lbNewStatusTitle.Name = "lbNewStatusTitle";
+            lbNewStatusTitle.Size = new Size(131, 19);
+            lbNewStatusTitle.TabIndex = 3;
+            lbNewStatusTitle.Text = "Select New Status:";
             // 
-            // lbUpdateServiceRoomNumber
+            // lbCurrentStatusValue
             // 
-            lbUpdateServiceRoomNumber.AutoSize = true;
-            lbUpdateServiceRoomNumber.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbUpdateServiceRoomNumber.ForeColor = Color.Black;
-            lbUpdateServiceRoomNumber.Location = new Point(130, 85);
-            lbUpdateServiceRoomNumber.Name = "lbUpdateServiceRoomNumber";
-            lbUpdateServiceRoomNumber.Size = new Size(53, 19);
-            lbUpdateServiceRoomNumber.TabIndex = 0;
-            lbUpdateServiceRoomNumber.Text = "Name:";
+            lbCurrentStatusValue.AutoSize = true;
+            lbCurrentStatusValue.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lbCurrentStatusValue.ForeColor = Color.FromArgb(217, 83, 79);
+            lbCurrentStatusValue.Location = new Point(15, 178);
+            lbCurrentStatusValue.Name = "lbCurrentStatusValue";
+            lbCurrentStatusValue.Size = new Size(122, 21);
+            lbCurrentStatusValue.TabIndex = 4;
+            lbCurrentStatusValue.Text = "NOT SELECTED";
             // 
-            // lbUpdateServiceNameTitle
+            // lbCurrentStatusTitle
             // 
-            lbUpdateServiceNameTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbUpdateServiceNameTitle.ForeColor = Color.Black;
-            lbUpdateServiceNameTitle.Location = new Point(10, 50);
-            lbUpdateServiceNameTitle.Name = "lbUpdateServiceNameTitle";
-            lbUpdateServiceNameTitle.Size = new Size(55, 20);
-            lbUpdateServiceNameTitle.TabIndex = 0;
-            lbUpdateServiceNameTitle.Text = "Name:";
+            lbCurrentStatusTitle.AutoSize = true;
+            lbCurrentStatusTitle.Font = new Font("Segoe UI", 9F);
+            lbCurrentStatusTitle.ForeColor = Color.Gray;
+            lbCurrentStatusTitle.Location = new Point(15, 160);
+            lbCurrentStatusTitle.Name = "lbCurrentStatusTitle";
+            lbCurrentStatusTitle.Size = new Size(85, 15);
+            lbCurrentStatusTitle.TabIndex = 5;
+            lbCurrentStatusTitle.Text = "Current Status:";
             // 
-            // lbUpdateServiceStatusTitle
+            // lbRoomNumberValue
             // 
-            lbUpdateServiceStatusTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbUpdateServiceStatusTitle.ForeColor = Color.Black;
-            lbUpdateServiceStatusTitle.Location = new Point(10, 140);
-            lbUpdateServiceStatusTitle.Name = "lbUpdateServiceStatusTitle";
-            lbUpdateServiceStatusTitle.Size = new Size(65, 20);
-            lbUpdateServiceStatusTitle.TabIndex = 0;
-            lbUpdateServiceStatusTitle.Text = "STATUS:";
+            lbRoomNumberValue.AutoSize = true;
+            lbRoomNumberValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbRoomNumberValue.Location = new Point(15, 123);
+            lbRoomNumberValue.Name = "lbRoomNumberValue";
+            lbRoomNumberValue.Size = new Size(31, 20);
+            lbRoomNumberValue.TabIndex = 6;
+            lbRoomNumberValue.Text = "  -  ";
             // 
-            // lpUpdateServiceStatus
+            // lbRoomNumberTitle
             // 
-            lpUpdateServiceStatus.AutoSize = true;
-            lpUpdateServiceStatus.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            lpUpdateServiceStatus.ForeColor = Color.FromArgb(24, 60, 142);
-            lpUpdateServiceStatus.Location = new Point(10, 10);
-            lpUpdateServiceStatus.Name = "lpUpdateServiceStatus";
-            lpUpdateServiceStatus.Size = new Size(187, 20);
-            lpUpdateServiceStatus.TabIndex = 0;
-            lpUpdateServiceStatus.Text = "UPDATE SERVICE STATUS";
+            lbRoomNumberTitle.AutoSize = true;
+            lbRoomNumberTitle.Font = new Font("Segoe UI", 9F);
+            lbRoomNumberTitle.ForeColor = Color.Gray;
+            lbRoomNumberTitle.Location = new Point(15, 105);
+            lbRoomNumberTitle.Name = "lbRoomNumberTitle";
+            lbRoomNumberTitle.Size = new Size(89, 15);
+            lbRoomNumberTitle.TabIndex = 7;
+            lbRoomNumberTitle.Text = "Room Number:";
+            // 
+            // lbServiceNameValue
+            // 
+            lbServiceNameValue.AutoSize = true;
+            lbServiceNameValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbServiceNameValue.Location = new Point(15, 68);
+            lbServiceNameValue.Name = "lbServiceNameValue";
+            lbServiceNameValue.Size = new Size(97, 20);
+            lbServiceNameValue.TabIndex = 8;
+            lbServiceNameValue.Text = "Not selected";
+            // 
+            // lbServiceNameTitle
+            // 
+            lbServiceNameTitle.AutoSize = true;
+            lbServiceNameTitle.Font = new Font("Segoe UI", 9F);
+            lbServiceNameTitle.ForeColor = Color.Gray;
+            lbServiceNameTitle.Location = new Point(15, 50);
+            lbServiceNameTitle.Name = "lbServiceNameTitle";
+            lbServiceNameTitle.Size = new Size(82, 15);
+            lbServiceNameTitle.TabIndex = 9;
+            lbServiceNameTitle.Text = "Service Name:";
+            // 
+            // lbStatusEditorHeader
+            // 
+            lbStatusEditorHeader.AutoSize = true;
+            lbStatusEditorHeader.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbStatusEditorHeader.ForeColor = Color.FromArgb(24, 60, 142);
+            lbStatusEditorHeader.Location = new Point(15, 15);
+            lbStatusEditorHeader.Name = "lbStatusEditorHeader";
+            lbStatusEditorHeader.Size = new Size(125, 20);
+            lbStatusEditorHeader.TabIndex = 0;
+            lbStatusEditorHeader.Text = "UPDATE STATUS";
+            // 
+            // pnlNewServiceBooking
+            // 
+            pnlNewServiceBooking.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            pnlNewServiceBooking.BorderStyle = BorderStyle.FixedSingle;
+            pnlNewServiceBooking.Controls.Add(pnlBookingBottom);
+            pnlNewServiceBooking.Controls.Add(lbTotalPriceValue);
+            pnlNewServiceBooking.Controls.Add(lbTotalPriceTitle);
+            pnlNewServiceBooking.Controls.Add(numQuantity);
+            pnlNewServiceBooking.Controls.Add(lbQuantityTitle);
+            pnlNewServiceBooking.Controls.Add(cbSelectService);
+            pnlNewServiceBooking.Controls.Add(lbSelectServiceTitle);
+            pnlNewServiceBooking.Controls.Add(cbSelectRoom);
+            pnlNewServiceBooking.Controls.Add(lbSelectRoomTitle);
+            pnlNewServiceBooking.Controls.Add(lbBookingHeader);
+            pnlNewServiceBooking.Controls.Add(btnNewServiceClear);
+            pnlNewServiceBooking.Location = new Point(1372, 10);
+            pnlNewServiceBooking.Margin = new Padding(0);
+            pnlNewServiceBooking.Name = "pnlNewServiceBooking";
+            pnlNewServiceBooking.Size = new Size(355, 610);
+            pnlNewServiceBooking.TabIndex = 4;
+            pnlNewServiceBooking.Visible = false;
+            // 
+            // pnlBookingBottom
+            // 
+            pnlBookingBottom.Controls.Add(btnAddBooking);
+            pnlBookingBottom.Dock = DockStyle.Bottom;
+            pnlBookingBottom.Location = new Point(0, 428);
+            pnlBookingBottom.Name = "pnlBookingBottom";
+            pnlBookingBottom.Padding = new Padding(15, 65, 15, 65);
+            pnlBookingBottom.Size = new Size(353, 180);
+            pnlBookingBottom.TabIndex = 4;
+            // 
+            // btnAddBooking
+            // 
+            btnAddBooking.BackColor = Color.FromArgb(24, 60, 142);
+            btnAddBooking.Dock = DockStyle.Fill;
+            btnAddBooking.FlatAppearance.BorderSize = 0;
+            btnAddBooking.FlatStyle = FlatStyle.Flat;
+            btnAddBooking.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnAddBooking.ForeColor = Color.White;
+            btnAddBooking.Location = new Point(15, 65);
+            btnAddBooking.Name = "btnAddBooking";
+            btnAddBooking.Size = new Size(323, 50);
+            btnAddBooking.TabIndex = 0;
+            btnAddBooking.Text = "ADD SERVICE";
+            btnAddBooking.UseVisualStyleBackColor = false;
+            btnAddBooking.Click += btnAddBooking_Click;
+            // 
+            // lbTotalPriceValue
+            // 
+            lbTotalPriceValue.AutoSize = true;
+            lbTotalPriceValue.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            lbTotalPriceValue.ForeColor = Color.FromArgb(24, 60, 142);
+            lbTotalPriceValue.Location = new Point(15, 275);
+            lbTotalPriceValue.Name = "lbTotalPriceValue";
+            lbTotalPriceValue.Size = new Size(67, 25);
+            lbTotalPriceValue.TabIndex = 5;
+            lbTotalPriceValue.Text = "0 HUF";
+            // 
+            // lbTotalPriceTitle
+            // 
+            lbTotalPriceTitle.AutoSize = true;
+            lbTotalPriceTitle.Font = new Font("Segoe UI", 9F);
+            lbTotalPriceTitle.ForeColor = Color.Gray;
+            lbTotalPriceTitle.Location = new Point(15, 255);
+            lbTotalPriceTitle.Name = "lbTotalPriceTitle";
+            lbTotalPriceTitle.Size = new Size(64, 15);
+            lbTotalPriceTitle.TabIndex = 6;
+            lbTotalPriceTitle.Text = "Total Price:";
+            // 
+            // numQuantity
+            // 
+            numQuantity.Font = new Font("Segoe UI", 10F);
+            numQuantity.Location = new Point(15, 210);
+            numQuantity.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numQuantity.Name = "numQuantity";
+            numQuantity.Size = new Size(130, 25);
+            numQuantity.TabIndex = 3;
+            numQuantity.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numQuantity.ValueChanged += numQuantity_ValueChanged;
+            // 
+            // lbQuantityTitle
+            // 
+            lbQuantityTitle.AutoSize = true;
+            lbQuantityTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbQuantityTitle.Location = new Point(15, 185);
+            lbQuantityTitle.Name = "lbQuantityTitle";
+            lbQuantityTitle.Size = new Size(70, 19);
+            lbQuantityTitle.TabIndex = 7;
+            lbQuantityTitle.Text = "Quantity:";
+            // 
+            // cbSelectService
+            // 
+            cbSelectService.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cbSelectService.Font = new Font("Segoe UI", 10F);
+            cbSelectService.FormattingEnabled = true;
+            cbSelectService.Location = new Point(15, 145);
+            cbSelectService.MaxLength = 50;
+            cbSelectService.Name = "cbSelectService";
+            cbSelectService.Size = new Size(323, 25);
+            cbSelectService.TabIndex = 2;
+            cbSelectService.SelectedIndexChanged += cbSelectService_SelectedIndexChanged;
+            // 
+            // lbSelectServiceTitle
+            // 
+            lbSelectServiceTitle.AutoSize = true;
+            lbSelectServiceTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbSelectServiceTitle.Location = new Point(15, 120);
+            lbSelectServiceTitle.Name = "lbSelectServiceTitle";
+            lbSelectServiceTitle.Size = new Size(107, 19);
+            lbSelectServiceTitle.TabIndex = 8;
+            lbSelectServiceTitle.Text = "Select Service:";
+            // 
+            // cbSelectRoom
+            // 
+            cbSelectRoom.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSelectRoom.Font = new Font("Segoe UI", 10F);
+            cbSelectRoom.FormattingEnabled = true;
+            cbSelectRoom.Location = new Point(15, 80);
+            cbSelectRoom.Name = "cbSelectRoom";
+            cbSelectRoom.Size = new Size(323, 25);
+            cbSelectRoom.TabIndex = 1;
+            // 
+            // lbSelectRoomTitle
+            // 
+            lbSelectRoomTitle.AutoSize = true;
+            lbSelectRoomTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbSelectRoomTitle.Location = new Point(15, 55);
+            lbSelectRoomTitle.Name = "lbSelectRoomTitle";
+            lbSelectRoomTitle.Size = new Size(113, 19);
+            lbSelectRoomTitle.TabIndex = 9;
+            lbSelectRoomTitle.Text = "Room Number:";
+            // 
+            // lbBookingHeader
+            // 
+            lbBookingHeader.AutoSize = true;
+            lbBookingHeader.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbBookingHeader.ForeColor = Color.FromArgb(24, 60, 142);
+            lbBookingHeader.Location = new Point(15, 15);
+            lbBookingHeader.Name = "lbBookingHeader";
+            lbBookingHeader.Size = new Size(180, 20);
+            lbBookingHeader.TabIndex = 0;
+            lbBookingHeader.Text = "NEW SERVICE BOOKING";
+            // 
+            // btnNewServiceClear
+            // 
+            btnNewServiceClear.BackColor = SystemColors.ButtonFace;
+            btnNewServiceClear.FlatStyle = FlatStyle.Flat;
+            btnNewServiceClear.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnNewServiceClear.Location = new Point(238, 209);
+            btnNewServiceClear.Name = "btnNewServiceClear";
+            btnNewServiceClear.Size = new Size(100, 25);
+            btnNewServiceClear.TabIndex = 7;
+            btnNewServiceClear.Text = "Clear";
+            btnNewServiceClear.UseVisualStyleBackColor = false;
+            btnNewServiceClear.Click += btnNewServiceClear_Click;
+            // 
+            // pnlDeleteEditor
+            // 
+            pnlDeleteEditor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            pnlDeleteEditor.BorderStyle = BorderStyle.FixedSingle;
+            pnlDeleteEditor.Controls.Add(pnlDeleteBottom);
+            pnlDeleteEditor.Controls.Add(lbDeleteReqDateValue);
+            pnlDeleteEditor.Controls.Add(lbDeleteReqDateTitle);
+            pnlDeleteEditor.Controls.Add(lbDeletePriceValue);
+            pnlDeleteEditor.Controls.Add(lbDeletePriceTitle);
+            pnlDeleteEditor.Controls.Add(lbDeleteQuantityValue);
+            pnlDeleteEditor.Controls.Add(lbDeleteQuantityTitle);
+            pnlDeleteEditor.Controls.Add(lbDeleteCurrentStatusValue);
+            pnlDeleteEditor.Controls.Add(lbDeleteCurrentStatusTitle);
+            pnlDeleteEditor.Controls.Add(lbDeleteRoomNumberValue);
+            pnlDeleteEditor.Controls.Add(lbDeleteRoomNumberTitle);
+            pnlDeleteEditor.Controls.Add(lbDeleteServiceNameValue);
+            pnlDeleteEditor.Controls.Add(lbDeleteServiceNameTitle);
+            pnlDeleteEditor.Controls.Add(lbDeleteEditorHeader);
+            pnlDeleteEditor.Location = new Point(1369, 10);
+            pnlDeleteEditor.Margin = new Padding(0);
+            pnlDeleteEditor.Name = "pnlDeleteEditor";
+            pnlDeleteEditor.Size = new Size(355, 610);
+            pnlDeleteEditor.TabIndex = 3;
+            pnlDeleteEditor.Visible = false;
+            // 
+            // pnlDeleteBottom
+            // 
+            pnlDeleteBottom.Controls.Add(btnDeleteServiceBooking);
+            pnlDeleteBottom.Dock = DockStyle.Bottom;
+            pnlDeleteBottom.Location = new Point(0, 428);
+            pnlDeleteBottom.Name = "pnlDeleteBottom";
+            pnlDeleteBottom.Padding = new Padding(15, 65, 15, 65);
+            pnlDeleteBottom.Size = new Size(353, 180);
+            pnlDeleteBottom.TabIndex = 2;
+            // 
+            // btnDeleteServiceBooking
+            // 
+            btnDeleteServiceBooking.BackColor = Color.FromArgb(217, 83, 79);
+            btnDeleteServiceBooking.Dock = DockStyle.Fill;
+            btnDeleteServiceBooking.FlatAppearance.BorderSize = 0;
+            btnDeleteServiceBooking.FlatStyle = FlatStyle.Flat;
+            btnDeleteServiceBooking.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnDeleteServiceBooking.ForeColor = Color.White;
+            btnDeleteServiceBooking.Location = new Point(15, 65);
+            btnDeleteServiceBooking.Name = "btnDeleteServiceBooking";
+            btnDeleteServiceBooking.Size = new Size(323, 50);
+            btnDeleteServiceBooking.TabIndex = 0;
+            btnDeleteServiceBooking.Text = "DELETE BOOKING";
+            btnDeleteServiceBooking.UseVisualStyleBackColor = false;
+            btnDeleteServiceBooking.Click += btnDeleteServiceBooking_Click;
+            // 
+            // lbDeleteReqDateValue
+            // 
+            lbDeleteReqDateValue.AutoSize = true;
+            lbDeleteReqDateValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbDeleteReqDateValue.Location = new Point(15, 318);
+            lbDeleteReqDateValue.Name = "lbDeleteReqDateValue";
+            lbDeleteReqDateValue.Size = new Size(31, 20);
+            lbDeleteReqDateValue.TabIndex = 12;
+            lbDeleteReqDateValue.Text = "  -  ";
+            // 
+            // lbDeleteReqDateTitle
+            // 
+            lbDeleteReqDateTitle.AutoSize = true;
+            lbDeleteReqDateTitle.Font = new Font("Segoe UI", 9F);
+            lbDeleteReqDateTitle.ForeColor = Color.Gray;
+            lbDeleteReqDateTitle.Location = new Point(15, 300);
+            lbDeleteReqDateTitle.Name = "lbDeleteReqDateTitle";
+            lbDeleteReqDateTitle.Size = new Size(92, 15);
+            lbDeleteReqDateTitle.TabIndex = 11;
+            lbDeleteReqDateTitle.Text = "Requested Date:";
+            // 
+            // lbDeletePriceValue
+            // 
+            lbDeletePriceValue.AutoSize = true;
+            lbDeletePriceValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbDeletePriceValue.Location = new Point(15, 218);
+            lbDeletePriceValue.Name = "lbDeletePriceValue";
+            lbDeletePriceValue.Size = new Size(31, 20);
+            lbDeletePriceValue.TabIndex = 8;
+            lbDeletePriceValue.Text = "  -  ";
+            // 
+            // lbDeletePriceTitle
+            // 
+            lbDeletePriceTitle.AutoSize = true;
+            lbDeletePriceTitle.Font = new Font("Segoe UI", 9F);
+            lbDeletePriceTitle.ForeColor = Color.Gray;
+            lbDeletePriceTitle.Location = new Point(15, 200);
+            lbDeletePriceTitle.Name = "lbDeletePriceTitle";
+            lbDeletePriceTitle.Size = new Size(36, 15);
+            lbDeletePriceTitle.TabIndex = 7;
+            lbDeletePriceTitle.Text = "Price:";
+            // 
+            // lbDeleteQuantityValue
+            // 
+            lbDeleteQuantityValue.AutoSize = true;
+            lbDeleteQuantityValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbDeleteQuantityValue.Location = new Point(15, 168);
+            lbDeleteQuantityValue.Name = "lbDeleteQuantityValue";
+            lbDeleteQuantityValue.Size = new Size(31, 20);
+            lbDeleteQuantityValue.TabIndex = 6;
+            lbDeleteQuantityValue.Text = "  -  ";
+            // 
+            // lbDeleteQuantityTitle
+            // 
+            lbDeleteQuantityTitle.AutoSize = true;
+            lbDeleteQuantityTitle.Font = new Font("Segoe UI", 9F);
+            lbDeleteQuantityTitle.ForeColor = Color.Gray;
+            lbDeleteQuantityTitle.Location = new Point(15, 150);
+            lbDeleteQuantityTitle.Name = "lbDeleteQuantityTitle";
+            lbDeleteQuantityTitle.Size = new Size(56, 15);
+            lbDeleteQuantityTitle.TabIndex = 5;
+            lbDeleteQuantityTitle.Text = "Quantity:";
+            // 
+            // lbDeleteCurrentStatusValue
+            // 
+            lbDeleteCurrentStatusValue.AutoSize = true;
+            lbDeleteCurrentStatusValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbDeleteCurrentStatusValue.ForeColor = Color.FromArgb(217, 83, 79);
+            lbDeleteCurrentStatusValue.Location = new Point(15, 268);
+            lbDeleteCurrentStatusValue.Name = "lbDeleteCurrentStatusValue";
+            lbDeleteCurrentStatusValue.Size = new Size(113, 20);
+            lbDeleteCurrentStatusValue.TabIndex = 10;
+            lbDeleteCurrentStatusValue.Text = "NOT SELECTED";
+            // 
+            // lbDeleteCurrentStatusTitle
+            // 
+            lbDeleteCurrentStatusTitle.AutoSize = true;
+            lbDeleteCurrentStatusTitle.Font = new Font("Segoe UI", 9F);
+            lbDeleteCurrentStatusTitle.ForeColor = Color.Gray;
+            lbDeleteCurrentStatusTitle.Location = new Point(15, 250);
+            lbDeleteCurrentStatusTitle.Name = "lbDeleteCurrentStatusTitle";
+            lbDeleteCurrentStatusTitle.Size = new Size(85, 15);
+            lbDeleteCurrentStatusTitle.TabIndex = 9;
+            lbDeleteCurrentStatusTitle.Text = "Current Status:";
+            // 
+            // lbDeleteRoomNumberValue
+            // 
+            lbDeleteRoomNumberValue.AutoSize = true;
+            lbDeleteRoomNumberValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbDeleteRoomNumberValue.Location = new Point(15, 118);
+            lbDeleteRoomNumberValue.Name = "lbDeleteRoomNumberValue";
+            lbDeleteRoomNumberValue.Size = new Size(31, 20);
+            lbDeleteRoomNumberValue.TabIndex = 4;
+            lbDeleteRoomNumberValue.Text = "  -  ";
+            // 
+            // lbDeleteRoomNumberTitle
+            // 
+            lbDeleteRoomNumberTitle.AutoSize = true;
+            lbDeleteRoomNumberTitle.Font = new Font("Segoe UI", 9F);
+            lbDeleteRoomNumberTitle.ForeColor = Color.Gray;
+            lbDeleteRoomNumberTitle.Location = new Point(15, 100);
+            lbDeleteRoomNumberTitle.Name = "lbDeleteRoomNumberTitle";
+            lbDeleteRoomNumberTitle.Size = new Size(89, 15);
+            lbDeleteRoomNumberTitle.TabIndex = 3;
+            lbDeleteRoomNumberTitle.Text = "Room Number:";
+            // 
+            // lbDeleteServiceNameValue
+            // 
+            lbDeleteServiceNameValue.AutoSize = true;
+            lbDeleteServiceNameValue.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbDeleteServiceNameValue.Location = new Point(15, 68);
+            lbDeleteServiceNameValue.Name = "lbDeleteServiceNameValue";
+            lbDeleteServiceNameValue.Size = new Size(97, 20);
+            lbDeleteServiceNameValue.TabIndex = 2;
+            lbDeleteServiceNameValue.Text = "Not selected";
+            // 
+            // lbDeleteServiceNameTitle
+            // 
+            lbDeleteServiceNameTitle.AutoSize = true;
+            lbDeleteServiceNameTitle.Font = new Font("Segoe UI", 9F);
+            lbDeleteServiceNameTitle.ForeColor = Color.Gray;
+            lbDeleteServiceNameTitle.Location = new Point(15, 50);
+            lbDeleteServiceNameTitle.Name = "lbDeleteServiceNameTitle";
+            lbDeleteServiceNameTitle.Size = new Size(82, 15);
+            lbDeleteServiceNameTitle.TabIndex = 1;
+            lbDeleteServiceNameTitle.Text = "Service Name:";
+            // 
+            // lbDeleteEditorHeader
+            // 
+            lbDeleteEditorHeader.AutoSize = true;
+            lbDeleteEditorHeader.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lbDeleteEditorHeader.ForeColor = Color.FromArgb(217, 83, 79);
+            lbDeleteEditorHeader.Location = new Point(15, 15);
+            lbDeleteEditorHeader.Name = "lbDeleteEditorHeader";
+            lbDeleteEditorHeader.Size = new Size(197, 20);
+            lbDeleteEditorHeader.TabIndex = 0;
+            lbDeleteEditorHeader.Text = "DELETE SERVICE BOOKING";
             // 
             // ProductContol
             // 
@@ -980,6 +1413,8 @@
             BackColor = Color.FromArgb(248, 249, 250);
             Controls.Add(pnlStatusEditor);
             Controls.Add(pnlEditor);
+            Controls.Add(pnlDeleteEditor);
+            Controls.Add(pnlNewServiceBooking);
             Controls.Add(pnlGrid);
             Controls.Add(pnlTop);
             Font = new Font("Segoe UI", 9.75F);
@@ -1003,6 +1438,14 @@
             ((System.ComponentModel.ISupportInitialize)numPrice).EndInit();
             pnlStatusEditor.ResumeLayout(false);
             pnlStatusEditor.PerformLayout();
+            pnlStatusBottom.ResumeLayout(false);
+            pnlNewServiceBooking.ResumeLayout(false);
+            pnlNewServiceBooking.PerformLayout();
+            pnlBookingBottom.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)numQuantity).EndInit();
+            pnlDeleteEditor.ResumeLayout(false);
+            pnlDeleteEditor.PerformLayout();
+            pnlDeleteBottom.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1053,17 +1496,6 @@
         private NumericUpDown numPrice;
         private Button btnSaveService;
         private Panel pnlSideBottom;
-        private DataGridViewTextBoxColumn colId;
-        private DataGridViewTextBoxColumn colRoomNumber;
-        private DataGridViewTextBoxColumn colStatus;
-        private DataGridViewTextBoxColumn colRequestDate;
-        private DataGridViewTextBoxColumn colNameHu;
-        private DataGridViewTextBoxColumn colTypeHu;
-        private DataGridViewTextBoxColumn colDescHu;
-        private DataGridViewTextBoxColumn colPrice;
-        private DataGridViewTextBoxColumn colNameEn;
-        private DataGridViewTextBoxColumn colTypeEn;
-        private DataGridViewTextBoxColumn colDescEn;
         private Label lbRoomNumber;
         private ComboBox cbRoomNumbers;
         private CheckBox chkShowHistory;
@@ -1072,13 +1504,57 @@
         private Label lbHistory;
         private Panel pnlRbHolder;
         private Panel pnlStatusEditor;
-        private ComboBox cbUpdateServiceStatus;
-        private Label lbUpdateServiceRoomNumberTitle;
-        private Label lbUpdateServiceNameTitle;
-        private Label lbUpdateServiceStatusTitle;
-        private Label lpUpdateServiceStatus;
-        private Button btnUpdateServiceStatus;
-        private Label lbUpdateServiceName;
-        private Label lbUpdateServiceRoomNumber;
+        private Label lbStatusEditorHeader;
+        private Label lbServiceNameTitle;
+        private Label lbServiceNameValue;
+        private Label lbRoomNumberTitle;
+        private Label lbRoomNumberValue;
+        private Label lbCurrentStatusTitle;
+        private Label lbCurrentStatusValue;
+        private Label lbNewStatusTitle;
+        private ComboBox cbNewStatus;
+        private Panel pnlStatusBottom;
+        private Button btnUpdateStatus;
+        private Panel pnlNewServiceBooking;
+        private Label lbBookingHeader;
+        private Label lbSelectRoomTitle;
+        private ComboBox cbSelectRoom;
+        private Label lbSelectServiceTitle;
+        private ComboBox cbSelectService;
+        private Label lbQuantityTitle;
+        private NumericUpDown numQuantity;
+        private Label lbTotalPriceTitle;
+        private Label lbTotalPriceValue;
+        private Panel pnlBookingBottom;
+        private Button btnAddBooking;
+        private Button btnNewServiceClear;
+        private Panel pnlDeleteEditor;
+        private Panel pnlDeleteBottom;
+        private Button btnDeleteServiceBooking;
+        private Label lbDeleteEditorHeader;
+        private Label lbDeleteServiceNameTitle;
+        private Label lbDeleteServiceNameValue;
+        private Label lbDeleteRoomNumberTitle;
+        private Label lbDeleteRoomNumberValue;
+        private Label lbDeleteQuantityTitle;
+        private Label lbDeleteQuantityValue;
+        private Label lbDeletePriceTitle;
+        private Label lbDeletePriceValue;
+        private Label lbDeleteCurrentStatusTitle;
+        private Label lbDeleteCurrentStatusValue;
+        private Label lbDeleteReqDateTitle;
+        private Label lbDeleteReqDateValue;
+        private DataGridViewTextBoxColumn colId;
+        private DataGridViewTextBoxColumn colRoomNumber;
+        private DataGridViewTextBoxColumn colStatus;
+        private DataGridViewTextBoxColumn colRequestDate;
+        private DataGridViewTextBoxColumn colNameHu;
+        private DataGridViewTextBoxColumn colTypeHu;
+        private DataGridViewTextBoxColumn colDescHu;
+        private DataGridViewTextBoxColumn colQuantity;
+        private DataGridViewTextBoxColumn colPrice;
+        private DataGridViewTextBoxColumn colNameEn;
+        private DataGridViewTextBoxColumn colTypeEn;
+        private DataGridViewTextBoxColumn colDescEn;
     }
 }

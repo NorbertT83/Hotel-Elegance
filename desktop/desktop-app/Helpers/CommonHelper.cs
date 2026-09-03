@@ -39,5 +39,31 @@ namespace Hotel_erp_Winforms_App.Helpers
             }
             else { ep.SetError(tb, ""); return false; }
         }
+
+        // empty list message box
+        public void EmptyListMessageBox(int listCount, string dataType)
+        {
+            if (listCount == 0)
+            {
+                MessageBox.Show(
+                    $"No matching {dataType} found.",
+                    "Search Results",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                return;
+            }
+        }
+
+        // Error message box
+        public void MBErrorMessage(Exception ex)
+        {
+            MessageBox.Show(
+                "An error occured while trying to execute the process: " + ex.Message,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+        }
     }
 }
