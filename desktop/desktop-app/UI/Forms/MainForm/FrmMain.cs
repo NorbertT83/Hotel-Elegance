@@ -6,6 +6,7 @@ using Hotel_erp_Winforms_App.UI.Controls.Rooms;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Hotel_erp_Winforms_App.Helpers;
 
 namespace Hotel_erp_Winforms_App
 {
@@ -22,6 +23,8 @@ namespace Hotel_erp_Winforms_App
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            PermissionManager.ApplyPermissions(this);
+
             Color sotetKek = Color.FromArgb(30, 58, 138);
             Color elenkKek = Color.FromArgb(59, 130, 246);
             Color feher = Color.White;

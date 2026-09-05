@@ -31,20 +31,18 @@
             pnlSumGuestDataContainer = new Panel();
             tbSumAddress = new TextBox();
             label49 = new Label();
+            tbSumDocumentID = new TextBox();
             tbSumCarPlate = new TextBox();
             label50 = new Label();
             tbSumEmail = new TextBox();
-            label51 = new Label();
-            tbSumPhone = new TextBox();
             label52 = new Label();
             tbSumCountry = new TextBox();
             label55 = new Label();
             tbSumBirth = new TextBox();
+            label1 = new Label();
             label53 = new Label();
             tbSumName = new TextBox();
             label56 = new Label();
-            label1 = new Label();
-            tbSumDocumentID = new TextBox();
             pnlSumGuestDataContainer.SuspendLayout();
             SuspendLayout();
             // 
@@ -56,8 +54,6 @@
             pnlSumGuestDataContainer.Controls.Add(tbSumCarPlate);
             pnlSumGuestDataContainer.Controls.Add(label50);
             pnlSumGuestDataContainer.Controls.Add(tbSumEmail);
-            pnlSumGuestDataContainer.Controls.Add(label51);
-            pnlSumGuestDataContainer.Controls.Add(tbSumPhone);
             pnlSumGuestDataContainer.Controls.Add(label52);
             pnlSumGuestDataContainer.Controls.Add(tbSumCountry);
             pnlSumGuestDataContainer.Controls.Add(label55);
@@ -91,9 +87,18 @@
             label49.TabIndex = 14;
             label49.Text = "Name:";
             // 
+            // tbSumDocumentID
+            // 
+            tbSumDocumentID.Location = new Point(355, 89);
+            tbSumDocumentID.Name = "tbSumDocumentID";
+            tbSumDocumentID.ReadOnly = true;
+            tbSumDocumentID.Size = new Size(153, 23);
+            tbSumDocumentID.TabIndex = 16;
+            tbSumDocumentID.TextAlign = HorizontalAlignment.Right;
+            // 
             // tbSumCarPlate
             // 
-            tbSumCarPlate.Location = new Point(353, 88);
+            tbSumCarPlate.Location = new Point(355, 51);
             tbSumCarPlate.Name = "tbSumCarPlate";
             tbSumCarPlate.ReadOnly = true;
             tbSumCarPlate.Size = new Size(153, 23);
@@ -112,37 +117,18 @@
             // 
             // tbSumEmail
             // 
-            tbSumEmail.Location = new Point(353, 50);
+            tbSumEmail.Location = new Point(355, 13);
             tbSumEmail.Name = "tbSumEmail";
             tbSumEmail.ReadOnly = true;
             tbSumEmail.Size = new Size(153, 23);
             tbSumEmail.TabIndex = 17;
             tbSumEmail.TextAlign = HorizontalAlignment.Right;
             // 
-            // label51
-            // 
-            label51.AutoSize = true;
-            label51.Font = new Font("Segoe UI", 10F);
-            label51.Location = new Point(243, 13);
-            label51.Name = "label51";
-            label51.Size = new Size(105, 19);
-            label51.TabIndex = 12;
-            label51.Text = "Phone Number:";
-            // 
-            // tbSumPhone
-            // 
-            tbSumPhone.Location = new Point(353, 12);
-            tbSumPhone.Name = "tbSumPhone";
-            tbSumPhone.ReadOnly = true;
-            tbSumPhone.Size = new Size(153, 23);
-            tbSumPhone.TabIndex = 18;
-            tbSumPhone.TextAlign = HorizontalAlignment.Right;
-            // 
             // label52
             // 
             label52.AutoSize = true;
             label52.Font = new Font("Segoe UI", 10F);
-            label52.Location = new Point(243, 51);
+            label52.Location = new Point(245, 14);
             label52.Name = "label52";
             label52.Size = new Size(44, 19);
             label52.TabIndex = 11;
@@ -176,11 +162,21 @@
             tbSumBirth.TabIndex = 20;
             tbSumBirth.TextAlign = HorizontalAlignment.Right;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 10F);
+            label1.Location = new Point(245, 90);
+            label1.Name = "label1";
+            label1.Size = new Size(80, 19);
+            label1.TabIndex = 9;
+            label1.Text = "ID Number:";
+            // 
             // label53
             // 
             label53.AutoSize = true;
             label53.Font = new Font("Segoe UI", 10F);
-            label53.Location = new Point(243, 89);
+            label53.Location = new Point(245, 52);
             label53.Name = "label53";
             label53.Size = new Size(67, 19);
             label53.TabIndex = 9;
@@ -205,25 +201,6 @@
             label56.TabIndex = 8;
             label56.Text = "Address:";
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 10F);
-            label1.Location = new Point(243, 127);
-            label1.Name = "label1";
-            label1.Size = new Size(80, 19);
-            label1.TabIndex = 9;
-            label1.Text = "ID Number:";
-            // 
-            // tbSumDocumentID
-            // 
-            tbSumDocumentID.Location = new Point(353, 126);
-            tbSumDocumentID.Name = "tbSumDocumentID";
-            tbSumDocumentID.ReadOnly = true;
-            tbSumDocumentID.Size = new Size(153, 23);
-            tbSumDocumentID.TabIndex = 16;
-            tbSumDocumentID.TextAlign = HorizontalAlignment.Right;
-            // 
             // GuestDataSumControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -245,8 +222,6 @@
         private TextBox tbSumCarPlate;
         private Label label50;
         private TextBox tbSumEmail;
-        private Label label51;
-        private TextBox tbSumPhone;
         private Label label52;
         private TextBox tbSumCountry;
         private Label label55;

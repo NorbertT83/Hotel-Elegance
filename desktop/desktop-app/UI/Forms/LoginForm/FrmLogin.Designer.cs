@@ -40,6 +40,8 @@
             label4 = new Label();
             linkLabel = new LinkLabel();
             label5 = new Label();
+            cbJobTitle = new ComboBox();
+            lbJobTitle = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -96,7 +98,7 @@
             // tbPassword
             // 
             tbPassword.Font = new Font("Segoe UI", 15F);
-            tbPassword.Location = new Point(487, 266);
+            tbPassword.Location = new Point(487, 269);
             tbPassword.Name = "tbPassword";
             tbPassword.Size = new Size(210, 34);
             tbPassword.TabIndex = 2;
@@ -133,7 +135,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F);
-            label4.Location = new Point(487, 242);
+            label4.Location = new Point(487, 245);
             label4.Name = "label4";
             label4.Size = new Size(76, 21);
             label4.TabIndex = 6;
@@ -161,6 +163,24 @@
             label5.TabIndex = 102;
             label5.Text = "Don't have an account yet?";
             // 
+            // cbJobTitle
+            // 
+            cbJobTitle.FormattingEnabled = true;
+            cbJobTitle.Items.AddRange(new object[] { "Admin", "Manager", "Guest" });
+            cbJobTitle.Location = new Point(530, 56);
+            cbJobTitle.Name = "cbJobTitle";
+            cbJobTitle.Size = new Size(118, 23);
+            cbJobTitle.TabIndex = 103;
+            // 
+            // lbJobTitle
+            // 
+            lbJobTitle.AutoSize = true;
+            lbJobTitle.Location = new Point(548, 35);
+            lbJobTitle.Name = "lbJobTitle";
+            lbJobTitle.Size = new Size(91, 15);
+            lbJobTitle.TabIndex = 104;
+            lbJobTitle.Text = "Default job title:";
+            // 
             // FrmLogin
             // 
             AcceptButton = btnLogin;
@@ -168,6 +188,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(784, 494);
+            Controls.Add(lbJobTitle);
+            Controls.Add(cbJobTitle);
             Controls.Add(label5);
             Controls.Add(linkLabel);
             Controls.Add(label4);
@@ -183,6 +205,7 @@
             Name = "FrmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Login";
+            Load += FrmLogin_Load;
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
@@ -201,5 +224,7 @@
         private Label label4;
         private LinkLabel linkLabel;
         private Label label5;
+        private ComboBox cbJobTitle;
+        private Label lbJobTitle;
     }
 }

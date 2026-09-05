@@ -43,6 +43,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private async void HousekeepingControl_Load(object sender, EventArgs e)
         {
             #region UI defaults before await
+            PermissionManager.ApplyPermissions(this);
 
             lbPrioTitle.Visible = false;
             lbPrioColor.Visible = false;

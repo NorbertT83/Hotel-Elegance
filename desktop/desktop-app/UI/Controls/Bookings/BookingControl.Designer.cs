@@ -252,7 +252,7 @@
             // 
             cbSpanFilter.DropDownStyle = ComboBoxStyle.DropDownList;
             cbSpanFilter.FormattingEnabled = true;
-            cbSpanFilter.Items.AddRange(new object[] { "Booked From", "Booked To", "Stay Range" });
+            cbSpanFilter.Items.AddRange(new object[] { "Not set", "Booked From", "Booked To", "Stay Range" });
             cbSpanFilter.Location = new Point(540, 48);
             cbSpanFilter.Name = "cbSpanFilter";
             cbSpanFilter.Size = new Size(140, 25);
@@ -264,7 +264,7 @@
             lbSpanFilter.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
             lbSpanFilter.Location = new Point(495, 53);
             lbSpanFilter.Name = "lbSpanFilter";
-            lbSpanFilter.Size = new Size(38, 15);
+            lbSpanFilter.Size = new Size(37, 15);
             lbSpanFilter.TabIndex = 12;
             lbSpanFilter.Text = "Span:";
             // 
@@ -282,7 +282,7 @@
             lbDateTo.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
             lbDateTo.Location = new Point(335, 53);
             lbDateTo.Name = "lbDateTo";
-            lbDateTo.Size = new Size(24, 15);
+            lbDateTo.Size = new Size(23, 15);
             lbDateTo.TabIndex = 10;
             lbDateTo.Text = "To:";
             // 
@@ -369,7 +369,7 @@
             lbFilter.ForeColor = Color.DimGray;
             lbFilter.Location = new Point(12, 53);
             lbFilter.Name = "lbFilter";
-            lbFilter.Size = new Size(122, 15);
+            lbFilter.Size = new Size(117, 15);
             lbFilter.TabIndex = 0;
             lbFilter.Text = "PERIOD SELECTION:";
             // 
@@ -392,7 +392,7 @@
             lbKpiArrivalsSub.ForeColor = Color.Gray;
             lbKpiArrivalsSub.Location = new Point(12, 60);
             lbKpiArrivalsSub.Name = "lbKpiArrivalsSub";
-            lbKpiArrivalsSub.Size = new Size(127, 15);
+            lbKpiArrivalsSub.Size = new Size(141, 15);
             lbKpiArrivalsSub.TabIndex = 2;
             lbKpiArrivalsSub.Text = "Expected guest check-ins";
             // 
@@ -414,7 +414,7 @@
             lbKpiArrivalsTitle.ForeColor = Color.DimGray;
             lbKpiArrivalsTitle.Location = new Point(12, 10);
             lbKpiArrivalsTitle.Name = "lbKpiArrivalsTitle";
-            lbKpiArrivalsTitle.Size = new Size(111, 15);
+            lbKpiArrivalsTitle.Size = new Size(116, 15);
             lbKpiArrivalsTitle.TabIndex = 0;
             lbKpiArrivalsTitle.Text = "TODAY'S ARRIVALS";
             // 
@@ -437,7 +437,7 @@
             lbKpiDeparturesSub.ForeColor = Color.Gray;
             lbKpiDeparturesSub.Location = new Point(12, 60);
             lbKpiDeparturesSub.Name = "lbKpiDeparturesSub";
-            lbKpiDeparturesSub.Size = new Size(127, 15);
+            lbKpiDeparturesSub.Size = new Size(124, 15);
             lbKpiDeparturesSub.TabIndex = 2;
             lbKpiDeparturesSub.Text = "Scheduled check-outs";
             // 
@@ -459,7 +459,7 @@
             lbKpiDeparturesTitle.ForeColor = Color.DimGray;
             lbKpiDeparturesTitle.Location = new Point(12, 10);
             lbKpiDeparturesTitle.Name = "lbKpiDeparturesTitle";
-            lbKpiDeparturesTitle.Size = new Size(129, 15);
+            lbKpiDeparturesTitle.Size = new Size(134, 15);
             lbKpiDeparturesTitle.TabIndex = 0;
             lbKpiDeparturesTitle.Text = "TODAY'S DEPARTURES";
             // 
@@ -482,7 +482,7 @@
             lbKpiOccupancySub.ForeColor = Color.Gray;
             lbKpiOccupancySub.Location = new Point(12, 60);
             lbKpiOccupancySub.Name = "lbKpiOccupancySub";
-            lbKpiOccupancySub.Size = new Size(111, 15);
+            lbKpiOccupancySub.Size = new Size(106, 15);
             lbKpiOccupancySub.TabIndex = 2;
             lbKpiOccupancySub.Text = "Current room ratio";
             // 
@@ -493,7 +493,7 @@
             lbKpiOccupancyValue.ForeColor = Color.DarkGreen;
             lbKpiOccupancyValue.Location = new Point(10, 27);
             lbKpiOccupancyValue.Name = "lbKpiOccupancyValue";
-            lbKpiOccupancyValue.Size = new Size(57, 32);
+            lbKpiOccupancyValue.Size = new Size(56, 32);
             lbKpiOccupancyValue.TabIndex = 1;
             lbKpiOccupancyValue.Text = "0 %";
             // 
@@ -504,7 +504,7 @@
             lbKpiOccupancyTitle.ForeColor = Color.DimGray;
             lbKpiOccupancyTitle.Location = new Point(12, 10);
             lbKpiOccupancyTitle.Name = "lbKpiOccupancyTitle";
-            lbKpiOccupancyTitle.Size = new Size(106, 15);
+            lbKpiOccupancyTitle.Size = new Size(107, 15);
             lbKpiOccupancyTitle.TabIndex = 0;
             lbKpiOccupancyTitle.Text = "OCCUPANCY RATE";
             // 
@@ -527,7 +527,7 @@
             lbKpiTotalBookingsSub.ForeColor = Color.Gray;
             lbKpiTotalBookingsSub.Location = new Point(12, 60);
             lbKpiTotalBookingsSub.Name = "lbKpiTotalBookingsSub";
-            lbKpiTotalBookingsSub.Size = new Size(125, 15);
+            lbKpiTotalBookingsSub.Size = new Size(121, 15);
             lbKpiTotalBookingsSub.TabIndex = 2;
             lbKpiTotalBookingsSub.Text = "Active records loaded";
             // 
@@ -649,7 +649,6 @@
             dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle6.Format = "yyyy.MM.dd";
             colBegOfStay.DefaultCellStyle = dataGridViewCellStyle6;
-            colBegOfStay.FillWeight = 100F;
             colBegOfStay.HeaderText = "Booked From";
             colBegOfStay.Name = "colBegOfStay";
             colBegOfStay.ReadOnly = true;
@@ -661,7 +660,6 @@
             dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle7.Format = "yyyy.MM.dd";
             colEndOfStay.DefaultCellStyle = dataGridViewCellStyle7;
-            colEndOfStay.FillWeight = 100F;
             colEndOfStay.HeaderText = "Booked To";
             colEndOfStay.Name = "colEndOfStay";
             colEndOfStay.ReadOnly = true;
@@ -737,9 +735,9 @@
             lbNotesTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             lbNotesTitle.Location = new Point(15, 430);
             lbNotesTitle.Name = "lbNotesTitle";
-            lbNotesTitle.Size = new Size(164, 17);
+            lbNotesTitle.Size = new Size(48, 17);
             lbNotesTitle.TabIndex = 10;
-            lbNotesTitle.Text = "Special Requests & Notes:";
+            lbNotesTitle.Text = "Notes:";
             // 
             // pnlFinancial
             // 
@@ -762,7 +760,7 @@
             lbFinanceRemaining.ForeColor = Color.Firebrick;
             lbFinanceRemaining.Location = new Point(12, 95);
             lbFinanceRemaining.Name = "lbFinanceRemaining";
-            lbFinanceRemaining.Size = new Size(50, 25);
+            lbFinanceRemaining.Size = new Size(45, 25);
             lbFinanceRemaining.TabIndex = 4;
             lbFinanceRemaining.Text = "0 Ft";
             // 
@@ -773,7 +771,7 @@
             lbFinanceRemainingTitle.ForeColor = Color.Gray;
             lbFinanceRemainingTitle.Location = new Point(12, 75);
             lbFinanceRemainingTitle.Name = "lbFinanceRemainingTitle";
-            lbFinanceRemainingTitle.Size = new Size(116, 15);
+            lbFinanceRemainingTitle.Size = new Size(115, 15);
             lbFinanceRemainingTitle.TabIndex = 3;
             lbFinanceRemainingTitle.Text = "Remaining Balance:";
             // 
@@ -784,7 +782,7 @@
             lbFinancePaid.ForeColor = Color.DarkGreen;
             lbFinancePaid.Location = new Point(160, 40);
             lbFinancePaid.Name = "lbFinancePaid";
-            lbFinancePaid.Size = new Size(69, 17);
+            lbFinancePaid.Size = new Size(66, 17);
             lbFinancePaid.TabIndex = 2;
             lbFinancePaid.Text = "Paid: 0 Ft";
             // 
@@ -795,7 +793,7 @@
             lbFinanceTotal.ForeColor = Color.DimGray;
             lbFinanceTotal.Location = new Point(12, 40);
             lbFinanceTotal.Name = "lbFinanceTotal";
-            lbFinanceTotal.Size = new Size(73, 17);
+            lbFinanceTotal.Size = new Size(70, 17);
             lbFinanceTotal.TabIndex = 1;
             lbFinanceTotal.Text = "Total: 0 Ft";
             // 
@@ -860,7 +858,7 @@
             lbGuestPhoneTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             lbGuestPhoneTitle.Location = new Point(15, 100);
             lbGuestPhoneTitle.Name = "lbGuestPhoneTitle";
-            lbGuestPhoneTitle.Size = new Size(105, 17);
+            lbGuestPhoneTitle.Size = new Size(106, 17);
             lbGuestPhoneTitle.TabIndex = 2;
             lbGuestPhoneTitle.Text = "Phone Number:";
             // 
@@ -878,7 +876,7 @@
             lbGuestNameTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             lbGuestNameTitle.Location = new Point(15, 45);
             lbGuestNameTitle.Name = "lbGuestNameTitle";
-            lbGuestNameTitle.Size = new Size(88, 17);
+            lbGuestNameTitle.Size = new Size(87, 17);
             lbGuestNameTitle.TabIndex = 1;
             lbGuestNameTitle.Text = "Guest Name:";
             // 
@@ -889,7 +887,7 @@
             lbEditorTitle.ForeColor = Color.FromArgb(24, 60, 142);
             lbEditorTitle.Location = new Point(15, 12);
             lbEditorTitle.Name = "lbEditorTitle";
-            lbEditorTitle.Size = new Size(187, 20);
+            lbEditorTitle.Size = new Size(172, 20);
             lbEditorTitle.TabIndex = 0;
             lbEditorTitle.Text = "SELECTED GUEST & STAY";
             // 

@@ -23,42 +23,72 @@ namespace Hotel_erp_Winforms_App.Forms
             InitializeComponent();
         }
 
+        private void FrmLogin_Load(object sender, EventArgs e)
+        {
+            tbTaxNumber.Text = "TX100001";
+        }
+
         private void btnLogin_Click(object sender, EventArgs e)
         {
-        //    EmployeeService _employeeService = new EmployeeService();
+            //if (cbJobTitle.SelectedItem == null)
+            //{
+            //    MessageBox.Show(
+            //        "Please select a title first!",
+            //        "Selection Required",
+            //        MessageBoxButtons.OK,
+            //        MessageBoxIcon.Error);
 
-        //    loggedInEmployee = _employeeService.GetEmployeeByTaxNumber(tbTaxNumber.Text);
+            //    return;
+            //}
 
-        //    if (loggedInEmployee != null)
-        //    {
-        //        bool isPasswordValid = PasswordHelper.VerifyPassword(tbPassword.Text, loggedInEmployee.Password_hash);
+            EmployeeService _employeeService = new EmployeeService();
 
-        //        if (isPasswordValid)
-        //        {
-        //            SessionManager.CurrentUser = loggedInEmployee;
+            loggedInEmployee = _employeeService.GetEmployeeByTaxNumber(tbTaxNumber.Text.Trim());
 
-        //            FrmMain mainForm = new FrmMain(loggedInEmployee);
-        //            mainForm.Show();
-        //            this.Hide();
-        //        }
+            if (loggedInEmployee != null)
+            {
+                UserRole defaultUserRole = cbJobTitle.SelectedIndex switch
+                {
+                    0 => UserRole.Admin,
+                    1 => UserRole.Manager,
+                    2 => UserRole.Guest,
+                    _ => UserRole.Guest
+                };
 
-        //        else
-        //        {
-        //            MessageBox.Show("Hibás jelszó!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        }
-        //    }
+                CurrentUser.Id = loggedInEmployee.Id;
+                CurrentUser.Username = loggedInEmployee.FName ?? "User";
+                CurrentUser.Role = loggedInEmployee.JobTitle.ToString() switch
+                {
+                    "HK Manager" => UserRole.HKManager,
+                    "Receptionist" => UserRole.Receptionist,
+                    "Front Office Manager" => UserRole.FrontOffMan,
+                    _ => defaultUserRole
+                };
 
-        //    else
-        //    {
-        //        MessageBox.Show("A felhasználó nem létezik!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
+                //if (cbJobTitle.SelectedItem is UserRole selectedRole)
+                //{
+                //    CurrentUser.Role = selectedRole;
+                //}
+                //else
+                //{
+                //    CurrentUser.Role = UserRole.Guest;
+                //}
+
+                FrmMain mainForm = new FrmMain(loggedInEmployee);
+                mainForm.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("A felhasználó nem létezik!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void linkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            FrmRegistration registrationFrom = new FrmRegistration();
-            registrationFrom.Show();
-            this.Hide();
+            FrmRegistration registrationForm = new FrmRegistration();
+            registrationForm.Show();
+            this.Close();
         }
     }
 }

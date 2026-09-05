@@ -85,11 +85,8 @@
             btnPrint = new Button();
             ckbEditData = new CheckBox();
             dtpBirthdate = new DateTimePicker();
-            cbDocumentType = new ComboBox();
             cbNationality = new ComboBox();
-            cbPhoneCountry = new ComboBox();
             tbLastName = new TextBox();
-            tbPhone = new TextBox();
             tbDocumentNumber = new TextBox();
             tbStreet = new TextBox();
             tbCity = new TextBox();
@@ -98,18 +95,13 @@
             tbFirstName = new TextBox();
             lbUI24 = new Label();
             lbUI17 = new Label();
-            lbUI21 = new Label();
-            lbUI30 = new Label();
             lbUI27 = new Label();
             lbUI26 = new Label();
             lbUI25 = new Label();
-            lbUI29 = new Label();
             lbUI23 = new Label();
-            lbUI20 = new Label();
             lbUI22 = new Label();
             lbUI28 = new Label();
             lbUI19 = new Label();
-            lbUI18 = new Label();
             lbUI16 = new Label();
             lbUI15 = new Label();
             lbUI14 = new Label();
@@ -120,7 +112,6 @@
             lbUI31 = new Label();
             HL3 = new Label();
             ckbParking = new CheckBox();
-            tbOtherRequests = new TextBox();
             cbAirportTransfer = new ComboBox();
             cbChampagne = new ComboBox();
             cbDepartureNotes = new ComboBox();
@@ -133,7 +124,6 @@
             lbUI37 = new Label();
             lbUI36 = new Label();
             lbUI40 = new Label();
-            lbUI41 = new Label();
             lbUI39 = new Label();
             lbUI35 = new Label();
             lbUI32 = new Label();
@@ -713,11 +703,8 @@
             tpPersonalData.Controls.Add(btnPrint);
             tpPersonalData.Controls.Add(ckbEditData);
             tpPersonalData.Controls.Add(dtpBirthdate);
-            tpPersonalData.Controls.Add(cbDocumentType);
             tpPersonalData.Controls.Add(cbNationality);
-            tpPersonalData.Controls.Add(cbPhoneCountry);
             tpPersonalData.Controls.Add(tbLastName);
-            tpPersonalData.Controls.Add(tbPhone);
             tpPersonalData.Controls.Add(tbDocumentNumber);
             tpPersonalData.Controls.Add(tbStreet);
             tpPersonalData.Controls.Add(tbCity);
@@ -726,18 +713,13 @@
             tpPersonalData.Controls.Add(tbFirstName);
             tpPersonalData.Controls.Add(lbUI24);
             tpPersonalData.Controls.Add(lbUI17);
-            tpPersonalData.Controls.Add(lbUI21);
-            tpPersonalData.Controls.Add(lbUI30);
             tpPersonalData.Controls.Add(lbUI27);
             tpPersonalData.Controls.Add(lbUI26);
             tpPersonalData.Controls.Add(lbUI25);
-            tpPersonalData.Controls.Add(lbUI29);
             tpPersonalData.Controls.Add(lbUI23);
-            tpPersonalData.Controls.Add(lbUI20);
             tpPersonalData.Controls.Add(lbUI22);
             tpPersonalData.Controls.Add(lbUI28);
             tpPersonalData.Controls.Add(lbUI19);
-            tpPersonalData.Controls.Add(lbUI18);
             tpPersonalData.Controls.Add(lbUI16);
             tpPersonalData.Controls.Add(lbUI15);
             tpPersonalData.Controls.Add(lbUI14);
@@ -851,7 +833,7 @@
             // 
             dtpBirthdate.Font = new Font("Segoe UI", 12F);
             dtpBirthdate.Format = DateTimePickerFormat.Short;
-            dtpBirthdate.Location = new Point(276, 306);
+            dtpBirthdate.Location = new Point(24, 346);
             dtpBirthdate.MaxDate = new DateTime(2026, 7, 21, 0, 0, 0, 0);
             dtpBirthdate.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             dtpBirthdate.Name = "dtpBirthdate";
@@ -859,67 +841,37 @@
             dtpBirthdate.TabIndex = 39;
             dtpBirthdate.Value = new DateTime(2026, 7, 12, 0, 0, 0, 0);
             // 
-            // cbDocumentType
-            // 
-            cbDocumentType.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbDocumentType.Font = new Font("Segoe UI", 12F);
-            cbDocumentType.FormattingEnabled = true;
-            cbDocumentType.Items.AddRange(new object[] { "ID", "Passport" });
-            cbDocumentType.Location = new Point(24, 528);
-            cbDocumentType.Name = "cbDocumentType";
-            cbDocumentType.Size = new Size(133, 29);
-            cbDocumentType.TabIndex = 44;
-            // 
             // cbNationality
             // 
             cbNationality.DropDownStyle = ComboBoxStyle.DropDownList;
             cbNationality.Font = new Font("Segoe UI", 12F);
             cbNationality.FormattingEnabled = true;
-            cbNationality.Location = new Point(24, 380);
+            cbNationality.Location = new Point(24, 428);
             cbNationality.Name = "cbNationality";
-            cbNationality.Size = new Size(488, 29);
+            cbNationality.Size = new Size(486, 29);
             cbNationality.TabIndex = 40;
-            // 
-            // cbPhoneCountry
-            // 
-            cbPhoneCountry.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbPhoneCountry.Font = new Font("Segoe UI", 12F);
-            cbPhoneCountry.FormattingEnabled = true;
-            cbPhoneCountry.Location = new Point(24, 306);
-            cbPhoneCountry.Name = "cbPhoneCountry";
-            cbPhoneCountry.Size = new Size(46, 29);
-            cbPhoneCountry.TabIndex = 36;
             // 
             // tbLastName
             // 
             tbLastName.Font = new Font("Segoe UI", 12F);
-            tbLastName.Location = new Point(276, 158);
+            tbLastName.Location = new Point(274, 174);
             tbLastName.Name = "tbLastName";
-            tbLastName.Size = new Size(236, 29);
+            tbLastName.Size = new Size(238, 29);
             tbLastName.TabIndex = 17;
             tbLastName.KeyPress += tbLastName_KeyPress;
-            // 
-            // tbPhone
-            // 
-            tbPhone.Font = new Font("Segoe UI", 12F);
-            tbPhone.Location = new Point(76, 306);
-            tbPhone.Name = "tbPhone";
-            tbPhone.Size = new Size(186, 29);
-            tbPhone.TabIndex = 38;
-            tbPhone.KeyPress += tbPhone_KeyPress;
             // 
             // tbDocumentNumber
             // 
             tbDocumentNumber.Font = new Font("Segoe UI", 12F);
-            tbDocumentNumber.Location = new Point(170, 528);
+            tbDocumentNumber.Location = new Point(274, 346);
             tbDocumentNumber.Name = "tbDocumentNumber";
-            tbDocumentNumber.Size = new Size(342, 29);
+            tbDocumentNumber.Size = new Size(236, 29);
             tbDocumentNumber.TabIndex = 45;
             // 
             // tbStreet
             // 
             tbStreet.Font = new Font("Segoe UI", 12F);
-            tbStreet.Location = new Point(276, 454);
+            tbStreet.Location = new Point(274, 518);
             tbStreet.Name = "tbStreet";
             tbStreet.Size = new Size(236, 29);
             tbStreet.TabIndex = 43;
@@ -927,7 +879,7 @@
             // tbCity
             // 
             tbCity.Font = new Font("Segoe UI", 12F);
-            tbCity.Location = new Point(130, 454);
+            tbCity.Location = new Point(132, 518);
             tbCity.Name = "tbCity";
             tbCity.Size = new Size(132, 29);
             tbCity.TabIndex = 42;
@@ -936,7 +888,7 @@
             // tbZipCode
             // 
             tbZipCode.Font = new Font("Segoe UI", 12F);
-            tbZipCode.Location = new Point(24, 454);
+            tbZipCode.Location = new Point(24, 518);
             tbZipCode.Name = "tbZipCode";
             tbZipCode.Size = new Size(98, 29);
             tbZipCode.TabIndex = 41;
@@ -945,7 +897,7 @@
             // tbEmail
             // 
             tbEmail.Font = new Font("Segoe UI", 12F);
-            tbEmail.Location = new Point(24, 232);
+            tbEmail.Location = new Point(24, 260);
             tbEmail.Name = "tbEmail";
             tbEmail.Size = new Size(488, 29);
             tbEmail.TabIndex = 18;
@@ -953,7 +905,7 @@
             // tbFirstName
             // 
             tbFirstName.Font = new Font("Segoe UI", 12F);
-            tbFirstName.Location = new Point(24, 158);
+            tbFirstName.Location = new Point(24, 174);
             tbFirstName.Name = "tbFirstName";
             tbFirstName.Size = new Size(238, 29);
             tbFirstName.TabIndex = 16;
@@ -963,7 +915,7 @@
             // 
             lbUI24.AutoSize = true;
             lbUI24.Font = new Font("Segoe UI", 12F);
-            lbUI24.Location = new Point(20, 430);
+            lbUI24.Location = new Point(24, 494);
             lbUI24.Name = "lbUI24";
             lbUI24.Size = new Size(66, 21);
             lbUI24.TabIndex = 37;
@@ -974,40 +926,18 @@
             lbUI17.AutoSize = true;
             lbUI17.Font = new Font("Segoe UI", 8F);
             lbUI17.ForeColor = Color.Gray;
-            lbUI17.Location = new Point(24, 264);
+            lbUI17.Location = new Point(27, 292);
             lbUI17.Name = "lbUI17";
             lbUI17.Size = new Size(112, 13);
             lbUI17.TabIndex = 33;
             lbUI17.Text = "example@gmail.com";
-            // 
-            // lbUI21
-            // 
-            lbUI21.AutoSize = true;
-            lbUI21.Font = new Font("Segoe UI", 8F);
-            lbUI21.ForeColor = Color.Gray;
-            lbUI21.Location = new Point(76, 338);
-            lbUI21.Name = "lbUI21";
-            lbUI21.Size = new Size(84, 13);
-            lbUI21.TabIndex = 19;
-            lbUI21.Text = "Phone Number";
-            // 
-            // lbUI30
-            // 
-            lbUI30.AutoSize = true;
-            lbUI30.Font = new Font("Segoe UI", 8F);
-            lbUI30.ForeColor = Color.Gray;
-            lbUI30.Location = new Point(170, 560);
-            lbUI30.Name = "lbUI30";
-            lbUI30.Size = new Size(104, 13);
-            lbUI30.TabIndex = 20;
-            lbUI30.Text = "Document Number";
             // 
             // lbUI27
             // 
             lbUI27.AutoSize = true;
             lbUI27.Font = new Font("Segoe UI", 8F);
             lbUI27.ForeColor = Color.Gray;
-            lbUI27.Location = new Point(276, 486);
+            lbUI27.Location = new Point(274, 550);
             lbUI27.Name = "lbUI27";
             lbUI27.Size = new Size(114, 13);
             lbUI27.TabIndex = 21;
@@ -1018,7 +948,7 @@
             lbUI26.AutoSize = true;
             lbUI26.Font = new Font("Segoe UI", 8F);
             lbUI26.ForeColor = Color.Gray;
-            lbUI26.Location = new Point(132, 486);
+            lbUI26.Location = new Point(132, 550);
             lbUI26.Name = "lbUI26";
             lbUI26.Size = new Size(26, 13);
             lbUI26.TabIndex = 22;
@@ -1029,50 +959,28 @@
             lbUI25.AutoSize = true;
             lbUI25.Font = new Font("Segoe UI", 8F);
             lbUI25.ForeColor = Color.Gray;
-            lbUI25.Location = new Point(24, 486);
+            lbUI25.Location = new Point(24, 550);
             lbUI25.Name = "lbUI25";
             lbUI25.Size = new Size(53, 13);
             lbUI25.TabIndex = 23;
             lbUI25.Text = "Zip Code";
-            // 
-            // lbUI29
-            // 
-            lbUI29.AutoSize = true;
-            lbUI29.Font = new Font("Segoe UI", 8F);
-            lbUI29.ForeColor = Color.Gray;
-            lbUI29.Location = new Point(24, 560);
-            lbUI29.Name = "lbUI29";
-            lbUI29.Size = new Size(86, 13);
-            lbUI29.TabIndex = 24;
-            lbUI29.Text = "Document Type";
             // 
             // lbUI23
             // 
             lbUI23.AutoSize = true;
             lbUI23.Font = new Font("Segoe UI", 8F);
             lbUI23.ForeColor = Color.Gray;
-            lbUI23.Location = new Point(24, 412);
+            lbUI23.Location = new Point(27, 460);
             lbUI23.Name = "lbUI23";
             lbUI23.Size = new Size(48, 13);
             lbUI23.TabIndex = 25;
             lbUI23.Text = "Country";
             // 
-            // lbUI20
-            // 
-            lbUI20.AutoSize = true;
-            lbUI20.Font = new Font("Segoe UI", 8F);
-            lbUI20.ForeColor = Color.Gray;
-            lbUI20.Location = new Point(24, 338);
-            lbUI20.Name = "lbUI20";
-            lbUI20.Size = new Size(48, 13);
-            lbUI20.TabIndex = 32;
-            lbUI20.Text = "Country";
-            // 
             // lbUI22
             // 
             lbUI22.AutoSize = true;
             lbUI22.Font = new Font("Segoe UI", 12F);
-            lbUI22.Location = new Point(20, 356);
+            lbUI22.Location = new Point(24, 404);
             lbUI22.Name = "lbUI22";
             lbUI22.Size = new Size(86, 21);
             lbUI22.TabIndex = 26;
@@ -1082,37 +990,27 @@
             // 
             lbUI28.AutoSize = true;
             lbUI28.Font = new Font("Segoe UI", 12F);
-            lbUI28.Location = new Point(20, 504);
+            lbUI28.Location = new Point(281, 322);
             lbUI28.Name = "lbUI28";
-            lbUI28.Size = new Size(189, 21);
+            lbUI28.Size = new Size(124, 21);
             lbUI28.TabIndex = 27;
-            lbUI28.Text = "Identity Document Details";
+            lbUI28.Text = "ID Card Number";
             // 
             // lbUI19
             // 
             lbUI19.AutoSize = true;
             lbUI19.Font = new Font("Segoe UI", 12F);
-            lbUI19.Location = new Point(276, 282);
+            lbUI19.Location = new Point(24, 322);
             lbUI19.Name = "lbUI19";
             lbUI19.Size = new Size(73, 21);
             lbUI19.TabIndex = 28;
             lbUI19.Text = "Birthdate";
             // 
-            // lbUI18
-            // 
-            lbUI18.AutoSize = true;
-            lbUI18.Font = new Font("Segoe UI", 12F);
-            lbUI18.Location = new Point(20, 282);
-            lbUI18.Name = "lbUI18";
-            lbUI18.Size = new Size(113, 21);
-            lbUI18.TabIndex = 29;
-            lbUI18.Text = "Phone number";
-            // 
             // lbUI16
             // 
             lbUI16.AutoSize = true;
             lbUI16.Font = new Font("Segoe UI", 12F);
-            lbUI16.Location = new Point(20, 208);
+            lbUI16.Location = new Point(24, 236);
             lbUI16.Name = "lbUI16";
             lbUI16.Size = new Size(134, 21);
             lbUI16.TabIndex = 30;
@@ -1123,7 +1021,7 @@
             lbUI15.AutoSize = true;
             lbUI15.Font = new Font("Segoe UI", 8F);
             lbUI15.ForeColor = Color.Gray;
-            lbUI15.Location = new Point(276, 190);
+            lbUI15.Location = new Point(279, 206);
             lbUI15.Name = "lbUI15";
             lbUI15.Size = new Size(59, 13);
             lbUI15.TabIndex = 31;
@@ -1134,7 +1032,7 @@
             lbUI14.AutoSize = true;
             lbUI14.Font = new Font("Segoe UI", 8F);
             lbUI14.ForeColor = Color.Gray;
-            lbUI14.Location = new Point(24, 190);
+            lbUI14.Location = new Point(27, 206);
             lbUI14.Name = "lbUI14";
             lbUI14.Size = new Size(61, 13);
             lbUI14.TabIndex = 35;
@@ -1144,7 +1042,7 @@
             // 
             lbUI13.AutoSize = true;
             lbUI13.Font = new Font("Segoe UI", 12F);
-            lbUI13.Location = new Point(20, 134);
+            lbUI13.Location = new Point(24, 150);
             lbUI13.Name = "lbUI13";
             lbUI13.Size = new Size(138, 21);
             lbUI13.TabIndex = 34;
@@ -1155,7 +1053,6 @@
             tpExtras.BackColor = Color.White;
             tpExtras.Controls.Add(pnlUI05);
             tpExtras.Controls.Add(ckbParking);
-            tpExtras.Controls.Add(tbOtherRequests);
             tpExtras.Controls.Add(cbAirportTransfer);
             tpExtras.Controls.Add(cbChampagne);
             tpExtras.Controls.Add(cbDepartureNotes);
@@ -1168,7 +1065,6 @@
             tpExtras.Controls.Add(lbUI37);
             tpExtras.Controls.Add(lbUI36);
             tpExtras.Controls.Add(lbUI40);
-            tpExtras.Controls.Add(lbUI41);
             tpExtras.Controls.Add(lbUI39);
             tpExtras.Controls.Add(lbUI35);
             tpExtras.Controls.Add(lbUI32);
@@ -1226,20 +1122,12 @@
             // ckbParking
             // 
             ckbParking.Font = new Font("Segoe UI", 30F);
-            ckbParking.Location = new Point(24, 235);
+            ckbParking.Location = new Point(24, 257);
             ckbParking.Name = "ckbParking";
             ckbParking.Size = new Size(14, 29);
             ckbParking.TabIndex = 41;
             ckbParking.UseVisualStyleBackColor = true;
             ckbParking.CheckedChanged += ckbParking_CheckedChanged;
-            // 
-            // tbOtherRequests
-            // 
-            tbOtherRequests.Location = new Point(24, 394);
-            tbOtherRequests.Multiline = true;
-            tbOtherRequests.Name = "tbOtherRequests";
-            tbOtherRequests.Size = new Size(486, 178);
-            tbOtherRequests.TabIndex = 30;
             // 
             // cbAirportTransfer
             // 
@@ -1259,7 +1147,7 @@
             cbChampagne.Font = new Font("Segoe UI", 12F);
             cbChampagne.FormattingEnabled = true;
             cbChampagne.Items.AddRange(new object[] { "Yes", "No" });
-            cbChampagne.Location = new Point(275, 235);
+            cbChampagne.Location = new Point(275, 257);
             cbChampagne.Name = "cbChampagne";
             cbChampagne.Size = new Size(235, 29);
             cbChampagne.TabIndex = 27;
@@ -1271,7 +1159,7 @@
             cbDepartureNotes.Font = new Font("Segoe UI", 12F);
             cbDepartureNotes.FormattingEnabled = true;
             cbDepartureNotes.Items.AddRange(new object[] { "None", "Late Check-out", "Early Departure" });
-            cbDepartureNotes.Location = new Point(275, 324);
+            cbDepartureNotes.Location = new Point(275, 369);
             cbDepartureNotes.Name = "cbDepartureNotes";
             cbDepartureNotes.Size = new Size(235, 29);
             cbDepartureNotes.TabIndex = 29;
@@ -1283,7 +1171,7 @@
             cbExtraBed.Font = new Font("Segoe UI", 12F);
             cbExtraBed.FormattingEnabled = true;
             cbExtraBed.Items.AddRange(new object[] { "None", "Extra Bed", "Baby Cot" });
-            cbExtraBed.Location = new Point(24, 324);
+            cbExtraBed.Location = new Point(24, 368);
             cbExtraBed.Name = "cbExtraBed";
             cbExtraBed.Size = new Size(235, 29);
             cbExtraBed.TabIndex = 28;
@@ -1304,7 +1192,7 @@
             // tbCarPlateNumber
             // 
             tbCarPlateNumber.Font = new Font("Segoe UI", 12F);
-            tbCarPlateNumber.Location = new Point(44, 235);
+            tbCarPlateNumber.Location = new Point(44, 257);
             tbCarPlateNumber.Name = "tbCarPlateNumber";
             tbCarPlateNumber.ReadOnly = true;
             tbCarPlateNumber.Size = new Size(215, 29);
@@ -1326,7 +1214,7 @@
             lbUI38.AutoSize = true;
             lbUI38.Font = new Font("Segoe UI", 8F);
             lbUI38.ForeColor = Color.Gray;
-            lbUI38.Location = new Point(275, 267);
+            lbUI38.Location = new Point(275, 306);
             lbUI38.Name = "lbUI38";
             lbUI38.Size = new Size(47, 13);
             lbUI38.TabIndex = 39;
@@ -1348,7 +1236,7 @@
             lbUI37.AutoSize = true;
             lbUI37.Font = new Font("Segoe UI", 8F);
             lbUI37.ForeColor = Color.Gray;
-            lbUI37.Location = new Point(44, 267);
+            lbUI37.Location = new Point(44, 306);
             lbUI37.Name = "lbUI37";
             lbUI37.Size = new Size(76, 13);
             lbUI37.TabIndex = 40;
@@ -1358,7 +1246,7 @@
             // 
             lbUI36.AutoSize = true;
             lbUI36.Font = new Font("Segoe UI", 12F);
-            lbUI36.Location = new Point(275, 211);
+            lbUI36.Location = new Point(275, 233);
             lbUI36.Name = "lbUI36";
             lbUI36.Size = new Size(94, 21);
             lbUI36.TabIndex = 32;
@@ -1368,27 +1256,17 @@
             // 
             lbUI40.AutoSize = true;
             lbUI40.Font = new Font("Segoe UI", 12F);
-            lbUI40.Location = new Point(275, 300);
+            lbUI40.Location = new Point(275, 345);
             lbUI40.Name = "lbUI40";
             lbUI40.Size = new Size(125, 21);
             lbUI40.TabIndex = 36;
             lbUI40.Text = "Departure Notes";
             // 
-            // lbUI41
-            // 
-            lbUI41.AutoSize = true;
-            lbUI41.Font = new Font("Segoe UI", 12F);
-            lbUI41.Location = new Point(21, 370);
-            lbUI41.Name = "lbUI41";
-            lbUI41.Size = new Size(50, 21);
-            lbUI41.TabIndex = 35;
-            lbUI41.Text = "Other";
-            // 
             // lbUI39
             // 
             lbUI39.AutoSize = true;
             lbUI39.Font = new Font("Segoe UI", 12F);
-            lbUI39.Location = new Point(24, 300);
+            lbUI39.Location = new Point(24, 344);
             lbUI39.Name = "lbUI39";
             lbUI39.Size = new Size(74, 21);
             lbUI39.TabIndex = 34;
@@ -1398,7 +1276,7 @@
             // 
             lbUI35.AutoSize = true;
             lbUI35.Font = new Font("Segoe UI", 12F);
-            lbUI35.Location = new Point(21, 211);
+            lbUI35.Location = new Point(21, 233);
             lbUI35.Name = "lbUI35";
             lbUI35.Size = new Size(62, 21);
             lbUI35.TabIndex = 31;
@@ -1550,15 +1428,12 @@
             // 
             dgvPaymentSum.AllowUserToAddRows = false;
             dgvPaymentSum.AllowUserToDeleteRows = false;
-            dgvPaymentSum.AllowUserToResizeColumns = false;
-            dgvPaymentSum.AllowUserToResizeRows = false;
             dgvPaymentSum.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPaymentSum.BackgroundColor = Color.White;
             dgvPaymentSum.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             dgvPaymentSum.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle1.BackColor = Color.FromArgb(239, 246, 255);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 238);
             dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
             dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
@@ -1569,24 +1444,24 @@
             dgvPaymentSum.Columns.AddRange(new DataGridViewColumn[] { colDate, colNameOfService, colUnitPrice, colQuantity, colTax, colTotal });
             dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = SystemColors.Window;
-            dataGridViewCellStyle8.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle8.Font = new Font("Segoe UI", 9.5F);
             dataGridViewCellStyle8.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle8.SelectionBackColor = Color.FromArgb(220, 235, 252);
+            dataGridViewCellStyle8.SelectionForeColor = Color.Black;
             dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
             dgvPaymentSum.DefaultCellStyle = dataGridViewCellStyle8;
-            dgvPaymentSum.Dock = DockStyle.Top;
             dgvPaymentSum.EnableHeadersVisualStyles = false;
-            dgvPaymentSum.GridColor = SystemColors.ButtonFace;
+            dgvPaymentSum.GridColor = Color.FromArgb(230, 230, 230);
             dgvPaymentSum.Location = new Point(10, 10);
             dgvPaymentSum.Margin = new Padding(10);
+            dgvPaymentSum.MultiSelect = false;
             dgvPaymentSum.Name = "dgvPaymentSum";
             dgvPaymentSum.ReadOnly = true;
             dgvPaymentSum.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgvPaymentSum.RowHeadersVisible = false;
-            dgvPaymentSum.RowTemplate.Height = 30;
-            dgvPaymentSum.ScrollBars = ScrollBars.None;
-            dgvPaymentSum.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dgvPaymentSum.RowTemplate.Height = 28;
+            dgvPaymentSum.ScrollBars = ScrollBars.Vertical;
+            dgvPaymentSum.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvPaymentSum.Size = new Size(509, 329);
             dgvPaymentSum.TabIndex = 56;
             // 
@@ -1594,6 +1469,8 @@
             // 
             colDate.DataPropertyName = "Date";
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Format = "d";
+            dataGridViewCellStyle2.NullValue = null;
             colDate.DefaultCellStyle = dataGridViewCellStyle2;
             colDate.FillWeight = 85F;
             colDate.HeaderText = "Date";
@@ -1606,7 +1483,7 @@
             colNameOfService.DataPropertyName = "Description";
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
             colNameOfService.DefaultCellStyle = dataGridViewCellStyle3;
-            colNameOfService.FillWeight = 160F;
+            colNameOfService.FillWeight = 150F;
             colNameOfService.HeaderText = "Description";
             colNameOfService.Name = "colNameOfService";
             colNameOfService.ReadOnly = true;
@@ -1615,8 +1492,10 @@
             // 
             colUnitPrice.DataPropertyName = "UnitPrice";
             dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.Format = "C0";
+            dataGridViewCellStyle4.NullValue = null;
             colUnitPrice.DefaultCellStyle = dataGridViewCellStyle4;
-            colUnitPrice.FillWeight = 95F;
+            colUnitPrice.FillWeight = 85F;
             colUnitPrice.HeaderText = "Unit Price";
             colUnitPrice.Name = "colUnitPrice";
             colUnitPrice.ReadOnly = true;
@@ -1645,8 +1524,9 @@
             // 
             colTotal.DataPropertyName = "Total";
             dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "C2";
+            dataGridViewCellStyle7.NullValue = "0";
             colTotal.DefaultCellStyle = dataGridViewCellStyle7;
-            colTotal.FillWeight = 110F;
             colTotal.HeaderText = "Total";
             colTotal.Name = "colTotal";
             colTotal.ReadOnly = true;
@@ -2088,11 +1968,8 @@
         private Button btnPrint;
         private CheckBox ckbEditData;
         private DateTimePicker dtpBirthdate;
-        private ComboBox cbDocumentType;
         private ComboBox cbNationality;
-        private ComboBox cbPhoneCountry;
         private TextBox tbLastName;
-        private TextBox tbPhone;
         private TextBox tbDocumentNumber;
         private TextBox tbStreet;
         private TextBox tbCity;
@@ -2101,18 +1978,13 @@
         private TextBox tbFirstName;
         private Label lbUI24;
         private Label lbUI17;
-        private Label lbUI21;
-        private Label lbUI30;
         private Label lbUI27;
         private Label lbUI26;
         private Label lbUI25;
-        private Label lbUI29;
         private Label lbUI23;
-        private Label lbUI20;
         private Label lbUI22;
         private Label lbUI28;
         private Label lbUI19;
-        private Label lbUI18;
         private Label lbUI16;
         private Label lbUI15;
         private Label lbUI14;
@@ -2125,7 +1997,6 @@
         private Label lbUI31;
         private Label HL3;
         private CheckBox ckbParking;
-        private TextBox tbOtherRequests;
         private ComboBox cbAirportTransfer;
         private ComboBox cbChampagne;
         private ComboBox cbDepartureNotes;
@@ -2138,7 +2009,6 @@
         private Label lbUI37;
         private Label lbUI36;
         private Label lbUI40;
-        private Label lbUI41;
         private Label lbUI39;
         private Label lbUI35;
         private Label lbUI32;
@@ -2164,12 +2034,6 @@
         private Label lbUI45;
         private Label lbUI44;
         private DataGridView dgvPaymentSum;
-        private DataGridViewTextBoxColumn colDate;
-        private DataGridViewTextBoxColumn colNameOfService;
-        private DataGridViewTextBoxColumn colUnitPrice;
-        private DataGridViewTextBoxColumn colQuantity;
-        private DataGridViewTextBoxColumn colTax;
-        private DataGridViewTextBoxColumn colTotal;
         private Panel pnlUI09;
         private TableLayoutPanel tableLayoutPanel7;
         private Label lbUI46;
@@ -2197,5 +2061,11 @@
         private Label lbUI47;
         private Label lbUI12;
         private TextBox tbDateOfArrival;
+        private DataGridViewTextBoxColumn colDate;
+        private DataGridViewTextBoxColumn colNameOfService;
+        private DataGridViewTextBoxColumn colUnitPrice;
+        private DataGridViewTextBoxColumn colQuantity;
+        private DataGridViewTextBoxColumn colTax;
+        private DataGridViewTextBoxColumn colTotal;
     }
 }

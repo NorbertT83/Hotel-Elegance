@@ -95,6 +95,7 @@ namespace Hotel_erp_Winforms_App.Services
             }
             return bookings;
         }
+
         // 2.
         public async Task<List<Booking>> SearchBookings(int fieldIndex, string searchText, int statusIndex, int spanIndex, DateTime fromDate, DateTime toDate)
         {
@@ -102,17 +103,18 @@ namespace Hotel_erp_Winforms_App.Services
             string whereClause = " WHERE 1=1 ";
             var parameters = new Dictionary<string, object>();
 
-            // MEZŐ KIVÁLASZTÁS
+            // 1. MEZŐ KIVÁLASZTÁS
             if (!string.IsNullOrEmpty(searchText))
             {
                 switch (fieldIndex)
                 {
                     case -1:
-                    case 0: break;
+                    case 0:
+                        break;
 
                     case 1:
                         joins += " INNER JOIN guests ON bookings.guest1_id = guests.id ";
-                        whereClause += " AND guests.fname LIKE @fname ";
+                        whereClause += " AND (guests.fname LIKE @fname OR guests.lname LIKE @fname) ";
                         parameters.Add("@fname", $"%{searchText}%");
                         break;
 
@@ -132,22 +134,22 @@ namespace Hotel_erp_Winforms_App.Services
                         break;
 
                     case 5:
-                        whereClause += " AND bookings.beginning_of_stay LIKE @searchBar ";
+                        whereClause += " AND DATE_FORMAT(bookings.beginning_of_stay, '%Y-%m-%d') LIKE @searchBar ";
                         parameters.Add("@searchBar", $"%{searchText}%");
                         break;
 
                     case 6:
-                        whereClause += " AND bookings.end_of_stay LIKE @searchBar ";
+                        whereClause += " AND DATE_FORMAT(bookings.end_of_stay, '%Y-%m-%d') LIKE @searchBar ";
                         parameters.Add("@searchBar", $"%{searchText}%");
                         break;
 
                     case 7:
-                        whereClause += " AND bookings.checkin LIKE @searchBar ";
+                        whereClause += " AND DATE_FORMAT(bookings.checkin, '%Y-%m-%d') LIKE @searchBar ";
                         parameters.Add("@searchBar", $"%{searchText}%");
                         break;
 
                     case 8:
-                        whereClause += " AND bookings.checkout LIKE @searchBar ";
+                        whereClause += " AND DATE_FORMAT(bookings.checkout, '%Y-%m-%d') LIKE @searchBar ";
                         parameters.Add("@searchBar", $"%{searchText}%");
                         break;
 
@@ -156,42 +158,46 @@ namespace Hotel_erp_Winforms_App.Services
                         parameters.Add("@searchBar", $"%{searchText}%");
                         break;
                 }
-            
+            }
 
-            // STÁTUSZ KIVÁLASZTÁS
+            // 2. STÁTUSZ KIVÁLASZTÁS
             switch (statusIndex)
             {
+                case 0:
+                    break;
                 case 1:
                     whereClause += " AND checkin IS NULL";
                     break;
-
                 case 2:
                     whereClause += " AND checkin IS NOT NULL AND checkout IS NULL";
                     break;
-
                 case 3:
                     whereClause += " AND checkout IS NOT NULL";
                     break;
             }
-        }
 
-        // IDŐSZAK KIVÁLASZTÁS
+            // 3. IDŐSZAK KIVÁLASZTÁS
+            DateTime startRange = fromDate.Date;
+            DateTime endRange = toDate.Date.AddDays(1).AddSeconds(-1);
+
             switch (spanIndex)
             {
                 case 0:
-                    whereClause += " AND beginning_of_stay BETWEEN @from AND @to";
-                    parameters.Add("@from", fromDate);
-                    parameters.Add("@to", toDate);
                     break;
                 case 1:
-                    whereClause += " AND end_of_stay BETWEEN @from AND @to";
-                    parameters.Add("@from", fromDate);
-                    parameters.Add("@to", toDate);
+                    whereClause += " AND beginning_of_stay BETWEEN @from AND @to";
+                    parameters.Add("@from", startRange);
+                    parameters.Add("@to", endRange);
                     break;
                 case 2:
+                    whereClause += " AND end_of_stay BETWEEN @from AND @to";
+                    parameters.Add("@from", startRange);
+                    parameters.Add("@to", endRange);
+                    break;
+                case 3:
                     whereClause += " AND beginning_of_stay >= @from AND end_of_stay <= @to";
-                    parameters.Add("@from", fromDate);
-                    parameters.Add("@to", toDate);
+                    parameters.Add("@from", startRange);
+                    parameters.Add("@to", endRange);
                     break;
             }
 
@@ -199,6 +205,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             return await LoadDgvAsync(query, parameters);
         }
+
         // 3.
         public async Task ConfirmCheckinAsync(Booking booking, List<Guest> guestList, List<Service> serviceItems)
         {
@@ -354,6 +361,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+
         // 4.
         public async Task ConfirmNewBookingAsync(Room room, List<Guest> guestList, List<Service> services, DateTime endDate, CateringLevel catering, int nights)
         {
@@ -1089,43 +1097,43 @@ namespace Hotel_erp_Winforms_App.Services
             var bindingList = new BindingList<BillingItem>(billingItems);
 
             dgvPaymentSum.AutoGenerateColumns = false;
-            dgvPaymentSum.Columns.Clear();
+            //dgvPaymentSum.Columns.Clear();
 
-            LoadBillingitemToDgv("Date", dgvPaymentSum);
-            LoadBillingitemToDgv("Description", dgvPaymentSum);
-            LoadBillingitemToDgv("UnitPrice", dgvPaymentSum);
-            LoadBillingitemToDgv("Quantity", dgvPaymentSum);
-            LoadBillingitemToDgv("Tax", dgvPaymentSum);
-            LoadBillingitemToDgv("Total", dgvPaymentSum);
+            //LoadBillingitemToDgv("Date", dgvPaymentSum);
+            //LoadBillingitemToDgv("Description", dgvPaymentSum);
+            //LoadBillingitemToDgv("UnitPrice", dgvPaymentSum);
+            //LoadBillingitemToDgv("Quantity", dgvPaymentSum);
+            //LoadBillingitemToDgv("Tax", dgvPaymentSum);
+            //LoadBillingitemToDgv("Total", dgvPaymentSum);
 
-            dgvPaymentSum.Columns[3].HeaderText = "Qty";
+            //dgvPaymentSum.Columns[3].HeaderText = "Qty";
 
             dgvPaymentSum.DataSource = bindingList;
 
             // DATAGRIDVIEW STYLE
-            dgvPaymentSum.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dgvPaymentSum.Columns[1].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[2].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[3].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvPaymentSum.Columns[5].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //dgvPaymentSum.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            //dgvPaymentSum.Columns[1].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //dgvPaymentSum.Columns[2].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //dgvPaymentSum.Columns[3].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //dgvPaymentSum.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //dgvPaymentSum.Columns[5].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            dgvPaymentSum.Columns[0].DefaultCellStyle.Format = "yyyy.MM.dd";
+            //dgvPaymentSum.Columns[0].DefaultCellStyle.Format = "yyyy.MM.dd";
 
-            dgvPaymentSum.Columns[2].DefaultCellStyle.Format = "C0";
-            dgvPaymentSum.Columns[5].DefaultCellStyle.Format = "C0";
+            //dgvPaymentSum.Columns[2].DefaultCellStyle.Format = "C0";
+            //dgvPaymentSum.Columns[5].DefaultCellStyle.Format = "C0";
 
-            dgvPaymentSum.Columns[4].DefaultCellStyle.Format = "P0";
+            //dgvPaymentSum.Columns[4].DefaultCellStyle.Format = "P0";
         }
         // 15.
-        private void LoadBillingitemToDgv(string description, DataGridView dgvPaymentSum)
-        {
-            dgvPaymentSum.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = description,
-                HeaderText = description
-            });
-        }
+        //private void LoadBillingitemToDgv(string description, DataGridView dgvPaymentSum)
+        //{
+        //    dgvPaymentSum.Columns.Add(new DataGridViewTextBoxColumn
+        //    {
+        //        DataPropertyName = description,
+        //        HeaderText = description
+        //    });
+        //}
         #endregion
 
         #region INFO

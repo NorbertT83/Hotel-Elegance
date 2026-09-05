@@ -104,7 +104,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             tbDocumentNumber.Text = "123456AB";
             tbFirstName.Text = "Elek";
             tbLastName.Text = "Teszt";
-            tbPhone.Text = "+36 70 388 9083";
             dtpBirthdate.Value = new DateTime(1995, 5, 15);
             cbNationality.Text = "Hungary";
             tbZipCode.Text = "1051";
@@ -112,6 +111,15 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             tbStreet.Text = "Fő utca 1.";
             tbCarPlateNumber.Text = "ABC-123";
             // ----------
+
+            // DGV PAYMENT SUM
+            foreach (DataGridViewColumn col in dgvPaymentSum.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+            dgvPaymentSum.ClearSelection();
+            // ----------
+
 
             #endregion
         }
@@ -594,12 +602,11 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
             bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
             bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider);
-            bool isPhoneValid = !_commonHelper.HasValidationError(tbPhone, _errorProvider);
             bool isZipValid = !_commonHelper.HasValidationError(tbZipCode, _errorProvider);
             bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
             bool isDocValid = !_commonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
 
-            return isFirstNameValid && isLastNameValid && isEmailValid && isPhoneValid && isZipValid && isCityValid && isDocValid;
+            return isFirstNameValid && isLastNameValid && isEmailValid && isZipValid && isCityValid && isDocValid;
         }
 
         #endregion

@@ -31,8 +31,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         #region variables
 
         private Booking selectedBooking;
-        private BookingService _bookingService;
-        private CommonHelper _commonHelper;
+        private BookingService _bookingService = new BookingService();
+        private CommonHelper _commonHelper = new CommonHelper();
         public Service service;
 
         public List<Service> services = new List<Service>();
@@ -54,8 +54,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         public FrmCheckin(Booking? booking = null)
         {
             InitializeComponent();
+
             selectedBooking = booking;
-            _bookingService = new BookingService();
         }
 
         private void FrmCheckin_Load(object sender, EventArgs e)
@@ -75,7 +75,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             cbNationality.SelectedItem = "Hungary";
             dtpBirthdate.MaxDate = DateTime.Today;
-            cbDocumentType.SelectedIndex = 0;
 
             tbFirstName.ReadOnly = !string.IsNullOrEmpty(tbFirstName.Text);
             tbLastName.ReadOnly = !string.IsNullOrEmpty(tbLastName.Text);
@@ -89,7 +88,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             #endregion
 
             // FOR TESTING!!!
-            tbPhone.Text = "111";
             tbDocumentNumber.Text = "adsv";
             // --------------
 
@@ -229,7 +227,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             tbDocumentNumber.Clear();
             tbFirstName.Clear();
             tbLastName.Clear();
-            tbPhone.Clear();
             dtpBirthdate.Value = DateTime.Today;
             cbNationality.SelectedItem = "Hungary";
             tbZipCode.Clear();
@@ -270,21 +267,23 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 {
                     guest = GetGuestFromInput();
 
-                    if (guestsOfBooking.Count() > 0)
+                    if (guestsOfBooking.Count > modifiedGuestIndex)
                     {
-                        guest = guestsOfBooking[modifiedGuestIndex];
+                        guestsOfBooking[modifiedGuestIndex] = guest;
                     }
                     else
                     {
                         guestsOfBooking.Add(guest);
-
                         guestCount++;
                         cbGuests.Items.Add($"Guest {guestCount}");
                         cbGuests.SelectedIndex = guestCount - 1;
                     }
 
                     tcGuests.TabPages.Clear();
-                    foreach(var g in guestsOfBooking) _bookingService.AddGuestTabToSummary(g, guestsOfBooking, tcGuests);
+                    foreach (var g in guestsOfBooking)
+                    {
+                        _bookingService.AddGuestTabToSummary(g, guestsOfBooking, tcGuests);
+                    }
 
                     dataModified = false;
                     guestIsSaved = true;
@@ -474,6 +473,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         #endregion
 
         #region Payment summary
+
         private void dgvPaymentSum_SelectionChanged(object sender, EventArgs e)
         {
             dgvPaymentSum.ClearSelection();
@@ -500,6 +500,12 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 break;
 
                 case 3:
+                    colNameOfService.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colUnitPrice.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colQuantity.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colTax.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colTotal.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+
                     await _bookingService.LoadBillItemsAsync(dgvPaymentSum, services, selectedBooking);
 
                     lbNetAmount.Text = _bookingService.CalculateNetAmount(billingItems).ToString("C0");
@@ -719,12 +725,11 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
             bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
             bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider);
-            bool isPhoneValid = !_commonHelper.HasValidationError(tbPhone, _errorProvider);
             bool isZipValid = !_commonHelper.HasValidationError(tbZipCode, _errorProvider);
             bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
             bool isDocValid = !_commonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
 
-            return isFirstNameValid && isLastNameValid && isEmailValid && isPhoneValid && isZipValid && isCityValid && isDocValid;
+            return isFirstNameValid && isLastNameValid && isEmailValid && isZipValid && isCityValid && isDocValid;
         }
 
         #endregion

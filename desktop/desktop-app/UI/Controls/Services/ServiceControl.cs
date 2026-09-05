@@ -23,8 +23,9 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         #region TODO:
 
         /*
-         * NEW SERVICE BOOKINGOT BEFEJEZNI
-         * -> NEM FRISSUL AZ ÁR, NAGYON SOKSZOR VAN UGYANAZ A SZOBASZÁM A COMBOBOXBAN
+         * a bookings ne radio button legyen
+         * active services megjelenítése
+         * cb type-hoz "Other" fület adni, 0-s db type-okat bele tölteni
         */
 
         #endregion
@@ -66,6 +67,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private async void ProductContol_Load(object sender, EventArgs e)
         {
             #region UI defaults before await
+            PermissionManager.ApplyPermissions(this);
 
             SetBoxesReadonlibility(true);
             pnlSideBottom.Visible = false;
@@ -178,6 +180,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             if (rbStatusActive.Checked)
             {
+                btnUpdateService.Enabled = true;
+                btnNewService.Enabled = true;
+                btnDeleteService.Enabled = true;
+
                 try
                 {
                     cbRoomNumbers.Text = string.Empty;
@@ -221,6 +227,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 {
                     Cursor.Current = Cursors.Default;
                 }
+            }
+
+            else
+            {
+                PermissionManager.ApplyPermissions(this);
             }
         }
 
