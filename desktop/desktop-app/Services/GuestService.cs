@@ -160,20 +160,19 @@ namespace Hotel_erp_Winforms_App.Services
             Guest g = new Guest
             (
                 Convert.ToInt32(reader["id"]),
-                reader["email"].ToString(),
-                GetStringOrNull(reader["id_card_number"]),
-                reader["fname"].ToString(),
-                reader["lname"].ToString(),
-                reader["date_of_birth"] is DBNull ? null : Convert.ToDateTime(reader["date_of_birth"]),
-                reader["country"].ToString(),
-                reader["zip_code"].ToString(),
-                reader["city"].ToString(),
-                reader["street"].ToString(),
-                GetStringOrNull(reader["car_plate_number"]),
+                reader["email"]?.ToString() ?? string.Empty,
+                GetStringOrNull(reader["id_card_number"]) ?? string.Empty,
+                reader["fname"]?.ToString() ?? string.Empty,
+                reader["lname"]?.ToString() ?? string.Empty,
+                reader["date_of_birth"] is DBNull or null ? null : Convert.ToDateTime(reader["date_of_birth"]),
+                reader["country"]?.ToString() ?? string.Empty,
+                reader["zip_code"]?.ToString() ?? string.Empty,
+                reader["city"]?.ToString() ?? string.Empty,
+                reader["street"]?.ToString() ?? string.Empty,
+                GetStringOrNull(reader["car_plate_number"]) ?? string.Empty,
                 Convert.ToInt32(reader["total_nights"]),
                 Convert.ToInt32(reader["loyalty_level"])
             );
-
             return g;
         }
         #endregion
@@ -196,16 +195,16 @@ namespace Hotel_erp_Winforms_App.Services
         }
 
         // 2.
-        public int GetNumberOfCurrentlyStayers(List<Booking> bookings)
+        public int GetNumberOfCurrentlyStayers(List<Booking>? bookings)
         {
             if (bookings == null) return 0;
 
             int count = bookings
                 .Where(b => b.Checkin != null && b.Checkout == null)
-                .Sum(b => (b.GuestId != null ? 1 : 0) +
-                          (b.GuestId2 != null ? 1 : 0) +
-                          (b.GuestId3 != null ? 1 : 0) +
-                          (b.GuestId4 != null ? 1 : 0));
+                .Sum(b => (b.GuestId == 0 ? 1 : 0) +
+                          (b.GuestId2 == 0 ? 1 : 0) +
+                          (b.GuestId3 == 0 ? 1 : 0) +
+                          (b.GuestId4 == 0 ? 1 : 0));
 
             return count;
         }
@@ -216,9 +215,9 @@ namespace Hotel_erp_Winforms_App.Services
             if (bookings == null) return 0;
 
             int returningCount = bookings
-                .SelectMany(b => new[] { (int?)b.GuestId, b.GuestId2, b.GuestId3, b.GuestId4 })
+                .SelectMany(b => new[] { b.GuestId, b.GuestId2, b.GuestId3, b.GuestId4 })
                 .Where(id => id.HasValue)
-                .Select(id => id.Value)
+                .Select(id => id!.Value)
                 .GroupBy(id => id)
                 .Count(g => g.Count() > 1);
 

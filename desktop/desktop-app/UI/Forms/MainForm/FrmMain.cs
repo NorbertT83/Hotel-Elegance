@@ -3,10 +3,8 @@ using Hotel_erp_Winforms_App.UI.Controls;
 using Hotel_erp_Winforms_App.UI.Controls.EmployeeControl;
 using Hotel_erp_Winforms_App.UI.Controls.Settings;
 using Hotel_erp_Winforms_App.UI.Controls.Rooms;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 using Hotel_erp_Winforms_App.Helpers;
+using Hotel_erp_Winforms_App.Forms;
 
 namespace Hotel_erp_Winforms_App
 {
@@ -107,6 +105,25 @@ namespace Hotel_erp_Winforms_App
             ShowControl(new SettingsControl());
             lbControlTitle.Text = "System Settings";
         }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            FrmLogin frmLogin = new FrmLogin();
+            
+
+            DialogResult dr = MessageBox.Show(
+                "Are you sure you want to log out?",
+                "Confirm Log Out",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (dr == DialogResult.Yes)
+            {
+                frmLogin.Show();
+                this.Close();
+            }
+
+        }
         #endregion
 
         private void ShowControl(UserControl control)
@@ -117,6 +134,6 @@ namespace Hotel_erp_Winforms_App
             control.Dock = DockStyle.Fill;
             control.BringToFront();
             panelMainContent.ResumeLayout();
-        }
+        } 
     }
 }

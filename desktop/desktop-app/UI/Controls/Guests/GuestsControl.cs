@@ -34,7 +34,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private List<Guest> guests = new List<Guest>();
 
-        private Guest _selectedGuest;
+        private Guest? _selectedGuest;
         private ErrorProvider _errorProvider = new ErrorProvider();
 
         bool addGuestClicked = false;
@@ -223,7 +223,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    _guestService.DeleteGuestFromDbAsync(_selectedGuest);
+                    await _guestService.DeleteGuestFromDbAsync(_selectedGuest);
 
                     MessageBox.Show(
                         "Guest deletet successfully!",
@@ -262,28 +262,28 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         #endregion
         #region Helpers
         // 1.
-        private void dgvGuests_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void dgvGuests_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dgvGuests.Columns[e.ColumnIndex].Name.Equals("colLoyalty", StringComparison.OrdinalIgnoreCase) ||
-                dgvGuests.Columns[e.ColumnIndex].DataPropertyName.Equals("loyalty_level", StringComparison.OrdinalIgnoreCase))
+            var column = dgvGuests.Columns[e.ColumnIndex];
+            if (column is null)
             {
-                if (e.Value != null && int.TryParse(e.Value.ToString(), out int loyalty))
+                return;
+            }
+
+            bool isLoyaltyColumn = string.Equals(column.Name, "colLoyalty", StringComparison.OrdinalIgnoreCase) ||
+                                   string.Equals(column.DataPropertyName, "loyalty_level", StringComparison.OrdinalIgnoreCase);
+
+            if (isLoyaltyColumn && e.Value is not null and not DBNull)
+            {
+                if (int.TryParse(e.Value.ToString(), out int loyalty))
                 {
-                    switch (loyalty)
+                    e.Value = loyalty switch
                     {
-                        case 0:
-                            e.Value = "Standard";
-                            break;
-                        case 1:
-                            e.Value = "Corporate";
-                            break;
-                        case 2:
-                            e.Value = "VIP";
-                            break;
-                        default:
-                            e.Value = "Unknown";
-                            break;
-                    }
+                        0 => "Standard",
+                        1 => "Corporate",
+                        2 => "VIP",
+                        _ => "Unknown"
+                    };
 
                     e.FormattingApplied = true;
                 }
@@ -321,6 +321,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             tbFullName.Text = $"{_selectedGuest?.LName} {_selectedGuest?.FName}";
             tbEmail.Text = $"{_selectedGuest?.Email}";
 
+            if (_selectedGuest == null)
+            {
+                throw new InvalidOperationException("No guest selected to set address.");
+            }
+
             tbAddress.Text = $"{_selectedGuest.ZipCode ?? ""}" +
                 $"{(!string.IsNullOrWhiteSpace(_selectedGuest.ZipCode) ? " " : "")}" +
                 $"{_selectedGuest.City ?? ""}" +
@@ -328,6 +333,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 $"{_selectedGuest.Street}";
 
             tbIdCard.Text = $"{_selectedGuest?.IdCardNumber}";
+
+            if (_selectedGuest == null)
+            {
+                throw new InvalidOperationException("No guest selected to set loyalty category.");
+            }
 
             switch (_selectedGuest.LoyaltyLevel)
             {

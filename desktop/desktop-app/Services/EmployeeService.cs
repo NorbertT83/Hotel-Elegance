@@ -74,7 +74,8 @@ namespace Hotel_erp_Winforms_App.Services
         }
 
         // jelszó kezelés
-        public Employee GetEmployeeByTaxNumber(string taxNumber)
+
+        public Employee? GetEmployeeByTaxNumber(string taxNumber)
         {
             string query = "SELECT id, fname, lname, tax_number, paid_holidays_left, address, date_of_birth, date_of_hiring, " +
                 "role, salary, created_at, updated_at " +
@@ -117,7 +118,9 @@ namespace Hotel_erp_Winforms_App.Services
                         MessageBox.Show("Adatbázis hiba: " + ex.Message);
                     }
                 }
-            } return null;
+            }
+
+            return null;
         }
 
         public bool SaveEmployeesPassword(string taxNumber, string hashedPassword)
@@ -146,6 +149,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+
         // jelszó kezelés vége
 
         public void DeleteEmployee(Employee employee)

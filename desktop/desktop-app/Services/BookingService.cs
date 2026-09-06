@@ -36,7 +36,7 @@ namespace Hotel_erp_Winforms_App.Services
         #endregion
         #region Database actions
         // 1.
-        public async Task<List<Booking>> LoadDgvAsync(string query = "SELECT * FROM bookings", Dictionary<string, object> parameters = null)
+        public async Task<List<Booking>> LoadDgvAsync(string query = "SELECT * FROM bookings", Dictionary<string, object>? parameters = null)
         {
             List<Booking> bookings = new List<Booking>();
 
@@ -277,11 +277,13 @@ namespace Hotel_erp_Winforms_App.Services
                                 cmd.Parameters.AddWithValue("@zip", guest.ZipCode);
                                 cmd.Parameters.AddWithValue("@city", guest.City);
                                 cmd.Parameters.AddWithValue("@street", guest.Street);
-                                cmd.Parameters.AddWithValue("@carPlate", (object)guest.CarPlateNumber ?? DBNull.Value);
+                                cmd.Parameters.AddWithValue("@carPlate", string.IsNullOrEmpty(guest.CarPlateNumber)
+                                    ? DBNull.Value
+                                    : guest.CarPlateNumber);
                                 cmd.Parameters.AddWithValue("@totalNights", guest.TotalNights);
                                 cmd.Parameters.AddWithValue("@loyalty", guest.LoyaltyLevel);
 
-                                object result = await cmd.ExecuteScalarAsync();
+                                object? result = await cmd.ExecuteScalarAsync();
                                 int currentGuestId = 0;
 
                                 if (result != null && result != DBNull.Value && Convert.ToInt32(result) != 0)
@@ -436,7 +438,7 @@ namespace Hotel_erp_Winforms_App.Services
                                     using (MySqlCommand idCmd = new MySqlCommand("SELECT id FROM guests WHERE id_card_number = @idCard", conn, transaction))
                                     {
                                         idCmd.Parameters.AddWithValue("@idCard", g.IdCardNumber);
-                                        object result = await idCmd.ExecuteScalarAsync();
+                                        object? result = await idCmd.ExecuteScalarAsync();
                                         guestDbIds.Add(Convert.ToInt64(result));
                                     }
                                 }
@@ -617,11 +619,11 @@ namespace Hotel_erp_Winforms_App.Services
         #endregion
         #region Check-in
         // 1.
-        public Booking GetBookingById(string id)
+        public Booking? GetBookingById(string id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "SELECT * FROM bookings WHERE @id = id";
+                string query = "SELECT * FROM bookings WHERE id = @id";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
@@ -632,24 +634,24 @@ namespace Hotel_erp_Winforms_App.Services
                     {
                         if (reader.Read())
                         {
-                            System.Enum.TryParse<Hotel_erp_Winforms_App.Models.RoomType>
+                            Enum.TryParse<Hotel_erp_Winforms_App.Models.RoomType>
                                 (reader["room_type"]?.ToString(), true, out var roomType);
 
-                            System.Enum.TryParse<CateringLevel>
+                            Enum.TryParse<CateringLevel>
                                 (reader["catering_level"]?.ToString(), true, out var cateringLevel);
 
                             return new Booking(
-                                reader["id"].ToString(),
+                                reader["id"]?.ToString() ?? string.Empty,
                                 Convert.ToInt32(reader["room_number"]),
                                 roomType,
                                 Convert.ToInt32(reader["guest1_id"]),
                                 Convert.ToDateTime(reader["beginning_of_stay"]),
                                 Convert.ToDateTime(reader["end_of_stay"]),
-                                reader["checkin"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["checkin"]),
-                                reader["checkout"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["checkout"]),
-                                reader["guest2_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest2_id"]),
-                                reader["guest3_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest3_id"]),
-                                reader["guest4_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["guest4_id"]),
+                                reader["checkin"] is DBNull or null ? null : Convert.ToDateTime(reader["checkin"]),
+                                reader["checkout"] is DBNull or null ? null : Convert.ToDateTime(reader["checkout"]),
+                                reader["guest2_id"] is DBNull or null ? null : Convert.ToInt32(reader["guest2_id"]),
+                                reader["guest3_id"] is DBNull or null ? null : Convert.ToInt32(reader["guest3_id"]),
+                                reader["guest4_id"] is DBNull or null ? null : Convert.ToInt32(reader["guest4_id"]),
                                 cateringLevel,
                                 Convert.ToDateTime(reader["created_at"])
                             );
@@ -660,8 +662,13 @@ namespace Hotel_erp_Winforms_App.Services
             return null;
         }
         // 2.
-        public Room GetRoomByBookingId(Booking booking)
+        public Room? GetRoomByBookingId(Booking? booking)
         {
+            if (booking is null)
+            {
+                return null;
+            }
+
             string query = "SELECT rooms.room_number, rooms.room_type, floorspace, bed_type, has_balcony, has_view, " +
                 "max_adults, extras, status, price_per_night, door_locked, needs_cleaning, dont_disturb, is_cleaning, ac_temp " +
                 "FROM rooms " +
@@ -672,24 +679,29 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
+                    cmd.Parameters.AddWithValue("@bookingID", booking.Id);
                     conn.Open();
-                    cmd.Parameters.AddWithValue("@bookingID", booking.Id); // ------------------- booking was null
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
+                            Enum.TryParse<Room.RoomType>(reader["room_type"]?.ToString(), true, out var roomType);
+                            Enum.TryParse<Room.BedType>(reader["bed_type"]?.ToString(), true, out var bedType);
+                            Enum.TryParse<Room.HasView>(reader["has_view"]?.ToString(), true, out var hasView);
+                            Enum.TryParse<Room.Status>(reader["status"]?.ToString(), true, out var status);
+
                             return new Room
                             (
                                 Convert.ToInt32(reader["room_number"]),
-                                (Room.RoomType)System.Enum.Parse(typeof(Room.RoomType), reader["room_type"].ToString()),
+                                roomType,
                                 Convert.ToInt32(reader["floorspace"]),
-                                (Room.BedType)System.Enum.Parse(typeof(Room.BedType), reader["bed_type"].ToString()),
+                                bedType,
                                 Convert.ToInt32(reader["has_balcony"]),
-                                (Room.HasView)System.Enum.Parse(typeof(Room.HasView), reader["has_view"].ToString()),
+                                hasView,
                                 Convert.ToInt32(reader["max_adults"]),
-                                reader["extras"] == DBNull.Value ? "" : reader["extras"].ToString(),
-                                (Room.Status)System.Enum.Parse(typeof(Room.Status), reader["status"].ToString()),
+                                reader["extras"] is DBNull or null ? string.Empty : reader["extras"].ToString()!,
+                                status,
                                 Convert.ToInt32(reader["price_per_night"]),
                                 Convert.ToInt32(reader["door_locked"]),
                                 Convert.ToInt32(reader["needs_cleaning"]),
@@ -775,14 +787,14 @@ namespace Hotel_erp_Winforms_App.Services
                             Room room = new Room
                             (
                                 Convert.ToInt32(reader["room_number"]),
-                                (Room.RoomType)System.Enum.Parse(typeof(Room.RoomType), reader["room_type"].ToString()),
+                                Enum.TryParse<Room.RoomType>(reader["room_type"]?.ToString(), true, out var roomType) ? roomType : default,
                                 Convert.ToInt32(reader["floorspace"]),
-                                (Room.BedType)System.Enum.Parse(typeof(Room.BedType), reader["bed_type"].ToString()),
+                                Enum.TryParse<Room.BedType>(reader["bed_type"]?.ToString(), true, out var bedType) ? bedType : default,
                                 Convert.ToInt32(reader["has_balcony"]),
-                                (Room.HasView)System.Enum.Parse(typeof(Room.HasView), reader["has_view"].ToString()),
+                                Enum.TryParse<Room.HasView>(reader["has_view"]?.ToString(), true, out var hasView) ? hasView : default,
                                 Convert.ToInt32(reader["max_adults"]),
-                                reader["extras"].ToString(),
-                                (Room.Status)System.Enum.Parse(typeof(Room.Status), reader["status"].ToString()),
+                                reader["extras"] is DBNull or null ? string.Empty : reader["extras"].ToString()!,
+                                Enum.TryParse<Room.Status>(reader["status"]?.ToString(), true, out var status) ? status : default,
                                 Convert.ToInt32(reader["price_per_night"]),
                                 Convert.ToInt32(reader["door_locked"]),
                                 Convert.ToInt32(reader["needs_cleaning"]),
@@ -1068,8 +1080,13 @@ namespace Hotel_erp_Winforms_App.Services
             return grossAmount;
         }
         // 13.
-        public async Task<string> GetIdCardNumberAsync(Booking booking)
+        public async Task<string> GetIdCardNumberAsync(Booking? booking)
         {
+            if (booking is null)
+            {
+                return string.Empty;
+            }
+
             string query = "SELECT guests.id_card_number " +
                 "FROM guests " +
                 "INNER JOIN bookings ON bookings.guest1_id = guests.id " +
@@ -1083,7 +1100,7 @@ namespace Hotel_erp_Winforms_App.Services
                     await conn.OpenAsync();
 
                     object? result = await cmd.ExecuteScalarAsync();
-                    return result != DBNull.Value && result != null ? result.ToString() : string.Empty;
+                    return result is not null and not DBNull ? result.ToString()! : string.Empty;
                 }
             }
         }
@@ -1177,14 +1194,14 @@ namespace Hotel_erp_Winforms_App.Services
                             Room room = new Room
                             (
                                 Convert.ToInt32(rd["room_number"]),
-                                (Room.RoomType)System.Enum.Parse(typeof(Room.RoomType), rd["room_type"].ToString(), true),
+                                Enum.TryParse<Room.RoomType>(rd["room_type"]?.ToString(), true, out var roomType) ? roomType : default,
                                 Convert.ToInt32(rd["floorspace"]),
-                                (Room.BedType)System.Enum.Parse(typeof(Room.BedType), rd["bed_type"].ToString(), true),
+                                Enum.TryParse<Room.BedType>(rd["bed_type"]?.ToString(), true, out var bedType) ? bedType : default,
                                 Convert.ToInt32(rd["has_balcony"]),
-                                (Room.HasView)System.Enum.Parse(typeof(Room.HasView), rd["has_view"].ToString(), true),
+                                Enum.TryParse<Room.HasView>(rd["has_view"]?.ToString(), true, out var hasView) ? hasView : default,
                                 Convert.ToInt32(rd["max_adults"]),
-                                rd["extras"].ToString(),
-                                (Room.Status)System.Enum.Parse(typeof(Room.Status), rd["status"].ToString(), true),
+                                rd["extras"] is DBNull or null ? string.Empty : rd["extras"].ToString()!,
+                                Enum.TryParse<Room.Status>(rd["status"]?.ToString(), true, out var status) ? status : default,
                                 Convert.ToInt32(rd["price_per_night"]),
                                 Convert.ToInt32(rd["door_locked"]),
                                 Convert.ToInt32(rd["needs_cleaning"]),
@@ -1192,7 +1209,6 @@ namespace Hotel_erp_Winforms_App.Services
                                 Convert.ToInt32(rd["is_cleaning"]),
                                 Convert.ToInt32(rd["ac_temp"])
                             );
-
                             selectedRooms.Add(room);
                         }
                     }

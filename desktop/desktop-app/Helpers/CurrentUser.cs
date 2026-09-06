@@ -1,7 +1,4 @@
-﻿using System;
-using static Hotel_erp_Winforms_App.Helpers.PermissionManager;
-
-namespace Hotel_erp_Winforms_App.Helpers
+﻿namespace Hotel_erp_Winforms_App.Helpers
 {
     public static class CurrentUser
     {

@@ -1,15 +1,7 @@
 ﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace Hotel_erp_Winforms_App.UI.Controls
 {
@@ -37,9 +29,9 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         List<Service> filteredServices = new List<Service>();
         List<RequestedService> serviceBookings;
 
-        Service _selectedService;
+        Service? _selectedService;
         Service? _selectedServiceForServiceBooking;
-        RequestedService _selectedRequestedService;
+        RequestedService? _selectedRequestedService;
 
         CommonHelper _commonHelper = new CommonHelper();
         BookingService _bookingService = new BookingService();
@@ -80,7 +72,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             dgvServices.AutoGenerateColumns = false;
 
-            dgvServices.Columns["colPrice"].DisplayIndex = 10;
+            dgvServices.Columns["colPrice"]!.DisplayIndex = 10;
 
             try
             {
@@ -107,7 +99,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             #region UI defaults
 
-            RefreshActiveOrInactiveCountAsync();
+            await RefreshActiveOrInactiveCountAsync();
 
             #endregion
         }
@@ -176,8 +168,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 2.
         private async void rbStatusActive_CheckedChanged(object sender, EventArgs e)
         {
-            DataGridViewTextBoxColumn roomNumberCol;
-
             if (rbStatusActive.Checked)
             {
                 btnUpdateService.Enabled = true;
@@ -193,7 +183,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     serviceBookings = await _serviceService.GetServiceDataByServicebookingAsync();
                     List<RequestedService> orderedSBList = serviceBookings.OrderByDescending(s => s.RequestedAt).ToList();
 
-                    _commonHelper.EmptyListMessageBox(orderedSBList.Count(), "service bookings");
+                    _commonHelper.EmptyListMessageBox(orderedSBList.Count, "service bookings");
 
                     dgvServices.DataSource = orderedSBList;
                     colId.DataPropertyName = "Id";
@@ -228,7 +218,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     Cursor.Current = Cursors.Default;
                 }
             }
-
             else
             {
                 PermissionManager.ApplyPermissions(this);
@@ -312,7 +301,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 6.
         private async void rbOrderBy_CheckedChanged(object sender, EventArgs e)
         {
-            ApplyFiltersAsync();
+            await ApplyFiltersAsync();
         }
 
         #endregion
@@ -323,9 +312,9 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             if (rbStatusActive.Checked)
             {
-                if (e.RowIndex >= 0)
+                if (e.RowIndex >= 0 && dgvServices.Rows[e.RowIndex].DataBoundItem is RequestedService selectedRequestedService)
                 {
-                    _selectedRequestedService = dgvServices.Rows[e.RowIndex].DataBoundItem as RequestedService;
+                    _selectedRequestedService = selectedRequestedService;
 
                     btnUpdateService.Enabled = _selectedRequestedService.CurrentServiceStatus == ServiceStatus.created ||
                         _selectedRequestedService.CurrentServiceStatus == ServiceStatus.pending;
@@ -339,42 +328,42 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                         cbNewStatus.Items.Add("Deleted");
                     }
 
-                    if (_selectedRequestedService != null)
+                    // UPDATE SERVICE PANEL
+                    lbServiceNameValue.Text = _selectedRequestedService.Name;
+                    lbRoomNumberValue.Text = _selectedRequestedService.RoomNumber.ToString();
+
+                    lbCurrentStatusValue.Text = _selectedRequestedService.CurrentServiceStatus switch
                     {
-                        // UPDATE SERVICE PANEL
-                        lbServiceNameValue.Text = _selectedRequestedService.Name;
-                        lbRoomNumberValue.Text = _selectedRequestedService.RoomNumber.ToString();
+                        ServiceStatus.created => "CREATED",
+                        ServiceStatus.pending => "PENDING",
+                        ServiceStatus.deleted => "DELETED",
+                        ServiceStatus.completed => "COMPLETED",
+                        _ => throw new InvalidOperationException($"Unsupported service status: {_selectedRequestedService.CurrentServiceStatus}")
+                    };
 
-                        lbCurrentStatusValue.Text = _selectedRequestedService.CurrentServiceStatus switch
-                        {
-                            ServiceStatus.created => "CREATED",
-                            ServiceStatus.pending => "PENDING",
-                            ServiceStatus.deleted => "DELETED",
-                            ServiceStatus.completed => "COMPLETED"
-                        };
+                    cbNewStatus.Text = _selectedRequestedService.CurrentServiceStatus switch
+                    {
+                        ServiceStatus.created => "Created",
+                        ServiceStatus.pending => "Pending",
+                        ServiceStatus.deleted => "Deleted",
+                        ServiceStatus.completed => "Completed",
+                        _ => throw new InvalidOperationException($"Unsupported service status: {_selectedRequestedService.CurrentServiceStatus}")
+                    };
 
-                        cbNewStatus.Text = _selectedRequestedService.CurrentServiceStatus switch
-                        {
-                            ServiceStatus.created => "Created",
-                            ServiceStatus.pending => "Pending",
-                            ServiceStatus.deleted => "Deleted",
-                            ServiceStatus.completed => "Completed"
-                        };
-
-                        // DELETE SERVICE PANEL
-                        lbDeleteServiceNameValue.Text = _selectedRequestedService.Name;
-                        lbDeleteRoomNumberValue.Text = _selectedRequestedService.RoomNumber.ToString();
-                        lbDeleteQuantityValue.Text = _selectedRequestedService.Quantity.ToString();
-                        lbDeletePriceValue.Text = _selectedRequestedService.Price.ToString();
-                        lbDeleteCurrentStatusValue.Text = _selectedRequestedService.CurrentServiceStatus switch
-                        {
-                            ServiceStatus.created => "Created",
-                            ServiceStatus.pending => "Pending",
-                            ServiceStatus.deleted => "Deleted",
-                            ServiceStatus.completed => "Completed"
-                        };
-                        lbDeleteReqDateValue.Text = _selectedRequestedService.RequestedAt.ToString();
-                    }
+                    // DELETE SERVICE PANEL
+                    lbDeleteServiceNameValue.Text = _selectedRequestedService.Name;
+                    lbDeleteRoomNumberValue.Text = _selectedRequestedService.RoomNumber.ToString();
+                    lbDeleteQuantityValue.Text = _selectedRequestedService.Quantity.ToString();
+                    lbDeletePriceValue.Text = _selectedRequestedService.Price.ToString();
+                    lbDeleteCurrentStatusValue.Text = _selectedRequestedService.CurrentServiceStatus switch
+                    {
+                        ServiceStatus.created => "Created",
+                        ServiceStatus.pending => "Pending",
+                        ServiceStatus.deleted => "Deleted",
+                        ServiceStatus.completed => "Completed",
+                        _ => throw new InvalidOperationException($"Unsupported service status: {_selectedRequestedService.CurrentServiceStatus}")
+                    };
+                    lbDeleteReqDateValue.Text = _selectedRequestedService.RequestedAt.ToString();
                 }
             }
 
@@ -382,13 +371,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 List<Service> actives = await _serviceService.GetActiveOrInactiveServicesAsync("active");
 
-                if (e.RowIndex >= 0)
+                if (e.RowIndex >= 0 && dgvServices.Rows[e.RowIndex].DataBoundItem is Service selectedService)
                 {
+                    _selectedService = selectedService;
+
                     pnlSideBottom.Visible = false;
-
                     chkIsActive.Visible = true;
-
-                    _selectedService = dgvServices.Rows[e.RowIndex].DataBoundItem as Service;
 
                     numPrice.Value = _selectedService.Price;
                     cbTypeHu.Text = _selectedService.SelectedServiceTypeHu.ToString();
@@ -405,7 +393,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                     if (resized)
                     {
-                        tabControlLang.Height = tabControlLang.Height + 175;
+                        tabControlLang.Height += 175;
                         resized = false;
                     }
                 }
@@ -514,6 +502,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             if (rbStatusActive.Checked)
             {
+                if (_selectedRequestedService == null)
+                {
+                    throw new InvalidOperationException("No requested service selected.");
+                }
+
                 MBSelectionRequired(_selectedRequestedService);
 
                 if (_selectedRequestedService != null)
@@ -529,11 +522,15 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     cbNewStatus.Items.Remove("Created");
                     cbNewStatus.Items.Remove("Deleted");
 
-                    cbNewStatus.Text = _selectedRequestedService.CurrentServiceStatus switch
+                    if (_selectedRequestedService != null)
                     {
-                        ServiceStatus.created => "Pending",
-                        ServiceStatus.pending => "Completed"
-                    };
+                        cbNewStatus.Text = _selectedRequestedService.CurrentServiceStatus switch
+                        {
+                            ServiceStatus.created => "Pending",
+                            ServiceStatus.pending => "Completed",
+                            _ => string.Empty
+                        };
+                    }
                 }
             }
 
@@ -543,6 +540,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 pnlNewServiceBooking.Visible = false;
 
                 pnlEditor.Visible = true;
+
+                if (_selectedService == null)
+                {
+                    throw new InvalidOperationException("No service selected.");
+                }
 
                 MBSelectionRequired(_selectedService);
 
@@ -566,6 +568,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // AKTÍV SERVICE BOOKINGS
             if (rbStatusActive.Checked)
             {
+                if (_selectedRequestedService == null)
+                {
+                    throw new InvalidOperationException("No requested service selected.");
+                }
+
                 MBSelectionRequired(_selectedRequestedService);
 
                 if (_selectedRequestedService != null)
@@ -586,7 +593,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // MINDEN SERVICE
             else
             {
+                if (_selectedService == null)
+                {
+                    throw new InvalidOperationException("No service selected.");
+                }
+
                 MBSelectionRequired(_selectedService);
+
 
                 DialogResult result = MessageBox.Show(
                     "Are you sure you want to delete this service?",
@@ -626,6 +639,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 10.
         private async void btnUpdateStatus_Click(object sender, EventArgs e)
         {
+            if (_selectedRequestedService == null)
+            {
+                throw new InvalidOperationException("No requested service selected to compare status.");
+            }
+
             if (cbNewStatus.Text.ToLower() == _selectedRequestedService.CurrentServiceStatus.ToString())
             {
                 MessageBox.Show(
@@ -659,7 +677,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 dgvServices.DataSource = orderedSource;
                 dgvServices.ClearSelection();
 
-                RefreshActiveOrInactiveCountAsync();
+                await RefreshActiveOrInactiveCountAsync();
             }
             catch (Exception ex)
             {
@@ -732,7 +750,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     dgvServices.DataSource = null;
                     dgvServices.DataSource = serviceBookings;
                     dgvServices.ClearSelection();
-                    RefreshActiveOrInactiveCountAsync();
+                    await RefreshActiveOrInactiveCountAsync();
                 }
                 catch (Exception ex)
                 {
@@ -852,7 +870,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 11.
         private void numQuantity_ValueChanged(object sender, EventArgs e)
         {
-            if (cbSelectService.SelectedItem != null)
+            if (_selectedServiceForServiceBooking != null)
             {
                 RefreshNewServiceBookingPrice(_selectedServiceForServiceBooking);
             }
@@ -935,18 +953,28 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private Service MakeNewService(int id = 0)
         {
-            Service service = new Service(
+            if (cbTypeHu.SelectedItem == null ||
+                !Enum.TryParse<ServiceTypeHu>(cbTypeHu.SelectedItem.ToString(), true, out var typeHu))
+            {
+                throw new InvalidOperationException("Hungarian service type selection is invalid or missing.");
+            }
+
+            if (cbTypeEn.SelectedItem == null ||
+                !Enum.TryParse<ServiceTypeEn>(cbTypeEn.SelectedItem.ToString(), true, out var typeEn))
+            {
+                throw new InvalidOperationException("English service type selection is invalid or missing.");
+            }
+
+            return new Service(
                 id,
                 tbNameHu.Text,
                 tbDescHu.Text,
-                (ServiceTypeHu)Enum.Parse(typeof(ServiceTypeHu), cbTypeHu.SelectedItem.ToString()),
+                typeHu,
                 numPrice.Value,
                 tbNameEn.Text,
                 tbDescEn.Text,
-                (ServiceTypeEn)Enum.Parse(typeof(ServiceTypeEn), cbTypeEn.SelectedItem.ToString())
+                typeEn
             );
-
-            return service;
         }
 
         private async void SaveService(UpdateOrSave updateOrSave)
@@ -966,12 +994,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 bool changed = false;
 
-                if (numPrice.Value != _selectedService.Price
-                    || cbTypeHu.Text != _selectedService.SelectedServiceTypeHu.ToString()
-                    || tbNameHu.Text != _selectedService.NameHu
-                    || tbDescHu.Text != _selectedService.DescriptionHu
-                    || tbNameEn.Text != _selectedService.NameEn
-                    || tbDescEn.Text != _selectedService.DescriptionEn)
+                if (_selectedService != null && (
+                    numPrice.Value != _selectedService.Price ||
+                    cbTypeHu.Text != _selectedService.SelectedServiceTypeHu.ToString() ||
+                    tbNameHu.Text != _selectedService.NameHu ||
+                    tbDescHu.Text != _selectedService.DescriptionHu ||
+                    tbNameEn.Text != _selectedService.NameEn ||
+                    tbDescEn.Text != _selectedService.DescriptionEn))
                 {
                     changed = true;
                 }
@@ -1017,6 +1046,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                 else
                 {
+                    if (_selectedService == null)
+                    {
+                        throw new InvalidOperationException("No service selected to update.");
+                    }
+
                     Service service = MakeNewService(_selectedService.Id);
                     await _serviceService.UpdateSelectedServiceAsync(service);
 
@@ -1077,10 +1111,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 colDescHu.Visible = false;
                 colDescEn.Visible = false;
 
-                dgvServices.Columns["colNameEn"].DisplayIndex = 4;
-                dgvServices.Columns["colTypeEn"].DisplayIndex = 5;
-                dgvServices.Columns["colQuantity"].DisplayIndex = 6;
-                dgvServices.Columns["colPrice"].DisplayIndex = 7;
+                dgvServices.Columns["colNameEn"]!.DisplayIndex = 4;
+                dgvServices.Columns["colTypeEn"]!.DisplayIndex = 5;
+                dgvServices.Columns["colQuantity"]!.DisplayIndex = 6;
+                dgvServices.Columns["colPrice"]!.DisplayIndex = 7;
 
                 colNameEn.DataPropertyName = "Name";
                 colTypeEn.DataPropertyName = "SelectedServiceType";
@@ -1121,9 +1155,9 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 colDescHu.Visible = true;
                 colDescEn.Visible = true;
 
-                dgvServices.Columns["colNameEn"].DisplayIndex = 5;
-                dgvServices.Columns["colTypeEn"].DisplayIndex = 6;
-                dgvServices.Columns["colPrice"].DisplayIndex = 10;
+                dgvServices.Columns["colNameEn"]!.DisplayIndex = 5;
+                dgvServices.Columns["colTypeEn"]!.DisplayIndex = 6;
+                dgvServices.Columns["colPrice"]!.DisplayIndex = 10;
 
                 colNameEn.DataPropertyName = "NameEn";
                 colTypeEn.DataPropertyName = "SelectedServiceTypeEn";
@@ -1263,15 +1297,26 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private async Task<ServiceBooking> MakeNewServiceBookingAsync(int roomNumber, Service selectedService)
         {
             List<Booking> bookings = await _bookingService.LoadDgvAsync();
+
             Booking? selectedBooking = bookings.Find(b =>
                 b.RoomNumber == roomNumber &&
                 b.Checkin.HasValue &&
                 !b.Checkout.HasValue
             );
 
+            if (selectedBooking == null)
+            {
+                throw new InvalidOperationException($"No active booking found for room number {roomNumber}.");
+            }
+
+            if (selectedService == null)
+            {
+                throw new ArgumentNullException(nameof(selectedService), "No service selected.");
+            }
+
             int price = (int)selectedService.Price * (int)numQuantity.Value;
 
-            ServiceBooking sb = new ServiceBooking(
+            return new ServiceBooking(
                 0,
                 selectedBooking.Id,
                 selectedService.Id,
@@ -1281,8 +1326,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 Status.created,
                 price
             );
-
-            return sb;
         }
 
         private async Task ReloadDbDataSourceAsync()

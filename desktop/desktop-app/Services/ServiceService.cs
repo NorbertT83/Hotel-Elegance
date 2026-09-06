@@ -136,7 +136,8 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 "active" => activeQuery,
                 "inactive" => inactiveQuery,
-                "notUsed" => notUsedQuery
+                "notUsed" => notUsedQuery,
+                _ => string.Empty
             };
 
             await using(MySqlConnection conn = new MySqlConnection(_connectionString))
@@ -215,7 +216,7 @@ namespace Hotel_erp_Winforms_App.Services
                     cmd.Parameters.AddWithValue("@serviceTypeHu", service.SelectedServiceTypeHu.ToString());
                     cmd.Parameters.AddWithValue("@nameEn", string.IsNullOrWhiteSpace(service.NameEn) ? DBNull.Value : service.NameEn);
                     cmd.Parameters.AddWithValue("@descriptionEn", string.IsNullOrWhiteSpace(service.DescriptionEn) ? DBNull.Value : service.DescriptionEn);
-                    cmd.Parameters.AddWithValue("@serviceTypeEn", service.SelectedServiceTypeEn != null ? service.SelectedServiceTypeEn.ToString() : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@serviceTypeEn", service.SelectedServiceTypeEn.ToString());
 
                     await cmd.ExecuteNonQueryAsync();
                 }
@@ -364,24 +365,20 @@ namespace Hotel_erp_Winforms_App.Services
         {
             Service service = new Service(
                 Convert.ToInt32(reader["id"]),
-                reader["name_hu"].ToString(),
-                reader["description_hu"] != DBNull.Value ? reader["description_hu"].ToString() : null,
+                reader["name_hu"]?.ToString() ?? string.Empty,
+                reader["description_hu"] is DBNull or null ? string.Empty : reader["description_hu"].ToString()!,
 
-                (ServiceTypeHu)Enum.Parse(
-                    typeof(ServiceTypeHu),
-                    reader["service_type_hu"] != DBNull.Value ? reader["service_type_hu"].ToString() : "Wellness",
-                    ignoreCase: true
-                ),
+                Enum.TryParse<ServiceTypeHu>(reader["service_type_hu"]?.ToString(), true, out var serviceTypeHu)
+                    ? serviceTypeHu
+                    : ServiceTypeHu.Wellness,
 
                 Convert.ToDecimal(reader["price"]),
-                reader["name_en"] != DBNull.Value ? reader["name_en"].ToString() : null,
-                reader["description_en"] != DBNull.Value ? reader["description_en"].ToString() : null,
+                Convert.ToString(reader["name_en"]) ?? string.Empty,
+                Convert.ToString(reader["description_en"]) ?? string.Empty,
 
-                (ServiceTypeEn)Enum.Parse(
-                    typeof(ServiceTypeEn),
-                    reader["service_type_en"] != DBNull.Value ? reader["service_type_en"].ToString() : "Wellness",
-                    ignoreCase: true
-                )
+                Enum.TryParse<ServiceTypeEn>(reader["service_type_en"]?.ToString(), true, out var serviceTypeEn)
+                    ? serviceTypeEn
+                    : ServiceTypeEn.Wellness
             );
 
             return service;

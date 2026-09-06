@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLogin));
             panel1 = new Panel();
             label2 = new Label();
             pictureBox1 = new PictureBox();
@@ -48,7 +47,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.FromArgb(59, 130, 246);
+            panel1.BackColor = Color.Black;
             panel1.Controls.Add(label2);
             panel1.Controls.Add(pictureBox1);
             panel1.Dock = DockStyle.Left;
@@ -59,18 +58,18 @@
             // 
             // label2
             // 
-            label2.Font = new Font("Modern No. 20", 20F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            label2.Font = new Font("Modern No. 20", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.White;
             label2.Location = new Point(57, 363);
             label2.Name = "label2";
             label2.Size = new Size(279, 79);
             label2.TabIndex = 100;
-            label2.Text = "Hotel Management Application";
+            label2.Text = "Hotel Elegance BackOffice";
             label2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
             // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Image = Properties.Resources.hotel_logo;
             pictureBox1.Location = new Point(57, 35);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(279, 281);
@@ -106,7 +105,7 @@
             // 
             // btnLogin
             // 
-            btnLogin.BackColor = Color.FromArgb(59, 130, 246);
+            btnLogin.BackColor = Color.Black;
             btnLogin.Cursor = Cursors.Hand;
             btnLogin.FlatAppearance.BorderSize = 0;
             btnLogin.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 58, 138);

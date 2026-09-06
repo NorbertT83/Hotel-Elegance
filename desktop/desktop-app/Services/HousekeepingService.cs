@@ -213,19 +213,22 @@ namespace Hotel_erp_Winforms_App.Services
 
         private Room MakeNewRoom(System.Data.Common.DbDataReader reader)
         {
+            Enum.TryParse<Room.RoomType>(reader["room_type"]?.ToString(), true, out var roomType);
+            Enum.TryParse<Room.BedType>(reader["bed_type"]?.ToString(), true, out var bedType);
+            Enum.TryParse<Room.HasView>(reader["has_view"]?.ToString(), true, out var hasView);
+            Enum.TryParse<Room.Status>(reader["status"]?.ToString(), true, out var status);
+
             Room room = new Room(
                 Convert.ToInt32(reader["room_number"]),
-                Enum.Parse<Room.RoomType>(reader["room_type"].ToString(), true),
+                roomType,
                 Convert.ToInt32(reader["floorspace"]),
-                Enum.Parse<Room.BedType>(reader["bed_type"].ToString(), true),
+                bedType,
                 Convert.ToInt32(reader["has_balcony"]),
-                reader["has_view"] != DBNull.Value
-                    ? Enum.Parse<Room.HasView>(reader["has_view"].ToString(), true)
-                    : Room.HasView.city,
+                reader["has_view"] is DBNull or null ? Room.HasView.city : hasView,
                 Convert.ToInt32(reader["max_adults"]),
-                reader["extras"] != DBNull.Value ? reader["extras"].ToString() : string.Empty,
-                Enum.Parse<Room.Status>(reader["status"].ToString(), true),
-                reader["price_per_night"] != DBNull.Value ? Convert.ToInt32(reader["price_per_night"]) : 0,
+                reader["extras"] is DBNull or null ? string.Empty : reader["extras"].ToString()!,
+                status,
+                reader["price_per_night"] is DBNull or null ? 0 : Convert.ToInt32(reader["price_per_night"]),
                 Convert.ToInt32(reader["door_locked"]),
                 Convert.ToInt32(reader["needs_cleaning"]),
                 Convert.ToInt32(reader["dont_disturb"]),
@@ -274,7 +277,7 @@ namespace Hotel_erp_Winforms_App.Services
                 return;
 
             string columnName = dgv.Columns[e.ColumnIndex].Name;
-            string valueStr = e.Value.ToString();
+            string valueStr = e.Value?.ToString() ?? string.Empty;
 
             if (columnName.Equals("colFloor", StringComparison.OrdinalIgnoreCase))
             {

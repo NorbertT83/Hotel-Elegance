@@ -1,13 +1,7 @@
 ﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using static Hotel_erp_Winforms_App.Helpers.CommonHelper;
 using static Hotel_erp_Winforms_App.Services.HousekeepingService;
 
@@ -35,7 +29,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private Dictionary<int, string> assignedCleaners = new Dictionary<int, string>();
 
-        private Room _selectedRoom;
+        private Room? _selectedRoom;
         #endregion
 
         #region onLoad events
@@ -146,15 +140,29 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 if (e.RowIndex < 0) return;
 
-                _selectedRoom = (Room)dgvRooms.Rows[e.RowIndex].DataBoundItem;
+                else
+                {
+                    _selectedRoom = dgvRooms.Rows[e.RowIndex].DataBoundItem as Room;
+                }
+            }
+
+            if (_selectedRoom == null)
+            {
+                throw new InvalidOperationException("No room selected to display room number.");
             }
 
             lbSelectedRoomValue.Text = _selectedRoom.Room_number.ToString();
 
+            if (_selectedRoom == null)
+            {
+                throw new InvalidOperationException("No room selected to set cleaning status.");
+            }
+
             cbSetStatus.Text = _selectedRoom.IsCleaning == 1 ? "In Progress" : _selectedRoom.NeedsCleaning switch
             {
                 0 => "Clean",
-                1 => "Dirty"
+                1 => "Dirty",
+                _ => throw new InvalidOperationException($"Unsupported cleaning status: {_selectedRoom.NeedsCleaning}")
             };
 
             cbAssignCleaner.Text = assignedCleaners[_selectedRoom.Room_number] == null ? "Unassigned" : assignedCleaners[_selectedRoom.Room_number];
@@ -164,6 +172,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private async void btnSaveRoomStatus_Click(object sender, EventArgs e)
         {
             // assign cleaner to room (into a dictionary)
+            if (_selectedRoom == null)
+            {
+                throw new InvalidOperationException("No room selected to assign cleaner.");
+            }
+
             if (cbAssignCleaner.SelectedIndex > 0)
             {
                 assignedCleaners[_selectedRoom.Room_number] = cbAssignCleaner.Text;
@@ -178,10 +191,16 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 {
                     "Dirty" => "Dirty",
                     "Clean" => "Clean",
-                    "In Progress" => "Pending"
+                    "In Progress" => "Pending",
+                    _ => throw new InvalidOperationException($"Unsupported cleaning status text: {cbSetStatus.Text}")
                 };
 
                 CleanStatus status = Enum.Parse<CleanStatus>(cleanStatus, ignoreCase: true);
+
+                if (_selectedRoom == null)
+                {
+                    throw new InvalidOperationException("No room selected for updating clean status.");
+                }
 
                 await _hkService.UpdateCleanStatusInDbAsync(status, _selectedRoom.Room_number);
 

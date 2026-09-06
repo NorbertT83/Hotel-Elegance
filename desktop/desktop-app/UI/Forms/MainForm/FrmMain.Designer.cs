@@ -33,20 +33,23 @@
             lbControlTitle = new Label();
             panelLeft = new Panel();
             btnSettings = new Button();
+            btnStatistics = new Button();
+            btnEmployees = new Button();
             btnRooms = new Button();
             btnBilling = new Button();
-            btnGuests = new Button();
-            btnHousekeeping = new Button();
-            btnStatistics = new Button();
             btnServices = new Button();
+            btnHousekeeping = new Button();
+            btnGuests = new Button();
             btnBookings = new Button();
-            btnEmployees = new Button();
             panelMainContent = new Panel();
             lbWelcomeMainForm = new Label();
+            pnlLogoutButtonHolder = new Panel();
+            btnLogout = new Button();
             panelHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panelLeft.SuspendLayout();
             panelMainContent.SuspendLayout();
+            pnlLogoutButtonHolder.SuspendLayout();
             SuspendLayout();
             // 
             // panelHeader
@@ -83,6 +86,7 @@
             // 
             // panelLeft
             // 
+            panelLeft.Controls.Add(pnlLogoutButtonHolder);
             panelLeft.Controls.Add(btnSettings);
             panelLeft.Controls.Add(btnStatistics);
             panelLeft.Controls.Add(btnEmployees);
@@ -118,6 +122,46 @@
             btnSettings.UseVisualStyleBackColor = false;
             btnSettings.Click += btnSettings_Click;
             // 
+            // btnStatistics
+            // 
+            btnStatistics.BackColor = Color.FromArgb(30, 58, 138);
+            btnStatistics.Cursor = Cursors.Hand;
+            btnStatistics.Dock = DockStyle.Top;
+            btnStatistics.FlatAppearance.BorderSize = 0;
+            btnStatistics.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
+            btnStatistics.FlatStyle = FlatStyle.Flat;
+            btnStatistics.Font = new Font("Segoe UI", 15F);
+            btnStatistics.ForeColor = Color.White;
+            btnStatistics.Location = new Point(0, 371);
+            btnStatistics.Name = "btnStatistics";
+            btnStatistics.Padding = new Padding(20, 0, 0, 0);
+            btnStatistics.Size = new Size(183, 53);
+            btnStatistics.TabIndex = 18;
+            btnStatistics.Text = "Statistics";
+            btnStatistics.TextAlign = ContentAlignment.MiddleLeft;
+            btnStatistics.UseVisualStyleBackColor = false;
+            btnStatistics.Click += btnStatistics_Click;
+            // 
+            // btnEmployees
+            // 
+            btnEmployees.BackColor = Color.FromArgb(30, 58, 138);
+            btnEmployees.Cursor = Cursors.Hand;
+            btnEmployees.Dock = DockStyle.Top;
+            btnEmployees.FlatAppearance.BorderSize = 0;
+            btnEmployees.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
+            btnEmployees.FlatStyle = FlatStyle.Flat;
+            btnEmployees.Font = new Font("Segoe UI", 15F);
+            btnEmployees.ForeColor = Color.White;
+            btnEmployees.Location = new Point(0, 318);
+            btnEmployees.Name = "btnEmployees";
+            btnEmployees.Padding = new Padding(20, 0, 0, 0);
+            btnEmployees.Size = new Size(183, 53);
+            btnEmployees.TabIndex = 20;
+            btnEmployees.Text = "Employees";
+            btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
+            btnEmployees.UseVisualStyleBackColor = false;
+            btnEmployees.Click += btnEmployees_Click;
+            // 
             // btnRooms
             // 
             btnRooms.BackColor = Color.FromArgb(30, 58, 138);
@@ -128,7 +172,7 @@
             btnRooms.FlatStyle = FlatStyle.Flat;
             btnRooms.Font = new Font("Segoe UI", 15F);
             btnRooms.ForeColor = Color.White;
-            btnRooms.Location = new Point(0, 106);
+            btnRooms.Location = new Point(0, 265);
             btnRooms.Name = "btnRooms";
             btnRooms.Padding = new Padding(20, 0, 0, 0);
             btnRooms.Size = new Size(183, 53);
@@ -158,25 +202,25 @@
             btnBilling.UseVisualStyleBackColor = false;
             btnBilling.Click += btnBilling_Click;
             // 
-            // btnGuests
+            // btnServices
             // 
-            btnGuests.BackColor = Color.FromArgb(30, 58, 138);
-            btnGuests.Cursor = Cursors.Hand;
-            btnGuests.Dock = DockStyle.Top;
-            btnGuests.FlatAppearance.BorderSize = 0;
-            btnGuests.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
-            btnGuests.FlatStyle = FlatStyle.Flat;
-            btnGuests.Font = new Font("Segoe UI", 15F);
-            btnGuests.ForeColor = Color.White;
-            btnGuests.Location = new Point(0, 53);
-            btnGuests.Name = "btnGuests";
-            btnGuests.Padding = new Padding(20, 0, 0, 0);
-            btnGuests.Size = new Size(183, 53);
-            btnGuests.TabIndex = 16;
-            btnGuests.Text = "Guests";
-            btnGuests.TextAlign = ContentAlignment.MiddleLeft;
-            btnGuests.UseVisualStyleBackColor = false;
-            btnGuests.Click += btnGuests_Click;
+            btnServices.BackColor = Color.FromArgb(30, 58, 138);
+            btnServices.Cursor = Cursors.Hand;
+            btnServices.Dock = DockStyle.Top;
+            btnServices.FlatAppearance.BorderSize = 0;
+            btnServices.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
+            btnServices.FlatStyle = FlatStyle.Flat;
+            btnServices.Font = new Font("Segoe UI", 15F);
+            btnServices.ForeColor = Color.White;
+            btnServices.Location = new Point(0, 159);
+            btnServices.Name = "btnServices";
+            btnServices.Padding = new Padding(20, 0, 0, 0);
+            btnServices.Size = new Size(183, 53);
+            btnServices.TabIndex = 17;
+            btnServices.Text = "Services";
+            btnServices.TextAlign = ContentAlignment.MiddleLeft;
+            btnServices.UseVisualStyleBackColor = false;
+            btnServices.Click += btnServices_Click;
             // 
             // btnHousekeeping
             // 
@@ -198,45 +242,25 @@
             btnHousekeeping.UseVisualStyleBackColor = false;
             btnHousekeeping.Click += btnHousekeeping_Click;
             // 
-            // btnStatistics
+            // btnGuests
             // 
-            btnStatistics.BackColor = Color.FromArgb(30, 58, 138);
-            btnStatistics.Cursor = Cursors.Hand;
-            btnStatistics.Dock = DockStyle.Top;
-            btnStatistics.FlatAppearance.BorderSize = 0;
-            btnStatistics.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
-            btnStatistics.FlatStyle = FlatStyle.Flat;
-            btnStatistics.Font = new Font("Segoe UI", 15F);
-            btnStatistics.ForeColor = Color.White;
-            btnStatistics.Location = new Point(0, 371);
-            btnStatistics.Name = "btnStatistics";
-            btnStatistics.Padding = new Padding(20, 0, 0, 0);
-            btnStatistics.Size = new Size(183, 53);
-            btnStatistics.TabIndex = 18;
-            btnStatistics.Text = "Statistics";
-            btnStatistics.TextAlign = ContentAlignment.MiddleLeft;
-            btnStatistics.UseVisualStyleBackColor = false;
-            btnStatistics.Click += btnStatistics_Click;
-            // 
-            // btnServices
-            // 
-            btnServices.BackColor = Color.FromArgb(30, 58, 138);
-            btnServices.Cursor = Cursors.Hand;
-            btnServices.Dock = DockStyle.Top;
-            btnServices.FlatAppearance.BorderSize = 0;
-            btnServices.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
-            btnServices.FlatStyle = FlatStyle.Flat;
-            btnServices.Font = new Font("Segoe UI", 15F);
-            btnServices.ForeColor = Color.White;
-            btnServices.Location = new Point(0, 159);
-            btnServices.Name = "btnServices";
-            btnServices.Padding = new Padding(20, 0, 0, 0);
-            btnServices.Size = new Size(183, 53);
-            btnServices.TabIndex = 17;
-            btnServices.Text = "Services";
-            btnServices.TextAlign = ContentAlignment.MiddleLeft;
-            btnServices.UseVisualStyleBackColor = false;
-            btnServices.Click += btnServices_Click;
+            btnGuests.BackColor = Color.FromArgb(30, 58, 138);
+            btnGuests.Cursor = Cursors.Hand;
+            btnGuests.Dock = DockStyle.Top;
+            btnGuests.FlatAppearance.BorderSize = 0;
+            btnGuests.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
+            btnGuests.FlatStyle = FlatStyle.Flat;
+            btnGuests.Font = new Font("Segoe UI", 15F);
+            btnGuests.ForeColor = Color.White;
+            btnGuests.Location = new Point(0, 53);
+            btnGuests.Name = "btnGuests";
+            btnGuests.Padding = new Padding(20, 0, 0, 0);
+            btnGuests.Size = new Size(183, 53);
+            btnGuests.TabIndex = 16;
+            btnGuests.Text = "Guests";
+            btnGuests.TextAlign = ContentAlignment.MiddleLeft;
+            btnGuests.UseVisualStyleBackColor = false;
+            btnGuests.Click += btnGuests_Click;
             // 
             // btnBookings
             // 
@@ -258,26 +282,6 @@
             btnBookings.UseVisualStyleBackColor = false;
             btnBookings.Click += btnBookings_Click;
             // 
-            // btnEmployees
-            // 
-            btnEmployees.BackColor = Color.FromArgb(30, 58, 138);
-            btnEmployees.Cursor = Cursors.Hand;
-            btnEmployees.Dock = DockStyle.Top;
-            btnEmployees.FlatAppearance.BorderSize = 0;
-            btnEmployees.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
-            btnEmployees.FlatStyle = FlatStyle.Flat;
-            btnEmployees.Font = new Font("Segoe UI", 15F);
-            btnEmployees.ForeColor = Color.White;
-            btnEmployees.Location = new Point(0, 318);
-            btnEmployees.Name = "btnEmployees";
-            btnEmployees.Padding = new Padding(20, 0, 0, 0);
-            btnEmployees.Size = new Size(183, 53);
-            btnEmployees.TabIndex = 20;
-            btnEmployees.Text = "Employees";
-            btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
-            btnEmployees.UseVisualStyleBackColor = false;
-            btnEmployees.Click += btnEmployees_Click;
-            // 
             // panelMainContent
             // 
             panelMainContent.Controls.Add(lbWelcomeMainForm);
@@ -298,6 +302,30 @@
             lbWelcomeMainForm.TabIndex = 0;
             lbWelcomeMainForm.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // pnlLogoutButtonHolder
+            // 
+            pnlLogoutButtonHolder.Controls.Add(btnLogout);
+            pnlLogoutButtonHolder.Dock = DockStyle.Bottom;
+            pnlLogoutButtonHolder.Location = new Point(0, 440);
+            pnlLogoutButtonHolder.Name = "pnlLogoutButtonHolder";
+            pnlLogoutButtonHolder.Padding = new Padding(10);
+            pnlLogoutButtonHolder.Size = new Size(183, 100);
+            pnlLogoutButtonHolder.TabIndex = 21;
+            // 
+            // btnLogout
+            // 
+            btnLogout.BackColor = Color.FromArgb(30, 58, 138);
+            btnLogout.Dock = DockStyle.Bottom;
+            btnLogout.Font = new Font("Segoe UI", 12F);
+            btnLogout.ForeColor = Color.White;
+            btnLogout.Location = new Point(10, 43);
+            btnLogout.Name = "btnLogout";
+            btnLogout.Size = new Size(163, 47);
+            btnLogout.TabIndex = 0;
+            btnLogout.Text = "Log Out";
+            btnLogout.UseVisualStyleBackColor = false;
+            btnLogout.Click += btnLogout_Click;
+            // 
             // FrmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -317,6 +345,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panelLeft.ResumeLayout(false);
             panelMainContent.ResumeLayout(false);
+            pnlLogoutButtonHolder.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -337,5 +366,7 @@
         private Button btnBilling;
         private Button btnGuests;
         private Button btnSettings;
+        private Panel pnlLogoutButtonHolder;
+        private Button btnLogout;
     }
 }
