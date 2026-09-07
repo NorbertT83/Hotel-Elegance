@@ -10,6 +10,7 @@ using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
+using Hotel_erp_Winforms_App.Helpers;
 
 namespace Hotel_erp_Winforms_App.UI.Forms
 {
@@ -20,11 +21,11 @@ namespace Hotel_erp_Winforms_App.UI.Forms
             InitializeComponent();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e)
         {
             EmployeeService _employeeService = new EmployeeService();
 
-            Employee user = _employeeService.GetEmployeeByTaxNumber(tbRegTaxNumber.Text);
+            Employee user = await _employeeService.GetEmployeeByEmailAsync(CurrentUser.Email);
 
             if (user != null)
             {
@@ -44,13 +45,13 @@ namespace Hotel_erp_Winforms_App.UI.Forms
                 }
 
                 string encryptedPassword = PasswordHelper.HashPassword(password);
-                bool isSuccess = _employeeService.SaveEmployeesPassword(user.TaxNumber, encryptedPassword);
+                //bool isSuccess = _employeeService.SaveEmployeesPassword(user.TaxNumber, encryptedPassword);
 
-                if (isSuccess)
-                {
-                    MessageBox.Show("Password saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    this.Close();
-                }
+                //if (isSuccess)
+                //{
+                //    MessageBox.Show("Password saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                //    this.Close();
+                //}
             }
             else
             {

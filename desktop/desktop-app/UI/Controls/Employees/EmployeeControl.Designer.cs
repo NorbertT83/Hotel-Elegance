@@ -17,6 +17,7 @@
 
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
@@ -70,6 +71,7 @@
             colHolidays = new DataGridViewTextBoxColumn();
             colSalary = new DataGridViewTextBoxColumn();
             pnlEditor = new Panel();
+            btnAddProfile = new Button();
             pbProfilePhoto = new PictureBox();
             btnSaveEmployee = new Button();
             tbSalary = new TextBox();
@@ -90,6 +92,7 @@
             tbFirstName = new TextBox();
             lbFullNameTitle = new Label();
             lbEditorTitle = new Label();
+            toolTip1 = new ToolTip(components);
             pnlTop.SuspendLayout();
             pnlKpiTotal.SuspendLayout();
             pnlKpiManagers.SuspendLayout();
@@ -245,7 +248,7 @@
             lbFilter.ForeColor = Color.DimGray;
             lbFilter.Location = new Point(15, 10);
             lbFilter.Name = "lbFilter";
-            lbFilter.Size = new Size(137, 19);
+            lbFilter.Size = new Size(132, 19);
             lbFilter.TabIndex = 0;
             lbFilter.Text = "EMPLOYEE FILTERS";
             // 
@@ -268,7 +271,7 @@
             lbKpiTotalSub.ForeColor = Color.Gray;
             lbKpiTotalSub.Location = new Point(12, 60);
             lbKpiTotalSub.Name = "lbKpiTotalSub";
-            lbKpiTotalSub.Size = new Size(130, 15);
+            lbKpiTotalSub.Size = new Size(122, 15);
             lbKpiTotalSub.TabIndex = 2;
             lbKpiTotalSub.Text = "Registered staff count";
             // 
@@ -290,7 +293,7 @@
             lbKpiTotalTitle.ForeColor = Color.DimGray;
             lbKpiTotalTitle.Location = new Point(12, 10);
             lbKpiTotalTitle.Name = "lbKpiTotalTitle";
-            lbKpiTotalTitle.Size = new Size(116, 15);
+            lbKpiTotalTitle.Size = new Size(111, 15);
             lbKpiTotalTitle.TabIndex = 0;
             lbKpiTotalTitle.Text = "TOTAL EMPLOYEES";
             // 
@@ -313,7 +316,7 @@
             lbKpiManagersSub.ForeColor = Color.Gray;
             lbKpiManagersSub.Location = new Point(12, 60);
             lbKpiManagersSub.Name = "lbKpiManagersSub";
-            lbKpiManagersSub.Size = new Size(125, 15);
+            lbKpiManagersSub.Size = new Size(119, 15);
             lbKpiManagersSub.TabIndex = 2;
             lbKpiManagersSub.Text = "Department directors";
             // 
@@ -335,7 +338,7 @@
             lbKpiManagersTitle.ForeColor = Color.DimGray;
             lbKpiManagersTitle.Location = new Point(12, 10);
             lbKpiManagersTitle.Name = "lbKpiManagersTitle";
-            lbKpiManagersTitle.Size = new Size(100, 15);
+            lbKpiManagersTitle.Size = new Size(91, 15);
             lbKpiManagersTitle.TabIndex = 0;
             lbKpiManagersTitle.Text = "MANAGEMENT";
             // 
@@ -358,7 +361,7 @@
             lbKpiStaffSub.ForeColor = Color.Gray;
             lbKpiStaffSub.Location = new Point(12, 60);
             lbKpiStaffSub.Name = "lbKpiStaffSub";
-            lbKpiStaffSub.Size = new Size(140, 15);
+            lbKpiStaffSub.Size = new Size(139, 15);
             lbKpiStaffSub.TabIndex = 2;
             lbKpiStaffSub.Text = "Front desk & Room service";
             // 
@@ -403,7 +406,7 @@
             lbKpiCleanersSub.ForeColor = Color.Gray;
             lbKpiCleanersSub.Location = new Point(12, 60);
             lbKpiCleanersSub.Name = "lbKpiCleanersSub";
-            lbKpiCleanersSub.Size = new Size(126, 15);
+            lbKpiCleanersSub.Size = new Size(111, 15);
             lbKpiCleanersSub.TabIndex = 2;
             lbKpiCleanersSub.Text = "Housekeeping crew";
             // 
@@ -425,7 +428,7 @@
             lbKpiCleanersTitle.ForeColor = Color.DimGray;
             lbKpiCleanersTitle.Location = new Point(12, 10);
             lbKpiCleanersTitle.Name = "lbKpiCleanersTitle";
-            lbKpiCleanersTitle.Size = new Size(99, 15);
+            lbKpiCleanersTitle.Size = new Size(96, 15);
             lbKpiCleanersTitle.TabIndex = 0;
             lbKpiCleanersTitle.Text = "HOUSEKEEPING";
             // 
@@ -599,6 +602,7 @@
             // 
             pnlEditor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             pnlEditor.BorderStyle = BorderStyle.FixedSingle;
+            pnlEditor.Controls.Add(btnAddProfile);
             pnlEditor.Controls.Add(pbProfilePhoto);
             pnlEditor.Controls.Add(btnSaveEmployee);
             pnlEditor.Controls.Add(tbSalary);
@@ -623,6 +627,18 @@
             pnlEditor.Name = "pnlEditor";
             pnlEditor.Size = new Size(355, 610);
             pnlEditor.TabIndex = 6;
+            // 
+            // btnAddProfile
+            // 
+            btnAddProfile.BackColor = Color.White;
+            btnAddProfile.Image = Properties.Resources.add;
+            btnAddProfile.Location = new Point(316, 12);
+            btnAddProfile.Name = "btnAddProfile";
+            btnAddProfile.Size = new Size(20, 20);
+            btnAddProfile.TabIndex = 20;
+            toolTip1.SetToolTip(btnAddProfile, "Add BackOffice Profile");
+            btnAddProfile.UseVisualStyleBackColor = false;
+            btnAddProfile.Click += btnAddProfile_Click;
             // 
             // pbProfilePhoto
             // 
@@ -665,7 +681,7 @@
             lbSalaryTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             lbSalaryTitle.Location = new Point(180, 435);
             lbSalaryTitle.Name = "lbSalaryTitle";
-            lbSalaryTitle.Size = new Size(89, 17);
+            lbSalaryTitle.Size = new Size(90, 17);
             lbSalaryTitle.TabIndex = 18;
             lbSalaryTitle.Text = "Salary (HUF):";
             // 
@@ -775,7 +791,7 @@
             lbJobTitleTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             lbJobTitleTitle.Location = new Point(15, 207);
             lbJobTitleTitle.Name = "lbJobTitleTitle";
-            lbJobTitleTitle.Size = new Size(80, 17);
+            lbJobTitleTitle.Size = new Size(81, 17);
             lbJobTitleTitle.TabIndex = 6;
             lbJobTitleTitle.Text = "Role / Title:";
             // 
@@ -812,7 +828,7 @@
             lbEditorTitle.ForeColor = Color.FromArgb(24, 60, 142);
             lbEditorTitle.Location = new Point(15, 12);
             lbEditorTitle.Name = "lbEditorTitle";
-            lbEditorTitle.Size = new Size(211, 20);
+            lbEditorTitle.Size = new Size(210, 20);
             lbEditorTitle.TabIndex = 0;
             lbEditorTitle.Text = "EMPLOYEE PROFILE DETAILS";
             // 
@@ -919,5 +935,7 @@
         private Label lbSalaryTitle;
         private TextBox tbSalary;
         private Button btnSaveEmployee;
+        private Button btnAddProfile;
+        private ToolTip toolTip1;
     }
 }

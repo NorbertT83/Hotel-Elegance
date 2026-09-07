@@ -16,7 +16,7 @@ namespace Hotel_erp_Winforms_App.Services
     {
         private readonly string connectionString = DbConfig.ConnectionString;
 
-        public List<Employee> LoadDgv(string query, Dictionary<string, object>? parameters = null)
+        public async Task<List<Employee>> LoadDgvAsync(string query, Dictionary<string, object>? parameters = null)
         {
             List<Employee> employees = new List<Employee>();
 
@@ -24,19 +24,19 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
 
-                if(parameters != null)
+                if (parameters != null)
                 {
-                    foreach(var param in parameters)
+                    foreach (var param in parameters)
                     {
                         cmd.Parameters.AddWithValue(param.Key, param.Value);
                     }
                 }
 
-                connection.Open();
+                await connection.OpenAsync();
 
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         Employee employee = new Employee
                         (
@@ -51,7 +51,9 @@ namespace Hotel_erp_Winforms_App.Services
                             reader["role"]?.ToString() ?? string.Empty,
                             Convert.ToInt32(reader["salary"]),
                             Convert.ToDateTime(reader["created_at"]),
-                            Convert.ToDateTime(reader["updated_at"])
+                            Convert.ToDateTime(reader["updated_at"]),
+                            reader["email"]?.ToString() ?? string.Empty,
+                            reader["password"]?.ToString() ?? string.Empty
                         );
                         employees.Add(employee);
                     }
@@ -75,18 +77,18 @@ namespace Hotel_erp_Winforms_App.Services
 
         // jelszó kezelés
 
-        public Employee? GetEmployeeByTaxNumber(string taxNumber)
+        public async Task<Employee?> GetEmployeeByEmailAsync(string email)
         {
             string query = "SELECT id, fname, lname, tax_number, paid_holidays_left, address, date_of_birth, date_of_hiring, " +
-                "role, salary, created_at, updated_at " +
+                "role, salary, created_at, updated_at, email, password " +
                 "FROM employees " +
-                "WHERE tax_number = @taxNumber";
+                "WHERE email = @email";
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@taxNumber", taxNumber);
+                    cmd.Parameters.AddWithValue("@email", email);
 
                     try
                     {
@@ -108,7 +110,9 @@ namespace Hotel_erp_Winforms_App.Services
                                     reader["role"]?.ToString() ?? string.Empty,
                                     Convert.ToInt32(reader["salary"]),
                                     Convert.ToDateTime(reader["created_at"]),
-                                    Convert.ToDateTime(reader["updated_at"])
+                                    Convert.ToDateTime(reader["updated_at"]),
+                                    reader["email"]?.ToString() ?? string.Empty,
+                                    reader["password"]?.ToString() ?? string.Empty
                                 );
                             }
                         }
@@ -123,35 +127,53 @@ namespace Hotel_erp_Winforms_App.Services
             return null;
         }
 
-        public bool SaveEmployeesPassword(string taxNumber, string hashedPassword)
+        public async Task SaveNewBackofficeProfileAsync(string hashedPassword, string email, int id)
         {
-            string query = "UPDATE employees SET password_hash = @passwordHash, password_salt = @passwordSalt, updated_at = GETDATE() WHERE " +
-                "tax_number = @taxNumber";
-            using(MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using(MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@passwordHash", hashedPassword);
-                    cmd.Parameters.AddWithValue("@passwordSalt", string.Empty);
-                    cmd.Parameters.AddWithValue("@taxNumber", taxNumber);
+            string query = @"
+                UPDATE employees
+                SET email = @email, password = @password
+                WHERE id = @id";
 
-                    try
-                    {
-                        conn.Open();
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        return rowsAffected > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Adatbázis hiba a mentés során: {ex.Message}", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                    }
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@password", hashedPassword);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
 
-        // jelszó kezelés vége
+        // --------------
 
+        // UPDATE EMAIL
+        public async Task UpdateEmailAsync(Employee employee, string email)
+        {
+            string query = @"
+                UPDATE employees
+                SET email = @email
+                WHERE id = @id";
+
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("id", employee.Id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        // DELTE EMPLYOEE FROM DB
         public void DeleteEmployee(Employee employee)
         {
             string query = "DELETE FROM employees WHERE tax_number = @taxNumber";
@@ -174,5 +196,45 @@ namespace Hotel_erp_Winforms_App.Services
                 MessageBox.Show($"An error occured while trying to delete from database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // GET EMAIL OF EMPLOYEE
+        public async Task<string> GetEmployeesEmailAsync(Employee employee)
+        {
+            string query = @"
+                SELECT email
+                FROM employees
+                WHERE id = @id";
+
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", employee.Id);
+
+                    object? result = await cmd.ExecuteScalarAsync();
+
+                    return result != null ? result.ToString() : string.Empty;
+                }
+            }
+        }
+
+        #region helpers
+
+        public async Task<bool> IsEmailAlreadyUsed(string email, EmployeeService _employeeService)
+        {
+            string query = "SELECT * FROM employees WHERE email = @email";
+            var parameters = new Dictionary<string, object>
+            {
+                { "@email", email.Trim() }
+            };
+
+            List<Employee> list = await _employeeService.LoadDgvAsync(query, parameters);
+
+            return list.Count > 0;
+        }
+
+        #endregion
     }
 }

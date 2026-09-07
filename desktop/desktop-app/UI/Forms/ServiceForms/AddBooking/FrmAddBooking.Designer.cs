@@ -1524,7 +1524,7 @@
             // 
             colTotal.DataPropertyName = "Total";
             dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C2";
+            dataGridViewCellStyle7.Format = "C0";
             dataGridViewCellStyle7.NullValue = "0";
             colTotal.DefaultCellStyle = dataGridViewCellStyle7;
             colTotal.HeaderText = "Total";

@@ -462,6 +462,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 case 3:
                     await bookingService.LoadBillItemsAsync(dgvPaymentSum, services, null, nightsCount, guestCount);
 
+                    dgvPaymentSum.Columns["colTax"]?.DefaultCellStyle.Format = "P0";
+
                     lbNetAmount.Text = bookingService.CalculateNetAmount(billingItems).ToString("C0");
                     lbTaxAmount.Text = bookingService.CalculateTaxAmount(billingItems).ToString("C0");
                     lbGrossAmount.Text = bookingService.CalculateGrossAmount(billingItems).ToString("C0");

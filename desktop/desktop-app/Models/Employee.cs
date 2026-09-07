@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Hotel_erp_Winforms_App.Models
@@ -9,7 +10,7 @@ namespace Hotel_erp_Winforms_App.Models
         public Employee() { }
 
         public Employee(int id, string fName, string lName, string taxNumber, int paidHolidaysLeft,
-            string address, DateTime dateOfBirth, DateTime dateOfHiring, string jobTitle, int salary, DateTime createdAt, DateTime updatedAt)
+            string address, DateTime dateOfBirth, DateTime dateOfHiring, string jobTitle, int salary, DateTime createdAt, DateTime updatedAt, string email, string password)
         {
             Id = id;
             FName = fName;
@@ -23,6 +24,8 @@ namespace Hotel_erp_Winforms_App.Models
             Salary = salary;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
+            Email = email;
+            Password = password;
         }
 
         public int Id { get; set; }
@@ -37,5 +40,7 @@ namespace Hotel_erp_Winforms_App.Models
         public int Salary { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

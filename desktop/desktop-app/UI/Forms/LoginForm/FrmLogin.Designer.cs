@@ -32,15 +32,11 @@
             label2 = new Label();
             pictureBox1 = new PictureBox();
             label1 = new Label();
-            tbTaxNumber = new TextBox();
+            tbEmail = new TextBox();
             tbPassword = new TextBox();
             btnLogin = new Button();
             label3 = new Label();
             label4 = new Label();
-            linkLabel = new LinkLabel();
-            label5 = new Label();
-            cbJobTitle = new ComboBox();
-            lbJobTitle = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -86,13 +82,13 @@
             label1.TabIndex = 101;
             label1.Text = "Login";
             // 
-            // tbTaxNumber
+            // tbEmail
             // 
-            tbTaxNumber.Font = new Font("Segoe UI", 15F);
-            tbTaxNumber.Location = new Point(487, 183);
-            tbTaxNumber.Name = "tbTaxNumber";
-            tbTaxNumber.Size = new Size(210, 34);
-            tbTaxNumber.TabIndex = 1;
+            tbEmail.Font = new Font("Segoe UI", 15F);
+            tbEmail.Location = new Point(487, 183);
+            tbEmail.Name = "tbEmail";
+            tbEmail.Size = new Size(210, 34);
+            tbEmail.TabIndex = 1;
             // 
             // tbPassword
             // 
@@ -126,9 +122,9 @@
             label3.Font = new Font("Segoe UI", 12F);
             label3.Location = new Point(487, 159);
             label3.Name = "label3";
-            label3.Size = new Size(93, 21);
+            label3.Size = new Size(108, 21);
             label3.TabIndex = 5;
-            label3.Text = "Tax Number";
+            label3.Text = "Email Address";
             // 
             // label4
             // 
@@ -140,46 +136,6 @@
             label4.TabIndex = 6;
             label4.Text = "Password";
             // 
-            // linkLabel
-            // 
-            linkLabel.AutoSize = true;
-            linkLabel.Font = new Font("Segoe UI", 10F);
-            linkLabel.Location = new Point(619, 423);
-            linkLabel.Name = "linkLabel";
-            linkLabel.Size = new Size(101, 19);
-            linkLabel.TabIndex = 4;
-            linkLabel.TabStop = true;
-            linkLabel.Text = "Make one here";
-            linkLabel.LinkClicked += linkLabel_LinkClicked;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 10F);
-            label5.Location = new Point(447, 423);
-            label5.Name = "label5";
-            label5.Size = new Size(176, 19);
-            label5.TabIndex = 102;
-            label5.Text = "Don't have an account yet?";
-            // 
-            // cbJobTitle
-            // 
-            cbJobTitle.FormattingEnabled = true;
-            cbJobTitle.Items.AddRange(new object[] { "Admin", "Manager", "Guest" });
-            cbJobTitle.Location = new Point(530, 56);
-            cbJobTitle.Name = "cbJobTitle";
-            cbJobTitle.Size = new Size(118, 23);
-            cbJobTitle.TabIndex = 103;
-            // 
-            // lbJobTitle
-            // 
-            lbJobTitle.AutoSize = true;
-            lbJobTitle.Location = new Point(548, 35);
-            lbJobTitle.Name = "lbJobTitle";
-            lbJobTitle.Size = new Size(91, 15);
-            lbJobTitle.TabIndex = 104;
-            lbJobTitle.Text = "Default job title:";
-            // 
             // FrmLogin
             // 
             AcceptButton = btnLogin;
@@ -187,15 +143,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(784, 494);
-            Controls.Add(lbJobTitle);
-            Controls.Add(cbJobTitle);
-            Controls.Add(label5);
-            Controls.Add(linkLabel);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(btnLogin);
             Controls.Add(tbPassword);
-            Controls.Add(tbTaxNumber);
+            Controls.Add(tbEmail);
             Controls.Add(label1);
             Controls.Add(panel1);
             Font = new Font("Segoe UI", 9F);
@@ -214,16 +166,12 @@
         #endregion
         private Label label1;
         private Panel panel1;
-        private TextBox tbTaxNumber;
+        private TextBox tbEmail;
         private PictureBox pictureBox1;
         private TextBox tbPassword;
         private Button btnLogin;
         private Label label2;
         private Label label3;
         private Label label4;
-        private LinkLabel linkLabel;
-        private Label label5;
-        private ComboBox cbJobTitle;
-        private Label lbJobTitle;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
+using Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,20 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 {
     public partial class EmployeeControl : UserControl
     {
-        private List<Employee> _employees = new List<Employee>();
-        private readonly EmployeeService _employeeService = new EmployeeService();
-        private Employee? _selectedEmployee;
-
         public EmployeeControl()
         {
             InitializeComponent();
         }
+
+        #region variables
+
+        private List<Employee> _employees = new List<Employee>();
+        private readonly EmployeeService _employeeService = new EmployeeService();
+        private Employee? _selectedEmployee;
+
+        #endregion
+
+        #region OnLoad events
 
         private void EmployeeControl_Load(object sender, EventArgs e)
         {
@@ -25,12 +32,16 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             LoadData();
         }
 
-        private void LoadData()
+        #endregion
+
+        #region Kpis, and refreshers
+
+        private async void LoadData()
         {
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                _employees = _employeeService.LoadDgv("SELECT * FROM employees");
+                _employees = await _employeeService.LoadDgvAsync("SELECT * FROM employees");
                 dgvEmployees.AutoGenerateColumns = false;
                 dgvEmployees.DataSource = _employees;
 
@@ -79,6 +90,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             tbSalary.Text = _selectedEmployee.Salary.ToString();
         }
 
+        #endregion
+
+        #region datagridview
+
         private void dgvEmployees_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -87,7 +102,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             }
         }
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        #endregion
+
+        #region buttons
+
+        private async void btnSearch_Click(object sender, EventArgs e)
         {
             string query = "SELECT * FROM employees WHERE 1=1 ";
             var parameters = new Dictionary<string, object>();
@@ -104,7 +123,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
                 parameters.Add("@role", cbJobTitleFilter.SelectedItem.ToString());
             }
 
-            _employees = _employeeService.LoadDgv(query, parameters);
+            _employees = await _employeeService.LoadDgvAsync(query, parameters);
             dgvEmployees.DataSource = _employees;
             UpdateKpis();
         }
@@ -167,5 +186,22 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
                 btnAdd_Click(sender, e);
             }
         }
+
+        private void btnAddProfile_Click(object sender, EventArgs e)
+        {
+            if (_selectedEmployee != null)
+            {
+                AddBackOfficeProfileForm addProfile = new AddBackOfficeProfileForm(_selectedEmployee);
+                addProfile.ShowDialog();
+            }
+        }
+
+        #endregion
+
+        #region helpers
+
+        
+
+        #endregion
     }
 }

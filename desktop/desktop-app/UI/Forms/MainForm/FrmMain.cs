@@ -19,6 +19,7 @@ namespace Hotel_erp_Winforms_App
             lbWelcomeMainForm.Text = $"Welcome {loggedInEmployee.FName}!";
         }
 
+        #region onLoad actions
         private void MainForm_Load(object sender, EventArgs e)
         {
             PermissionManager.ApplyPermissions(this);
@@ -50,6 +51,7 @@ namespace Hotel_erp_Winforms_App
             btn.ForeColor = textColor;
             btn.FlatAppearance.MouseOverBackColor = hoverColor;
         }
+        #endregion
 
         #region Menu buttons
         private void btnBookings_Click(object sender, EventArgs e)
@@ -126,6 +128,7 @@ namespace Hotel_erp_Winforms_App
         }
         #endregion
 
+        #region helpers
         private void ShowControl(UserControl control)
         {
             panelMainContent.SuspendLayout();
@@ -134,6 +137,7 @@ namespace Hotel_erp_Winforms_App
             control.Dock = DockStyle.Fill;
             control.BringToFront();
             panelMainContent.ResumeLayout();
-        } 
+        }
+        #endregion
     }
 }

@@ -14,6 +14,11 @@ namespace Hotel_erp_Winforms_App.Security
 
         public static bool VerifyPassword(string password, string hashedPassword)
         {
+            if (string.IsNullOrEmpty(hashedPassword))
+            {
+                return false;
+            }
+
             return BCrypt.Net.BCrypt.EnhancedVerify(password, hashedPassword);
         }
     }

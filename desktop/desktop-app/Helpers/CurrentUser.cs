@@ -3,14 +3,16 @@
     public static class CurrentUser
     {
         public static int Id { get; set; }
-        public static string Username { get; set; } = string.Empty;
+        public static string Name { get; set; } = string.Empty;
+        public static string Email { get; set; } = string.Empty;
         public static UserRole Role { get; set; }
 
         public static void Clear()
         {
             Id = 0;
-            Username = string.Empty;
-            Role = UserRole.Admin;
+            Name = string.Empty;
+            Email = string.Empty;
+            Role = UserRole.Guest;
         }
     }
 }

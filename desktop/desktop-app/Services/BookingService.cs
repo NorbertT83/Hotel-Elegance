@@ -1024,22 +1024,15 @@ namespace Hotel_erp_Winforms_App.Services
         // 10.
         public int CalculateNetAmount(List<BillingItem> billingItems)
         {
-            int netAmount = 0;
+            decimal netAmount = 0m;
 
             foreach (BillingItem item in billingItems)
             {
-                if (item.Description == "Szoba ár")
-                {
-                    netAmount += Convert.ToInt32(item.Total / 1.05m);
-                }
-
-                else
-                {
-                    netAmount += Convert.ToInt32(item.Total / 1.27m);
-                }
+                decimal rate = (item.Description == "Szoba ár") ? 1.05m : 1.27m;
+                netAmount += item.Total / rate;
             }
 
-            return netAmount;
+            return Convert.ToInt32(Math.Round(netAmount, MidpointRounding.AwayFromZero));
         }
         // 11.
         public int CalculateTaxAmount(List<BillingItem> billingItems)
@@ -1114,43 +1107,9 @@ namespace Hotel_erp_Winforms_App.Services
             var bindingList = new BindingList<BillingItem>(billingItems);
 
             dgvPaymentSum.AutoGenerateColumns = false;
-            //dgvPaymentSum.Columns.Clear();
-
-            //LoadBillingitemToDgv("Date", dgvPaymentSum);
-            //LoadBillingitemToDgv("Description", dgvPaymentSum);
-            //LoadBillingitemToDgv("UnitPrice", dgvPaymentSum);
-            //LoadBillingitemToDgv("Quantity", dgvPaymentSum);
-            //LoadBillingitemToDgv("Tax", dgvPaymentSum);
-            //LoadBillingitemToDgv("Total", dgvPaymentSum);
-
-            //dgvPaymentSum.Columns[3].HeaderText = "Qty";
-
+            dgvPaymentSum.DataSource = null;
             dgvPaymentSum.DataSource = bindingList;
-
-            // DATAGRIDVIEW STYLE
-            //dgvPaymentSum.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            //dgvPaymentSum.Columns[1].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            //dgvPaymentSum.Columns[2].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            //dgvPaymentSum.Columns[3].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            //dgvPaymentSum.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            //dgvPaymentSum.Columns[5].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            //dgvPaymentSum.Columns[0].DefaultCellStyle.Format = "yyyy.MM.dd";
-
-            //dgvPaymentSum.Columns[2].DefaultCellStyle.Format = "C0";
-            //dgvPaymentSum.Columns[5].DefaultCellStyle.Format = "C0";
-
-            //dgvPaymentSum.Columns[4].DefaultCellStyle.Format = "P0";
         }
-        // 15.
-        //private void LoadBillingitemToDgv(string description, DataGridView dgvPaymentSum)
-        //{
-        //    dgvPaymentSum.Columns.Add(new DataGridViewTextBoxColumn
-        //    {
-        //        DataPropertyName = description,
-        //        HeaderText = description
-        //    });
-        //}
         #endregion
 
         #region INFO

@@ -2,12 +2,13 @@
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.UI.Forms;
+using Hotel_erp_Winforms_App.Security;
 
 namespace Hotel_erp_Winforms_App.Forms
 {
     public partial class FrmLogin : Form
     {
-        public Employee loggedInEmployee = new Employee();
+        public Employee? loggedInEmployee = new Employee();
 
         public FrmLogin()
         {
@@ -16,58 +17,61 @@ namespace Hotel_erp_Winforms_App.Forms
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-            tbTaxNumber.Text = "TX100001";
+            // FOR TESTING
+            tbEmail.Text = "kovacs.peter@ceg.hu";
+            tbPassword.Text = "KovacsPeter1#";
+            // -----------------------------------------------------------------------
+
+            System.Diagnostics.Debug.WriteLine($"Employees id = 1 email: szabo.anna@ceg.hu // Recepciós");
+            System.Diagnostics.Debug.WriteLine($"Employees id = 1 jelszava: SzaboAnna1# ");
+            System.Diagnostics.Debug.WriteLine($"Employees id = 1 email: kovacs.peter@ceg.hu // Manager");
+            System.Diagnostics.Debug.WriteLine($"Employees id = 1 jelszava: KovacsPeter1# ");
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private async void btnLogin_Click(object sender, EventArgs e)
         {
-            //if (cbJobTitle.SelectedItem == null)
-            //{
-            //    MessageBox.Show(
-            //        "Please select a title first!",
-            //        "Selection Required",
-            //        MessageBoxButtons.OK,
-            //        MessageBoxIcon.Error);
-
-            //    return;
-            //}
-
             EmployeeService _employeeService = new EmployeeService();
 
-            loggedInEmployee = _employeeService.GetEmployeeByTaxNumber(tbTaxNumber.Text.Trim());
+            loggedInEmployee = await _employeeService.GetEmployeeByEmailAsync(tbEmail.Text.Trim().ToLower());
 
             if (loggedInEmployee != null)
             {
-                UserRole defaultUserRole = cbJobTitle.SelectedIndex switch
-                {
-                    0 => UserRole.Admin,
-                    1 => UserRole.Manager,
-                    2 => UserRole.Guest,
-                    _ => UserRole.Guest
-                };
-
                 CurrentUser.Id = loggedInEmployee.Id;
-                CurrentUser.Username = loggedInEmployee.FName ?? "User";
+                CurrentUser.Name = loggedInEmployee.FName ?? "User";
                 CurrentUser.Role = loggedInEmployee.JobTitle.ToString() switch
                 {
                     "HK Manager" => UserRole.HKManager,
                     "Receptionist" => UserRole.Receptionist,
                     "Front Office Manager" => UserRole.FrontOffMan,
-                    _ => defaultUserRole
+                    "Hotel Manager" => UserRole.Manager,
+                    "Admin" => UserRole.Admin,
+                    _ => UserRole.Guest
                 };
 
-                //if (cbJobTitle.SelectedItem is UserRole selectedRole)
-                //{
-                //    CurrentUser.Role = selectedRole;
-                //}
-                //else
-                //{
-                //    CurrentUser.Role = UserRole.Guest;
-                //}
+                string password = tbPassword.Text.Trim();
 
-                FrmMain mainForm = new FrmMain(loggedInEmployee);
-                mainForm.Show();
-                this.Hide();
+                if (PasswordHelper.VerifyPassword(password, loggedInEmployee.Password) == false)
+                {
+                    MessageBox.Show(
+                        "Invalid email address or password. Please try again.",
+                        "Login Failed",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+
+                    tbPassword.Clear();
+
+                    return;
+                }
+
+                else
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    FrmMain mainForm = new FrmMain(loggedInEmployee);
+                    mainForm.Show();
+                    this.Hide();
+                    Cursor.Current = Cursors.Default;
+                }
             }
             else
             {
