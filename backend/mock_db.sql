@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Júl 03. 08:15
--- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Sep 07, 2026 at 09:00 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `c82533nrbrt`
+-- Database: `hotelelegancedb`
 --
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `bookings`
+-- Table structure for table `bookings`
 --
 
 CREATE TABLE `bookings` (
@@ -44,7 +44,7 @@ CREATE TABLE `bookings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- A tábla adatainak kiíratása `bookings`
+-- Dumping data for table `bookings`
 --
 
 INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`, `created_at`) VALUES
@@ -56,7 +56,7 @@ INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginnin
 ('HE-2026-UCT4', 403, 'suite', 19, '2026-06-20', '2026-07-04', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-06-03 09:53:43');
 
 --
--- Eseményindítók `bookings`
+-- Triggers `bookings`
 --
 DELIMITER $$
 CREATE TRIGGER `trg_booking_date_check` BEFORE INSERT ON `bookings` FOR EACH ROW BEGIN
@@ -71,13 +71,15 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `employees`
+-- Table structure for table `employees`
 --
 
 CREATE TABLE `employees` (
   `id` int(11) NOT NULL,
   `fname` varchar(30) NOT NULL,
   `lname` varchar(30) NOT NULL,
+  `email` varchar(64) DEFAULT NULL,
+  `password` varchar(128) DEFAULT NULL,
   `tax_number` varchar(20) NOT NULL,
   `paid_holidays_left` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
   `address` text DEFAULT NULL,
@@ -90,23 +92,24 @@ CREATE TABLE `employees` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- A tábla adatainak kiíratása `employees`
+-- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`id`, `fname`, `lname`, `tax_number`, `paid_holidays_left`, `address`, `date_of_birth`, `date_of_hiring`, `role`, `salary`, `created_at`, `updated_at`) VALUES
-(1, 'Gábor', 'Nagy', 'TX100001', 18, 'Budapest, Andrássy út 10.', '1985-03-12', '2015-06-01', 'HK Manager', 950000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(2, 'Eszter', 'Kovács', 'TX100002', 20, 'Budapest, Bartók Béla út 22.', '1988-07-25', '2018-09-15', 'F&B Manager', 880000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(3, 'Anna', 'Szabó', 'TX100003', 12, 'Budapest, Váci út 45.', '1995-11-02', '2021-03-10', 'Receptionist', 420000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(4, 'Dániel', 'Tóth', 'TX100004', 10, 'Budapest, Üllői út 78.', '1998-05-19', '2022-07-01', 'Receptionist', 400000, '2026-03-30 07:06:55', '2026-05-15 07:53:19'),
-(5, 'Mária', 'Horváth', 'TX100005', 8, 'Budapest, József körút 33.', '1972-09-14', '2019-11-20', 'Cleaner', 300000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(6, 'József', 'Varga', 'TX100006', 6, 'Budapest, Kerepesi út 101.', '1968-01-30', '2017-04-05', 'Cleaner', 290000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(7, 'Lilla', 'Molnár', 'TX100007', 9, 'Budapest, Rákóczi út 12.', '1999-02-17', '2023-02-01', 'Room Service', 350000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(8, 'Bence', 'Farkas', 'TX100008', 11, 'Budapest, Fehérvári út 56.', '1996-08-09', '2020-06-18', 'Room Service', 360000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(9, 'Zoltán', 'Balogh', 'TX100009', 14, 'Budapest, Hungária körút 88.', '1982-12-05', '2016-01-10', 'Front Office Manager', 910000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(10, 'Petra', 'Papp', 'TX100010', 7, 'Budapest, Alkotás utca 3.', '1993-04-22', '2021-10-01', 'Cleaner', 410000, '2026-03-30 07:06:55', '2026-03-30 07:06:55');
+INSERT INTO `employees` (`id`, `fname`, `lname`, `email`, `password`, `tax_number`, `paid_holidays_left`, `address`, `date_of_birth`, `date_of_hiring`, `role`, `salary`, `created_at`, `updated_at`) VALUES
+(1, 'Gábor', 'Nagy', NULL, NULL, 'TX100001', 18, 'Budapest, Andrássy út 10.', '1985-03-12', '2015-06-01', 'HK Manager', 950000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(2, 'Eszter', 'Kovács', NULL, NULL, 'TX100002', 20, 'Budapest, Bartók Béla út 22.', '1988-07-25', '2018-09-15', 'F&B Manager', 880000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(3, 'Anna', 'Szabó', NULL, NULL, 'TX100003', 12, 'Budapest, Váci út 45.', '1995-11-02', '2021-03-10', 'Receptionist', 420000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(4, 'Dániel', 'Tóth', NULL, NULL, 'TX100004', 10, 'Budapest, Üllői út 78.', '1998-05-19', '2022-07-01', 'Receptionist', 400000, '2026-03-30 07:06:55', '2026-05-15 07:53:19'),
+(5, 'Mária', 'Horváth', NULL, NULL, 'TX100005', 8, 'Budapest, József körút 33.', '1972-09-14', '2019-11-20', 'Cleaner', 300000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(6, 'József', 'Varga', NULL, NULL, 'TX100006', 6, 'Budapest, Kerepesi út 101.', '1968-01-30', '2017-04-05', 'Cleaner', 290000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(7, 'Lilla', 'Molnár', NULL, NULL, 'TX100007', 9, 'Budapest, Rákóczi út 12.', '1999-02-17', '2023-02-01', 'Room Service', 350000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(8, 'Bence', 'Farkas', NULL, NULL, 'TX100008', 11, 'Budapest, Fehérvári út 56.', '1996-08-09', '2020-06-18', 'Room Service', 360000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(9, 'Zoltán', 'Balogh', NULL, NULL, 'TX100009', 14, 'Budapest, Hungária körút 88.', '1982-12-05', '2016-01-10', 'Front Office Manager', 910000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(10, 'Petra', 'Papp', NULL, NULL, 'TX100010', 7, 'Budapest, Alkotás utca 3.', '1993-04-22', '2021-10-01', 'Cleaner', 410000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
+(11, 'Gergő', 'Kocsis', NULL, NULL, 'TX124344', 12, 'Halásztelek Fő utca 14.', '1986-09-22', '2023-04-18', 'Hotel Manager', 999000, '2026-09-07 18:52:31', '2026-09-07 18:53:02');
 
 --
--- Eseményindítók `employees`
+-- Triggers `employees`
 --
 DELIMITER $$
 CREATE TRIGGER `trg_employees_birth_check` BEFORE INSERT ON `employees` FOR EACH ROW BEGIN
@@ -139,7 +142,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `food_and_beverage`
+-- Table structure for table `food_and_beverage`
 --
 
 CREATE TABLE `food_and_beverage` (
@@ -154,7 +157,7 @@ CREATE TABLE `food_and_beverage` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- A tábla adatainak kiíratása `food_and_beverage`
+-- Dumping data for table `food_and_beverage`
 --
 
 INSERT INTO `food_and_beverage` (`id`, `category`, `name_hu`, `description_hu`, `name_en`, `description_en`, `price`, `measure`) VALUES
@@ -224,7 +227,7 @@ INSERT INTO `food_and_beverage` (`id`, `category`, `name_hu`, `description_hu`, 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `guests`
+-- Table structure for table `guests`
 --
 
 CREATE TABLE `guests` (
@@ -244,7 +247,7 @@ CREATE TABLE `guests` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- A tábla adatainak kiíratása `guests`
+-- Dumping data for table `guests`
 --
 
 INSERT INTO `guests` (`id`, `email`, `id_card_number`, `fname`, `lname`, `date_of_birth`, `country`, `zip_code`, `city`, `street`, `car_plate_number`, `total_nights`) VALUES
@@ -270,7 +273,7 @@ INSERT INTO `guests` (`id`, `email`, `id_card_number`, `fname`, `lname`, `date_o
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `rate_limits`
+-- Table structure for table `rate_limits`
 --
 
 CREATE TABLE `rate_limits` (
@@ -281,7 +284,7 @@ CREATE TABLE `rate_limits` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- A tábla adatainak kiíratása `rate_limits`
+-- Dumping data for table `rate_limits`
 --
 
 INSERT INTO `rate_limits` (`id`, `key`, `attempts`, `window_start`) VALUES
@@ -291,7 +294,7 @@ INSERT INTO `rate_limits` (`id`, `key`, `attempts`, `window_start`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `refresh_tokens`
+-- Table structure for table `refresh_tokens`
 --
 
 CREATE TABLE `refresh_tokens` (
@@ -303,7 +306,7 @@ CREATE TABLE `refresh_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- A tábla adatainak kiíratása `refresh_tokens`
+-- Dumping data for table `refresh_tokens`
 --
 
 INSERT INTO `refresh_tokens` (`id`, `guest_id`, `token_id`, `expires_at`, `created_at`) VALUES
@@ -316,7 +319,7 @@ INSERT INTO `refresh_tokens` (`id`, `guest_id`, `token_id`, `expires_at`, `creat
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `rooms`
+-- Table structure for table `rooms`
 --
 
 CREATE TABLE `rooms` (
@@ -338,7 +341,7 @@ CREATE TABLE `rooms` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- A tábla adatainak kiíratása `rooms`
+-- Dumping data for table `rooms`
 --
 
 INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_balcony`, `has_view`, `max_adults`, `extras`, `status`, `price_per_night`, `door_locked`, `needs_cleaning`, `dont_disturb`, `is_cleaning`, `ac_temp`) VALUES
@@ -358,7 +361,7 @@ INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `servicebookings`
+-- Table structure for table `servicebookings`
 --
 
 CREATE TABLE `servicebookings` (
@@ -373,7 +376,7 @@ CREATE TABLE `servicebookings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- A tábla adatainak kiíratása `servicebookings`
+-- Dumping data for table `servicebookings`
 --
 
 INSERT INTO `servicebookings` (`id`, `booking_id`, `service_id`, `requested_at`, `updated_at`, `quantity`, `status`, `price_at_booking`) VALUES
@@ -394,7 +397,7 @@ INSERT INTO `servicebookings` (`id`, `booking_id`, `service_id`, `requested_at`,
 (69, 'HE-2026-INXI', 3, '2026-07-02 09:20:21', '2026-07-02 09:20:21', 1, 'created', 0);
 
 --
--- Eseményindítók `servicebookings`
+-- Triggers `servicebookings`
 --
 DELIMITER $$
 CREATE TRIGGER `before_servicebookings_insert` BEFORE INSERT ON `servicebookings` FOR EACH ROW BEGIN
@@ -412,7 +415,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `services`
+-- Table structure for table `services`
 --
 
 CREATE TABLE `services` (
@@ -427,7 +430,7 @@ CREATE TABLE `services` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- A tábla adatainak kiíratása `services`
+-- Dumping data for table `services`
 --
 
 INSERT INTO `services` (`id`, `name_hu`, `description_hu`, `price`, `service_type_hu`, `name_en`, `description_en`, `service_type_en`) VALUES
@@ -453,11 +456,11 @@ INSERT INTO `services` (`id`, `name_hu`, `description_hu`, `price`, `service_typ
 (20, 'Teljes ellátás', 'Teljes ellátás reggelivel, ebéddel és vacsorával.', 28000, NULL, 'Full board', 'Full-board service including breakfast, lunch and dinner.', NULL);
 
 --
--- Indexek a kiírt táblákhoz
+-- Indexes for dumped tables
 --
 
 --
--- A tábla indexei `bookings`
+-- Indexes for table `bookings`
 --
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`),
@@ -468,21 +471,22 @@ ALTER TABLE `bookings`
   ADD KEY `fk_guest4` (`guest4_id`);
 
 --
--- A tábla indexei `employees`
+-- Indexes for table `employees`
 --
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `tax_number` (`tax_number`),
+  ADD UNIQUE KEY `uniq_employee_index` (`email`),
   ADD KEY `idx_employees_name` (`lname`,`fname`);
 
 --
--- A tábla indexei `food_and_beverage`
+-- Indexes for table `food_and_beverage`
 --
 ALTER TABLE `food_and_beverage`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `guests`
+-- Indexes for table `guests`
 --
 ALTER TABLE `guests`
   ADD PRIMARY KEY (`id`),
@@ -490,14 +494,14 @@ ALTER TABLE `guests`
   ADD UNIQUE KEY `id_card_number` (`id_card_number`);
 
 --
--- A tábla indexei `rate_limits`
+-- Indexes for table `rate_limits`
 --
 ALTER TABLE `rate_limits`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `key` (`key`);
 
 --
--- A tábla indexei `refresh_tokens`
+-- Indexes for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
   ADD PRIMARY KEY (`id`),
@@ -506,13 +510,13 @@ ALTER TABLE `refresh_tokens`
   ADD KEY `guest_id` (`guest_id`);
 
 --
--- A tábla indexei `rooms`
+-- Indexes for table `rooms`
 --
 ALTER TABLE `rooms`
   ADD PRIMARY KEY (`room_number`);
 
 --
--- A tábla indexei `servicebookings`
+-- Indexes for table `servicebookings`
 --
 ALTER TABLE `servicebookings`
   ADD PRIMARY KEY (`id`),
@@ -520,63 +524,63 @@ ALTER TABLE `servicebookings`
   ADD KEY `fk_booking_id` (`booking_id`);
 
 --
--- A tábla indexei `services`
+-- Indexes for table `services`
 --
 ALTER TABLE `services`
   ADD PRIMARY KEY (`id`);
 
 --
--- A kiírt táblák AUTO_INCREMENT értéke
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT a táblához `employees`
+-- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT a táblához `food_and_beverage`
+-- AUTO_INCREMENT for table `food_and_beverage`
 --
 ALTER TABLE `food_and_beverage`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
--- AUTO_INCREMENT a táblához `guests`
+-- AUTO_INCREMENT for table `guests`
 --
 ALTER TABLE `guests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT a táblához `rate_limits`
+-- AUTO_INCREMENT for table `rate_limits`
 --
 ALTER TABLE `rate_limits`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT a táblához `refresh_tokens`
+-- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
--- AUTO_INCREMENT a táblához `servicebookings`
+-- AUTO_INCREMENT for table `servicebookings`
 --
 ALTER TABLE `servicebookings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
--- AUTO_INCREMENT a táblához `services`
+-- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- Megkötések a kiírt táblákhoz
+-- Constraints for dumped tables
 --
 
 --
--- Megkötések a táblához `bookings`
+-- Constraints for table `bookings`
 --
 ALTER TABLE `bookings`
   ADD CONSTRAINT `fk_bookings_room` FOREIGN KEY (`room_number`) REFERENCES `rooms` (`room_number`) ON UPDATE CASCADE,
@@ -586,13 +590,13 @@ ALTER TABLE `bookings`
   ADD CONSTRAINT `fk_guest4` FOREIGN KEY (`guest4_id`) REFERENCES `guests` (`id`);
 
 --
--- Megkötések a táblához `refresh_tokens`
+-- Constraints for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
   ADD CONSTRAINT `refresh_tokens_ibfk_1` FOREIGN KEY (`guest_id`) REFERENCES `guests` (`id`) ON DELETE CASCADE;
 
 --
--- Megkötések a táblához `servicebookings`
+-- Constraints for table `servicebookings`
 --
 ALTER TABLE `servicebookings`
   ADD CONSTRAINT `fk_booking_id` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`),
