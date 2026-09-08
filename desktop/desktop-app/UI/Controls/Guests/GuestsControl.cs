@@ -79,7 +79,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 Cursor.Current = Cursors.Default;
             }
 
+            dgvGuests.DataSource = null;
             dgvGuests.DataSource = guests;
+            dgvGuests.ClearSelection();
+
+            lbNoData.BringToFront();
+            lbNoData.Visible = guests.Count == 0;
+
             dgvGuests.CellFormatting += dgvGuests_CellFormatting;
 
             lbKpiTotalGuestsValue.Text = guests.Count.ToString();
@@ -107,7 +113,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 1.
         private async void btnSearch_Click(object sender, EventArgs e)
         {
-            dgvGuests.DataSource = await _guestService.GetFilteredGuestListAsync(txtSearch.Text, cbTypeFilter.Text);
+            List<Guest> guests = await _guestService.GetFilteredGuestListAsync(txtSearch.Text, cbTypeFilter.Text);
+
+            dgvGuests.DataSource = null;
+            dgvGuests.DataSource = guests;
+            dgvGuests.ClearSelection();
+
+            lbNoData.BringToFront();
+            lbNoData.Visible = guests.Count == 0;
         }
 
         // 2.
@@ -126,7 +139,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 Cursor.Current = Cursors.Default;
             }
+            dgvGuests.DataSource = null;
             dgvGuests.DataSource = guests;
+            dgvGuests.ClearSelection();
+
+            lbNoData.BringToFront();
+            lbNoData.Visible = guests.Count == 0;
+
             dgvGuests.CellFormatting += dgvGuests_CellFormatting;
         }
 
@@ -189,6 +208,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                         "Succession",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
+
+                    dgvGuests.DataSource = null;
+                    dgvGuests.DataSource = guests;
+                    dgvGuests.ClearSelection();
+
+                    lbNoData.BringToFront();
+                    lbNoData.Visible = guests.Count == 0;
 
                     RowSelection(0);
                 }

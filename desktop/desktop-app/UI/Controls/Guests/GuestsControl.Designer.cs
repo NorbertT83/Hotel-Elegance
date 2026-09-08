@@ -90,6 +90,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             colCarPlate = new DataGridViewTextBoxColumn();
             colTotalNights = new DataGridViewTextBoxColumn();
             colLoyalty = new DataGridViewTextBoxColumn();
+            lbNoData = new Label();
             pnlEditor = new Panel();
             dtpBirthdate = new DateTimePicker();
             btnSaveGuest = new Button();
@@ -442,6 +443,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlGrid.BackColor = Color.White;
             pnlGrid.Controls.Add(dgvGuests);
+            pnlGrid.Controls.Add(lbNoData);
             pnlGrid.Location = new Point(10, 190);
             pnlGrid.Name = "pnlGrid";
             pnlGrid.Size = new Size(1350, 430);
@@ -633,6 +635,19 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             colLoyalty.HeaderText = "Loyalty";
             colLoyalty.Name = "colLoyalty";
             colLoyalty.ReadOnly = true;
+            // 
+            // lbNoData
+            // 
+            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbNoData.AutoSize = true;
+            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            lbNoData.ForeColor = Color.DarkGray;
+            lbNoData.Location = new Point(482, 380);
+            lbNoData.Name = "lbNoData";
+            lbNoData.Size = new Size(401, 50);
+            lbNoData.TabIndex = 3;
+            lbNoData.Text = "NO MATCHING DATA";
+            lbNoData.Visible = false;
             // 
             // pnlEditor
             // 
@@ -913,6 +928,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlKpiBlacklist.ResumeLayout(false);
             pnlKpiBlacklist.PerformLayout();
             pnlGrid.ResumeLayout(false);
+            pnlGrid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvGuests).EndInit();
             pnlEditor.ResumeLayout(false);
             pnlEditor.PerformLayout();
@@ -993,5 +1009,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private Label lbCountryTitle;
         private TextBox tbCountry;
         private Button btnDelete;
+        private Label lbNoData;
     }
 }

@@ -1,10 +1,13 @@
+using Hotel_erp_Winforms_App.Forms;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.UI.Controls;
+using Hotel_erp_Winforms_App.UI.Controls.Dashboard;
 using Hotel_erp_Winforms_App.UI.Controls.EmployeeControl;
-using Hotel_erp_Winforms_App.UI.Controls.Settings;
 using Hotel_erp_Winforms_App.UI.Controls.Rooms;
-using Hotel_erp_Winforms_App.Helpers;
-using Hotel_erp_Winforms_App.Forms;
+using Hotel_erp_Winforms_App.UI.Controls.Settings;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Hotel_erp_Winforms_App
 {
@@ -16,14 +19,10 @@ namespace Hotel_erp_Winforms_App
         {
             InitializeComponent();
             currentuser = loggedInEmployee;
-            lbWelcomeMainForm.Text = $"Welcome {loggedInEmployee.FName}!";
         }
 
-        #region onLoad actions
         private void MainForm_Load(object sender, EventArgs e)
         {
-            PermissionManager.ApplyPermissions(this);
-
             Color sotetKek = Color.FromArgb(30, 58, 138);
             Color elenkKek = Color.FromArgb(59, 130, 246);
             Color feher = Color.White;
@@ -41,6 +40,13 @@ namespace Hotel_erp_Winforms_App
             FormatMenuButton(btnEmployees, sotetKek, elenkKek, feher);
             FormatMenuButton(btnStatistics, sotetKek, elenkKek, feher);
             FormatMenuButton(btnSettings, sotetKek, elenkKek, feher);
+
+            ShowDashboard();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            ShowDashboard();
         }
 
         private void FormatMenuButton(Button btn, Color backColor, Color hoverColor, Color textColor)
@@ -51,7 +57,6 @@ namespace Hotel_erp_Winforms_App
             btn.ForeColor = textColor;
             btn.FlatAppearance.MouseOverBackColor = hoverColor;
         }
-        #endregion
 
         #region Menu buttons
         private void btnBookings_Click(object sender, EventArgs e)
@@ -108,27 +113,32 @@ namespace Hotel_erp_Winforms_App
             lbControlTitle.Text = "System Settings";
         }
 
+        private void btnDashboard_Click(object sencder, EventArgs e)
+        {
+            ShowDashboard();
+        }
+
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            FrmLogin frmLogin = new FrmLogin();
-            
-
-            DialogResult dr = MessageBox.Show(
+            DialogResult result = MessageBox.Show(
                 "Are you sure you want to log out?",
                 "Confirm Log Out",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
-            if (dr == DialogResult.Yes)
+            if (result == DialogResult.Yes)
             {
+                FrmLogin frmLogin = new FrmLogin();
+
                 frmLogin.Show();
                 this.Close();
             }
-
         }
+
         #endregion
 
         #region helpers
+
         private void ShowControl(UserControl control)
         {
             panelMainContent.SuspendLayout();
@@ -138,6 +148,13 @@ namespace Hotel_erp_Winforms_App
             control.BringToFront();
             panelMainContent.ResumeLayout();
         }
+
+        public void ShowDashboard()
+        {
+            ShowControl(new DashboardControl(currentuser));
+            lbControlTitle.Text = "Dashboard";
+        }
+
         #endregion
     }
 }

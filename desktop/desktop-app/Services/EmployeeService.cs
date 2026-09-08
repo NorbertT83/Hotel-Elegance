@@ -12,6 +12,12 @@ using System.Web;
 
 namespace Hotel_erp_Winforms_App.Services
 {
+    public enum SaveOrUpdate
+    {
+        Save,
+        Update
+    }
+
     public class EmployeeService
     {
         private readonly string connectionString = DbConfig.ConnectionString;
@@ -216,6 +222,64 @@ namespace Hotel_erp_Winforms_App.Services
                     object? result = await cmd.ExecuteScalarAsync();
 
                     return result != null ? result.ToString() : string.Empty;
+                }
+            }
+        }
+
+        // SAVE EMPLYOEE
+        public async Task SaveEmployeeToDbAsync(Employee emp, SaveOrUpdate saveOrUpdate)
+        {
+            string saveQuery = @"
+                INSERT INTO employees
+                    (id, fname, lname, email, password, tax_number, paid_holidays_left, address, date_of_birth, date_of_hiring, role, salary, created_at, updated_at)
+                VALUES
+                    (@id, @fname, @lname, @email, @password, @tax_number, @holidays, @address, @date_of_birth, @date_of_hiring, @role, @salary, @created_at, @updated_at);
+                ";
+
+            string updateQuery = @"
+                UPDATE employees
+                SET 
+                    id = @id, 
+                    fname = @fname, 
+                    lname = @lname, 
+                    email = @email, 
+                    password = @password, 
+                    tax_number = @tax_number, 
+                    paid_holidays_left = @holidays, 
+                    address = @address, 
+                    date_of_birth = @date_of_birth, 
+                    date_of_hiring = @date_of_hiring, 
+                    role = @role, 
+                    salary = @salary, 
+                    created_at = @created_at, 
+                    updated_at = @updated_at
+                WHERE id = @id;
+                ";
+
+            string query = saveOrUpdate == SaveOrUpdate.Save ? saveQuery : updateQuery;
+
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", emp.Id);
+                    cmd.Parameters.AddWithValue("@fname", emp.FName);
+                    cmd.Parameters.AddWithValue("@lname", emp.LName);
+                    cmd.Parameters.AddWithValue("@email", (object)emp.Email ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@password", (object)emp.Password ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@tax_number", emp.TaxNumber);
+                    cmd.Parameters.AddWithValue("@holidays", emp.PaidHolidaysLeft);
+                    cmd.Parameters.AddWithValue("@address", emp.Address);
+                    cmd.Parameters.AddWithValue("@date_of_birth", emp.DateOfBirth);
+                    cmd.Parameters.AddWithValue("@date_of_hiring", emp.DateOfHiring);
+                    cmd.Parameters.AddWithValue("@role", emp.JobTitle);
+                    cmd.Parameters.AddWithValue("@salary", emp.Salary);
+                    cmd.Parameters.AddWithValue("@created_at", emp.CreatedAt);
+                    cmd.Parameters.AddWithValue("@updated_at", emp.UpdatedAt);
+
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
         }

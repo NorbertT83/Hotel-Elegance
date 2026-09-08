@@ -136,6 +136,7 @@
             lbDeleteServiceNameValue = new Label();
             lbDeleteServiceNameTitle = new Label();
             lbDeleteEditorHeader = new Label();
+            lbNoData = new Label();
             pnlTop.SuspendLayout();
             pnlRbHolder.SuspendLayout();
             pnlGrid.SuspendLayout();
@@ -511,6 +512,7 @@
             // 
             pnlGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlGrid.BackColor = Color.White;
+            pnlGrid.Controls.Add(lbNoData);
             pnlGrid.Controls.Add(dgvServices);
             pnlGrid.Location = new Point(10, 130);
             pnlGrid.Name = "pnlGrid";
@@ -1406,6 +1408,19 @@
             lbDeleteEditorHeader.TabIndex = 0;
             lbDeleteEditorHeader.Text = "DELETE SERVICE BOOKING";
             // 
+            // lbNoData
+            // 
+            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbNoData.AutoSize = true;
+            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            lbNoData.ForeColor = Color.DarkGray;
+            lbNoData.Location = new Point(483, 374);
+            lbNoData.Name = "lbNoData";
+            lbNoData.Size = new Size(401, 50);
+            lbNoData.TabIndex = 5;
+            lbNoData.Text = "NO MATCHING DATA";
+            lbNoData.Visible = false;
+            // 
             // ProductContol
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -1426,6 +1441,7 @@
             pnlRbHolder.ResumeLayout(false);
             pnlRbHolder.PerformLayout();
             pnlGrid.ResumeLayout(false);
+            pnlGrid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvServices).EndInit();
             pnlEditor.ResumeLayout(false);
             pnlEditor.PerformLayout();
@@ -1556,5 +1572,6 @@
         private DataGridViewTextBoxColumn colNameEn;
         private DataGridViewTextBoxColumn colTypeEn;
         private DataGridViewTextBoxColumn colDescEn;
+        private Label lbNoData;
     }
 }

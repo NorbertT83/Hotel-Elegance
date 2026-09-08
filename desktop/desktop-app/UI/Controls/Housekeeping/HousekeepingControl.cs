@@ -92,7 +92,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             #region datagridview
 
             dgvRooms.AutoGenerateColumns = false;
+            dgvRooms.DataSource = null;
             dgvRooms.DataSource = rooms;
+            dgvRooms.ClearSelection();
+
+            lbNoData.BringToFront();
+            lbNoData.Visible = rooms.Count == 0;
+
             dgvRooms.CellFormatting += _hkService.FormatRoomCell;
 
             #endregion
@@ -118,14 +124,25 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
             rooms = await _hkService.GetFilteredRoomsAsync(txtRoomSearch.Text, cleanStatus, floor);
 
+            dgvRooms.DataSource = null;
             dgvRooms.DataSource = rooms;
+            dgvRooms.ClearSelection();
+
+            lbNoData.BringToFront();
+            lbNoData.Visible = rooms.Count == 0;
         }
 
         // 2.
         private async void btnRefresh_Click(object sender, EventArgs e)
         {
             rooms = await _hkService.GetAllRoomsFromDbAsync();
+
+            dgvRooms.DataSource = null;
             dgvRooms.DataSource = rooms;
+            dgvRooms.ClearSelection();
+
+            lbNoData.BringToFront();
+            lbNoData.Visible = rooms.Count == 0;
 
             SetColorLabelVisibility(false);
 
@@ -211,7 +228,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     MessageBoxIcon.Information);
 
                 rooms = await _hkService.GetAllRoomsFromDbAsync();
+
+                dgvRooms.DataSource = null;
                 dgvRooms.DataSource = rooms;
+                dgvRooms.ClearSelection();
+
+                lbNoData.BringToFront();
+                lbNoData.Visible = rooms.Count == 0;
+
                 SetKpiBoxes();
 
                 // Color coding if checkbox was checked

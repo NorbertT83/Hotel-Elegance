@@ -3,45 +3,30 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hotel_erp_Winforms_App.Services
 {
     public class RoomService
     {
-        #region variables
+        private readonly string _connectionString = "server=localhost;port=3306;database=hotelelegancedb;uid=root;pwd=";
 
-        private readonly string _connectionString = DbConfig.ConnectionString;
-
-        #endregion
-
-        #region INFO
-        /*
-         * 1.: returns a list of all rooms in database
-        */
-        #endregion
-        #region database actions
-
-        // 1.
         public async Task<List<Room>> GetAllRoomsAsync()
         {
-            var rooms = new List<Room>();
-
-            string query = "SELECT * FROM rooms";
+            List<Room> rooms = new List<Room>();
+            string query = "SELECT * FROM rooms ORDER BY room_number ASC;";
 
             await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
                 await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     await using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
-                            Room room = MakeNewRoom(reader);
-                            rooms.Add(room);
+                            rooms.Add(MapRoomFromReader(reader));
                         }
                     }
                 }
@@ -50,63 +35,47 @@ namespace Hotel_erp_Winforms_App.Services
             return rooms;
         }
 
-        // 2.
-        public async Task<List<Room>> GetFilteredRoomsAsync(string search, string type, string status)
+        public async Task<List<Room>> GetFilteredRoomsAsync(string search, string roomType, string status)
         {
-            var rooms = new List<Room>();
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            List<Room> rooms = new List<Room>();
+            StringBuilder queryBuilder = new StringBuilder("SELECT * FROM rooms WHERE 1=1 ");
+            var parameters = new Dictionary<string, object>();
 
-            string selectQuery = "SELECT * FROM rooms WHERE 1=1 ";
-            string whereClauses = "";
-
-            if (!string.IsNullOrWhiteSpace(search))
+            if (int.TryParse(search, out int roomNumber))
             {
-                whereClauses += " AND CAST(room_number AS CHAR) LIKE @search";
-
-                parameters.Add("@search", $"%{search.Trim()}%");
+                queryBuilder.Append("AND room_number = @roomNumber ");
+                parameters.Add("@roomNumber", roomNumber);
             }
 
-            // típus szűrő
-            whereClauses += type switch
+            if (!string.IsNullOrEmpty(roomType) && roomType != "All Types")
             {
-                "All Types" => "",
-                "Standard" => " AND room_type = 'standard' ",
-                "Deluxe" => " AND room_type = 'deluxe' ",
-                "Suite" => " AND room_type = 'suite' ",
-                _ => ""
-            };
+                queryBuilder.Append("AND room_type = @roomType ");
+                parameters.Add("@roomType", roomType.ToLower());
+            }
 
-            // státusz szűrő
-            whereClauses += status switch
+            if (!string.IsNullOrEmpty(status) && status != "All Statuses")
             {
-                "All Statuses" => "",
-                "Available" => " AND rooms.status = 'available' ",
-                "Occupied" => " AND rooms.status = 'occupied' ",
-                "Under Maintenance" => " AND rooms.status = 'under_maintenance' ",
-                "Unavailable" => " AND rooms.status = 'unavailable' ",
-                _ => ""
-            };
+                queryBuilder.Append("AND status = @status ");
+                parameters.Add("@status", status.ToLower());
+            }
 
-            string query = selectQuery + whereClauses + ';';
+            queryBuilder.Append("ORDER BY room_number ASC;");
 
             await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(queryBuilder.ToString(), conn))
                 {
-                    foreach (var param in parameters)
+                    foreach (var p in parameters)
                     {
-                        cmd.Parameters.AddWithValue(param.Key, param.Value);
+                        cmd.Parameters.AddWithValue(p.Key, p.Value);
                     }
 
-                    await using(var reader = await cmd.ExecuteReaderAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        while(await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
-                            Room room = MakeNewRoom(reader);
-
-                            rooms.Add(room);
+                            rooms.Add(MapRoomFromReader(reader));
                         }
                     }
                 }
@@ -115,63 +84,92 @@ namespace Hotel_erp_Winforms_App.Services
             return rooms;
         }
 
-        #endregion
-
-        #region helpers
-
-        public Room MakeNewRoom(DbDataReader reader)
+        public async Task SaveOrUpdateRoomAsync(Room room, bool isNew)
         {
-            int roomNumber = Convert.ToInt32(reader["room_number"]);
+            string query;
+            if (isNew)
+            {
+                query = @"
+                    INSERT INTO rooms (room_number, room_type, floorspace, bed_type, has_balcony, has_view, max_adults, extras, status, price_per_night, door_locked, needs_cleaning, dont_disturb, is_cleaning, ac_temp)
+                    VALUES (@roomNumber, @roomType, @floorspace, @bedType, @hasBalcony, @hasView, @maxAdults, @extras, @status, @price, @doorLocked, @needsCleaning, @dontDisturb, @isCleaning, @acTemp);";
+            }
+            else
+            {
+                query = @"
+                    UPDATE rooms 
+                    SET room_type = @roomType,
+                        floorspace = @floorspace,
+                        bed_type = @bedType,
+                        has_balcony = @hasBalcony,
+                        has_view = @hasView,
+                        max_adults = @maxAdults,
+                        extras = @extras,
+                        status = @status,
+                        price_per_night = @price,
+                        ac_temp = @acTemp
+                    WHERE room_number = @roomNumber;";
+            }
 
-            Enum.TryParse<Room.RoomType>(reader["room_type"]?.ToString(), true, out var roomType);
-            Enum.TryParse<Room.BedType>(reader["bed_type"]?.ToString(), true, out var bedType);
-            Enum.TryParse<Room.Status>(reader["status"]?.ToString(), true, out var status);
-            Enum.TryParse<Room.HasView>(reader["has_view"]?.ToString(), true, out var view);
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@roomNumber", room.Room_number);
+                    cmd.Parameters.AddWithValue("@roomType", room.RoomsRoomtype.ToString().ToLower());
+                    cmd.Parameters.AddWithValue("@floorspace", room.FloorSpace);
+                    cmd.Parameters.AddWithValue("@bedType", room.RoomsBedType.ToString().ToLower());
+                    cmd.Parameters.AddWithValue("@hasBalcony", room.HasBalcony);
+                    cmd.Parameters.AddWithValue("@hasView", room.RoomsView.ToString().ToLower());
+                    cmd.Parameters.AddWithValue("@maxAdults", room.MaxAdults);
+                    cmd.Parameters.AddWithValue("@extras", string.IsNullOrEmpty(room.Extras) ? (object)DBNull.Value : room.Extras);
+                    cmd.Parameters.AddWithValue("@status", room.CurrentStatus.ToString().ToLower());
+                    cmd.Parameters.AddWithValue("@price", room.Price);
+                    cmd.Parameters.AddWithValue("@doorLocked", room.DoorLocked);
+                    cmd.Parameters.AddWithValue("@needsCleaning", room.NeedsCleaning);
+                    cmd.Parameters.AddWithValue("@dontDisturb", room.DontDisturb);
+                    cmd.Parameters.AddWithValue("@isCleaning", room.IsCleaning);
+                    cmd.Parameters.AddWithValue("@acTemp", room.AcTemp);
 
-            int floorSpace = Convert.ToInt32(reader["floorspace"]);
-            int hasBalcony = Convert.ToInt32(reader["has_balcony"]);
-            int maxAdults = Convert.ToInt32(reader["max_adults"]);
-            string extras = reader["extras"] != DBNull.Value ? reader["extras"].ToString() ?? "" : "";
-            int price = reader["price_per_night"] != DBNull.Value ? Convert.ToInt32(reader["price_per_night"]) : 0;
-
-            int doorLocked = Convert.ToInt32(reader["door_locked"]);
-            int needsCleaning = Convert.ToInt32(reader["needs_cleaning"]);
-            int dontDisturb = Convert.ToInt32(reader["dont_disturb"]);
-            int isCleaning = Convert.ToInt32(reader["is_cleaning"]);
-            int acTemp = Convert.ToInt32(reader["ac_temp"]);
-
-            return new Room(
-                roomNumber,
-                roomType,
-                floorSpace,
-                bedType,
-                hasBalcony,
-                view,
-                maxAdults,
-                extras,
-                status,
-                price,
-                doorLocked,
-                needsCleaning,
-                dontDisturb,
-                isCleaning,
-                acTemp
-            );
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
         }
 
-        #endregion
+        public async Task DeleteRoomAsync(int roomNumber)
+        {
+            string query = "DELETE FROM rooms WHERE room_number = @roomNumber;";
 
-        //_roomsList = await _roomService.GetFilteredRoomsAsync(
-        //            txtSearch.Text.Trim(),
-        //            cbTypeFilter.SelectedItem?.ToString() ?? "All Types",
-        //            cbStatusFilter.SelectedItem?.ToString() ?? "All Statuses"
-        //        );
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@roomNumber", roomNumber);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
 
-        //GetFilteredRoomsAsync();
-
-        //SaveOrUpdateRoomAsync(room, _isAddingNew);
-
-        //DeleteRoomAsync(_selectedRoom.Room_number);
-
+        private Room MapRoomFromReader(DbDataReader reader)
+        {
+            return new Room(
+                Convert.ToInt32(reader["room_number"]),
+                Enum.Parse<Room.RoomType>(reader["room_type"].ToString(), true),
+                Convert.ToInt32(reader["floorspace"]),
+                Enum.Parse<Room.BedType>(reader["bed_type"].ToString(), true),
+                Convert.ToInt32(reader["has_balcony"]),
+                reader["has_view"] != DBNull.Value ? Enum.Parse<Room.HasView>(reader["has_view"].ToString(), true) : Room.HasView.city,
+                Convert.ToInt32(reader["max_adults"]),
+                reader["extras"] != DBNull.Value ? reader["extras"].ToString() : string.Empty,
+                Enum.Parse<Room.Status>(reader["status"].ToString(), true),
+                reader["price_per_night"] != DBNull.Value ? Convert.ToInt32(reader["price_per_night"]) : 0,
+                reader["door_locked"] != DBNull.Value ? Convert.ToInt32(reader["door_locked"]) : 0,
+                reader["needs_cleaning"] != DBNull.Value ? Convert.ToInt32(reader["needs_cleaning"]) : 0,
+                reader["dont_disturb"] != DBNull.Value ? Convert.ToInt32(reader["dont_disturb"]) : 0,
+                reader["is_cleaning"] != DBNull.Value ? Convert.ToInt32(reader["is_cleaning"]) : 0,
+                reader["ac_temp"] != DBNull.Value ? Convert.ToInt32(reader["ac_temp"]) : 22
+            );
+        }
     }
 }

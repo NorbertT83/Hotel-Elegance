@@ -90,6 +90,7 @@
             lbSelectedRoomValue = new Label();
             lbSelectedRoomNumber = new Label();
             lbRoomDetailsTitle = new Label();
+            lbNoData = new Label();
             pnlTop.SuspendLayout();
             pnlKpiDirty.SuspendLayout();
             pnlKpiProgress.SuspendLayout();
@@ -427,6 +428,7 @@
             pnlGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlGrid.BackColor = Color.White;
             pnlGrid.Controls.Add(dgvRooms);
+            pnlGrid.Controls.Add(lbNoData);
             pnlGrid.Controls.Add(panel1);
             pnlGrid.Location = new Point(10, 190);
             pnlGrid.Name = "pnlGrid";
@@ -782,6 +784,19 @@
             lbRoomDetailsTitle.TabIndex = 0;
             lbRoomDetailsTitle.Text = "UPDATE ROOM STATUS";
             // 
+            // lbNoData
+            // 
+            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbNoData.AutoSize = true;
+            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            lbNoData.ForeColor = Color.DarkGray;
+            lbNoData.Location = new Point(478, 330);
+            lbNoData.Name = "lbNoData";
+            lbNoData.Size = new Size(401, 50);
+            lbNoData.TabIndex = 4;
+            lbNoData.Text = "NO MATCHING DATA";
+            lbNoData.Visible = false;
+            // 
             // HousekeepingControl
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -809,6 +824,7 @@
             pnlKpiMaintenance.ResumeLayout(false);
             pnlKpiMaintenance.PerformLayout();
             pnlGrid.ResumeLayout(false);
+            pnlGrid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRooms).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -884,5 +900,6 @@
         private Label lbNeedsCleaningTitle;
         private Label lbCleanColor;
         private Label lbCleanTitle;
+        private Label lbNoData;
     }
 }

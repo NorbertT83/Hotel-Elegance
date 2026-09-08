@@ -59,6 +59,7 @@
             lbKpiCleanersValue = new Label();
             lbKpiCleanersTitle = new Label();
             pnlGrid = new Panel();
+            lbNoData = new Label();
             dgvEmployees = new DataGridView();
             colId = new DataGridViewTextBoxColumn();
             colLname = new DataGridViewTextBoxColumn();
@@ -71,19 +72,21 @@
             colHolidays = new DataGridViewTextBoxColumn();
             colSalary = new DataGridViewTextBoxColumn();
             pnlEditor = new Panel();
+            numSalary = new NumericUpDown();
+            numHolidays = new NumericUpDown();
             btnAddProfile = new Button();
             pbProfilePhoto = new PictureBox();
             btnSaveEmployee = new Button();
-            tbSalary = new TextBox();
             lbSalaryTitle = new Label();
-            tbHolidays = new TextBox();
             lbHolidaysTitle = new Label();
             tbAddress = new TextBox();
             lbAddressTitle = new Label();
             dtpHiringDate = new DateTimePicker();
             lbHiringTitle = new Label();
             dtpBirthdate = new DateTimePicker();
+            lbEmailTitle = new Label();
             lbBirthdateTitle = new Label();
+            tbEmail = new TextBox();
             tbTaxNumber = new TextBox();
             lbTaxNumberTitle = new Label();
             cbJobTitle = new ComboBox();
@@ -101,6 +104,8 @@
             pnlGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvEmployees).BeginInit();
             pnlEditor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numSalary).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numHolidays).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pbProfilePhoto).BeginInit();
             SuspendLayout();
             // 
@@ -134,7 +139,7 @@
             btnDelete.Location = new Point(1220, 33);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(110, 30);
-            btnDelete.TabIndex = 6;
+            btnDelete.TabIndex = 7;
             btnDelete.Text = "Delete";
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += btnDelete_Click;
@@ -147,7 +152,7 @@
             btnModify.Location = new Point(1100, 33);
             btnModify.Name = "btnModify";
             btnModify.Size = new Size(110, 30);
-            btnModify.TabIndex = 5;
+            btnModify.TabIndex = 6;
             btnModify.Text = "Edit";
             btnModify.UseVisualStyleBackColor = false;
             btnModify.Click += btnModify_Click;
@@ -161,7 +166,7 @@
             btnAdd.Location = new Point(960, 33);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(130, 30);
-            btnAdd.TabIndex = 4;
+            btnAdd.TabIndex = 5;
             btnAdd.Text = "+ Add Employee";
             btnAdd.UseVisualStyleBackColor = false;
             btnAdd.Click += btnAdd_Click;
@@ -174,7 +179,7 @@
             btnRefresh.Location = new Point(850, 33);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(100, 30);
-            btnRefresh.TabIndex = 3;
+            btnRefresh.TabIndex = 4;
             btnRefresh.Text = "Reload";
             btnRefresh.UseVisualStyleBackColor = false;
             btnRefresh.Click += btnRefresh_Click;
@@ -198,7 +203,7 @@
             btnSearch.Location = new Point(540, 31);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(90, 32);
-            btnSearch.TabIndex = 2;
+            btnSearch.TabIndex = 3;
             btnSearch.Text = "Filter";
             btnSearch.UseVisualStyleBackColor = false;
             btnSearch.Click += btnSearch_Click;
@@ -211,7 +216,7 @@
             cbJobTitleFilter.Location = new Point(340, 35);
             cbJobTitleFilter.Name = "cbJobTitleFilter";
             cbJobTitleFilter.Size = new Size(180, 25);
-            cbJobTitleFilter.TabIndex = 1;
+            cbJobTitleFilter.TabIndex = 2;
             // 
             // lbRoleFilter
             // 
@@ -229,7 +234,7 @@
             txtSearch.Name = "txtSearch";
             txtSearch.PlaceholderText = "Search by name...";
             txtSearch.Size = new Size(200, 25);
-            txtSearch.TabIndex = 0;
+            txtSearch.TabIndex = 1;
             // 
             // lbSearch
             // 
@@ -263,6 +268,7 @@
             pnlKpiTotal.Name = "pnlKpiTotal";
             pnlKpiTotal.Size = new Size(325, 85);
             pnlKpiTotal.TabIndex = 1;
+            pnlKpiTotal.TabStop = true;
             // 
             // lbKpiTotalSub
             // 
@@ -308,6 +314,7 @@
             pnlKpiManagers.Name = "pnlKpiManagers";
             pnlKpiManagers.Size = new Size(325, 85);
             pnlKpiManagers.TabIndex = 2;
+            pnlKpiManagers.TabStop = true;
             // 
             // lbKpiManagersSub
             // 
@@ -353,6 +360,7 @@
             pnlKpiStaff.Name = "pnlKpiStaff";
             pnlKpiStaff.Size = new Size(325, 85);
             pnlKpiStaff.TabIndex = 3;
+            pnlKpiStaff.TabStop = true;
             // 
             // lbKpiStaffSub
             // 
@@ -361,9 +369,9 @@
             lbKpiStaffSub.ForeColor = Color.Gray;
             lbKpiStaffSub.Location = new Point(12, 60);
             lbKpiStaffSub.Name = "lbKpiStaffSub";
-            lbKpiStaffSub.Size = new Size(139, 15);
+            lbKpiStaffSub.Size = new Size(159, 15);
             lbKpiStaffSub.TabIndex = 2;
-            lbKpiStaffSub.Text = "Front desk & Room service";
+            lbKpiStaffSub.Text = "Front desk and Room service";
             // 
             // lbKpiStaffValue
             // 
@@ -398,6 +406,7 @@
             pnlKpiCleaners.Name = "pnlKpiCleaners";
             pnlKpiCleaners.Size = new Size(325, 85);
             pnlKpiCleaners.TabIndex = 4;
+            pnlKpiCleaners.TabStop = true;
             // 
             // lbKpiCleanersSub
             // 
@@ -436,11 +445,25 @@
             // 
             pnlGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlGrid.BackColor = Color.White;
+            pnlGrid.Controls.Add(lbNoData);
             pnlGrid.Controls.Add(dgvEmployees);
             pnlGrid.Location = new Point(10, 190);
             pnlGrid.Name = "pnlGrid";
             pnlGrid.Size = new Size(1350, 430);
             pnlGrid.TabIndex = 5;
+            // 
+            // lbNoData
+            // 
+            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbNoData.AutoSize = true;
+            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            lbNoData.ForeColor = Color.DarkGray;
+            lbNoData.Location = new Point(472, 399);
+            lbNoData.Name = "lbNoData";
+            lbNoData.Size = new Size(401, 50);
+            lbNoData.TabIndex = 9;
+            lbNoData.Text = "NO MATCHING DATA";
+            lbNoData.Visible = false;
             // 
             // dgvEmployees
             // 
@@ -602,19 +625,21 @@
             // 
             pnlEditor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             pnlEditor.BorderStyle = BorderStyle.FixedSingle;
+            pnlEditor.Controls.Add(numSalary);
+            pnlEditor.Controls.Add(numHolidays);
             pnlEditor.Controls.Add(btnAddProfile);
             pnlEditor.Controls.Add(pbProfilePhoto);
             pnlEditor.Controls.Add(btnSaveEmployee);
-            pnlEditor.Controls.Add(tbSalary);
             pnlEditor.Controls.Add(lbSalaryTitle);
-            pnlEditor.Controls.Add(tbHolidays);
             pnlEditor.Controls.Add(lbHolidaysTitle);
             pnlEditor.Controls.Add(tbAddress);
             pnlEditor.Controls.Add(lbAddressTitle);
             pnlEditor.Controls.Add(dtpHiringDate);
             pnlEditor.Controls.Add(lbHiringTitle);
             pnlEditor.Controls.Add(dtpBirthdate);
+            pnlEditor.Controls.Add(lbEmailTitle);
             pnlEditor.Controls.Add(lbBirthdateTitle);
+            pnlEditor.Controls.Add(tbEmail);
             pnlEditor.Controls.Add(tbTaxNumber);
             pnlEditor.Controls.Add(lbTaxNumberTitle);
             pnlEditor.Controls.Add(cbJobTitle);
@@ -628,6 +653,23 @@
             pnlEditor.Size = new Size(355, 610);
             pnlEditor.TabIndex = 6;
             // 
+            // numSalary
+            // 
+            numSalary.Location = new Point(180, 512);
+            numSalary.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
+            numSalary.Name = "numSalary";
+            numSalary.Size = new Size(156, 25);
+            numSalary.TabIndex = 18;
+            numSalary.ThousandsSeparator = true;
+            // 
+            // numHolidays
+            // 
+            numHolidays.Location = new Point(15, 512);
+            numHolidays.Maximum = new decimal(new int[] { 40, 0, 0, 0 });
+            numHolidays.Name = "numHolidays";
+            numHolidays.Size = new Size(155, 25);
+            numHolidays.TabIndex = 17;
+            // 
             // btnAddProfile
             // 
             btnAddProfile.BackColor = Color.White;
@@ -635,7 +677,7 @@
             btnAddProfile.Location = new Point(316, 12);
             btnAddProfile.Name = "btnAddProfile";
             btnAddProfile.Size = new Size(20, 20);
-            btnAddProfile.TabIndex = 20;
+            btnAddProfile.TabIndex = 8;
             toolTip1.SetToolTip(btnAddProfile, "Add BackOffice Profile");
             btnAddProfile.UseVisualStyleBackColor = false;
             btnAddProfile.Click += btnAddProfile_Click;
@@ -662,42 +704,26 @@
             btnSaveEmployee.Location = new Point(15, 548);
             btnSaveEmployee.Name = "btnSaveEmployee";
             btnSaveEmployee.Size = new Size(320, 45);
-            btnSaveEmployee.TabIndex = 10;
+            btnSaveEmployee.TabIndex = 19;
             btnSaveEmployee.Text = "Save Employee";
             btnSaveEmployee.UseVisualStyleBackColor = false;
             btnSaveEmployee.Click += btnSaveEmployee_Click;
-            // 
-            // tbSalary
-            // 
-            tbSalary.Location = new Point(180, 455);
-            tbSalary.Name = "tbSalary";
-            tbSalary.PlaceholderText = "0";
-            tbSalary.Size = new Size(155, 25);
-            tbSalary.TabIndex = 9;
             // 
             // lbSalaryTitle
             // 
             lbSalaryTitle.AutoSize = true;
             lbSalaryTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbSalaryTitle.Location = new Point(180, 435);
+            lbSalaryTitle.Location = new Point(180, 492);
             lbSalaryTitle.Name = "lbSalaryTitle";
             lbSalaryTitle.Size = new Size(90, 17);
             lbSalaryTitle.TabIndex = 18;
             lbSalaryTitle.Text = "Salary (HUF):";
             // 
-            // tbHolidays
-            // 
-            tbHolidays.Location = new Point(15, 455);
-            tbHolidays.Name = "tbHolidays";
-            tbHolidays.PlaceholderText = "20";
-            tbHolidays.Size = new Size(155, 25);
-            tbHolidays.TabIndex = 8;
-            // 
             // lbHolidaysTitle
             // 
             lbHolidaysTitle.AutoSize = true;
             lbHolidaysTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbHolidaysTitle.Location = new Point(15, 435);
+            lbHolidaysTitle.Location = new Point(15, 492);
             lbHolidaysTitle.Name = "lbHolidaysTitle";
             lbHolidaysTitle.Size = new Size(94, 17);
             lbHolidaysTitle.TabIndex = 16;
@@ -705,17 +731,17 @@
             // 
             // tbAddress
             // 
-            tbAddress.Location = new Point(15, 398);
+            tbAddress.Location = new Point(15, 455);
             tbAddress.Name = "tbAddress";
             tbAddress.PlaceholderText = "City, Street, House #";
             tbAddress.Size = new Size(320, 25);
-            tbAddress.TabIndex = 7;
+            tbAddress.TabIndex = 16;
             // 
             // lbAddressTitle
             // 
             lbAddressTitle.AutoSize = true;
             lbAddressTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbAddressTitle.Location = new Point(15, 378);
+            lbAddressTitle.Location = new Point(15, 435);
             lbAddressTitle.Name = "lbAddressTitle";
             lbAddressTitle.Size = new Size(61, 17);
             lbAddressTitle.TabIndex = 14;
@@ -724,16 +750,18 @@
             // dtpHiringDate
             // 
             dtpHiringDate.Format = DateTimePickerFormat.Short;
-            dtpHiringDate.Location = new Point(180, 341);
+            dtpHiringDate.Location = new Point(180, 398);
+            dtpHiringDate.MaxDate = new DateTime(2100, 12, 31, 0, 0, 0, 0);
+            dtpHiringDate.MinDate = new DateTime(1950, 1, 1, 0, 0, 0, 0);
             dtpHiringDate.Name = "dtpHiringDate";
             dtpHiringDate.Size = new Size(155, 25);
-            dtpHiringDate.TabIndex = 6;
+            dtpHiringDate.TabIndex = 15;
             // 
             // lbHiringTitle
             // 
             lbHiringTitle.AutoSize = true;
             lbHiringTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbHiringTitle.Location = new Point(180, 321);
+            lbHiringTitle.Location = new Point(180, 378);
             lbHiringTitle.Name = "lbHiringTitle";
             lbHiringTitle.Size = new Size(101, 17);
             lbHiringTitle.TabIndex = 12;
@@ -742,20 +770,41 @@
             // dtpBirthdate
             // 
             dtpBirthdate.Format = DateTimePickerFormat.Short;
-            dtpBirthdate.Location = new Point(15, 341);
+            dtpBirthdate.Location = new Point(15, 398);
+            dtpBirthdate.MaxDate = new DateTime(2026, 9, 8, 0, 0, 0, 0);
+            dtpBirthdate.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             dtpBirthdate.Name = "dtpBirthdate";
             dtpBirthdate.Size = new Size(155, 25);
-            dtpBirthdate.TabIndex = 5;
+            dtpBirthdate.TabIndex = 14;
+            dtpBirthdate.Value = new DateTime(2026, 9, 8, 0, 0, 0, 0);
+            // 
+            // lbEmailTitle
+            // 
+            lbEmailTitle.AutoSize = true;
+            lbEmailTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            lbEmailTitle.Location = new Point(15, 321);
+            lbEmailTitle.Name = "lbEmailTitle";
+            lbEmailTitle.Size = new Size(104, 17);
+            lbEmailTitle.TabIndex = 10;
+            lbEmailTitle.Text = "E-mail Address:";
             // 
             // lbBirthdateTitle
             // 
             lbBirthdateTitle.AutoSize = true;
             lbBirthdateTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbBirthdateTitle.Location = new Point(15, 321);
+            lbBirthdateTitle.Location = new Point(15, 378);
             lbBirthdateTitle.Name = "lbBirthdateTitle";
             lbBirthdateTitle.Size = new Size(69, 17);
             lbBirthdateTitle.TabIndex = 10;
             lbBirthdateTitle.Text = "Birthdate:";
+            // 
+            // tbEmail
+            // 
+            tbEmail.Location = new Point(16, 341);
+            tbEmail.Name = "tbEmail";
+            tbEmail.PlaceholderText = "example@ceg.hu";
+            tbEmail.Size = new Size(320, 25);
+            tbEmail.TabIndex = 13;
             // 
             // tbTaxNumber
             // 
@@ -763,7 +812,7 @@
             tbTaxNumber.Name = "tbTaxNumber";
             tbTaxNumber.PlaceholderText = "TX123456";
             tbTaxNumber.Size = new Size(320, 25);
-            tbTaxNumber.TabIndex = 4;
+            tbTaxNumber.TabIndex = 12;
             // 
             // lbTaxNumberTitle
             // 
@@ -783,7 +832,7 @@
             cbJobTitle.Location = new Point(15, 227);
             cbJobTitle.Name = "cbJobTitle";
             cbJobTitle.Size = new Size(320, 25);
-            cbJobTitle.TabIndex = 3;
+            cbJobTitle.TabIndex = 11;
             // 
             // lbJobTitleTitle
             // 
@@ -801,7 +850,8 @@
             tbLastName.Name = "tbLastName";
             tbLastName.PlaceholderText = "Last name";
             tbLastName.Size = new Size(155, 25);
-            tbLastName.TabIndex = 2;
+            tbLastName.TabIndex = 10;
+            tbLastName.KeyPress += tbLastName_KeyPress;
             // 
             // tbFirstName
             // 
@@ -809,7 +859,8 @@
             tbFirstName.Name = "tbFirstName";
             tbFirstName.PlaceholderText = "First name";
             tbFirstName.Size = new Size(155, 25);
-            tbFirstName.TabIndex = 1;
+            tbFirstName.TabIndex = 9;
+            tbFirstName.KeyPress += tbFirstName_KeyPress;
             // 
             // lbFullNameTitle
             // 
@@ -859,9 +910,12 @@
             pnlKpiCleaners.ResumeLayout(false);
             pnlKpiCleaners.PerformLayout();
             pnlGrid.ResumeLayout(false);
+            pnlGrid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvEmployees).EndInit();
             pnlEditor.ResumeLayout(false);
             pnlEditor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numSalary).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numHolidays).EndInit();
             ((System.ComponentModel.ISupportInitialize)pbProfilePhoto).EndInit();
             ResumeLayout(false);
         }
@@ -931,11 +985,14 @@
         private Label lbAddressTitle;
         private TextBox tbAddress;
         private Label lbHolidaysTitle;
-        private TextBox tbHolidays;
         private Label lbSalaryTitle;
-        private TextBox tbSalary;
         private Button btnSaveEmployee;
         private Button btnAddProfile;
         private ToolTip toolTip1;
+        private Label lbNoData;
+        private NumericUpDown numSalary;
+        private NumericUpDown numHolidays;
+        private Label lbEmailTitle;
+        private TextBox tbEmail;
     }
 }

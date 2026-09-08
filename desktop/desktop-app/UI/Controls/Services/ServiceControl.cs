@@ -161,6 +161,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                 dgvServices.DataSource = filteredServices;
 
+                dgvServices.DataSource = null;
+                dgvServices.DataSource = filteredServices;
+                dgvServices.ClearSelection();
+
+                lbNoData.BringToFront();
+                lbNoData.Visible = filteredServices.Count == 0;
+
                 Cursor.Current = Cursors.Default;
             }
         }
@@ -174,9 +181,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 btnNewService.Enabled = true;
                 btnDeleteService.Enabled = true;
 
+                txtSearch.Clear();
+
                 try
                 {
                     cbRoomNumbers.Text = string.Empty;
+                    lbNoData.Visible = false;
 
                     Cursor.Current = Cursors.WaitCursor;
 
@@ -185,7 +195,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                     _commonHelper.EmptyListMessageBox(orderedSBList.Count, "service bookings");
 
+                    dgvServices.DataSource = null;
                     dgvServices.DataSource = orderedSBList;
+                    lbNoData.Visible = orderedSBList.Count == 0;
+
                     colId.DataPropertyName = "Id";
 
                     pnlStatusEditor.Visible = true;
@@ -1335,8 +1348,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 ? source.OrderBy(s => s.RequestedAt).ToList()
                 : source.OrderByDescending(s => s.RequestedAt).ToList();
 
+            lbNoData.Visible = false;
             dgvServices.DataSource = null;
             dgvServices.DataSource = orderedSource;
+
+            lbNoData.BringToFront();
+            lbNoData.Visible = orderedSource.Count == 0;
 
             _selectedRequestedService = null;
 

@@ -91,6 +91,7 @@
             tbRoomNumber = new TextBox();
             lbRoomNumberTitle = new Label();
             lbEditorTitle = new Label();
+            lbNoData = new Label();
             pnlTop.SuspendLayout();
             pnlKpiTotal.SuspendLayout();
             pnlKpiAvailable.SuspendLayout();
@@ -236,6 +237,7 @@
             txtSearch.PlaceholderText = "Room #";
             txtSearch.Size = new Size(80, 25);
             txtSearch.TabIndex = 0;
+            txtSearch.KeyPress += txtSearch_KeyPress;
             // 
             // lbSearch
             // 
@@ -443,6 +445,7 @@
             pnlGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlGrid.BackColor = Color.White;
             pnlGrid.Controls.Add(dgvRooms);
+            pnlGrid.Controls.Add(lbNoData);
             pnlGrid.Location = new Point(10, 190);
             pnlGrid.Name = "pnlGrid";
             pnlGrid.Size = new Size(1350, 430);
@@ -850,6 +853,19 @@
             lbEditorTitle.TabIndex = 0;
             lbEditorTitle.Text = "ROOM CONFIG & DETAILS";
             // 
+            // lbNoData
+            // 
+            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbNoData.AutoSize = true;
+            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            lbNoData.ForeColor = Color.DarkGray;
+            lbNoData.Location = new Point(467, 380);
+            lbNoData.Name = "lbNoData";
+            lbNoData.Size = new Size(401, 50);
+            lbNoData.TabIndex = 5;
+            lbNoData.Text = "NO MATCHING DATA";
+            lbNoData.Visible = false;
+            // 
             // RoomsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -877,6 +893,7 @@
             pnlKpiMaintenance.ResumeLayout(false);
             pnlKpiMaintenance.PerformLayout();
             pnlGrid.ResumeLayout(false);
+            pnlGrid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRooms).EndInit();
             pnlEditor.ResumeLayout(false);
             pnlEditor.PerformLayout();
@@ -955,5 +972,6 @@
         private Label lbAcTempTitle;
         private TextBox tbAcTemp;
         private Button btnSaveRoom;
+        private Label lbNoData;
     }
 }

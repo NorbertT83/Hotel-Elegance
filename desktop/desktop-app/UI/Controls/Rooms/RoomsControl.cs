@@ -54,7 +54,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
                 _roomsList = await _roomService.GetAllRoomsAsync();
 
                 dgvRooms.AutoGenerateColumns = false;
+                dgvRooms.DataSource = null;
                 dgvRooms.DataSource = _roomsList;
+                dgvRooms.ClearSelection();
+
+                lbNoData.BringToFront();
+                lbNoData.Visible = _roomsList.Count == 0;
 
                 UpdateKpis();
 
@@ -99,7 +104,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
                     cbStatusFilter.SelectedItem?.ToString() ?? "All Statuses"
                 );
 
-                _commonHelper.EmptyListMessageBox(_roomsList.Count(), "rooms");
+                dgvRooms.DataSource = null;
+                dgvRooms.DataSource = _roomsList;
+                dgvRooms.ClearSelection();
+
+                lbNoData.BringToFront();
+                lbNoData.Visible = _roomsList.Count == 0;
 
                 dgvRooms.DataSource = _roomsList;
                 UpdateKpis();
@@ -189,53 +199,58 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
                 acTemp
             );
 
-            //try
-            //{
-            //    Cursor.Current = Cursors.WaitCursor;
-            //    await _roomService.SaveOrUpdateRoomAsync(room, _isAddingNew);
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                await _roomService.SaveOrUpdateRoomAsync(room, _isAddingNew);
 
-            //    MessageBox.Show("Room saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    LoadRooms();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //}
-            //finally
-            //{
-            //    Cursor.Current = Cursors.Default;
-            //}
+                MessageBox.Show("Room saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadRooms();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         // 6.
         private async void btnDeleteRoom_Click(object sender, EventArgs e)
         {
-            //if (_selectedRoom != null)
-            //{
-            //    DialogResult res = MessageBox.Show($"Are you sure you want to delete Room #{_selectedRoom.Room_number}?", "Delete Room", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            //    if (res == DialogResult.Yes)
-            //    {
-            //        try
-            //        {
-            //            Cursor.Current = Cursors.WaitCursor;
-            //            await _roomService.DeleteRoomAsync(_selectedRoom.Room_number);
-            //            MessageBox.Show("Room deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //            LoadRooms();
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            MessageBox.Show("Error deleting room: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //        }
-            //        finally
-            //        {
-            //            Cursor.Current = Cursors.Default;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Please select a room to delete first!", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //}
+            if (_selectedRoom != null)
+            {
+                DialogResult res = MessageBox.Show($"Are you sure you want to delete Room #{_selectedRoom.Room_number}?", "Delete Room", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (res == DialogResult.Yes)
+                {
+                    try
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+                        await _roomService.DeleteRoomAsync(_selectedRoom.Room_number);
+                        MessageBox.Show("Room deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadRooms();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error deleting room: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        Cursor.Current = Cursors.Default;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a room to delete first!", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void txtSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockLetters(e);
         }
 
         #endregion
