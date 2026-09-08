@@ -18,19 +18,20 @@ namespace Hotel_erp_Winforms_App.Forms
         private void FrmLogin_Load(object sender, EventArgs e)
         {
             // FOR TESTING
-            tbEmail.Text = "kovacs.peter@ceg.hu";
-            tbPassword.Text = "KovacsPeter1#";
+            tbEmail.Text = "kocsis.gergo@ceg.hu";
+            tbPassword.Text = "KocsisGergo1#";
             // -----------------------------------------------------------------------
 
-            System.Diagnostics.Debug.WriteLine($"Employees id = 1 email: szabo.anna@ceg.hu // Recepciós");
-            System.Diagnostics.Debug.WriteLine($"Employees id = 1 jelszava: SzaboAnna1# ");
-            System.Diagnostics.Debug.WriteLine($"Employees id = 1 email: kovacs.peter@ceg.hu // Manager");
-            System.Diagnostics.Debug.WriteLine($"Employees id = 1 jelszava: KovacsPeter1# ");
+            System.Diagnostics.Debug.WriteLine($"Employees id = 11 email: kocsis.gergo@ceg.hu // Manager");
+            System.Diagnostics.Debug.WriteLine($"Employees id = 1 jelszava: KocsisGergo1# ");
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
         {
             EmployeeService _employeeService = new EmployeeService();
+
+            loggedInEmployee = new Employee(
+                );
 
             loggedInEmployee = await _employeeService.GetEmployeeByEmailAsync(tbEmail.Text.Trim().ToLower());
 

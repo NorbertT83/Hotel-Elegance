@@ -23,6 +23,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
         private void InitializeComponent()
         {
             grpProfileDetails = new GroupBox();
+            llbChangeEmail = new LinkLabel();
             tbEmail = new TextBox();
             lblPassword = new Label();
             tbPassword = new TextBox();
@@ -34,7 +35,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             pnlActions = new Panel();
             btnCancel = new Button();
             btnSave = new Button();
-            llbChangeEmail = new LinkLabel();
             grpProfileDetails.SuspendLayout();
             pnlActions.SuspendLayout();
             SuspendLayout();
@@ -59,13 +59,24 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             grpProfileDetails.TabStop = false;
             grpProfileDetails.Text = "ACCOUNT CREDENTIALS";
             // 
+            // llbChangeEmail
+            // 
+            llbChangeEmail.AutoSize = true;
+            llbChangeEmail.Location = new Point(15, 192);
+            llbChangeEmail.Name = "llbChangeEmail";
+            llbChangeEmail.Size = new Size(132, 15);
+            llbChangeEmail.TabIndex = 6;
+            llbChangeEmail.TabStop = true;
+            llbChangeEmail.Text = "Change E-mail Address";
+            llbChangeEmail.LinkClicked += llbChangeEmail_LinkClicked;
+            // 
             // tbEmail
             // 
             tbEmail.Location = new Point(15, 47);
             tbEmail.MaxLength = 200;
             tbEmail.Name = "tbEmail";
             tbEmail.Size = new Size(331, 23);
-            tbEmail.TabIndex = 8;
+            tbEmail.TabIndex = 1;
             tbEmail.TabStop = false;
             // 
             // lblPassword
@@ -87,7 +98,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             tbPassword.Name = "tbPassword";
             tbPassword.PasswordChar = '*';
             tbPassword.Size = new Size(210, 23);
-            tbPassword.TabIndex = 1;
+            tbPassword.TabIndex = 2;
             // 
             // lblConfirmPassword
             // 
@@ -108,7 +119,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             tbConfirmPassword.Name = "tbConfirmPassword";
             tbConfirmPassword.PasswordChar = '*';
             tbConfirmPassword.Size = new Size(210, 23);
-            tbConfirmPassword.TabIndex = 4;
+            tbConfirmPassword.TabIndex = 3;
             // 
             // chkShowPassword
             // 
@@ -129,7 +140,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             btnGeneratePassword.Location = new Point(231, 98);
             btnGeneratePassword.Name = "btnGeneratePassword";
             btnGeneratePassword.Size = new Size(115, 25);
-            btnGeneratePassword.TabIndex = 2;
+            btnGeneratePassword.TabIndex = 4;
             btnGeneratePassword.Text = "Generate";
             btnGeneratePassword.UseVisualStyleBackColor = true;
             btnGeneratePassword.Click += btnGeneratePassword_Click;
@@ -166,7 +177,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             btnCancel.Location = new Point(186, 8);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(80, 28);
-            btnCancel.TabIndex = 1;
+            btnCancel.TabIndex = 7;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = false;
             btnCancel.Click += btnCancel_Click;
@@ -181,21 +192,10 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             btnSave.Location = new Point(272, 8);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(100, 28);
-            btnSave.TabIndex = 0;
+            btnSave.TabIndex = 8;
             btnSave.Text = "Save Profile";
             btnSave.UseVisualStyleBackColor = false;
             btnSave.Click += btnSave_Click;
-            // 
-            // llbChangeEmail
-            // 
-            llbChangeEmail.AutoSize = true;
-            llbChangeEmail.Location = new Point(15, 192);
-            llbChangeEmail.Name = "llbChangeEmail";
-            llbChangeEmail.Size = new Size(132, 15);
-            llbChangeEmail.TabIndex = 9;
-            llbChangeEmail.TabStop = true;
-            llbChangeEmail.Text = "Change E-mail Address";
-            llbChangeEmail.LinkClicked += llbChangeEmail_LinkClicked;
             // 
             // AddBackOfficeProfileForm
             // 

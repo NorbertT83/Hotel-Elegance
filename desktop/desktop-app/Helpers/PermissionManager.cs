@@ -21,7 +21,7 @@
             { "btnServices", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.HKManager, UserRole.Receptionist, UserRole.FrontOffMan } },
             { "btnBilling", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
             { "btnRooms", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
-            { "btnEmployees", new List<UserRole> { UserRole.Admin, UserRole.Manager, } },
+            { "btnEmployees", new List<UserRole> { UserRole.Admin, UserRole.Manager} },
             { "btnStatistics", new List<UserRole> { UserRole.Admin, UserRole.Manager } },
             { "btnSettings", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.HKManager, UserRole.Receptionist, UserRole.FrontOffMan } }
         };
