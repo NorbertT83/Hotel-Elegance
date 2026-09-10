@@ -307,6 +307,18 @@ export const bookingPageText = {
             zipPlaceholder: 'Irányítószám',
             prevButton: 'Vissza',
             finishButton: 'Befejezés',
+            validation: {
+                required: 'A mező kitöltése kötelező.',
+                nameMinLength: 'Legalább 2 karakter hosszú legyen.',
+                nameMaxLength: 'Legfeljebb 30 karakter lehet.',
+                lettersOnly: 'Csak betűket, szóközt vagy kötőjelet tartalmazhat.',
+                emailInvalid: 'Érvénytelen e-mail formátum (pl. nev@pelda.hu).',
+                zipMinLength: 'Legalább 4 karakterből kell állnia.',
+                zipMaxLength: 'Legfeljebb 10 karakter lehet.',
+                zipInvalid: 'Csak betűket, számokat vagy kötőjelet tartalmazhat.',
+                streetMinLength: 'Legalább 5 karakter hosszú legyen.',
+                streetNeedsNumber: 'Kérjük, adja meg a házszámot is.',
+            }
         },
         step6: {
             header: 'Sikeres foglalás!',
@@ -388,7 +400,19 @@ export const bookingPageText = {
             streetPlaceholder: 'Street / Number',
             zipPlaceholder: 'ZIP Code',
             prevButton: 'Back',
-            finishButton: 'Finish'
+            finishButton: 'Finish',
+            validation: {
+                required: 'This field is required.',
+                nameMinLength: 'Must be at least 2 characters long.',
+                nameMaxLength: 'Cannot exceed 30 characters.',
+                lettersOnly: 'Only letters, spaces, and hyphens are allowed.',
+                emailInvalid: 'Please enter a valid email address (e.g. name@example.com).',
+                zipMinLength: 'Must be at least 4 characters long.',
+                zipMaxLength: 'Cannot exceed 10 characters.',
+                zipInvalid: 'Only letters, numbers, and hyphens are allowed.',
+                streetMinLength: 'Must be at least 5 characters long.',
+                streetNeedsNumber: 'Please include the house/building number.',
+            }
         },
         step6: {
             header: 'Successful Booking!',

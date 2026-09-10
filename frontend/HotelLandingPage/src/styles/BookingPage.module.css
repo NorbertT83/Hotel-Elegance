@@ -212,10 +212,110 @@
 
 .personalData .invalid {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
     color: var(--error);
-    font-size: .95rem;
+    font-size: 1.15rem;
+}
+
+.personalData .errorContainer {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    outline: none;
+    pointer-events: none;
+}
+
+.personalData .errorIcon {
+    color: var(--error);
+    font-size: 1.15rem;
+    line-height: 1;
+    user-select: none;
+    cursor: help;
+    pointer-events: auto;
+    transition: filter 0.2s ease;
+}
+
+.personalData .errorIcon:hover,
+.personalData .errorIcon:focus {
+    filter: drop-shadow(0 0 5px rgba(197, 31, 31, 0.6));
+}
+
+.tooltipBubble {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    left: auto;
+    background: linear-gradient(145deg, #242322 0%, #171616 100%);
+    border: 1px solid rgba(255, 183, 123, 0.35);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.8), 0 0 12px rgba(255, 183, 123, 0.1);
+    padding: 0.55rem 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: max-content;
+    max-width: min(280px, 80vw);
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
+    z-index: 100;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.tooltipBubble::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 8px;
+    left: auto;
+    width: 9px;
+    height: 9px;
+    background: #171616;
+    border-right: 1px solid rgba(255, 183, 123, 0.35);
+    border-bottom: 1px solid rgba(255, 183, 123, 0.35);
+    transform: rotate(45deg);
+}
+
+.tooltipBubble.visible {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Specificity 0,3,0 — beats .personalData div { position: relative } at 0,1,1
+   which was silently overriding position:absolute on the tooltip bubble */
+.personalData .errorContainer .tooltipBubble {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    left: auto;
+}
+
+.tooltipIcon {
+    color: var(--error) !important;
+    font-size: 1.1rem !important;
+    flex-shrink: 0;
+    text-align: center !important;
+    user-select: none;
+}
+
+.tooltipText {
+    color: var(--text-on-background) !important;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.35;
+    text-align: left !important;
 }
 
 .personalData span {
@@ -228,7 +328,11 @@
     font-family: var(--font-body);
     border: 1px solid transparent;
     border-radius: .25rem;
-    padding: .5rem .75rem;
+    padding: .5rem 2.25rem .5rem .75rem;
+}
+
+.personalData select {
+    padding-right: .75rem;
 }
 
 .personalData input:focus-within, .personalData select:focus-within{

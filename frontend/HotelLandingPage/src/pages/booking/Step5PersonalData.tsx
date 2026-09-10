@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useBooking } from '../../context/BookingProcessContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { bookingPageText } from '../../translations';
@@ -5,10 +6,104 @@ import countries from '../../utils/countries';
 import s from '../../styles/BookingPage.module.css';
 
 
+type ValidatedField = 'lname' | 'fname' | 'email' | 'zip' | 'city' | 'street';
+
+const fallbackValidation = {
+    required: 'A mező kitöltése kötelező.',
+    nameMinLength: 'Legalább 2 karakter hosszú legyen.',
+    nameMaxLength: 'Legfeljebb 30 karakter lehet.',
+    lettersOnly: 'Csak betűket, szóközt vagy kötőjelet tartalmazhat.',
+    emailInvalid: 'Érvénytelen e-mail formátum (pl. nev@pelda.hu).',
+    zipMinLength: 'Legalább 4 karakterből kell állnia.',
+    zipMaxLength: 'Legfeljebb 10 karakter lehet.',
+    zipInvalid: 'Csak betűket, számokat vagy kötőjelet tartalmazhat.',
+    streetMinLength: 'Legalább 5 karakter hosszú legyen.',
+    streetNeedsNumber: 'Kérjük, adja meg a házszámot is.',
+};
+
+function getValidationError(
+    field: ValidatedField,
+    value: string,
+    vText: typeof bookingPageText['hu']['step5']['validation'] = fallbackValidation
+): string {
+    const trimmed = value.trim();
+    if (!trimmed) {
+        return vText.required;
+    }
+
+    switch (field) {
+        case 'lname':
+        case 'fname':
+            if (value.length < 2) return vText.nameMinLength;
+            if (value.length >= 30) return vText.nameMaxLength;
+            if (!/^[\p{L}\s-]+$/u.test(value)) return vText.lettersOnly;
+            break;
+        case 'email':
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return vText.emailInvalid;
+            break;
+        case 'zip':
+            if (value.length < 4) return vText.zipMinLength;
+            if (value.length > 10) return vText.zipMaxLength;
+            if (!/^[a-zA-Z0-9\s-]+$/.test(value)) return vText.zipInvalid;
+            break;
+        case 'city':
+            if (value.length < 2) return vText.nameMinLength;
+            if (!/^[\p{L}\s-]+$/u.test(value)) return vText.lettersOnly;
+            break;
+        case 'street':
+            if (value.length <= 4) return vText.streetMinLength;
+            if (!/\d/.test(value)) return vText.streetNeedsNumber;
+            break;
+    }
+
+    return vText.required;
+}
+
+interface ErrorTooltipProps {
+    field: ValidatedField;
+    value: string;
+    isTouched: boolean;
+    isValid: boolean;
+    vText: typeof bookingPageText['hu']['step5']['validation'];
+}
+
+function ErrorTooltip({ field, value, isTouched, isValid, vText }: ErrorTooltipProps) {
+    const isHidden = !isTouched || isValid;
+    const errorMsg = isHidden ? '' : getValidationError(field, value, vText);
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <div className={isHidden ? s.valid : s.errorContainer}>
+            <span
+                className={`${s.errorIcon} ${s.invalid} material-symbols-outlined`}
+                tabIndex={isHidden ? -1 : 0}
+                role={isHidden ? undefined : 'alert'}
+                aria-label={isHidden ? undefined : errorMsg}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onFocus={() => setIsHovered(true)}
+                onBlur={() => setIsHovered(false)}
+            >
+                error
+            </span>
+            {!isHidden && (
+                <div
+                    className={`${s.tooltipBubble} ${isHovered ? s.visible : ''}`}
+                    role="tooltip"
+                >
+                    <span className={`material-symbols-outlined ${s.tooltipIcon}`}>error</span>
+                    <span className={s.tooltipText}>{errorMsg}</span>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function Step5PersonalData() {
     const { language } = useLanguage();
     const { bookingState, handleInputChange, isFormValid, prevStep, finishBooking } = useBooking();
     const labels = bookingPageText[language].step5;
+    const validationText = labels.validation || fallbackValidation;
 
     return (
         <div className={s.cardContainer}>
@@ -19,7 +114,13 @@ export default function Step5PersonalData() {
                     <div className={s.inputGroup}>
                         <span>{labels.lname}:</span>
                         <div className={s.colSpan2}>
-                            <span className={`${!bookingState.formData.lname.isTouched || isFormValid.lname  ? s.valid : s.invalid} material-symbols-outlined`}>error</span>
+                            <ErrorTooltip
+                                field="lname"
+                                value={bookingState.formData.lname.value}
+                                isTouched={bookingState.formData.lname.isTouched}
+                                isValid={isFormValid.lname}
+                                vText={validationText}
+                            />
                             <input
                                 type="text"
                                 name="lname"
@@ -31,7 +132,13 @@ export default function Step5PersonalData() {
 
                         <span>{labels.fname}:</span>
                         <div className={s.colSpan2}>
-                            <span className={`${!bookingState.formData.fname.isTouched || isFormValid.fname  ? s.valid : s.invalid} material-symbols-outlined`}>error</span>
+                            <ErrorTooltip
+                                field="fname"
+                                value={bookingState.formData.fname.value}
+                                isTouched={bookingState.formData.fname.isTouched}
+                                isValid={isFormValid.fname}
+                                vText={validationText}
+                            />
                             <input
                                 type="text"
                                 name="fname"
@@ -43,7 +150,13 @@ export default function Step5PersonalData() {
 
                         <span>{labels.email}:</span>
                         <div className={s.colSpan2}>
-                            <span className={`${!bookingState.formData.email.isTouched || isFormValid.email  ? s.valid : s.invalid} material-symbols-outlined`}>error</span>
+                            <ErrorTooltip
+                                field="email"
+                                value={bookingState.formData.email.value}
+                                isTouched={bookingState.formData.email.isTouched}
+                                isValid={isFormValid.email}
+                                vText={validationText}
+                            />
                             <input
                                 type="email"
                                 name="email"
@@ -62,7 +175,13 @@ export default function Step5PersonalData() {
                             ))}
                         </select>
                         <div>
-                            <span className={`${!bookingState.formData.zip.isTouched || isFormValid.zip  ? s.valid : s.invalid} material-symbols-outlined`}>error</span>
+                            <ErrorTooltip
+                                field="zip"
+                                value={bookingState.formData.zip.value}
+                                isTouched={bookingState.formData.zip.isTouched}
+                                isValid={isFormValid.zip}
+                                vText={validationText}
+                            />
                             <input
                                 type="text"
                                 name="zip"
@@ -75,7 +194,13 @@ export default function Step5PersonalData() {
 
                         <span></span>
                         <div className={s.colSpan2}>
-                            <span className={`${!bookingState.formData.city.isTouched || isFormValid.city  ? s.valid : s.invalid} material-symbols-outlined`}>error</span>
+                            <ErrorTooltip
+                                field="city"
+                                value={bookingState.formData.city.value}
+                                isTouched={bookingState.formData.city.isTouched}
+                                isValid={isFormValid.city}
+                                vText={validationText}
+                            />
                             <input
                                 type="text"
                                 name="city"
@@ -87,7 +212,13 @@ export default function Step5PersonalData() {
                         
                         <span></span>
                         <div className={s.colSpan2}>
-                            <span className={`${!bookingState.formData.street.isTouched || isFormValid.street  ? s.valid : s.invalid} material-symbols-outlined`}>error</span>
+                            <ErrorTooltip
+                                field="street"
+                                value={bookingState.formData.street.value}
+                                isTouched={bookingState.formData.street.isTouched}
+                                isValid={isFormValid.street}
+                                vText={validationText}
+                            />
                             <input
                                 type="text"
                                 name="street"
