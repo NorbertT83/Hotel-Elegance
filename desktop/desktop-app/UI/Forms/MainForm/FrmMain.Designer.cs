@@ -76,13 +76,13 @@
             // 
             // lbControlTitle
             // 
-            lbControlTitle.Dock = DockStyle.Top;
-            lbControlTitle.Font = new Font("Segoe UI", 36F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            lbControlTitle.Location = new Point(0, 0);
+            lbControlTitle.Font = new Font("Segoe UI Semibold", 36F, FontStyle.Bold | FontStyle.Italic);
+            lbControlTitle.ForeColor = Color.FromArgb(30, 41, 59);
+            lbControlTitle.Location = new Point(182, 1);
             lbControlTitle.Name = "lbControlTitle";
-            lbControlTitle.Size = new Size(1231, 114);
+            lbControlTitle.Size = new Size(404, 114);
             lbControlTitle.TabIndex = 1;
-            lbControlTitle.Text = "Home Page";
+            lbControlTitle.Text = "HOME PAGE";
             lbControlTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panelLeft

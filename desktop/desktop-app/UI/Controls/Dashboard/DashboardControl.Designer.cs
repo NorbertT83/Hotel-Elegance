@@ -72,6 +72,17 @@
             lbStatAvailable = new Label();
             lbMatrixTitle = new Label();
             pnlProfile = new Panel();
+            llbChangePassword = new LinkLabel();
+            dtpBirthdate = new DateTimePicker();
+            tbFname = new TextBox();
+            tbAddress = new TextBox();
+            tbTaxNumber = new TextBox();
+            tbEmail = new TextBox();
+            tbLname = new TextBox();
+            panel1 = new Panel();
+            btnCancel = new Button();
+            btnSaveProfile = new Button();
+            btnEditProfile = new Button();
             pictureBox1 = new PictureBox();
             lbProfileTitle = new Label();
             lbNameTitle = new Label();
@@ -98,6 +109,7 @@
             pnlVipAlerts.SuspendLayout();
             pnlRoomMatrix.SuspendLayout();
             pnlProfile.SuspendLayout();
+            panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -386,7 +398,7 @@
             pnlMovements.Controls.Add(pnlMovementsHeader);
             pnlMovements.Location = new Point(10, 190);
             pnlMovements.Name = "pnlMovements";
-            pnlMovements.Size = new Size(1160, 430);
+            pnlMovements.Size = new Size(1160, 747);
             pnlMovements.TabIndex = 5;
             // 
             // dgvMovements
@@ -431,7 +443,7 @@
             dgvMovements.RowHeadersVisible = false;
             dgvMovements.RowTemplate.Height = 35;
             dgvMovements.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvMovements.Size = new Size(1158, 383);
+            dgvMovements.Size = new Size(1158, 700);
             dgvMovements.TabIndex = 1;
             dgvMovements.CellDoubleClick += dgvMovements_CellDoubleClick;
             // 
@@ -574,7 +586,7 @@
             pnlSideWidgets.Controls.Add(pnlProfile);
             pnlSideWidgets.Location = new Point(1180, 190);
             pnlSideWidgets.Name = "pnlSideWidgets";
-            pnlSideWidgets.Size = new Size(550, 430);
+            pnlSideWidgets.Size = new Size(550, 747);
             pnlSideWidgets.TabIndex = 6;
             // 
             // pnlVipAlerts
@@ -586,7 +598,7 @@
             pnlVipAlerts.Controls.Add(lbVipTitle);
             pnlVipAlerts.Location = new Point(0, 205);
             pnlVipAlerts.Name = "pnlVipAlerts";
-            pnlVipAlerts.Size = new Size(270, 225);
+            pnlVipAlerts.Size = new Size(270, 542);
             pnlVipAlerts.TabIndex = 1;
             // 
             // lbVipList
@@ -596,7 +608,7 @@
             lbVipList.ForeColor = Color.FromArgb(50, 50, 50);
             lbVipList.Location = new Point(15, 45);
             lbVipList.Name = "lbVipList";
-            lbVipList.Size = new Size(238, 165);
+            lbVipList.Size = new Size(238, 482);
             lbVipList.TabIndex = 1;
             lbVipList.Text = "• No pending special requests for today.\r\n• All VIP arrivals are pre-assigned.";
             // 
@@ -686,6 +698,14 @@
             pnlProfile.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlProfile.BackColor = Color.White;
             pnlProfile.BorderStyle = BorderStyle.FixedSingle;
+            pnlProfile.Controls.Add(llbChangePassword);
+            pnlProfile.Controls.Add(dtpBirthdate);
+            pnlProfile.Controls.Add(tbFname);
+            pnlProfile.Controls.Add(tbAddress);
+            pnlProfile.Controls.Add(tbTaxNumber);
+            pnlProfile.Controls.Add(tbEmail);
+            pnlProfile.Controls.Add(tbLname);
+            pnlProfile.Controls.Add(panel1);
             pnlProfile.Controls.Add(pictureBox1);
             pnlProfile.Controls.Add(lbProfileTitle);
             pnlProfile.Controls.Add(lbNameTitle);
@@ -702,8 +722,134 @@
             pnlProfile.Controls.Add(lbBirthdateValue);
             pnlProfile.Location = new Point(280, 205);
             pnlProfile.Name = "pnlProfile";
-            pnlProfile.Size = new Size(270, 225);
+            pnlProfile.Size = new Size(270, 542);
             pnlProfile.TabIndex = 2;
+            // 
+            // llbChangePassword
+            // 
+            llbChangePassword.AutoSize = true;
+            llbChangePassword.Location = new Point(150, 391);
+            llbChangePassword.Name = "llbChangePassword";
+            llbChangePassword.Size = new Size(112, 17);
+            llbChangePassword.TabIndex = 18;
+            llbChangePassword.TabStop = true;
+            llbChangePassword.Text = "Change Password";
+            llbChangePassword.Visible = false;
+            llbChangePassword.LinkClicked += llbChangePassword_LinkClicked;
+            // 
+            // dtpBirthdate
+            // 
+            dtpBirthdate.Location = new Point(110, 354);
+            dtpBirthdate.MaxDate = new DateTime(2026, 9, 10, 0, 0, 0, 0);
+            dtpBirthdate.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
+            dtpBirthdate.Name = "dtpBirthdate";
+            dtpBirthdate.Size = new Size(152, 25);
+            dtpBirthdate.TabIndex = 17;
+            dtpBirthdate.Value = new DateTime(2026, 9, 10, 0, 0, 0, 0);
+            // 
+            // tbFname
+            // 
+            tbFname.Location = new Point(189, 203);
+            tbFname.MaxLength = 30;
+            tbFname.Name = "tbFname";
+            tbFname.PlaceholderText = "First Name";
+            tbFname.Size = new Size(73, 25);
+            tbFname.TabIndex = 16;
+            // 
+            // tbAddress
+            // 
+            tbAddress.Location = new Point(110, 323);
+            tbAddress.MaxLength = 255;
+            tbAddress.Name = "tbAddress";
+            tbAddress.PlaceholderText = "Zip, City, Street";
+            tbAddress.Size = new Size(152, 25);
+            tbAddress.TabIndex = 16;
+            // 
+            // tbTaxNumber
+            // 
+            tbTaxNumber.Location = new Point(110, 263);
+            tbTaxNumber.MaxLength = 20;
+            tbTaxNumber.Name = "tbTaxNumber";
+            tbTaxNumber.PlaceholderText = "Tax Number";
+            tbTaxNumber.Size = new Size(152, 25);
+            tbTaxNumber.TabIndex = 16;
+            // 
+            // tbEmail
+            // 
+            tbEmail.Location = new Point(110, 233);
+            tbEmail.MaxLength = 64;
+            tbEmail.Name = "tbEmail";
+            tbEmail.PlaceholderText = "E-mail address";
+            tbEmail.Size = new Size(152, 25);
+            tbEmail.TabIndex = 16;
+            // 
+            // tbLname
+            // 
+            tbLname.Location = new Point(111, 203);
+            tbLname.MaxLength = 30;
+            tbLname.Name = "tbLname";
+            tbLname.PlaceholderText = "Last Name";
+            tbLname.Size = new Size(73, 25);
+            tbLname.TabIndex = 16;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(btnCancel);
+            panel1.Controls.Add(btnSaveProfile);
+            panel1.Controls.Add(btnEditProfile);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 464);
+            panel1.Name = "panel1";
+            panel1.Padding = new Padding(10, 20, 10, 20);
+            panel1.Size = new Size(268, 76);
+            panel1.TabIndex = 15;
+            // 
+            // btnCancel
+            // 
+            btnCancel.BackColor = Color.DarkRed;
+            btnCancel.Dock = DockStyle.Left;
+            btnCancel.FlatStyle = FlatStyle.Flat;
+            btnCancel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnCancel.ForeColor = Color.White;
+            btnCancel.Location = new Point(10, 20);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(119, 36);
+            btnCancel.TabIndex = 16;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = false;
+            btnCancel.Visible = false;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnSaveProfile
+            // 
+            btnSaveProfile.BackColor = Color.DarkGreen;
+            btnSaveProfile.Dock = DockStyle.Right;
+            btnSaveProfile.FlatStyle = FlatStyle.Flat;
+            btnSaveProfile.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnSaveProfile.ForeColor = Color.White;
+            btnSaveProfile.Location = new Point(139, 20);
+            btnSaveProfile.Name = "btnSaveProfile";
+            btnSaveProfile.Size = new Size(119, 36);
+            btnSaveProfile.TabIndex = 15;
+            btnSaveProfile.Text = "Save Profile";
+            btnSaveProfile.UseVisualStyleBackColor = false;
+            btnSaveProfile.Visible = false;
+            btnSaveProfile.Click += btnSaveProfileData_Click;
+            // 
+            // btnEditProfile
+            // 
+            btnEditProfile.BackColor = Color.FromArgb(24, 60, 142);
+            btnEditProfile.Dock = DockStyle.Fill;
+            btnEditProfile.FlatStyle = FlatStyle.Flat;
+            btnEditProfile.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnEditProfile.ForeColor = Color.White;
+            btnEditProfile.Location = new Point(10, 20);
+            btnEditProfile.Name = "btnEditProfile";
+            btnEditProfile.Size = new Size(248, 36);
+            btnEditProfile.TabIndex = 14;
+            btnEditProfile.Text = "Edit Profile";
+            btnEditProfile.UseVisualStyleBackColor = false;
+            btnEditProfile.Click += btnEditProfile_Click;
             // 
             // pictureBox1
             // 
@@ -862,7 +1008,7 @@
             Controls.Add(pnlTop);
             Font = new Font("Segoe UI", 9.75F);
             Name = "DashboardControl";
-            Size = new Size(1740, 639);
+            Size = new Size(1740, 956);
             Load += DashboardControl_Load;
             pnlTop.ResumeLayout(false);
             pnlTop.PerformLayout();
@@ -886,6 +1032,7 @@
             pnlRoomMatrix.PerformLayout();
             pnlProfile.ResumeLayout(false);
             pnlProfile.PerformLayout();
+            panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
@@ -961,5 +1108,16 @@
         private Label lbBirthdateTitle;
         private Label lbBirthdateValue;
         private PictureBox pictureBox1;
+        private Panel panel1;
+        private Button btnEditProfile;
+        private Button btnSaveProfile;
+        private TextBox tbFname;
+        private TextBox tbLname;
+        private TextBox tbAddress;
+        private TextBox tbTaxNumber;
+        private TextBox tbEmail;
+        private DateTimePicker dtpBirthdate;
+        private Button btnCancel;
+        private LinkLabel llbChangePassword;
     }
 }

@@ -81,8 +81,77 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // jelszó kezelés
+        // jelszó kezelés -- BackOffice profilok kezelése
 
+            // save new BackOffice profile
+        public async Task SaveNewBackofficeProfileAsync(string hashedPassword, string email, int id)
+        {
+            string query = @"
+                UPDATE employees
+                SET email = @email, password = @password
+                WHERE id = @id";
+
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@password", hashedPassword);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+            // update employees password
+        public async Task SaveEmployeesNewPasswordAsync(Employee emp, string password)
+        {
+            string query = @"
+                UPDATE employees
+                SET password = @password
+                WHERE id = @id";
+
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@password", password);
+                    cmd.Parameters.AddWithValue("@id", emp.Id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+            // delete BackOffice profile
+        public async Task DeleteBackOfficeProfileAsync(Employee emp)
+        {
+            string query = @"
+                UPDATE employees
+                SET password = NULL
+                WHERE id = @id;";
+
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", emp.Id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        // --------------
+
+        // RETURN EMPLYOEE BY EMAIL
         public async Task<Employee?> GetEmployeeByEmailAsync(string email)
         {
             string query = "SELECT id, fname, lname, tax_number, paid_holidays_left, address, date_of_birth, date_of_hiring, " +
@@ -133,30 +202,6 @@ namespace Hotel_erp_Winforms_App.Services
             return null;
         }
 
-        public async Task SaveNewBackofficeProfileAsync(string hashedPassword, string email, int id)
-        {
-            string query = @"
-                UPDATE employees
-                SET email = @email, password = @password
-                WHERE id = @id";
-
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                await conn.OpenAsync();
-
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@email", email);
-                    cmd.Parameters.AddWithValue("@password", hashedPassword);
-                    cmd.Parameters.AddWithValue("@id", id);
-
-                    await cmd.ExecuteNonQueryAsync();
-                }
-            }
-        }
-
-        // --------------
-
         // UPDATE EMAIL
         public async Task UpdateEmailAsync(Employee employee, string email)
         {
@@ -180,7 +225,7 @@ namespace Hotel_erp_Winforms_App.Services
         }
 
         // DELTE EMPLYOEE FROM DB
-        public void DeleteEmployee(Employee employee)
+        public async Task DeleteEmployeeAsync(Employee employee)
         {
             string query = "DELETE FROM employees WHERE tax_number = @taxNumber";
             try
@@ -190,16 +235,14 @@ namespace Hotel_erp_Winforms_App.Services
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@taxNumber", employee.TaxNumber);
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
+                        await conn.OpenAsync();
+                        await cmd.ExecuteNonQueryAsync();
                     }
                 }
             }
-            
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show($"An error occured while trying to delete from database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"An error occurred while trying to delete from database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -283,6 +326,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+
 
         #region helpers
 

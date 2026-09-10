@@ -112,6 +112,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             SetBoxesReadability(false);
         }
 
+        // 5.
         private void btnModify_Click(object sender, EventArgs e)
         {
             if (_selectedEmployee != null)
@@ -126,7 +127,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             }
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
+        // 6.
+        private async void btnDelete_Click(object sender, EventArgs e)
         {
             if (_selectedEmployee != null)
             {
@@ -137,7 +139,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
                     {
                         Cursor.Current = Cursors.WaitCursor;
 
-                        _employeeService.DeleteEmployee(_selectedEmployee);
+                        await _employeeService.DeleteEmployeeAsync(_selectedEmployee);
 
                         MessageBox.Show("Employee deleted successfully.",
                             "Success",
@@ -163,7 +165,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             }
         }
 
-        // 5.
+        // 7.
         private async void btnSaveEmployee_Click(object sender, EventArgs e)
         {
             if (_selectedEmployee != null) // UPDATE EMPLYOEE
@@ -338,12 +340,60 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             }
         }
 
+        // 8.
         private void btnAddProfile_Click(object sender, EventArgs e)
         {
             if (_selectedEmployee != null)
             {
                 AddBackOfficeProfileForm addProfile = new AddBackOfficeProfileForm(_selectedEmployee);
-                addProfile.ShowDialog();
+                var result =  addProfile.ShowDialog();
+
+                if(result == DialogResult.OK)
+                {
+                    LoadData();
+                }
+            }
+        }
+
+        // 9.
+        private async void btnDeleteBackOffProfile_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show(
+                "Are you sure you want to delete this BackOffice profile?",
+                "Confirm Deletion",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.No) return;
+
+            try
+            {
+                if(_selectedEmployee != null)
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    await _employeeService.DeleteBackOfficeProfileAsync(_selectedEmployee);
+
+                    MessageBox.Show(
+                        "This profile is deleted successfully.",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    var list = await _employeeService.LoadDgvAsync("SELECT * FROM employees");
+
+                    dgvEmployees.DataSource = null;
+                    dgvEmployees.DataSource = list;
+                    dgvEmployees.ClearSelection();
+                }
+            }
+            catch (Exception ex)
+            {
+                _commonHelper.MBErrorMessage(ex);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -423,6 +473,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             tbAddress.Text = _selectedEmployee.Address ?? "";
             numHolidays.Value = _selectedEmployee.PaidHolidaysLeft;
             numSalary.Value = _selectedEmployee.Salary;
+
+            btnDeleteBackOffProfile.Visible = !string.IsNullOrEmpty(_selectedEmployee.Password) && (_selectedEmployee.Id != CurrentUser.Id);
+            btnAddProfile.Visible = _selectedEmployee.Id != CurrentUser.Id;
+
+            if (_selectedEmployee.Id == CurrentUser.Id)
+            {
+            }
 
             SetBoxesReadability(false);
         }

@@ -31,6 +31,7 @@ namespace Hotel_erp_Winforms_App.Forms
             EmployeeService _employeeService = new EmployeeService();
 
             loggedInEmployee = new Employee(
+
                 );
 
             loggedInEmployee = await _employeeService.GetEmployeeByEmailAsync(tbEmail.Text.Trim().ToLower());
@@ -65,6 +66,8 @@ namespace Hotel_erp_Winforms_App.Forms
                     return;
                 }
 
+
+
                 else
                 {
                     Cursor.Current = Cursors.WaitCursor;
@@ -85,6 +88,13 @@ namespace Hotel_erp_Winforms_App.Forms
             FrmRegistration registrationForm = new FrmRegistration();
             registrationForm.Show();
             this.Close();
+        }
+
+        private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            bool hidePassword = !chkShowPassword.Checked;
+
+            tbPassword.UseSystemPasswordChar = hidePassword;
         }
     }
 }

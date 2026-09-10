@@ -1,38 +1,33 @@
-﻿using Hotel_erp_Winforms_App.Security;
-using Hotel_erp_Winforms_App.Services;
+﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
-using Hotel_erp_Winforms_App.Helpers;
+using Hotel_erp_Winforms_App.Security;
+using Hotel_erp_Winforms_App.Services;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using ZstdSharp.Unsafe;
 
-namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
+namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.Change_Password
 {
-    public partial class AddBackOfficeProfileForm : Form
+    public partial class FrmChangePassword : Form
     {
-        Employee _employee;
+        Employee _currentEmployee;
 
-        public AddBackOfficeProfileForm(Employee selectedEmployee)
+        public FrmChangePassword(Employee _emplyoee)
         {
             InitializeComponent();
 
-            _employee = selectedEmployee;
+            _currentEmployee = _emplyoee;
         }
 
         #region variables
 
-        EmployeeService _employeeService = new EmployeeService();
+        EmployeeService employeeService = new EmployeeService();
         CommonHelper commonHelper = new CommonHelper();
-
-        #endregion
-
-        #region onLoad functions
-
-        private void AddBackOfficeProfileForm_Load(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(_employee.Email))
-            {
-                tbEmail.Text = _employee.Email;
-                tbEmail.Enabled = false;
-            }
-        }
 
         #endregion
 
@@ -70,42 +65,56 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
 
             string generatedPassword = new string(chars);
 
-            tbPassword.Text = generatedPassword;
-            tbConfirmPassword.Text = generatedPassword;
+            tbNewPassword.Text = generatedPassword;
+            tbConfirmNewPassword.Text = generatedPassword;
         }
 
         // SHOW PASSWORD
         private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
         {
-            bool hidePassword = chkShowPassword.Checked;
+            bool hidePassword = !chkShowPassword.Checked;
 
-            tbPassword.UseSystemPasswordChar = !hidePassword;
-            tbConfirmPassword.UseSystemPasswordChar = !hidePassword;
+            tbNewPassword.UseSystemPasswordChar = hidePassword;
+            tbOldPassword.UseSystemPasswordChar = hidePassword;
+            tbConfirmNewPassword.UseSystemPasswordChar = hidePassword;
+        }
+
+        // RETURN
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show(
+                "Are you sure you want to discard the changes?",
+                "Discard Changes?",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                this.Close();
+            }
         }
 
         // SAVE
         private async void btnSave_Click(object sender, EventArgs e)
         {
-            string email = tbEmail.Text.Trim();
-            string password = tbPassword.Text.Trim();
-            string confirmPassword = tbConfirmPassword.Text.Trim();
+            string password = tbNewPassword.Text.Trim();
+            string confirmPassword = tbConfirmNewPassword.Text.Trim();
 
-            if (!email.Contains('@') || string.IsNullOrWhiteSpace(tbEmail.Text))
+            if (!PasswordHelper.VerifyPassword(tbOldPassword.Text.Trim(), _currentEmployee.Password))
             {
                 MessageBox.Show(
-                    "Please enter a valid email address containing an '@' symbol.",
-                    "Invalid Email Format",
+                    "Your password is not correct.",
+                    "Incorrect Password",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                    MessageBoxIcon.Error);
 
-                tbEmail.Clear();
-                tbEmail.Focus();
+                tbOldPassword.Clear();
+                tbOldPassword.Focus();
 
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(tbPassword.Text) || string.IsNullOrWhiteSpace(tbConfirmPassword.Text))
+            if (string.IsNullOrWhiteSpace(tbNewPassword.Text.Trim()) || string.IsNullOrWhiteSpace(tbConfirmNewPassword.Text.Trim()))
             {
                 MessageBox.Show(
                     "Please enter a password.",
@@ -114,15 +123,15 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
                     MessageBoxIcon.Warning
                 );
 
-                tbPassword.Focus();
+                tbNewPassword.Focus();
                 return;
             }
 
-            var hasUpper = tbPassword.Text.Any(char.IsUpper);
-            var hasLower = tbPassword.Text.Any(char.IsLower);
-            var hasDigit = tbPassword.Text.Any(char.IsDigit);
-            var hasSpecial = tbPassword.Text.Any(c => !char.IsLetterOrDigit(c));
-            var isLongEnough = tbPassword.Text.Length >= 8;
+            var hasUpper = tbNewPassword.Text.Any(char.IsUpper);
+            var hasLower = tbNewPassword.Text.Any(char.IsLower);
+            var hasDigit = tbNewPassword.Text.Any(char.IsDigit);
+            var hasSpecial = tbNewPassword.Text.Any(c => !char.IsLetterOrDigit(c));
+            var isLongEnough = tbNewPassword.Text.Length >= 8;
 
             if (!isLongEnough || !hasUpper || !hasLower || !hasDigit || !hasSpecial)
             {
@@ -137,14 +146,14 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
                     MessageBoxIcon.Warning
                 );
 
-                tbPassword.Clear();
-                tbConfirmPassword.Clear();
+                tbNewPassword.Clear();
+                tbConfirmNewPassword.Clear();
 
-                tbPassword.Focus();
+                tbNewPassword.Focus();
                 return;
             }
 
-            if (password != tbConfirmPassword.Text)
+            if (password != tbConfirmNewPassword.Text.Trim())
             {
                 MessageBox.Show(
                     "The passwords you entered do not match. Please check and try again.",
@@ -153,44 +162,43 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
                     MessageBoxIcon.Warning
                 );
 
-                tbPassword.Clear();
-                tbConfirmPassword.Clear();
+                tbNewPassword.Clear();
+                tbConfirmNewPassword.Clear();
 
-                tbPassword.Focus();
+                tbNewPassword.Focus();
 
                 return;
             }
 
-            if (await _employeeService.IsEmailAlreadyUsed(email, _employeeService) && email != _employee.Email)
+            if (PasswordHelper.HashPassword(password) == _currentEmployee.Password)
             {
                 MessageBox.Show(
-                    "This email address is already in use. Please enter a different one.",
-                    "Email Already Exists",
+                    "The new password cannot be the same as the old password.",
+                    "Invalid Password",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                    MessageBoxIcon.Warning);
 
-                tbEmail.Clear();
-                tbEmail.Focus();
+                tbNewPassword.Clear();
+                tbOldPassword.Clear();
+
+                tbNewPassword.Focus();
 
                 return;
             }
-
+            
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
 
                 string hashedPassword = PasswordHelper.HashPassword(password);
-                await _employeeService.SaveNewBackofficeProfileAsync(hashedPassword, email, _employee.Id);
+                await employeeService.SaveEmployeesNewPasswordAsync(_currentEmployee, hashedPassword);
 
                 MessageBox.Show(
-                    "BackOffice profile created successfully!",
+                    "Password saved successfully.",
                     "Success",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information
                 );
-
-                this.DialogResult = DialogResult.OK;
 
                 this.Close();
             }
@@ -206,13 +214,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             {
                 Cursor.Current = Cursors.Default;
             }
-
-        }
-
-        // CANCEL
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         #endregion

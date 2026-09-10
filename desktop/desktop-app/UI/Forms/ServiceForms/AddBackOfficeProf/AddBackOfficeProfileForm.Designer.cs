@@ -23,7 +23,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
         private void InitializeComponent()
         {
             grpProfileDetails = new GroupBox();
-            llbChangeEmail = new LinkLabel();
             tbEmail = new TextBox();
             lblPassword = new Label();
             tbPassword = new TextBox();
@@ -41,7 +40,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             // 
             // grpProfileDetails
             // 
-            grpProfileDetails.Controls.Add(llbChangeEmail);
             grpProfileDetails.Controls.Add(tbEmail);
             grpProfileDetails.Controls.Add(lblPassword);
             grpProfileDetails.Controls.Add(tbPassword);
@@ -58,17 +56,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             grpProfileDetails.TabIndex = 0;
             grpProfileDetails.TabStop = false;
             grpProfileDetails.Text = "ACCOUNT CREDENTIALS";
-            // 
-            // llbChangeEmail
-            // 
-            llbChangeEmail.AutoSize = true;
-            llbChangeEmail.Location = new Point(15, 192);
-            llbChangeEmail.Name = "llbChangeEmail";
-            llbChangeEmail.Size = new Size(132, 15);
-            llbChangeEmail.TabIndex = 6;
-            llbChangeEmail.TabStop = true;
-            llbChangeEmail.Text = "Change E-mail Address";
-            llbChangeEmail.LinkClicked += llbChangeEmail_LinkClicked;
             // 
             // tbEmail
             // 
@@ -96,9 +83,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             tbPassword.Location = new Point(15, 98);
             tbPassword.MaxLength = 255;
             tbPassword.Name = "tbPassword";
-            tbPassword.PasswordChar = '*';
             tbPassword.Size = new Size(210, 23);
             tbPassword.TabIndex = 2;
+            tbPassword.UseSystemPasswordChar = true;
             // 
             // lblConfirmPassword
             // 
@@ -117,9 +104,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             tbConfirmPassword.Location = new Point(15, 149);
             tbConfirmPassword.MaxLength = 255;
             tbConfirmPassword.Name = "tbConfirmPassword";
-            tbConfirmPassword.PasswordChar = '*';
             tbConfirmPassword.Size = new Size(210, 23);
             tbConfirmPassword.TabIndex = 3;
+            tbConfirmPassword.UseSystemPasswordChar = true;
             // 
             // chkShowPassword
             // 
@@ -232,6 +219,5 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
         private Button btnSave;
         private Button btnCancel;
         private TextBox tbEmail;
-        private LinkLabel llbChangeEmail;
     }
 }

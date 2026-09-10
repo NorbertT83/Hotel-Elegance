@@ -74,6 +74,7 @@
             pnlEditor = new Panel();
             numSalary = new NumericUpDown();
             numHolidays = new NumericUpDown();
+            btnDeleteBackOffProfile = new Button();
             btnAddProfile = new Button();
             pbProfilePhoto = new PictureBox();
             btnSaveEmployee = new Button();
@@ -96,6 +97,7 @@
             lbFullNameTitle = new Label();
             lbEditorTitle = new Label();
             toolTip1 = new ToolTip(components);
+            toolTip2 = new ToolTip(components);
             pnlTop.SuspendLayout();
             pnlKpiTotal.SuspendLayout();
             pnlKpiManagers.SuspendLayout();
@@ -627,6 +629,7 @@
             pnlEditor.BorderStyle = BorderStyle.FixedSingle;
             pnlEditor.Controls.Add(numSalary);
             pnlEditor.Controls.Add(numHolidays);
+            pnlEditor.Controls.Add(btnDeleteBackOffProfile);
             pnlEditor.Controls.Add(btnAddProfile);
             pnlEditor.Controls.Add(pbProfilePhoto);
             pnlEditor.Controls.Add(btnSaveEmployee);
@@ -670,10 +673,27 @@
             numHolidays.Size = new Size(155, 25);
             numHolidays.TabIndex = 17;
             // 
+            // btnDeleteBackOffProfile
+            // 
+            btnDeleteBackOffProfile.BackColor = Color.White;
+            btnDeleteBackOffProfile.BackgroundImage = Properties.Resources.delete;
+            btnDeleteBackOffProfile.BackgroundImageLayout = ImageLayout.Zoom;
+            btnDeleteBackOffProfile.FlatStyle = FlatStyle.Flat;
+            btnDeleteBackOffProfile.Location = new Point(316, 12);
+            btnDeleteBackOffProfile.Name = "btnDeleteBackOffProfile";
+            btnDeleteBackOffProfile.Size = new Size(20, 20);
+            btnDeleteBackOffProfile.TabIndex = 8;
+            toolTip2.SetToolTip(btnDeleteBackOffProfile, "Delete BackOffice profile");
+            btnDeleteBackOffProfile.UseVisualStyleBackColor = false;
+            btnDeleteBackOffProfile.Visible = false;
+            btnDeleteBackOffProfile.Click += btnDeleteBackOffProfile_Click;
+            // 
             // btnAddProfile
             // 
             btnAddProfile.BackColor = Color.White;
-            btnAddProfile.Image = Properties.Resources.add;
+            btnAddProfile.BackgroundImage = Properties.Resources.add;
+            btnAddProfile.BackgroundImageLayout = ImageLayout.Zoom;
+            btnAddProfile.FlatStyle = FlatStyle.Flat;
             btnAddProfile.Location = new Point(316, 12);
             btnAddProfile.Name = "btnAddProfile";
             btnAddProfile.Size = new Size(20, 20);
@@ -994,5 +1014,7 @@
         private NumericUpDown numHolidays;
         private Label lbEmailTitle;
         private TextBox tbEmail;
+        private Button btnDeleteBackOffProfile;
+        private ToolTip toolTip2;
     }
 }
