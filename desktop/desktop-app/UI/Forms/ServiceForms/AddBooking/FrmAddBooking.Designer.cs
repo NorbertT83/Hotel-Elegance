@@ -75,6 +75,7 @@
             lbUI11 = new Label();
             HL1 = new Label();
             tpPersonalData = new TabPage();
+            btnFillData = new Button();
             pnlUI04 = new Panel();
             tableLayoutPanel5 = new TableLayoutPanel();
             lbUI12 = new Label();
@@ -83,7 +84,6 @@
             btnEditGuestData = new Button();
             btnSaveGuest = new Button();
             btnPrint = new Button();
-            ckbEditData = new CheckBox();
             dtpBirthdate = new DateTimePicker();
             cbNationality = new ComboBox();
             tbLastName = new TextBox();
@@ -696,12 +696,12 @@
             // tpPersonalData
             // 
             tpPersonalData.BackColor = Color.White;
+            tpPersonalData.Controls.Add(btnFillData);
             tpPersonalData.Controls.Add(pnlUI04);
             tpPersonalData.Controls.Add(cbGuests);
             tpPersonalData.Controls.Add(btnEditGuestData);
             tpPersonalData.Controls.Add(btnSaveGuest);
             tpPersonalData.Controls.Add(btnPrint);
-            tpPersonalData.Controls.Add(ckbEditData);
             tpPersonalData.Controls.Add(dtpBirthdate);
             tpPersonalData.Controls.Add(cbNationality);
             tpPersonalData.Controls.Add(tbLastName);
@@ -730,6 +730,18 @@
             tpPersonalData.Size = new Size(535, 588);
             tpPersonalData.TabIndex = 1;
             tpPersonalData.Text = "tabPage2";
+            // 
+            // btnFillData
+            // 
+            btnFillData.FlatStyle = FlatStyle.Flat;
+            btnFillData.Location = new Point(463, 489);
+            btnFillData.Name = "btnFillData";
+            btnFillData.Size = new Size(47, 23);
+            btnFillData.TabIndex = 53;
+            btnFillData.Text = "Fill";
+            btnFillData.UseVisualStyleBackColor = true;
+            btnFillData.Visible = false;
+            btnFillData.Click += btnFillData_Click;
             // 
             // pnlUI04
             // 
@@ -795,6 +807,7 @@
             btnEditGuestData.Size = new Size(33, 29);
             btnEditGuestData.TabIndex = 50;
             btnEditGuestData.UseVisualStyleBackColor = true;
+            btnEditGuestData.Click += btnEditGuestData_Click;
             // 
             // btnSaveGuest
             // 
@@ -819,16 +832,6 @@
             btnPrint.TabIndex = 47;
             btnPrint.UseVisualStyleBackColor = true;
             // 
-            // ckbEditData
-            // 
-            ckbEditData.Location = new Point(255, 127);
-            ckbEditData.Name = "ckbEditData";
-            ckbEditData.Size = new Size(46, 19);
-            ckbEditData.TabIndex = 46;
-            ckbEditData.Text = "Edit";
-            ckbEditData.UseVisualStyleBackColor = true;
-            ckbEditData.Visible = false;
-            // 
             // dtpBirthdate
             // 
             dtpBirthdate.Font = new Font("Segoe UI", 12F);
@@ -843,9 +846,12 @@
             // 
             // cbNationality
             // 
-            cbNationality.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbNationality.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cbNationality.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbNationality.DropDownHeight = 150;
             cbNationality.Font = new Font("Segoe UI", 12F);
             cbNationality.FormattingEnabled = true;
+            cbNationality.IntegralHeight = false;
             cbNationality.Location = new Point(24, 428);
             cbNationality.Name = "cbNationality";
             cbNationality.Size = new Size(486, 29);
@@ -1873,6 +1879,7 @@
             BackColor = Color.White;
             ClientSize = new Size(573, 745);
             Controls.Add(pnlMain);
+            MaximizeBox = false;
             Name = "FrmAddBooking";
             Padding = new Padding(15);
             StartPosition = FormStartPosition.CenterScreen;
@@ -1966,7 +1973,6 @@
         private Button btnEditGuestData;
         private Button btnSaveGuest;
         private Button btnPrint;
-        private CheckBox ckbEditData;
         private DateTimePicker dtpBirthdate;
         private ComboBox cbNationality;
         private TextBox tbLastName;
@@ -2067,5 +2073,6 @@
         private DataGridViewTextBoxColumn colQuantity;
         private DataGridViewTextBoxColumn colTax;
         private DataGridViewTextBoxColumn colTotal;
+        private Button btnFillData;
     }
 }

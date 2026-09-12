@@ -211,9 +211,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                     cbRoomNumbers.Items.Clear();
 
-                    foreach (RequestedService rs in serviceBookings)
+                    var orderedServiceBookings = serviceBookings.OrderBy(s => s.RoomNumber);
+
+                    foreach (RequestedService rs in orderedServiceBookings)
                     {
-                        cbRoomNumbers.Items.Add(rs.RoomNumber);
+                        if (!cbRoomNumbers.Items.Contains(rs.RoomNumber))
+                        {
+                            cbRoomNumbers.Items.Add(rs.RoomNumber);
+                        }
                     }
                 }
                 catch (Exception ex)

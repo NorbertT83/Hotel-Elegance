@@ -34,7 +34,8 @@ namespace Hotel_erp_Winforms_App.Services
             4.: confirms the new booking, updates database
         */
         #endregion
-        #region Database actions
+        #region Common database actions
+
         // 1.
         public async Task<List<Booking>> LoadDgvAsync(string query = "SELECT * FROM bookings", Dictionary<string, object>? parameters = null)
         {
@@ -551,7 +552,7 @@ namespace Hotel_erp_Winforms_App.Services
         #region Occupancy
         public int GetTodaysArrivalsCount()
         {
-            string query = "SELECT COUNT(*) FROM bookings WHERE beginning_of_stay = CURRENT_DATE AND checkin = NULL ;";
+            string query = "SELECT COUNT(*) FROM bookings WHERE beginning_of_stay = CURRENT_DATE AND checkin IS NULL ;";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
@@ -618,6 +619,7 @@ namespace Hotel_erp_Winforms_App.Services
         */
         #endregion
         #region Check-in
+
         // 1.
         public Booking? GetBookingById(string id)
         {
@@ -661,6 +663,7 @@ namespace Hotel_erp_Winforms_App.Services
             }
             return null;
         }
+
         // 2.
         public Room? GetRoomByBookingId(Booking? booking)
         {
@@ -716,6 +719,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             return null;
         }
+
         // 3.
         public Guest? FillPersonalData(Booking selectedBooking)
         {
@@ -758,6 +762,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             return null;
         }
+
         // 4.
         public List<Room> SelectedRoomsByBooking(Booking booking, string request = "")
         {
@@ -812,6 +817,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             return rooms;
         }
+
         // 5.
         public async Task<List<BillingItem>> MakeListOfBillsAsync(List<Service> servicesList, Booking? selectedBooking = null, int days = 1, int guestCount = 1)
         {
@@ -830,7 +836,24 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 decimal netPrice = service.Price / 1.27m;
 
-                if (service.NameHu == "Parkolás")
+                if (service.NameHu == "Szoba")
+                {
+                    decimal unitNetPrice = (service.Price / (days > 0 ? days : 1)) / 1.05m;
+                    decimal grossTotal = service.Price;
+
+                    BillingItem roomItem = new BillingItem
+                    (
+                        service.Id,
+                        DateTime.Now,
+                        service.NameHu,
+                        unitNetPrice,
+                        days,
+                        0.05m,
+                        grossTotal
+                    );
+                    billingItems.Add(roomItem);
+                }
+                else if (service.NameHu == "Parkolás")
                 {
                     BillingItem parking = new BillingItem
                     (
@@ -844,7 +867,6 @@ namespace Hotel_erp_Winforms_App.Services
                     );
                     billingItems.Add(parking);
                 }
-
                 else if (service.NameHu == "Teljes ellátás")
                 {
                     BillingItem fullBoard = new BillingItem
@@ -852,14 +874,13 @@ namespace Hotel_erp_Winforms_App.Services
                         service.Id,
                         DateTime.Now,
                         service.NameHu,
-                        28000 / 1.05m * guestCount,
+                        (28000 / 1.05m),
                         days,
                         0.05m,
                         service.Price * days * guestCount
                     );
                     billingItems.Add(fullBoard);
                 }
-
                 else if (service.NameHu == "Félpanzió")
                 {
                     BillingItem halfBoard = new BillingItem
@@ -867,14 +888,13 @@ namespace Hotel_erp_Winforms_App.Services
                         service.Id,
                         DateTime.Now,
                         service.NameHu,
-                        17000 / 1.05m * guestCount,
+                        (17000 / 1.05m),
                         days,
                         0.05m,
                         service.Price * days * guestCount
                     );
                     billingItems.Add(halfBoard);
                 }
-
                 else
                 {
                     BillingItem item = new BillingItem
@@ -892,12 +912,12 @@ namespace Hotel_erp_Winforms_App.Services
             }
 
             // SZOBA ÁRÁNAK KISZÁMÍTÁSA
-            if (selectedBooking != null)
+            if (selectedBooking != null && !servicesList.Any(s => s.NameHu == "Szoba"))
             {
                 string getRoomQuery = "SELECT rooms.price_per_night, bookings.beginning_of_stay, bookings.end_of_stay, bookings.created_at " +
-                                "FROM bookings " +
-                                "INNER JOIN rooms ON bookings.room_number = rooms.room_number " +
-                                "WHERE bookings.id = @bookingId;";
+                                      "FROM bookings " +
+                                      "INNER JOIN rooms ON bookings.room_number = rooms.room_number " +
+                                      "WHERE bookings.id = @bookingId;";
 
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
@@ -916,7 +936,7 @@ namespace Hotel_erp_Winforms_App.Services
                                 int nights = Convert.ToInt32((end - beginning).Days);
 
                                 decimal pricePerNight = Convert.ToDecimal(reader["price_per_night"]);
-                                decimal netPricePerNight = Convert.ToDecimal(pricePerNight / 1.05m);
+                                decimal netPricePerNight = pricePerNight / 1.05m;
                                 decimal grossPrice = pricePerNight * nights;
 
                                 BillingItem roomItem = new BillingItem
@@ -935,8 +955,10 @@ namespace Hotel_erp_Winforms_App.Services
                     }
                 }
             }
+
             return billingItems;
         }
+        
         // 6.
         public bool GetSpecialRequestsFromDb(Booking selectedBooking, string serviceNameHu)
         {
@@ -961,6 +983,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+        
         // 7.
         public bool IsChampagneOrdered(Booking selectedBooking)
         {
@@ -983,6 +1006,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+       
         // 8.
         public string GetCarPlateNumberByBooking(Booking selectedBooking)
         {
@@ -999,6 +1023,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+        
         // 9.
         public int GetNumberOfGuests(Booking selectedBooking)
         {
@@ -1021,6 +1046,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+        
         // 10.
         public int CalculateNetAmount(List<BillingItem> billingItems)
         {
@@ -1034,6 +1060,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             return Convert.ToInt32(Math.Round(netAmount, MidpointRounding.AwayFromZero));
         }
+        
         // 11.
         public int CalculateTaxAmount(List<BillingItem> billingItems)
         {
@@ -1053,6 +1080,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             return tax;
         }
+        
         // 12.
         public int CalculateGrossAmount(List<BillingItem> billingItems)
         {
@@ -1072,6 +1100,7 @@ namespace Hotel_erp_Winforms_App.Services
 
             return grossAmount;
         }
+        
         // 13.
         public async Task<string> GetIdCardNumberAsync(Booking? booking)
         {
@@ -1097,6 +1126,7 @@ namespace Hotel_erp_Winforms_App.Services
                 }
             }
         }
+       
         // 14.
         public async Task LoadBillItemsAsync(DataGridView dgvPaymentSum, List<Service> services, Booking? selectedBooking = null, int days = 1, int guestCount = 1)
         {
@@ -1270,7 +1300,6 @@ namespace Hotel_erp_Winforms_App.Services
         {
             var service = serviceName switch
             {
-
                 "Szoba" when room != null => new Service(0, "Szoba", "Szoba ára éjszakánként", ServiceTypeHu.Logisztika, room.Price * days, "Room", "Price of room per night", ServiceTypeEn.Logistics),
                 "Halfboard" => new Service(19, "Félpanzió", "Félpanziós ellátás reggelivel és vacsorával", ServiceTypeHu.Logisztika, 17000, "Half board", "Half-board service including breakfast and dinner.", ServiceTypeEn.Logistics),
                 "Fullboard" => new Service(20, "Teljes ellátás", "Teljes ellátás reggelivel, ebéddel és vacsorával.", ServiceTypeHu.Logisztika, 28000, "Full board", "Full-board service including breakfast, lunch and dinner.", ServiceTypeEn.Logistics),
