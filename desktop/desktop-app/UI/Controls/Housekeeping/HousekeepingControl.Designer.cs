@@ -32,9 +32,10 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             pnlTop = new Panel();
+            pnlActionsHolder = new Panel();
             btnMarkAllClean = new Button();
-            btnRefresh = new Button();
             lbUtility = new Label();
+            btnRefresh = new Button();
             btnSearch = new Button();
             cbStatusFilter = new ComboBox();
             lbStatusFilter = new Label();
@@ -69,6 +70,7 @@
             colCleaningStatus = new DataGridViewTextBoxColumn();
             colDisturb = new DataGridViewTextBoxColumn();
             colIsCleaning = new DataGridViewTextBoxColumn();
+            lbNoData = new Label();
             panel1 = new Panel();
             cbColorCodes = new CheckBox();
             lbCleanColor = new Label();
@@ -90,8 +92,8 @@
             lbSelectedRoomValue = new Label();
             lbSelectedRoomNumber = new Label();
             lbRoomDetailsTitle = new Label();
-            lbNoData = new Label();
             pnlTop.SuspendLayout();
+            pnlActionsHolder.SuspendLayout();
             pnlKpiDirty.SuspendLayout();
             pnlKpiProgress.SuspendLayout();
             pnlKpiClean.SuspendLayout();
@@ -107,9 +109,7 @@
             pnlTop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlTop.BackColor = Color.FromArgb(245, 245, 248);
             pnlTop.BorderStyle = BorderStyle.FixedSingle;
-            pnlTop.Controls.Add(btnMarkAllClean);
-            pnlTop.Controls.Add(btnRefresh);
-            pnlTop.Controls.Add(lbUtility);
+            pnlTop.Controls.Add(pnlActionsHolder);
             pnlTop.Controls.Add(btnSearch);
             pnlTop.Controls.Add(cbStatusFilter);
             pnlTop.Controls.Add(lbStatusFilter);
@@ -123,41 +123,56 @@
             pnlTop.Size = new Size(1350, 75);
             pnlTop.TabIndex = 0;
             // 
+            // pnlActionsHolder
+            // 
+            pnlActionsHolder.Controls.Add(btnMarkAllClean);
+            pnlActionsHolder.Controls.Add(lbUtility);
+            pnlActionsHolder.Controls.Add(btnRefresh);
+            pnlActionsHolder.Dock = DockStyle.Right;
+            pnlActionsHolder.Location = new Point(1011, 0);
+            pnlActionsHolder.Name = "pnlActionsHolder";
+            pnlActionsHolder.Padding = new Padding(0, 0, 10, 0);
+            pnlActionsHolder.Size = new Size(337, 73);
+            pnlActionsHolder.TabIndex = 11;
+            // 
             // btnMarkAllClean
             // 
+            btnMarkAllClean.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnMarkAllClean.BackColor = SystemColors.ButtonFace;
             btnMarkAllClean.FlatStyle = FlatStyle.Flat;
             btnMarkAllClean.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnMarkAllClean.Location = new Point(1200, 33);
+            btnMarkAllClean.Location = new Point(191, 32);
             btnMarkAllClean.Name = "btnMarkAllClean";
             btnMarkAllClean.Size = new Size(130, 30);
             btnMarkAllClean.TabIndex = 10;
             btnMarkAllClean.Text = "Reset All to Dirty";
             btnMarkAllClean.UseVisualStyleBackColor = false;
             // 
+            // lbUtility
+            // 
+            lbUtility.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lbUtility.AutoSize = true;
+            lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbUtility.ForeColor = Color.DimGray;
+            lbUtility.Location = new Point(71, 9);
+            lbUtility.Name = "lbUtility";
+            lbUtility.Size = new Size(70, 19);
+            lbUtility.TabIndex = 8;
+            lbUtility.Text = "ACTIONS";
+            // 
             // btnRefresh
             // 
+            btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnRefresh.BackColor = SystemColors.ButtonFace;
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRefresh.Location = new Point(1080, 33);
+            btnRefresh.Location = new Point(71, 32);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(110, 30);
             btnRefresh.TabIndex = 9;
             btnRefresh.Text = "Reload";
             btnRefresh.UseVisualStyleBackColor = false;
             btnRefresh.Click += btnRefresh_Click;
-            // 
-            // lbUtility
-            // 
-            lbUtility.AutoSize = true;
-            lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbUtility.ForeColor = Color.DimGray;
-            lbUtility.Location = new Point(1080, 10);
-            lbUtility.Name = "lbUtility";
-            lbUtility.Size = new Size(70, 19);
-            lbUtility.TabIndex = 8;
-            lbUtility.Text = "ACTIONS";
             // 
             // btnSearch
             // 
@@ -380,6 +395,7 @@
             // 
             // pnlKpiMaintenance
             // 
+            pnlKpiMaintenance.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlKpiMaintenance.BackColor = Color.White;
             pnlKpiMaintenance.BorderStyle = BorderStyle.FixedSingle;
             pnlKpiMaintenance.Controls.Add(lbKpiStaffSub);
@@ -387,7 +403,7 @@
             pnlKpiMaintenance.Controls.Add(lbKpiStaffTitle);
             pnlKpiMaintenance.Location = new Point(1035, 95);
             pnlKpiMaintenance.Name = "pnlKpiMaintenance";
-            pnlKpiMaintenance.Size = new Size(325, 85);
+            pnlKpiMaintenance.Size = new Size(324, 85);
             pnlKpiMaintenance.TabIndex = 4;
             // 
             // lbKpiStaffSub
@@ -549,6 +565,19 @@
             colIsCleaning.Name = "colIsCleaning";
             colIsCleaning.ReadOnly = true;
             // 
+            // lbNoData
+            // 
+            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbNoData.AutoSize = true;
+            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            lbNoData.ForeColor = Color.DarkGray;
+            lbNoData.Location = new Point(478, 330);
+            lbNoData.Name = "lbNoData";
+            lbNoData.Size = new Size(401, 50);
+            lbNoData.TabIndex = 4;
+            lbNoData.Text = "NO MATCHING DATA";
+            lbNoData.Visible = false;
+            // 
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
@@ -569,10 +598,11 @@
             // 
             // cbColorCodes
             // 
+            cbColorCodes.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbColorCodes.AutoSize = true;
             cbColorCodes.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             cbColorCodes.ForeColor = Color.DarkGreen;
-            cbColorCodes.Location = new Point(1200, 16);
+            cbColorCodes.Location = new Point(1190, 16);
             cbColorCodes.Name = "cbColorCodes";
             cbColorCodes.Size = new Size(142, 21);
             cbColorCodes.TabIndex = 4;
@@ -784,19 +814,6 @@
             lbRoomDetailsTitle.TabIndex = 0;
             lbRoomDetailsTitle.Text = "UPDATE ROOM STATUS";
             // 
-            // lbNoData
-            // 
-            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lbNoData.AutoSize = true;
-            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
-            lbNoData.ForeColor = Color.DarkGray;
-            lbNoData.Location = new Point(478, 330);
-            lbNoData.Name = "lbNoData";
-            lbNoData.Size = new Size(401, 50);
-            lbNoData.TabIndex = 4;
-            lbNoData.Text = "NO MATCHING DATA";
-            lbNoData.Visible = false;
-            // 
             // HousekeepingControl
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -815,6 +832,8 @@
             Load += HousekeepingControl_Load;
             pnlTop.ResumeLayout(false);
             pnlTop.PerformLayout();
+            pnlActionsHolder.ResumeLayout(false);
+            pnlActionsHolder.PerformLayout();
             pnlKpiDirty.ResumeLayout(false);
             pnlKpiDirty.PerformLayout();
             pnlKpiProgress.ResumeLayout(false);
@@ -901,5 +920,6 @@
         private Label lbCleanColor;
         private Label lbCleanTitle;
         private Label lbNoData;
+        private Panel pnlActionsHolder;
     }
 }

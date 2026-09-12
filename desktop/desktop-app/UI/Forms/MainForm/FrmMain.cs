@@ -1,10 +1,10 @@
 using Hotel_erp_Winforms_App.Forms;
+using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.UI.Controls;
 using Hotel_erp_Winforms_App.UI.Controls.Dashboard;
 using Hotel_erp_Winforms_App.UI.Controls.EmployeeControl;
 using Hotel_erp_Winforms_App.UI.Controls.Rooms;
-using Hotel_erp_Winforms_App.UI.Controls.Settings;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -36,12 +36,10 @@ namespace Hotel_erp_Winforms_App
             FormatMenuButton(btnRooms, sotetKek, elenkKek, feher);
             FormatMenuButton(btnHousekeeping, sotetKek, elenkKek, feher);
             FormatMenuButton(btnServices, sotetKek, elenkKek, feher);
-            FormatMenuButton(btnBilling, sotetKek, elenkKek, feher);
             FormatMenuButton(btnEmployees, sotetKek, elenkKek, feher);
-            FormatMenuButton(btnStatistics, sotetKek, elenkKek, feher);
-            FormatMenuButton(btnSettings, sotetKek, elenkKek, feher);
 
             ShowDashboard();
+            PermissionManager.ApplyPermissions(this);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -89,31 +87,13 @@ namespace Hotel_erp_Winforms_App
             lbControlTitle.Text = "Services";
         }
 
-        private void btnBilling_Click(object sender, EventArgs e)
-        {
-            ShowControl(new BillingsControl());
-            lbControlTitle.Text = "Billings and Invoicing";
-        }
-
         private void btnEmployees_Click(object sender, EventArgs e)
         {
             ShowControl(new EmployeeControl());
             lbControlTitle.Text = "Employees";
         }
 
-        private void btnStatistics_Click(object sender, EventArgs e)
-        {
-            ShowControl(new StatisticsControl());
-            lbControlTitle.Text = "Statistics";
-        }
-
-        private void btnSettings_Click(object sender, EventArgs e)
-        {
-            ShowControl(new SettingsControl());
-            lbControlTitle.Text = "System Settings";
-        }
-
-        private void btnDashboard_Click(object sencder, EventArgs e)
+        private void btnDashboard_Click(object sender, EventArgs e)
         {
             ShowDashboard();
         }

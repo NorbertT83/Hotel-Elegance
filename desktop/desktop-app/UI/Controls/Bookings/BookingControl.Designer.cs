@@ -510,6 +510,7 @@
             // 
             // pnlKpiTotalBookings
             // 
+            pnlKpiTotalBookings.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlKpiTotalBookings.BackColor = Color.White;
             pnlKpiTotalBookings.BorderStyle = BorderStyle.FixedSingle;
             pnlKpiTotalBookings.Controls.Add(lbKpiTotalBookingsSub);

@@ -175,4 +175,25 @@
   <data name="Edit_25" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit_square_25dp_000000_FILL0_wght400_GRAD0_opsz24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="menuCalendar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\calendar_today_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuHome" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\home_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuGuests" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\group_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuRooms" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bed_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuHK" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mop_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuServices" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\room_service_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menuEmp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\work_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

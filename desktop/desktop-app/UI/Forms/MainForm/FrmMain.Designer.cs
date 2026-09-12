@@ -28,90 +28,115 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             panelHeader = new Panel();
-            pictureBox1 = new PictureBox();
+            pnlHeaderContent = new Panel();
             lbControlTitle = new Label();
+            label1 = new Label();
+            pictureBox1 = new PictureBox();
             panelLeft = new Panel();
             pnlLogoutButtonHolder = new Panel();
             btnLogout = new Button();
-            btnSettings = new Button();
-            btnStatistics = new Button();
             btnEmployees = new Button();
             btnRooms = new Button();
-            btnBilling = new Button();
             btnServices = new Button();
             btnHousekeeping = new Button();
             btnGuests = new Button();
             btnBookings = new Button();
             btnDashBoard = new Button();
+            pnlMenuHeader = new Panel();
+            pictureBox2 = new PictureBox();
+            label2 = new Label();
             panelMainContent = new Panel();
             lbWelcomeMainForm = new Label();
             panelHeader.SuspendLayout();
+            pnlHeaderContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panelLeft.SuspendLayout();
             pnlLogoutButtonHolder.SuspendLayout();
+            pnlMenuHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panelMainContent.SuspendLayout();
             SuspendLayout();
             // 
             // panelHeader
             // 
             panelHeader.BorderStyle = BorderStyle.FixedSingle;
+            panelHeader.Controls.Add(pnlHeaderContent);
             panelHeader.Controls.Add(pictureBox1);
-            panelHeader.Controls.Add(lbControlTitle);
             panelHeader.Dock = DockStyle.Top;
-            panelHeader.Location = new Point(0, 0);
+            panelHeader.Location = new Point(229, 0);
             panelHeader.Name = "panelHeader";
-            panelHeader.Size = new Size(1233, 116);
+            panelHeader.Size = new Size(1004, 159);
             panelHeader.TabIndex = 0;
+            // 
+            // pnlHeaderContent
+            // 
+            pnlHeaderContent.Controls.Add(lbControlTitle);
+            pnlHeaderContent.Controls.Add(label1);
+            pnlHeaderContent.Dock = DockStyle.Fill;
+            pnlHeaderContent.Location = new Point(117, 0);
+            pnlHeaderContent.Name = "pnlHeaderContent";
+            pnlHeaderContent.Size = new Size(885, 157);
+            pnlHeaderContent.TabIndex = 3;
+            // 
+            // lbControlTitle
+            // 
+            lbControlTitle.Font = new Font("Franklin Gothic Medium", 48F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lbControlTitle.ForeColor = Color.FromArgb(30, 41, 59);
+            lbControlTitle.Location = new Point(0, 26);
+            lbControlTitle.Name = "lbControlTitle";
+            lbControlTitle.Size = new Size(445, 73);
+            lbControlTitle.TabIndex = 1;
+            lbControlTitle.Text = "Housekeeping";
+            lbControlTitle.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label1
+            // 
+            label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            label1.ForeColor = SystemColors.ControlDark;
+            label1.Location = new Point(16, 99);
+            label1.Name = "label1";
+            label1.Size = new Size(321, 21);
+            label1.TabIndex = 2;
+            label1.Text = "Hotel Elegance Management System";
             // 
             // pictureBox1
             // 
+            pictureBox1.Dock = DockStyle.Left;
             pictureBox1.Image = Properties.Resources.hotel_logo;
-            pictureBox1.Location = new Point(11, -1);
+            pictureBox1.Location = new Point(0, 0);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(158, 134);
+            pictureBox1.Size = new Size(117, 157);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
-            // lbControlTitle
-            // 
-            lbControlTitle.Font = new Font("Segoe UI Semibold", 36F, FontStyle.Bold | FontStyle.Italic);
-            lbControlTitle.ForeColor = Color.FromArgb(30, 41, 59);
-            lbControlTitle.Location = new Point(182, 1);
-            lbControlTitle.Name = "lbControlTitle";
-            lbControlTitle.Size = new Size(404, 114);
-            lbControlTitle.TabIndex = 1;
-            lbControlTitle.Text = "HOME PAGE";
-            lbControlTitle.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // panelLeft
             // 
             panelLeft.Controls.Add(pnlLogoutButtonHolder);
-            panelLeft.Controls.Add(btnSettings);
-            panelLeft.Controls.Add(btnStatistics);
             panelLeft.Controls.Add(btnEmployees);
             panelLeft.Controls.Add(btnRooms);
-            panelLeft.Controls.Add(btnBilling);
             panelLeft.Controls.Add(btnServices);
             panelLeft.Controls.Add(btnHousekeeping);
             panelLeft.Controls.Add(btnGuests);
             panelLeft.Controls.Add(btnBookings);
             panelLeft.Controls.Add(btnDashBoard);
+            panelLeft.Controls.Add(pnlMenuHeader);
             panelLeft.Dock = DockStyle.Left;
-            panelLeft.Location = new Point(0, 116);
+            panelLeft.Location = new Point(0, 0);
             panelLeft.Name = "panelLeft";
-            panelLeft.Size = new Size(183, 540);
+            panelLeft.Size = new Size(229, 656);
             panelLeft.TabIndex = 1;
             // 
             // pnlLogoutButtonHolder
             // 
             pnlLogoutButtonHolder.Controls.Add(btnLogout);
             pnlLogoutButtonHolder.Dock = DockStyle.Bottom;
-            pnlLogoutButtonHolder.Location = new Point(0, 440);
+            pnlLogoutButtonHolder.Location = new Point(0, 556);
             pnlLogoutButtonHolder.Name = "pnlLogoutButtonHolder";
             pnlLogoutButtonHolder.Padding = new Padding(10);
-            pnlLogoutButtonHolder.Size = new Size(183, 100);
+            pnlLogoutButtonHolder.Size = new Size(229, 100);
             pnlLogoutButtonHolder.TabIndex = 21;
             // 
             // btnLogout
@@ -122,51 +147,11 @@
             btnLogout.ForeColor = Color.White;
             btnLogout.Location = new Point(10, 43);
             btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(163, 47);
+            btnLogout.Size = new Size(209, 47);
             btnLogout.TabIndex = 0;
             btnLogout.Text = "Log Out";
             btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += btnLogout_Click;
-            // 
-            // btnSettings
-            // 
-            btnSettings.BackColor = Color.FromArgb(30, 58, 138);
-            btnSettings.Cursor = Cursors.Hand;
-            btnSettings.Dock = DockStyle.Top;
-            btnSettings.FlatAppearance.BorderSize = 0;
-            btnSettings.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
-            btnSettings.FlatStyle = FlatStyle.Flat;
-            btnSettings.Font = new Font("Segoe UI", 15F);
-            btnSettings.ForeColor = Color.White;
-            btnSettings.Location = new Point(0, 477);
-            btnSettings.Name = "btnSettings";
-            btnSettings.Padding = new Padding(20, 0, 0, 0);
-            btnSettings.Size = new Size(183, 53);
-            btnSettings.TabIndex = 16;
-            btnSettings.Text = "Settings";
-            btnSettings.TextAlign = ContentAlignment.MiddleLeft;
-            btnSettings.UseVisualStyleBackColor = false;
-            btnSettings.Click += btnSettings_Click;
-            // 
-            // btnStatistics
-            // 
-            btnStatistics.BackColor = Color.FromArgb(30, 58, 138);
-            btnStatistics.Cursor = Cursors.Hand;
-            btnStatistics.Dock = DockStyle.Top;
-            btnStatistics.FlatAppearance.BorderSize = 0;
-            btnStatistics.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
-            btnStatistics.FlatStyle = FlatStyle.Flat;
-            btnStatistics.Font = new Font("Segoe UI", 15F);
-            btnStatistics.ForeColor = Color.White;
-            btnStatistics.Location = new Point(0, 424);
-            btnStatistics.Name = "btnStatistics";
-            btnStatistics.Padding = new Padding(20, 0, 0, 0);
-            btnStatistics.Size = new Size(183, 53);
-            btnStatistics.TabIndex = 18;
-            btnStatistics.Text = "Statistics";
-            btnStatistics.TextAlign = ContentAlignment.MiddleLeft;
-            btnStatistics.UseVisualStyleBackColor = false;
-            btnStatistics.Click += btnStatistics_Click;
             // 
             // btnEmployees
             // 
@@ -178,13 +163,15 @@
             btnEmployees.FlatStyle = FlatStyle.Flat;
             btnEmployees.Font = new Font("Segoe UI", 15F);
             btnEmployees.ForeColor = Color.White;
-            btnEmployees.Location = new Point(0, 371);
+            btnEmployees.Image = Properties.Resources.menuEmp;
+            btnEmployees.ImageAlign = ContentAlignment.MiddleLeft;
+            btnEmployees.Location = new Point(0, 418);
             btnEmployees.Name = "btnEmployees";
             btnEmployees.Padding = new Padding(20, 0, 0, 0);
-            btnEmployees.Size = new Size(183, 53);
+            btnEmployees.Size = new Size(229, 53);
             btnEmployees.TabIndex = 20;
             btnEmployees.Text = "Employees";
-            btnEmployees.TextAlign = ContentAlignment.MiddleLeft;
+            btnEmployees.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnEmployees.UseVisualStyleBackColor = false;
             btnEmployees.Click += btnEmployees_Click;
             // 
@@ -198,35 +185,17 @@
             btnRooms.FlatStyle = FlatStyle.Flat;
             btnRooms.Font = new Font("Segoe UI", 15F);
             btnRooms.ForeColor = Color.White;
-            btnRooms.Location = new Point(0, 318);
+            btnRooms.Image = Properties.Resources.menuRooms;
+            btnRooms.ImageAlign = ContentAlignment.MiddleLeft;
+            btnRooms.Location = new Point(0, 365);
             btnRooms.Name = "btnRooms";
             btnRooms.Padding = new Padding(20, 0, 0, 0);
-            btnRooms.Size = new Size(183, 53);
+            btnRooms.Size = new Size(229, 53);
             btnRooms.TabIndex = 16;
             btnRooms.Text = "Rooms";
-            btnRooms.TextAlign = ContentAlignment.MiddleLeft;
+            btnRooms.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnRooms.UseVisualStyleBackColor = false;
             btnRooms.Click += btnRooms_Click;
-            // 
-            // btnBilling
-            // 
-            btnBilling.BackColor = Color.FromArgb(30, 58, 138);
-            btnBilling.Cursor = Cursors.Hand;
-            btnBilling.Dock = DockStyle.Top;
-            btnBilling.FlatAppearance.BorderSize = 0;
-            btnBilling.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
-            btnBilling.FlatStyle = FlatStyle.Flat;
-            btnBilling.Font = new Font("Segoe UI", 15F);
-            btnBilling.ForeColor = Color.White;
-            btnBilling.Location = new Point(0, 265);
-            btnBilling.Name = "btnBilling";
-            btnBilling.Padding = new Padding(20, 0, 0, 0);
-            btnBilling.Size = new Size(183, 53);
-            btnBilling.TabIndex = 16;
-            btnBilling.Text = "Billing";
-            btnBilling.TextAlign = ContentAlignment.MiddleLeft;
-            btnBilling.UseVisualStyleBackColor = false;
-            btnBilling.Click += btnBilling_Click;
             // 
             // btnServices
             // 
@@ -238,13 +207,15 @@
             btnServices.FlatStyle = FlatStyle.Flat;
             btnServices.Font = new Font("Segoe UI", 15F);
             btnServices.ForeColor = Color.White;
-            btnServices.Location = new Point(0, 212);
+            btnServices.Image = Properties.Resources.menuServices;
+            btnServices.ImageAlign = ContentAlignment.MiddleLeft;
+            btnServices.Location = new Point(0, 312);
             btnServices.Name = "btnServices";
             btnServices.Padding = new Padding(20, 0, 0, 0);
-            btnServices.Size = new Size(183, 53);
+            btnServices.Size = new Size(229, 53);
             btnServices.TabIndex = 17;
             btnServices.Text = "Services";
-            btnServices.TextAlign = ContentAlignment.MiddleLeft;
+            btnServices.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnServices.UseVisualStyleBackColor = false;
             btnServices.Click += btnServices_Click;
             // 
@@ -258,13 +229,15 @@
             btnHousekeeping.FlatStyle = FlatStyle.Flat;
             btnHousekeeping.Font = new Font("Segoe UI", 15F);
             btnHousekeeping.ForeColor = Color.White;
-            btnHousekeeping.Location = new Point(0, 159);
+            btnHousekeeping.Image = Properties.Resources.menuHK;
+            btnHousekeeping.ImageAlign = ContentAlignment.MiddleLeft;
+            btnHousekeeping.Location = new Point(0, 259);
             btnHousekeeping.Name = "btnHousekeeping";
             btnHousekeeping.Padding = new Padding(20, 0, 0, 0);
-            btnHousekeeping.Size = new Size(183, 53);
+            btnHousekeeping.Size = new Size(229, 53);
             btnHousekeeping.TabIndex = 16;
             btnHousekeeping.Text = "Housekeeping";
-            btnHousekeeping.TextAlign = ContentAlignment.MiddleLeft;
+            btnHousekeeping.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnHousekeeping.UseVisualStyleBackColor = false;
             btnHousekeeping.Click += btnHousekeeping_Click;
             // 
@@ -278,13 +251,15 @@
             btnGuests.FlatStyle = FlatStyle.Flat;
             btnGuests.Font = new Font("Segoe UI", 15F);
             btnGuests.ForeColor = Color.White;
-            btnGuests.Location = new Point(0, 106);
+            btnGuests.Image = Properties.Resources.menuGuests;
+            btnGuests.ImageAlign = ContentAlignment.MiddleLeft;
+            btnGuests.Location = new Point(0, 206);
             btnGuests.Name = "btnGuests";
             btnGuests.Padding = new Padding(20, 0, 0, 0);
-            btnGuests.Size = new Size(183, 53);
+            btnGuests.Size = new Size(229, 53);
             btnGuests.TabIndex = 16;
             btnGuests.Text = "Guests";
-            btnGuests.TextAlign = ContentAlignment.MiddleLeft;
+            btnGuests.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnGuests.UseVisualStyleBackColor = false;
             btnGuests.Click += btnGuests_Click;
             // 
@@ -298,13 +273,15 @@
             btnBookings.FlatStyle = FlatStyle.Flat;
             btnBookings.Font = new Font("Segoe UI", 15F);
             btnBookings.ForeColor = Color.White;
-            btnBookings.Location = new Point(0, 53);
+            btnBookings.Image = Properties.Resources.menuCalendar;
+            btnBookings.ImageAlign = ContentAlignment.MiddleLeft;
+            btnBookings.Location = new Point(0, 153);
             btnBookings.Name = "btnBookings";
             btnBookings.Padding = new Padding(20, 0, 0, 0);
-            btnBookings.Size = new Size(183, 53);
+            btnBookings.Size = new Size(229, 53);
             btnBookings.TabIndex = 15;
             btnBookings.Text = "Bookings";
-            btnBookings.TextAlign = ContentAlignment.MiddleLeft;
+            btnBookings.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnBookings.UseVisualStyleBackColor = false;
             btnBookings.Click += btnBookings_Click;
             // 
@@ -318,33 +295,66 @@
             btnDashBoard.FlatStyle = FlatStyle.Flat;
             btnDashBoard.Font = new Font("Segoe UI", 15F);
             btnDashBoard.ForeColor = Color.White;
-            btnDashBoard.Location = new Point(0, 0);
+            btnDashBoard.Image = Properties.Resources.menuHome;
+            btnDashBoard.ImageAlign = ContentAlignment.MiddleLeft;
+            btnDashBoard.Location = new Point(0, 100);
             btnDashBoard.Name = "btnDashBoard";
             btnDashBoard.Padding = new Padding(20, 0, 0, 0);
-            btnDashBoard.Size = new Size(183, 53);
+            btnDashBoard.Size = new Size(229, 53);
             btnDashBoard.TabIndex = 22;
             btnDashBoard.Text = "Dashboard";
-            btnDashBoard.TextAlign = ContentAlignment.MiddleLeft;
+            btnDashBoard.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDashBoard.UseVisualStyleBackColor = false;
             btnDashBoard.Click += btnDashboard_Click;
+            // 
+            // pnlMenuHeader
+            // 
+            pnlMenuHeader.BackColor = Color.FromArgb(30, 58, 138);
+            pnlMenuHeader.Controls.Add(pictureBox2);
+            pnlMenuHeader.Controls.Add(label2);
+            pnlMenuHeader.Dock = DockStyle.Top;
+            pnlMenuHeader.Location = new Point(0, 0);
+            pnlMenuHeader.Name = "pnlMenuHeader";
+            pnlMenuHeader.Size = new Size(229, 100);
+            pnlMenuHeader.TabIndex = 23;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = Properties.Resources.hotel_logo;
+            pictureBox2.Location = new Point(12, 25);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(44, 50);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 1;
+            pictureBox2.TabStop = false;
+            // 
+            // label2
+            // 
+            label2.Font = new Font("Segoe UI", 17F);
+            label2.ForeColor = Color.White;
+            label2.Location = new Point(52, 35);
+            label2.Name = "label2";
+            label2.Size = new Size(167, 30);
+            label2.TabIndex = 0;
+            label2.Text = "Hotel Elegance";
             // 
             // panelMainContent
             // 
             panelMainContent.Controls.Add(lbWelcomeMainForm);
             panelMainContent.Dock = DockStyle.Fill;
-            panelMainContent.Location = new Point(183, 116);
+            panelMainContent.Location = new Point(229, 159);
             panelMainContent.Name = "panelMainContent";
-            panelMainContent.Size = new Size(1050, 540);
+            panelMainContent.Size = new Size(1004, 497);
             panelMainContent.TabIndex = 3;
             // 
             // lbWelcomeMainForm
             // 
-            lbWelcomeMainForm.Dock = DockStyle.Fill;
+            lbWelcomeMainForm.Dock = DockStyle.Bottom;
             lbWelcomeMainForm.Font = new Font("Stencil", 50.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lbWelcomeMainForm.ForeColor = Color.Teal;
-            lbWelcomeMainForm.Location = new Point(0, 0);
+            lbWelcomeMainForm.Location = new Point(0, -22);
             lbWelcomeMainForm.Name = "lbWelcomeMainForm";
-            lbWelcomeMainForm.Size = new Size(1050, 540);
+            lbWelcomeMainForm.Size = new Size(1004, 519);
             lbWelcomeMainForm.TabIndex = 0;
             lbWelcomeMainForm.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -355,18 +365,22 @@
             BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(1233, 656);
             Controls.Add(panelMainContent);
-            Controls.Add(panelLeft);
             Controls.Add(panelHeader);
+            Controls.Add(panelLeft);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            MinimizeBox = false;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "FrmMain";
-            Text = "Kezdőoldal";
+            Text = "Hotel Elegance BackOffice";
             WindowState = FormWindowState.Maximized;
             Load += MainForm_Load;
             panelHeader.ResumeLayout(false);
+            pnlHeaderContent.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panelLeft.ResumeLayout(false);
             pnlLogoutButtonHolder.ResumeLayout(false);
+            pnlMenuHeader.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             panelMainContent.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -376,7 +390,6 @@
         private Panel panelLeft;
         private Panel panelHeader;
         private Button btnEmployees;
-        private Button btnStatistics;
         private Button btnServices;
         private Button btnHousekeeping;
         private Button btnBookings;
@@ -385,11 +398,14 @@
         private Label lbControlTitle;
         private Label lbWelcomeMainForm;
         private Button btnRooms;
-        private Button btnBilling;
         private Button btnGuests;
-        private Button btnSettings;
         private Panel pnlLogoutButtonHolder;
         private Button btnLogout;
         private Button btnDashBoard;
+        private Label label1;
+        private Panel pnlMenuHeader;
+        private Label label2;
+        private PictureBox pictureBox2;
+        private Panel pnlHeaderContent;
     }
 }

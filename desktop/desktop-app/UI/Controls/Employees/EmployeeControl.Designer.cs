@@ -18,18 +18,18 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle24 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle15 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle16 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle17 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle18 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle19 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle20 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle21 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle22 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle23 = new DataGridViewCellStyle();
             pnlTop = new Panel();
             btnDelete = new Button();
             btnModify = new Button();
@@ -134,6 +134,7 @@
             // 
             // btnDelete
             // 
+            btnDelete.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnDelete.BackColor = SystemColors.ButtonFace;
             btnDelete.FlatStyle = FlatStyle.Flat;
             btnDelete.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
@@ -148,6 +149,7 @@
             // 
             // btnModify
             // 
+            btnModify.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnModify.BackColor = SystemColors.ButtonFace;
             btnModify.FlatStyle = FlatStyle.Flat;
             btnModify.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
@@ -161,6 +163,7 @@
             // 
             // btnAdd
             // 
+            btnAdd.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnAdd.BackColor = SystemColors.ButtonFace;
             btnAdd.FlatStyle = FlatStyle.Flat;
             btnAdd.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
@@ -175,6 +178,7 @@
             // 
             // btnRefresh
             // 
+            btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnRefresh.BackColor = SystemColors.ButtonFace;
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
@@ -188,6 +192,7 @@
             // 
             // lbUtility
             // 
+            lbUtility.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbUtility.AutoSize = true;
             lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbUtility.ForeColor = Color.DimGray;
@@ -399,6 +404,7 @@
             // 
             // pnlKpiCleaners
             // 
+            pnlKpiCleaners.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlKpiCleaners.BackColor = Color.White;
             pnlKpiCleaners.BorderStyle = BorderStyle.FixedSingle;
             pnlKpiCleaners.Controls.Add(lbKpiCleanersSub);
@@ -474,31 +480,31 @@
             dgvEmployees.AllowUserToOrderColumns = true;
             dgvEmployees.AllowUserToResizeColumns = false;
             dgvEmployees.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(245, 248, 253);
-            dgvEmployees.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.BackColor = Color.FromArgb(245, 248, 253);
+            dgvEmployees.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
             dgvEmployees.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvEmployees.BackgroundColor = Color.White;
             dgvEmployees.BorderStyle = BorderStyle.None;
             dgvEmployees.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(30, 58, 138);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvEmployees.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle14.BackColor = Color.FromArgb(30, 58, 138);
+            dataGridViewCellStyle14.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            dataGridViewCellStyle14.ForeColor = Color.White;
+            dataGridViewCellStyle14.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = DataGridViewTriState.True;
+            dgvEmployees.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
             dgvEmployees.ColumnHeadersHeight = 40;
             dgvEmployees.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvEmployees.Columns.AddRange(new DataGridViewColumn[] { colId, colLname, colFname, colJobTitle, colTaxNumber, colBirthDate, colHiringDate, colAddress, colHolidays, colSalary });
-            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle12.BackColor = SystemColors.Window;
-            dataGridViewCellStyle12.Font = new Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle12.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle12.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = DataGridViewTriState.False;
-            dgvEmployees.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle24.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle24.BackColor = SystemColors.Window;
+            dataGridViewCellStyle24.Font = new Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle24.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle24.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle24.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle24.WrapMode = DataGridViewTriState.False;
+            dgvEmployees.DefaultCellStyle = dataGridViewCellStyle24;
             dgvEmployees.Dock = DockStyle.Fill;
             dgvEmployees.EnableHeadersVisualStyles = false;
             dgvEmployees.GridColor = SystemColors.ControlLight;
@@ -525,8 +531,8 @@
             // 
             colLname.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colLname.DataPropertyName = "LName";
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colLname.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle15.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colLname.DefaultCellStyle = dataGridViewCellStyle15;
             colLname.FillWeight = 15F;
             colLname.HeaderText = "Last Name";
             colLname.Name = "colLname";
@@ -536,8 +542,8 @@
             // 
             colFname.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colFname.DataPropertyName = "FName";
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colFname.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle16.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colFname.DefaultCellStyle = dataGridViewCellStyle16;
             colFname.FillWeight = 15F;
             colFname.HeaderText = "First Name";
             colFname.Name = "colFname";
@@ -547,8 +553,8 @@
             // 
             colJobTitle.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colJobTitle.DataPropertyName = "JobTitle";
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colJobTitle.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle17.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colJobTitle.DefaultCellStyle = dataGridViewCellStyle17;
             colJobTitle.FillWeight = 20F;
             colJobTitle.HeaderText = "Role / Title";
             colJobTitle.Name = "colJobTitle";
@@ -558,8 +564,8 @@
             // 
             colTaxNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colTaxNumber.DataPropertyName = "TaxNumber";
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colTaxNumber.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle18.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colTaxNumber.DefaultCellStyle = dataGridViewCellStyle18;
             colTaxNumber.FillWeight = 18F;
             colTaxNumber.HeaderText = "Tax Number";
             colTaxNumber.Name = "colTaxNumber";
@@ -569,9 +575,9 @@
             // 
             colBirthDate.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colBirthDate.DataPropertyName = "DateOfBirth";
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.Format = "yyyy.MM.dd";
-            colBirthDate.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle19.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle19.Format = "yyyy.MM.dd";
+            colBirthDate.DefaultCellStyle = dataGridViewCellStyle19;
             colBirthDate.FillWeight = 15F;
             colBirthDate.HeaderText = "Birthdate";
             colBirthDate.Name = "colBirthDate";
@@ -581,9 +587,9 @@
             // 
             colHiringDate.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colHiringDate.DataPropertyName = "DateOfHiring";
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.Format = "yyyy.MM.dd";
-            colHiringDate.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle20.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle20.Format = "yyyy.MM.dd";
+            colHiringDate.DefaultCellStyle = dataGridViewCellStyle20;
             colHiringDate.FillWeight = 15F;
             colHiringDate.HeaderText = "Date of Hiring";
             colHiringDate.Name = "colHiringDate";
@@ -593,8 +599,8 @@
             // 
             colAddress.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colAddress.DataPropertyName = "Address";
-            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            colAddress.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle21.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            colAddress.DefaultCellStyle = dataGridViewCellStyle21;
             colAddress.FillWeight = 25F;
             colAddress.HeaderText = "Address";
             colAddress.Name = "colAddress";
@@ -604,8 +610,8 @@
             // 
             colHolidays.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colHolidays.DataPropertyName = "PaidHolidaysLeft";
-            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colHolidays.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle22.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colHolidays.DefaultCellStyle = dataGridViewCellStyle22;
             colHolidays.FillWeight = 12F;
             colHolidays.HeaderText = "Holidays Left";
             colHolidays.Name = "colHolidays";
@@ -615,9 +621,9 @@
             // 
             colSalary.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colSalary.DataPropertyName = "Salary";
-            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle11.Format = "C0";
-            colSalary.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle23.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle23.Format = "C0";
+            colSalary.DefaultCellStyle = dataGridViewCellStyle23;
             colSalary.FillWeight = 15F;
             colSalary.HeaderText = "Salary";
             colSalary.Name = "colSalary";

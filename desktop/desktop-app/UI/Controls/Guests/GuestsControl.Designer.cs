@@ -49,10 +49,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             pnlTop = new Panel();
+            panel1 = new Panel();
             btnDelete = new Button();
+            lbUtility = new Label();
             btnNewGuest = new Button();
             btnRefresh = new Button();
-            lbUtility = new Label();
             btnSearch = new Button();
             cbTypeFilter = new ComboBox();
             lbTypeFilter = new Label();
@@ -116,6 +117,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             lbFullNameTitle = new Label();
             lbEditorTitle = new Label();
             pnlTop.SuspendLayout();
+            panel1.SuspendLayout();
             pnlKpiTotalGuests.SuspendLayout();
             pnlKpiVip.SuspendLayout();
             pnlKpiInHouse.SuspendLayout();
@@ -130,10 +132,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlTop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlTop.BackColor = Color.FromArgb(245, 245, 248);
             pnlTop.BorderStyle = BorderStyle.FixedSingle;
-            pnlTop.Controls.Add(btnDelete);
-            pnlTop.Controls.Add(btnNewGuest);
-            pnlTop.Controls.Add(btnRefresh);
-            pnlTop.Controls.Add(lbUtility);
+            pnlTop.Controls.Add(panel1);
             pnlTop.Controls.Add(btnSearch);
             pnlTop.Controls.Add(cbTypeFilter);
             pnlTop.Controls.Add(lbTypeFilter);
@@ -145,13 +144,26 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlTop.Size = new Size(1350, 75);
             pnlTop.TabIndex = 0;
             // 
+            // panel1
+            // 
+            panel1.Controls.Add(btnDelete);
+            panel1.Controls.Add(lbUtility);
+            panel1.Controls.Add(btnNewGuest);
+            panel1.Controls.Add(btnRefresh);
+            panel1.Dock = DockStyle.Right;
+            panel1.Location = new Point(899, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(449, 73);
+            panel1.TabIndex = 7;
+            // 
             // btnDelete
             // 
+            btnDelete.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnDelete.BackColor = SystemColors.ButtonFace;
             btnDelete.FlatStyle = FlatStyle.Flat;
             btnDelete.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnDelete.ForeColor = Color.DarkRed;
-            btnDelete.Location = new Point(1210, 33);
+            btnDelete.Location = new Point(305, 33);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(130, 30);
             btnDelete.TabIndex = 5;
@@ -159,13 +171,26 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += btnDelete_Click;
             // 
+            // lbUtility
+            // 
+            lbUtility.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lbUtility.AutoSize = true;
+            lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbUtility.ForeColor = Color.DimGray;
+            lbUtility.Location = new Point(45, 10);
+            lbUtility.Name = "lbUtility";
+            lbUtility.Size = new Size(70, 19);
+            lbUtility.TabIndex = 6;
+            lbUtility.Text = "ACTIONS";
+            // 
             // btnNewGuest
             // 
+            btnNewGuest.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnNewGuest.BackColor = SystemColors.ButtonFace;
             btnNewGuest.FlatStyle = FlatStyle.Flat;
             btnNewGuest.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnNewGuest.ForeColor = Color.DarkGreen;
-            btnNewGuest.Location = new Point(1070, 33);
+            btnNewGuest.Location = new Point(165, 33);
             btnNewGuest.Name = "btnNewGuest";
             btnNewGuest.Size = new Size(130, 30);
             btnNewGuest.TabIndex = 5;
@@ -175,27 +200,17 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             // btnRefresh
             // 
+            btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnRefresh.BackColor = SystemColors.ButtonFace;
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRefresh.Location = new Point(950, 33);
+            btnRefresh.Location = new Point(45, 33);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(110, 30);
             btnRefresh.TabIndex = 4;
             btnRefresh.Text = "Reload";
             btnRefresh.UseVisualStyleBackColor = false;
             btnRefresh.Click += btnRefresh_Click;
-            // 
-            // lbUtility
-            // 
-            lbUtility.AutoSize = true;
-            lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbUtility.ForeColor = Color.DimGray;
-            lbUtility.Location = new Point(950, 10);
-            lbUtility.Name = "lbUtility";
-            lbUtility.Size = new Size(70, 19);
-            lbUtility.TabIndex = 6;
-            lbUtility.Text = "ACTIONS";
             // 
             // btnSearch
             // 
@@ -395,6 +410,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             // pnlKpiBlacklist
             // 
+            pnlKpiBlacklist.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlKpiBlacklist.BackColor = Color.White;
             pnlKpiBlacklist.BorderStyle = BorderStyle.FixedSingle;
             pnlKpiBlacklist.Controls.Add(lbKpiReturningSub);
@@ -402,7 +418,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlKpiBlacklist.Controls.Add(lbKpiReturningTitle);
             pnlKpiBlacklist.Location = new Point(1035, 95);
             pnlKpiBlacklist.Name = "pnlKpiBlacklist";
-            pnlKpiBlacklist.Size = new Size(325, 85);
+            pnlKpiBlacklist.Size = new Size(324, 85);
             pnlKpiBlacklist.TabIndex = 4;
             // 
             // lbKpiReturningSub
@@ -919,6 +935,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             Load += GuestsControl_Load;
             pnlTop.ResumeLayout(false);
             pnlTop.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             pnlKpiTotalGuests.ResumeLayout(false);
             pnlKpiTotalGuests.PerformLayout();
             pnlKpiVip.ResumeLayout(false);
@@ -1010,5 +1028,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private TextBox tbCountry;
         private Button btnDelete;
         private Label lbNoData;
+        private Panel panel1;
     }
 }

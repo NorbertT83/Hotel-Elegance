@@ -28,10 +28,11 @@
             DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
             pnlTop = new Panel();
-            btnDeleteRoom = new Button();
-            btnNewRoom = new Button();
+            panel1 = new Panel();
             btnRefresh = new Button();
             lbUtility = new Label();
+            btnDeleteRoom = new Button();
+            btnNewRoom = new Button();
             btnSearch = new Button();
             cbStatusFilter = new ComboBox();
             lbStatusFilter = new Label();
@@ -67,6 +68,7 @@
             colMaxAdults = new DataGridViewTextBoxColumn();
             colStatus = new DataGridViewTextBoxColumn();
             colPrice = new DataGridViewTextBoxColumn();
+            lbNoData = new Label();
             pnlEditor = new Panel();
             btnSaveRoom = new Button();
             tbAcTemp = new TextBox();
@@ -91,8 +93,8 @@
             tbRoomNumber = new TextBox();
             lbRoomNumberTitle = new Label();
             lbEditorTitle = new Label();
-            lbNoData = new Label();
             pnlTop.SuspendLayout();
+            panel1.SuspendLayout();
             pnlKpiTotal.SuspendLayout();
             pnlKpiAvailable.SuspendLayout();
             pnlKpiOccupied.SuspendLayout();
@@ -107,10 +109,9 @@
             pnlTop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlTop.BackColor = Color.FromArgb(245, 245, 248);
             pnlTop.BorderStyle = BorderStyle.FixedSingle;
+            pnlTop.Controls.Add(panel1);
             pnlTop.Controls.Add(btnDeleteRoom);
             pnlTop.Controls.Add(btnNewRoom);
-            pnlTop.Controls.Add(btnRefresh);
-            pnlTop.Controls.Add(lbUtility);
             pnlTop.Controls.Add(btnSearch);
             pnlTop.Controls.Add(cbStatusFilter);
             pnlTop.Controls.Add(lbStatusFilter);
@@ -124,8 +125,44 @@
             pnlTop.Size = new Size(1350, 75);
             pnlTop.TabIndex = 0;
             // 
+            // panel1
+            // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            panel1.Controls.Add(btnRefresh);
+            panel1.Controls.Add(lbUtility);
+            panel1.Location = new Point(979, 2);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(100, 67);
+            panel1.TabIndex = 9;
+            // 
+            // btnRefresh
+            // 
+            btnRefresh.BackColor = SystemColors.ButtonFace;
+            btnRefresh.FlatStyle = FlatStyle.Flat;
+            btnRefresh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnRefresh.Location = new Point(0, 31);
+            btnRefresh.Margin = new Padding(0);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(100, 30);
+            btnRefresh.TabIndex = 3;
+            btnRefresh.Text = "Reload";
+            btnRefresh.UseVisualStyleBackColor = false;
+            btnRefresh.Click += btnRefresh_Click;
+            // 
+            // lbUtility
+            // 
+            lbUtility.AutoSize = true;
+            lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lbUtility.ForeColor = Color.DimGray;
+            lbUtility.Location = new Point(0, 7);
+            lbUtility.Name = "lbUtility";
+            lbUtility.Size = new Size(70, 19);
+            lbUtility.TabIndex = 8;
+            lbUtility.Text = "ACTIONS";
+            // 
             // btnDeleteRoom
             // 
+            btnDeleteRoom.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnDeleteRoom.BackColor = SystemColors.ButtonFace;
             btnDeleteRoom.FlatStyle = FlatStyle.Flat;
             btnDeleteRoom.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
@@ -140,41 +177,18 @@
             // 
             // btnNewRoom
             // 
+            btnNewRoom.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnNewRoom.BackColor = SystemColors.ButtonFace;
             btnNewRoom.FlatStyle = FlatStyle.Flat;
             btnNewRoom.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnNewRoom.ForeColor = Color.DarkGreen;
-            btnNewRoom.Location = new Point(1085, 33);
+            btnNewRoom.Location = new Point(1087, 33);
             btnNewRoom.Name = "btnNewRoom";
             btnNewRoom.Size = new Size(125, 30);
             btnNewRoom.TabIndex = 4;
             btnNewRoom.Text = "+ Add Room";
             btnNewRoom.UseVisualStyleBackColor = false;
             btnNewRoom.Click += btnNewRoom_Click;
-            // 
-            // btnRefresh
-            // 
-            btnRefresh.BackColor = SystemColors.ButtonFace;
-            btnRefresh.FlatStyle = FlatStyle.Flat;
-            btnRefresh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRefresh.Location = new Point(975, 33);
-            btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(100, 30);
-            btnRefresh.TabIndex = 3;
-            btnRefresh.Text = "Reload";
-            btnRefresh.UseVisualStyleBackColor = false;
-            btnRefresh.Click += btnRefresh_Click;
-            // 
-            // lbUtility
-            // 
-            lbUtility.AutoSize = true;
-            lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbUtility.ForeColor = Color.DimGray;
-            lbUtility.Location = new Point(975, 10);
-            lbUtility.Name = "lbUtility";
-            lbUtility.Size = new Size(70, 19);
-            lbUtility.TabIndex = 8;
-            lbUtility.Text = "ACTIONS";
             // 
             // btnSearch
             // 
@@ -397,6 +411,7 @@
             // 
             // pnlKpiMaintenance
             // 
+            pnlKpiMaintenance.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlKpiMaintenance.BackColor = Color.White;
             pnlKpiMaintenance.BorderStyle = BorderStyle.FixedSingle;
             pnlKpiMaintenance.Controls.Add(lbKpiMaintenanceSub);
@@ -592,6 +607,19 @@
             colPrice.HeaderText = "Price / Night";
             colPrice.Name = "colPrice";
             colPrice.ReadOnly = true;
+            // 
+            // lbNoData
+            // 
+            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbNoData.AutoSize = true;
+            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            lbNoData.ForeColor = Color.DarkGray;
+            lbNoData.Location = new Point(467, 380);
+            lbNoData.Name = "lbNoData";
+            lbNoData.Size = new Size(401, 50);
+            lbNoData.TabIndex = 5;
+            lbNoData.Text = "NO MATCHING DATA";
+            lbNoData.Visible = false;
             // 
             // pnlEditor
             // 
@@ -853,19 +881,6 @@
             lbEditorTitle.TabIndex = 0;
             lbEditorTitle.Text = "ROOM CONFIG & DETAILS";
             // 
-            // lbNoData
-            // 
-            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lbNoData.AutoSize = true;
-            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
-            lbNoData.ForeColor = Color.DarkGray;
-            lbNoData.Location = new Point(467, 380);
-            lbNoData.Name = "lbNoData";
-            lbNoData.Size = new Size(401, 50);
-            lbNoData.TabIndex = 5;
-            lbNoData.Text = "NO MATCHING DATA";
-            lbNoData.Visible = false;
-            // 
             // RoomsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -884,6 +899,8 @@
             Load += RoomsControl_Load;
             pnlTop.ResumeLayout(false);
             pnlTop.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             pnlKpiTotal.ResumeLayout(false);
             pnlKpiTotal.PerformLayout();
             pnlKpiAvailable.ResumeLayout(false);
@@ -973,5 +990,6 @@
         private TextBox tbAcTemp;
         private Button btnSaveRoom;
         private Label lbNoData;
+        private Panel panel1;
     }
 }

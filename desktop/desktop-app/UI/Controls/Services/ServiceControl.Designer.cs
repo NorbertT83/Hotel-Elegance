@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             pnlTop = new Panel();
             pnlRbHolder = new Panel();
             rbOrderBy = new RadioButton();
@@ -60,6 +60,7 @@
             btnRefresh = new Button();
             btnResetFilters = new Button();
             pnlGrid = new Panel();
+            lbNoData = new Label();
             dgvServices = new DataGridView();
             colId = new DataGridViewTextBoxColumn();
             colRoomNumber = new DataGridViewTextBoxColumn();
@@ -136,7 +137,6 @@
             lbDeleteServiceNameValue = new Label();
             lbDeleteServiceNameTitle = new Label();
             lbDeleteEditorHeader = new Label();
-            lbNoData = new Label();
             pnlTop.SuspendLayout();
             pnlRbHolder.SuspendLayout();
             pnlGrid.SuspendLayout();
@@ -297,11 +297,12 @@
             // 
             // btnDeleteService
             // 
+            btnDeleteService.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnDeleteService.BackColor = SystemColors.ButtonFace;
             btnDeleteService.FlatStyle = FlatStyle.Flat;
             btnDeleteService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnDeleteService.ForeColor = Color.DarkRed;
-            btnDeleteService.Location = new Point(940, 38);
+            btnDeleteService.Location = new Point(973, 38);
             btnDeleteService.Name = "btnDeleteService";
             btnDeleteService.Size = new Size(100, 50);
             btnDeleteService.TabIndex = 0;
@@ -321,10 +322,11 @@
             // 
             // btnUpdateService
             // 
+            btnUpdateService.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnUpdateService.BackColor = SystemColors.ButtonFace;
             btnUpdateService.FlatStyle = FlatStyle.Flat;
             btnUpdateService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnUpdateService.Location = new Point(810, 38);
+            btnUpdateService.Location = new Point(843, 38);
             btnUpdateService.Name = "btnUpdateService";
             btnUpdateService.Size = new Size(120, 50);
             btnUpdateService.TabIndex = 0;
@@ -334,6 +336,7 @@
             // 
             // lbActiveServices
             // 
+            lbActiveServices.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbActiveServices.AutoSize = true;
             lbActiveServices.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbActiveServices.ForeColor = Color.Green;
@@ -345,6 +348,7 @@
             // 
             // lbTotalServices
             // 
+            lbTotalServices.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbTotalServices.AutoSize = true;
             lbTotalServices.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbTotalServices.ForeColor = Color.Black;
@@ -356,6 +360,7 @@
             // 
             // lbStats
             // 
+            lbStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbStats.AutoSize = true;
             lbStats.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbStats.ForeColor = Color.DimGray;
@@ -367,10 +372,11 @@
             // 
             // lbActions
             // 
+            lbActions.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbActions.AutoSize = true;
             lbActions.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbActions.ForeColor = Color.DimGray;
-            lbActions.Location = new Point(680, 12);
+            lbActions.Location = new Point(713, 12);
             lbActions.Name = "lbActions";
             lbActions.Size = new Size(70, 19);
             lbActions.TabIndex = 0;
@@ -378,10 +384,11 @@
             // 
             // btnNewService
             // 
+            btnNewService.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnNewService.BackColor = SystemColors.ButtonFace;
             btnNewService.FlatStyle = FlatStyle.Flat;
             btnNewService.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnNewService.Location = new Point(680, 38);
+            btnNewService.Location = new Point(713, 38);
             btnNewService.Name = "btnNewService";
             btnNewService.Size = new Size(120, 50);
             btnNewService.TabIndex = 0;
@@ -424,10 +431,11 @@
             // 
             // lbStatusFilter
             // 
+            lbStatusFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbStatusFilter.AutoSize = true;
             lbStatusFilter.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbStatusFilter.ForeColor = Color.DimGray;
-            lbStatusFilter.Location = new Point(560, 12);
+            lbStatusFilter.Location = new Point(605, 12);
             lbStatusFilter.Name = "lbStatusFilter";
             lbStatusFilter.Size = new Size(59, 19);
             lbStatusFilter.TabIndex = 0;
@@ -435,10 +443,11 @@
             // 
             // rbStatusAll
             // 
+            rbStatusAll.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             rbStatusAll.AutoSize = true;
             rbStatusAll.Checked = true;
             rbStatusAll.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            rbStatusAll.Location = new Point(560, 36);
+            rbStatusAll.Location = new Point(605, 36);
             rbStatusAll.Name = "rbStatusAll";
             rbStatusAll.Size = new Size(43, 21);
             rbStatusAll.TabIndex = 4;
@@ -449,9 +458,10 @@
             // 
             // rbStatusActive
             // 
+            rbStatusActive.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             rbStatusActive.AutoSize = true;
             rbStatusActive.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            rbStatusActive.Location = new Point(560, 57);
+            rbStatusActive.Location = new Point(605, 57);
             rbStatusActive.Name = "rbStatusActive";
             rbStatusActive.Size = new Size(83, 21);
             rbStatusActive.TabIndex = 5;
@@ -461,9 +471,10 @@
             // 
             // rbStatusInactive
             // 
+            rbStatusInactive.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             rbStatusInactive.AutoSize = true;
             rbStatusInactive.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            rbStatusInactive.Location = new Point(560, 78);
+            rbStatusInactive.Location = new Point(605, 78);
             rbStatusInactive.Name = "rbStatusInactive";
             rbStatusInactive.Size = new Size(74, 21);
             rbStatusInactive.TabIndex = 6;
@@ -473,10 +484,11 @@
             // 
             // lbUtility
             // 
+            lbUtility.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbUtility.AutoSize = true;
             lbUtility.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lbUtility.ForeColor = Color.DimGray;
-            lbUtility.Location = new Point(1080, 12);
+            lbUtility.Location = new Point(1095, 13);
             lbUtility.Name = "lbUtility";
             lbUtility.Size = new Size(67, 19);
             lbUtility.TabIndex = 0;
@@ -484,10 +496,11 @@
             // 
             // btnRefresh
             // 
+            btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnRefresh.BackColor = SystemColors.ButtonFace;
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRefresh.Location = new Point(1080, 38);
+            btnRefresh.Location = new Point(1095, 39);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(100, 25);
             btnRefresh.TabIndex = 7;
@@ -497,10 +510,11 @@
             // 
             // btnResetFilters
             // 
+            btnResetFilters.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnResetFilters.BackColor = SystemColors.ButtonFace;
             btnResetFilters.FlatStyle = FlatStyle.Flat;
             btnResetFilters.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnResetFilters.Location = new Point(1080, 66);
+            btnResetFilters.Location = new Point(1095, 67);
             btnResetFilters.Name = "btnResetFilters";
             btnResetFilters.Size = new Size(100, 25);
             btnResetFilters.TabIndex = 8;
@@ -519,25 +533,38 @@
             pnlGrid.Size = new Size(1350, 490);
             pnlGrid.TabIndex = 1;
             // 
+            // lbNoData
+            // 
+            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lbNoData.AutoSize = true;
+            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            lbNoData.ForeColor = Color.DarkGray;
+            lbNoData.Location = new Point(483, 374);
+            lbNoData.Name = "lbNoData";
+            lbNoData.Size = new Size(401, 50);
+            lbNoData.TabIndex = 5;
+            lbNoData.Text = "NO MATCHING DATA";
+            lbNoData.Visible = false;
+            // 
             // dgvServices
             // 
             dgvServices.AllowUserToAddRows = false;
             dgvServices.AllowUserToDeleteRows = false;
             dgvServices.AllowUserToResizeColumns = false;
             dgvServices.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(245, 248, 253);
-            dgvServices.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(245, 248, 253);
+            dgvServices.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvServices.BackgroundColor = Color.White;
             dgvServices.BorderStyle = BorderStyle.None;
             dgvServices.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(24, 60, 142);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(24, 60, 142);
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvServices.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(24, 60, 142);
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle5.ForeColor = Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(24, 60, 142);
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
+            dgvServices.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             dgvServices.ColumnHeadersHeight = 40;
             dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvServices.Columns.AddRange(new DataGridViewColumn[] { colId, colRoomNumber, colStatus, colRequestDate, colNameHu, colTypeHu, colDescHu, colQuantity, colPrice, colNameEn, colTypeEn, colDescEn });
@@ -632,8 +659,8 @@
             // 
             colPrice.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             colPrice.DataPropertyName = "Price";
-            dataGridViewCellStyle3.NullValue = null;
-            colPrice.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.NullValue = null;
+            colPrice.DefaultCellStyle = dataGridViewCellStyle6;
             colPrice.FillWeight = 10F;
             colPrice.HeaderText = "Price (HUF)";
             colPrice.Name = "colPrice";
@@ -1407,19 +1434,6 @@
             lbDeleteEditorHeader.Size = new Size(197, 20);
             lbDeleteEditorHeader.TabIndex = 0;
             lbDeleteEditorHeader.Text = "DELETE SERVICE BOOKING";
-            // 
-            // lbNoData
-            // 
-            lbNoData.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lbNoData.AutoSize = true;
-            lbNoData.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
-            lbNoData.ForeColor = Color.DarkGray;
-            lbNoData.Location = new Point(483, 374);
-            lbNoData.Name = "lbNoData";
-            lbNoData.Size = new Size(401, 50);
-            lbNoData.TabIndex = 5;
-            lbNoData.Text = "NO MATCHING DATA";
-            lbNoData.Visible = false;
             // 
             // ProductContol
             // 

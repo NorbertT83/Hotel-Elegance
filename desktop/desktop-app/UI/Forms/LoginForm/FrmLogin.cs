@@ -30,9 +30,7 @@ namespace Hotel_erp_Winforms_App.Forms
         {
             EmployeeService _employeeService = new EmployeeService();
 
-            loggedInEmployee = new Employee(
-
-                );
+            loggedInEmployee = new Employee();
 
             loggedInEmployee = await _employeeService.GetEmployeeByEmailAsync(tbEmail.Text.Trim().ToLower());
 

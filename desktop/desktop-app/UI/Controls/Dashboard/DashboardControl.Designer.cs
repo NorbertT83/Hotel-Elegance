@@ -728,7 +728,7 @@
             // llbChangePassword
             // 
             llbChangePassword.AutoSize = true;
-            llbChangePassword.Location = new Point(150, 391);
+            llbChangePassword.Location = new Point(146, 362);
             llbChangePassword.Name = "llbChangePassword";
             llbChangePassword.Size = new Size(112, 17);
             llbChangePassword.TabIndex = 18;
@@ -739,7 +739,7 @@
             // 
             // dtpBirthdate
             // 
-            dtpBirthdate.Location = new Point(110, 354);
+            dtpBirthdate.Location = new Point(106, 325);
             dtpBirthdate.MaxDate = new DateTime(2026, 9, 10, 0, 0, 0, 0);
             dtpBirthdate.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             dtpBirthdate.Name = "dtpBirthdate";
@@ -749,7 +749,7 @@
             // 
             // tbFname
             // 
-            tbFname.Location = new Point(189, 203);
+            tbFname.Location = new Point(185, 174);
             tbFname.MaxLength = 30;
             tbFname.Name = "tbFname";
             tbFname.PlaceholderText = "First Name";
@@ -758,7 +758,7 @@
             // 
             // tbAddress
             // 
-            tbAddress.Location = new Point(110, 323);
+            tbAddress.Location = new Point(106, 294);
             tbAddress.MaxLength = 255;
             tbAddress.Name = "tbAddress";
             tbAddress.PlaceholderText = "Zip, City, Street";
@@ -767,7 +767,7 @@
             // 
             // tbTaxNumber
             // 
-            tbTaxNumber.Location = new Point(110, 263);
+            tbTaxNumber.Location = new Point(106, 234);
             tbTaxNumber.MaxLength = 20;
             tbTaxNumber.Name = "tbTaxNumber";
             tbTaxNumber.PlaceholderText = "Tax Number";
@@ -776,7 +776,7 @@
             // 
             // tbEmail
             // 
-            tbEmail.Location = new Point(110, 233);
+            tbEmail.Location = new Point(106, 204);
             tbEmail.MaxLength = 64;
             tbEmail.Name = "tbEmail";
             tbEmail.PlaceholderText = "E-mail address";
@@ -785,7 +785,7 @@
             // 
             // tbLname
             // 
-            tbLname.Location = new Point(111, 203);
+            tbLname.Location = new Point(107, 174);
             tbLname.MaxLength = 30;
             tbLname.Name = "tbLname";
             tbLname.PlaceholderText = "Last Name";
@@ -856,9 +856,9 @@
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
             pictureBox1.Image = Properties.Resources.person_icon;
             pictureBox1.InitialImage = Properties.Resources.person_icon;
-            pictureBox1.Location = new Point(72, 56);
+            pictureBox1.Location = new Point(79, 45);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(126, 126);
+            pictureBox1.Size = new Size(110, 110);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 13;
             pictureBox1.TabStop = false;
@@ -878,7 +878,7 @@
             // 
             lbNameTitle.AutoSize = true;
             lbNameTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbNameTitle.Location = new Point(15, 206);
+            lbNameTitle.Location = new Point(11, 177);
             lbNameTitle.Name = "lbNameTitle";
             lbNameTitle.Size = new Size(48, 17);
             lbNameTitle.TabIndex = 1;
@@ -888,7 +888,7 @@
             // 
             lbNameValue.AutoSize = true;
             lbNameValue.Font = new Font("Segoe UI", 9.5F);
-            lbNameValue.Location = new Point(110, 206);
+            lbNameValue.Location = new Point(106, 177);
             lbNameValue.Name = "lbNameValue";
             lbNameValue.Size = new Size(63, 17);
             lbNameValue.TabIndex = 2;
@@ -898,7 +898,7 @@
             // 
             lbEmailTitle.AutoSize = true;
             lbEmailTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbEmailTitle.Location = new Point(15, 236);
+            lbEmailTitle.Location = new Point(11, 207);
             lbEmailTitle.Name = "lbEmailTitle";
             lbEmailTitle.Size = new Size(46, 17);
             lbEmailTitle.TabIndex = 3;
@@ -908,7 +908,7 @@
             // 
             lbEmailValue.AutoSize = true;
             lbEmailValue.Font = new Font("Segoe UI", 9.5F);
-            lbEmailValue.Location = new Point(110, 236);
+            lbEmailValue.Location = new Point(106, 207);
             lbEmailValue.Name = "lbEmailValue";
             lbEmailValue.Size = new Size(130, 17);
             lbEmailValue.TabIndex = 4;
@@ -918,7 +918,7 @@
             // 
             lbTaxNumberTitle.AutoSize = true;
             lbTaxNumberTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbTaxNumberTitle.Location = new Point(15, 266);
+            lbTaxNumberTitle.Location = new Point(11, 237);
             lbTaxNumberTitle.Name = "lbTaxNumberTitle";
             lbTaxNumberTitle.Size = new Size(88, 17);
             lbTaxNumberTitle.TabIndex = 5;
@@ -928,7 +928,7 @@
             // 
             lbTaxNumberValue.AutoSize = true;
             lbTaxNumberValue.Font = new Font("Segoe UI", 9.5F);
-            lbTaxNumberValue.Location = new Point(110, 266);
+            lbTaxNumberValue.Location = new Point(106, 237);
             lbTaxNumberValue.Name = "lbTaxNumberValue";
             lbTaxNumberValue.Size = new Size(78, 17);
             lbTaxNumberValue.TabIndex = 6;
@@ -938,7 +938,7 @@
             // 
             lbHolidaysLeftTitle.AutoSize = true;
             lbHolidaysLeftTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbHolidaysLeftTitle.Location = new Point(15, 296);
+            lbHolidaysLeftTitle.Location = new Point(11, 267);
             lbHolidaysLeftTitle.Name = "lbHolidaysLeftTitle";
             lbHolidaysLeftTitle.Size = new Size(94, 17);
             lbHolidaysLeftTitle.TabIndex = 7;
@@ -948,7 +948,7 @@
             // 
             lbHolidaysLeftValue.AutoSize = true;
             lbHolidaysLeftValue.Font = new Font("Segoe UI", 9.5F);
-            lbHolidaysLeftValue.Location = new Point(110, 296);
+            lbHolidaysLeftValue.Location = new Point(106, 267);
             lbHolidaysLeftValue.Name = "lbHolidaysLeftValue";
             lbHolidaysLeftValue.Size = new Size(22, 17);
             lbHolidaysLeftValue.TabIndex = 8;
@@ -958,7 +958,7 @@
             // 
             lbAddressTitle.AutoSize = true;
             lbAddressTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbAddressTitle.Location = new Point(15, 326);
+            lbAddressTitle.Location = new Point(11, 297);
             lbAddressTitle.Name = "lbAddressTitle";
             lbAddressTitle.Size = new Size(61, 17);
             lbAddressTitle.TabIndex = 9;
@@ -968,7 +968,7 @@
             // 
             lbAddressValue.AutoSize = true;
             lbAddressValue.Font = new Font("Segoe UI", 9.5F);
-            lbAddressValue.Location = new Point(110, 326);
+            lbAddressValue.Location = new Point(106, 297);
             lbAddressValue.Name = "lbAddressValue";
             lbAddressValue.Size = new Size(105, 17);
             lbAddressValue.TabIndex = 10;
@@ -978,7 +978,7 @@
             // 
             lbBirthdateTitle.AutoSize = true;
             lbBirthdateTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbBirthdateTitle.Location = new Point(15, 356);
+            lbBirthdateTitle.Location = new Point(11, 327);
             lbBirthdateTitle.Name = "lbBirthdateTitle";
             lbBirthdateTitle.Size = new Size(69, 17);
             lbBirthdateTitle.TabIndex = 11;
@@ -988,7 +988,7 @@
             // 
             lbBirthdateValue.AutoSize = true;
             lbBirthdateValue.Font = new Font("Segoe UI", 9.5F);
-            lbBirthdateValue.Location = new Point(110, 356);
+            lbBirthdateValue.Location = new Point(106, 327);
             lbBirthdateValue.Name = "lbBirthdateValue";
             lbBirthdateValue.Size = new Size(74, 17);
             lbBirthdateValue.TabIndex = 12;
