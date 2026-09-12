@@ -522,12 +522,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 if (_selectedRequestedService == null)
                 {
-                    throw new InvalidOperationException("No requested service selected.");
+                    MBSelectionRequired();
+
+                    return;
                 }
 
-                MBSelectionRequired(_selectedRequestedService);
-
-                if (_selectedRequestedService != null)
+                else
                 {
                     pnlEditor.Visible = false;
                     pnlNewServiceBooking.Visible = false;
@@ -540,15 +540,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     cbNewStatus.Items.Remove("Created");
                     cbNewStatus.Items.Remove("Deleted");
 
-                    if (_selectedRequestedService != null)
+                    cbNewStatus.Text = _selectedRequestedService.CurrentServiceStatus switch
                     {
-                        cbNewStatus.Text = _selectedRequestedService.CurrentServiceStatus switch
-                        {
-                            ServiceStatus.created => "Pending",
-                            ServiceStatus.pending => "Completed",
-                            _ => string.Empty
-                        };
-                    }
+                        ServiceStatus.created => "Pending",
+                        ServiceStatus.pending => "Completed",
+                        _ => string.Empty
+                    };
                 }
             }
 
@@ -559,13 +556,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
                 pnlEditor.Visible = true;
 
-                if (_selectedService == null)
+                if(_selectedService == null)
                 {
-                    throw new InvalidOperationException("No service selected.");
+                    MBSelectionRequired();
+
+                    return;
                 }
-
-                MBSelectionRequired(_selectedService);
-
                 SetBoxesReadonlibility(false);
 
                 tabControlLang.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -586,14 +582,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // AKTÍV SERVICE BOOKINGS
             if (rbStatusActive.Checked)
             {
-                if (_selectedRequestedService == null)
+                if(_selectedRequestedService == null)
                 {
-                    throw new InvalidOperationException("No requested service selected.");
+                    MBSelectionRequired();
+                    return;
                 }
 
-                MBSelectionRequired(_selectedRequestedService);
-
-                if (_selectedRequestedService != null)
+                else
                 {
                     pnlEditor.Visible = false;
                     pnlNewServiceBooking.Visible = false;
@@ -611,13 +606,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // MINDEN SERVICE
             else
             {
-                if (_selectedService == null)
+                if(_selectedService == null)
                 {
-                    throw new InvalidOperationException("No service selected.");
+                    MBSelectionRequired();
+
+                    return;
                 }
-
-                MBSelectionRequired(_selectedService);
-
 
                 DialogResult result = MessageBox.Show(
                     "Are you sure you want to delete this service?",
@@ -1258,19 +1252,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             lbActiveServices.Text = "In progress: " + activesList.Count();
         }
 
-        private void MBSelectionRequired(object obj)
+        private void MBSelectionRequired()
         {
-            if (obj == null)
-            {
-                MessageBox.Show(
-                    "You must select a service first!",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-
-                return;
-            }
+            MessageBox.Show(
+                "You must select a service first!",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
         }
 
         private void MBCantDeleteService(RequestedService service)
