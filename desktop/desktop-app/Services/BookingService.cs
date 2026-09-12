@@ -949,6 +949,7 @@ namespace Hotel_erp_Winforms_App.Services
                                     0.05m,
                                     grossPrice
                                 );
+
                                 billingItems.Add(roomItem);
                             }
                         }
@@ -1315,6 +1316,11 @@ namespace Hotel_erp_Winforms_App.Services
 
             if (service != null)
             {
+                if(service.NameHu == "Szoba")
+                {
+                    serviceList.RemoveAll(s => s.NameHu == "Szoba");
+                }
+
                 serviceList.Add(service);
             }
         }
