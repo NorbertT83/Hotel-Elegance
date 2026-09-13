@@ -43,7 +43,6 @@
             btnEditGuestData = new Button();
             btnSaveGuest = new Button();
             btnAddGuest = new Button();
-            button1 = new Button();
             ckbEditData = new CheckBox();
             dtpBirthdate = new DateTimePicker();
             cbNationality = new ComboBox();
@@ -216,7 +215,6 @@
             tpPersonalData.Controls.Add(btnEditGuestData);
             tpPersonalData.Controls.Add(btnSaveGuest);
             tpPersonalData.Controls.Add(btnAddGuest);
-            tpPersonalData.Controls.Add(button1);
             tpPersonalData.Controls.Add(ckbEditData);
             tpPersonalData.Controls.Add(dtpBirthdate);
             tpPersonalData.Controls.Add(cbNationality);
@@ -263,7 +261,7 @@
             // 
             cbGuests.DropDownStyle = ComboBoxStyle.DropDownList;
             cbGuests.FormattingEnabled = true;
-            cbGuests.Location = new Point(272, 110);
+            cbGuests.Location = new Point(308, 118);
             cbGuests.Name = "cbGuests";
             cbGuests.Size = new Size(88, 23);
             cbGuests.TabIndex = 15;
@@ -274,7 +272,7 @@
             btnEditGuestData.FlatAppearance.BorderSize = 0;
             btnEditGuestData.FlatStyle = FlatStyle.Flat;
             btnEditGuestData.Image = Properties.Resources.Edit_25;
-            btnEditGuestData.Location = new Point(441, 106);
+            btnEditGuestData.Location = new Point(477, 114);
             btnEditGuestData.Name = "btnEditGuestData";
             btnEditGuestData.Size = new Size(33, 29);
             btnEditGuestData.TabIndex = 14;
@@ -286,7 +284,7 @@
             btnSaveGuest.FlatAppearance.BorderSize = 0;
             btnSaveGuest.FlatStyle = FlatStyle.Flat;
             btnSaveGuest.Image = Properties.Resources.Save;
-            btnSaveGuest.Location = new Point(365, 106);
+            btnSaveGuest.Location = new Point(401, 114);
             btnSaveGuest.Name = "btnSaveGuest";
             btnSaveGuest.Size = new Size(33, 29);
             btnSaveGuest.TabIndex = 14;
@@ -298,27 +296,16 @@
             btnAddGuest.FlatAppearance.BorderSize = 0;
             btnAddGuest.FlatStyle = FlatStyle.Flat;
             btnAddGuest.Image = Properties.Resources.personadd;
-            btnAddGuest.Location = new Point(403, 106);
+            btnAddGuest.Location = new Point(439, 114);
             btnAddGuest.Name = "btnAddGuest";
             btnAddGuest.Size = new Size(33, 29);
             btnAddGuest.TabIndex = 14;
             btnAddGuest.UseVisualStyleBackColor = true;
             btnAddGuest.Click += btnAddGuest_Click;
             // 
-            // button1
-            // 
-            button1.FlatAppearance.BorderSize = 0;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Image = Properties.Resources.print;
-            button1.Location = new Point(479, 106);
-            button1.Name = "button1";
-            button1.Size = new Size(33, 29);
-            button1.TabIndex = 14;
-            button1.UseVisualStyleBackColor = true;
-            // 
             // ckbEditData
             // 
-            ckbEditData.Location = new Point(212, 112);
+            ckbEditData.Location = new Point(248, 120);
             ckbEditData.Name = "ckbEditData";
             ckbEditData.Size = new Size(46, 19);
             ckbEditData.TabIndex = 13;
@@ -1820,7 +1807,6 @@
         private Label lbTaxAmount;
         private Label lbNetAmount;
         private CheckBox ckbEditData;
-        private Button button1;
         private Label lbCurrentPage;
         private Label label43;
         private Panel pnlChosenRoomCardHolder;

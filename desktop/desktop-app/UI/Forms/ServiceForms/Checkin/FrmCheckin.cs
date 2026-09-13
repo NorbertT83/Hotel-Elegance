@@ -11,11 +11,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
     {
         #region TODO:
 
-        /*
-            - Csak akkor lehessen rányomni egy foglalásnál a check-inre, ha aznap van az érkezési dátum
-            - Ha már létezik a vendég az adatbázisban, akkor ne mentse újra a check in confirm
-        */
-
         #endregion
 
         #region variables
@@ -55,6 +50,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             btnBack.Visible = false;
             btnConfirm.Visible = false;
             ckbEditData.Visible = false;
+            ckbEditData.Checked = true;
 
             #region Personal Data
 
@@ -94,15 +90,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             cbNationality.SelectedItem = "Hungary";
             dtpBirthdate.MaxDate = DateTime.Today;
-
-            tbFirstName.ReadOnly = !string.IsNullOrEmpty(tbFirstName.Text);
-            tbLastName.ReadOnly = !string.IsNullOrEmpty(tbLastName.Text);
-            tbEmail.ReadOnly = !string.IsNullOrEmpty(tbEmail.Text);
-            tbCarPlateNumber.ReadOnly = !string.IsNullOrEmpty(tbCarPlateNumber.Text);
-            tbZipCode.ReadOnly = !string.IsNullOrEmpty(tbZipCode.Text);
-            tbCity.ReadOnly = !string.IsNullOrEmpty(tbCity.Text);
-            tbStreet.ReadOnly = !string.IsNullOrEmpty(tbStreet.Text);
-            tbDocumentNumber.ReadOnly = !string.IsNullOrEmpty(tbDocumentNumber.Text);
 
             #endregion
 
@@ -213,6 +200,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             tbCity.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbCity.Text);
             tbStreet.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbStreet.Text);
             tbDocumentNumber.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbDocumentNumber.Text);
+            dtpBirthdate.Enabled = isEditing;
+            cbNationality.Enabled = isEditing;
         }
 
         private bool guestIsSaved = true;
@@ -227,7 +216,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 return;
             }
 
-            cbGuests.SelectedIndex = -1;
+            cbGuests.Items.Add($"Guest {guestsOfBooking.Count + 1}");
+            cbGuests.SelectedIndex = cbGuests.Items.Count - 1;
+            ckbEditData.Checked = true;
 
             ClearInputFields();
 
@@ -238,16 +229,19 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             dataModified = false;
             guestIsSaved = false;
-            ckbEditData.Checked = true;
+
+            cbGuests.Enabled = false;
+            btnAddGuest.Enabled = false;
         }
 
         private void btnEditGuestData_Click(object sender, EventArgs e)
         {
             if (cbGuests.SelectedIndex < 0) return;
 
+            ckbEditData.Checked = true;
+
             dataModified = true;
             guestIsSaved = false;
-            ckbEditData.Checked = true;
         }
 
         private async void btnSaveGuest_Click(object sender, EventArgs e)
@@ -295,8 +289,11 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 var newGuest = GetGuestFromInput();
                 guestsOfBooking.Add(newGuest);
 
-                int nextGuestNumber = guestsOfBooking.Count;
-                cbGuests.Items.Add($"Guest {nextGuestNumber}");
+                if(guestsOfBooking.Count == 1)
+                {
+                    cbGuests.Items.Add($"Guest 1");
+                }
+
                 cbGuests.SelectedIndex = cbGuests.Items.Count - 1;
             }
 
@@ -308,10 +305,13 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             dataModified = false;
             guestIsSaved = true;
-            ckbEditData.Checked = false;
             cbGuests.Visible = true;
 
             MessageBox.Show("Guest details saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            cbGuests.Enabled = true;
+            btnAddGuest.Enabled = true;
+            ckbEditData.Checked = false;
         }
 
         private void cbGuests_SelectedIndexChanged(object sender, EventArgs e)
@@ -326,7 +326,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 FillGuestPersonalData(index);
                 guestIsSaved = true;
                 dataModified = false;
-                ckbEditData.Checked = false;
             }
         }
 
@@ -385,9 +384,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 _editingGuestId = existingGuest.Id ?? 0;
 
                 tbEmail.Text = existingGuest.Email;
-                tbDocumentNumber.Text = string.IsNullOrWhiteSpace(existingGuest.IdCardNumber)
-                    ? await _bookingService.GetIdCardNumberAsync(selectedBooking)
-                    : existingGuest.IdCardNumber;
+                tbDocumentNumber.Text = existingGuest.IdCardNumber;
                 tbFirstName.Text = existingGuest.FName;
                 tbLastName.Text = existingGuest.LName;
                 dtpBirthdate.Value = existingGuest.DateOfBirth ?? DateTime.Today;

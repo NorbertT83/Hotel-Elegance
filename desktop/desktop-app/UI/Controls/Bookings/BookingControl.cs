@@ -1,4 +1,5 @@
-﻿using Hotel_erp_Winforms_App.Models;
+﻿using Hotel_erp_Winforms_App.Helpers;
+using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.UI.Forms;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
@@ -13,10 +14,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         }
 
         #region TODO
-        /*
-         * 
-         * 
-        */
         #endregion
 
         #region variables
@@ -235,16 +232,33 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         }
 
         // 8.
-        private void btnCancel_Click(object sender, EventArgs e)
+        private async void btnCancel_Click(object sender, EventArgs e)
         {
             if (selectedBooking != null)
             {
                 DialogResult res = MessageBox.Show($"Are you sure you want to cancel booking #{selectedBooking.Id}?", "Cancel Booking", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (res == DialogResult.Yes)
                 {
-                    MessageBox.Show("Booking cancelled successfully.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadBookings();
-                    ShowInfo();
+                    try
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+
+                        var deletedStorage = new DeletedBookingStorageService();
+                        await deletedStorage.SaveDeletedBookingAsync(selectedBooking);
+
+                        MessageBox.Show("Booking successfully deleted and archived!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        var ch = new CommonHelper();
+                        ch.MBErrorMessage(ex);
+                    }
+                    finally
+                    {
+                        Cursor.Current = Cursors.Default;
+                        LoadBookings();
+                        ShowInfo();
+                    }
                 }
             }
             else
@@ -271,7 +285,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                _bookingsList = await bookingService.LoadDgvAsync("SELECT * FROM bookings");
+
+                _bookingsList = await bookingService.SearchBookings(0, "", 0, 0, DateTime.Now, DateTime.Now);
 
                 dgvBookings.AutoGenerateColumns = false;
                 dgvBookings.DataSource = _bookingsList;

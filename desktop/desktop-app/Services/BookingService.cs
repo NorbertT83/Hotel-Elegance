@@ -95,9 +95,86 @@ namespace Hotel_erp_Winforms_App.Services
         // 2.
         public async Task<List<Booking>> SearchBookings(int fieldIndex, string searchText, int statusIndex, int spanIndex, DateTime fromDate, DateTime toDate)
         {
+            if (statusIndex == 4)
+            {
+                var deletedStorage = new DeletedBookingStorageService();
+                List<Booking> deletedBookings = await deletedStorage.LoadDeletedBookingsAsync();
+
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    string search = searchText.Trim().ToLower();
+
+                    var gs = new GuestService();
+                    var allGuests = await gs.GetAllGuestsFromDbAsync();
+
+                    deletedBookings = deletedBookings.Where(b =>
+                    {
+                        var guestIds = new List<int>();
+                        if (b.GuestId > 0) guestIds.Add(b.GuestId);
+                        if (b.GuestId2 > 0) guestIds.Add(b.GuestId2.Value);
+                        if (b.GuestId3 > 0) guestIds.Add(b.GuestId3.Value);
+                        if (b.GuestId4 > 0) guestIds.Add(b.GuestId4.Value);
+
+                        var matchingGuests = allGuests.Where(g => guestIds.Contains(g.Id ?? 0)).ToList();
+
+                        bool nameMatches = matchingGuests.Any(g =>
+                            (!string.IsNullOrEmpty(g.FName) && g.FName.ToLower().Contains(search)) ||
+                            (!string.IsNullOrEmpty(g.LName) && g.LName.ToLower().Contains(search))
+                        );
+
+                        return (fieldIndex == 1 && nameMatches) ||
+                               (fieldIndex == 2 && b.Id.ToString().Contains(search)) ||
+                               (fieldIndex == 3 && b.RoomNumber.ToString().Contains(search)) ||
+                               (fieldIndex == 4 && b.SelectedRoomType.ToString().ToLower().Contains(search)) ||
+                               (fieldIndex == 9 && b.SelectedCateringLevel.ToString().ToLower().Contains(search)) ||
+                               (fieldIndex <= 0 && (nameMatches || b.Id.ToString().Contains(search)));
+                    }).ToList();
+                }
+
+                DateTime deletedStartRange = fromDate.Date;
+                DateTime deletedEndRange = toDate.Date.AddDays(1).AddSeconds(-1);
+
+                switch (spanIndex)
+                {
+                    case 1: // Kezdés alapján
+                        deletedBookings = deletedBookings
+                            .Where(b => b.BeginningOfStay >= deletedStartRange && b.BeginningOfStay <= deletedEndRange)
+                            .ToList();
+                        break;
+                    case 2: // Távozás alapján
+                        deletedBookings = deletedBookings
+                            .Where(b => b.EndOfStay >= deletedStartRange && b.EndOfStay <= deletedEndRange)
+                            .ToList();
+                        break;
+                    case 3: // Teljes tartomány
+                        deletedBookings = deletedBookings
+                            .Where(b => b.BeginningOfStay >= deletedStartRange && b.EndOfStay <= deletedEndRange)
+                            .ToList();
+                        break;
+                }
+
+                return deletedBookings;
+            }
+
             string joins = "";
             string whereClause = " WHERE 1=1 ";
             var parameters = new Dictionary<string, object>();
+
+            var deletedService = new DeletedBookingStorageService();
+            List<Booking> deletedList = await deletedService.LoadDeletedBookingsAsync();
+
+            if (deletedList.Count > 0)
+            {
+                var validDeletedIds = deletedList
+                    .Where(b => !string.IsNullOrWhiteSpace(b.Id))
+                    .Select(b => $"'{b.Id.Replace("'", "''")}'")
+                    .ToList();
+
+                if (validDeletedIds.Count > 0)
+                {
+                    whereClause += $" AND bookings.id NOT IN ({string.Join(",", validDeletedIds)}) ";
+                }
+            }
 
             // 1. MEZŐ KIVÁLASZTÁS
             if (!string.IsNullOrEmpty(searchText))
@@ -170,6 +247,7 @@ namespace Hotel_erp_Winforms_App.Services
                 case 3:
                     whereClause += " AND checkout IS NOT NULL";
                     break;
+
             }
 
             // 3. IDŐSZAK KIVÁLASZTÁS

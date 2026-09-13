@@ -30,7 +30,6 @@
             DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
             pnlTop = new Panel();
             btnCancel = new Button();
-            btnEdit = new Button();
             btnCheckout = new Button();
             btnCheckin = new Button();
             btnAddBooking = new Button();
@@ -111,7 +110,6 @@
             pnlTop.BackColor = Color.FromArgb(245, 245, 248);
             pnlTop.BorderStyle = BorderStyle.FixedSingle;
             pnlTop.Controls.Add(btnCancel);
-            pnlTop.Controls.Add(btnEdit);
             pnlTop.Controls.Add(btnCheckout);
             pnlTop.Controls.Add(btnCheckin);
             pnlTop.Controls.Add(btnAddBooking);
@@ -143,27 +141,13 @@
             btnCancel.FlatStyle = FlatStyle.Flat;
             btnCancel.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
             btnCancel.ForeColor = Color.DarkRed;
-            btnCancel.Location = new Point(1230, 44);
+            btnCancel.Location = new Point(1115, 46);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(105, 28);
             btnCancel.TabIndex = 10;
             btnCancel.Text = "Cancel Stay";
             btnCancel.UseVisualStyleBackColor = false;
             btnCancel.Click += btnCancel_Click;
-            // 
-            // btnEdit
-            // 
-            btnEdit.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnEdit.BackColor = SystemColors.ButtonFace;
-            btnEdit.FlatStyle = FlatStyle.Flat;
-            btnEdit.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-            btnEdit.Location = new Point(1115, 44);
-            btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(105, 28);
-            btnEdit.TabIndex = 9;
-            btnEdit.Text = "Edit Booking";
-            btnEdit.UseVisualStyleBackColor = false;
-            btnEdit.Click += btnEdit_Click;
             // 
             // btnCheckout
             // 
@@ -215,7 +199,7 @@
             btnRefresh.BackColor = SystemColors.ButtonFace;
             btnRefresh.FlatStyle = FlatStyle.Flat;
             btnRefresh.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
-            btnRefresh.Location = new Point(980, 44);
+            btnRefresh.Location = new Point(980, 46);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(125, 28);
             btnRefresh.TabIndex = 11;
@@ -308,7 +292,7 @@
             // 
             cbStatusFilter.DropDownStyle = ComboBoxStyle.DropDownList;
             cbStatusFilter.FormattingEnabled = true;
-            cbStatusFilter.Items.AddRange(new object[] { "All", "Upcoming", "Current", "Past" });
+            cbStatusFilter.Items.AddRange(new object[] { "All", "Upcoming", "Current", "Past", "Canceled" });
             cbStatusFilter.Location = new Point(540, 16);
             cbStatusFilter.Name = "cbStatusFilter";
             cbStatusFilter.Size = new Size(140, 25);
@@ -949,7 +933,6 @@
         private Button btnAddBooking;
         private Button btnCheckin;
         private Button btnCheckout;
-        private Button btnEdit;
         private Button btnCancel;
 
         private Panel pnlKpiArrivals;
