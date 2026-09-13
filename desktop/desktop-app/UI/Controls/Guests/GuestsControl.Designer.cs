@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using System;
 
 namespace Hotel_erp_Winforms_App.UI.Controls
@@ -95,8 +94,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlEditor = new Panel();
             dtpBirthdate = new DateTimePicker();
             btnSaveGuest = new Button();
-            tbNotes = new TextBox();
-            lbNotesTitle = new Label();
             cbCategory = new ComboBox();
             lbCountryTitle = new Label();
             lbBirthdateTitle = new Label();
@@ -248,6 +245,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // txtSearch
             // 
             txtSearch.Location = new Point(73, 35);
+            txtSearch.MaxLength = 64;
             txtSearch.Name = "txtSearch";
             txtSearch.Size = new Size(180, 25);
             txtSearch.TabIndex = 1;
@@ -671,8 +669,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             pnlEditor.BorderStyle = BorderStyle.FixedSingle;
             pnlEditor.Controls.Add(dtpBirthdate);
             pnlEditor.Controls.Add(btnSaveGuest);
-            pnlEditor.Controls.Add(tbNotes);
-            pnlEditor.Controls.Add(lbNotesTitle);
             pnlEditor.Controls.Add(cbCategory);
             pnlEditor.Controls.Add(lbCountryTitle);
             pnlEditor.Controls.Add(lbBirthdateTitle);
@@ -701,12 +697,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             dtpBirthdate.Format = DateTimePickerFormat.Short;
             dtpBirthdate.Location = new Point(15, 285);
-            dtpBirthdate.MaxDate = new DateTime(2026, 8, 27, 0, 0, 0, 0);
-            dtpBirthdate.MinDate = new DateTime(1910, 1, 1, 0, 0, 0, 0);
+            dtpBirthdate.MinDate = new DateTime(1900, 1, 1, 0, 0, 0, 0);
             dtpBirthdate.Name = "dtpBirthdate";
             dtpBirthdate.Size = new Size(165, 25);
             dtpBirthdate.TabIndex = 17;
-            dtpBirthdate.Value = new DateTime(2026, 8, 27, 0, 0, 0, 0);
             // 
             // btnSaveGuest
             // 
@@ -723,32 +717,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             btnSaveGuest.UseVisualStyleBackColor = false;
             btnSaveGuest.Click += btnSaveGuest_Click;
             // 
-            // tbNotes
-            // 
-            tbNotes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tbNotes.Location = new Point(15, 340);
-            tbNotes.Multiline = true;
-            tbNotes.Name = "tbNotes";
-            tbNotes.ScrollBars = ScrollBars.Vertical;
-            tbNotes.Size = new Size(320, 142);
-            tbNotes.TabIndex = 11;
-            // 
-            // lbNotesTitle
-            // 
-            lbNotesTitle.AutoSize = true;
-            lbNotesTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbNotesTitle.Location = new Point(15, 320);
-            lbNotesTitle.Name = "lbNotesTitle";
-            lbNotesTitle.Size = new Size(164, 17);
-            lbNotesTitle.TabIndex = 13;
-            lbNotesTitle.Text = "Special Requests / Notes:";
-            // 
             // cbCategory
             // 
             cbCategory.DropDownStyle = ComboBoxStyle.DropDownList;
             cbCategory.FormattingEnabled = true;
             cbCategory.Items.AddRange(new object[] { "Standard", "VIP", "Corporate" });
-            cbCategory.Location = new Point(15, 285);
+            cbCategory.Location = new Point(15, 340);
             cbCategory.Name = "cbCategory";
             cbCategory.Size = new Size(320, 25);
             cbCategory.TabIndex = 10;
@@ -777,7 +751,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             lbCategoryTitle.AutoSize = true;
             lbCategoryTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lbCategoryTitle.Location = new Point(15, 265);
+            lbCategoryTitle.Location = new Point(15, 320);
             lbCategoryTitle.Name = "lbCategoryTitle";
             lbCategoryTitle.Size = new Size(107, 17);
             lbCategoryTitle.TabIndex = 11;
@@ -786,6 +760,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbCountry
             // 
             tbCountry.Location = new Point(185, 285);
+            tbCountry.MaxLength = 50;
             tbCountry.Name = "tbCountry";
             tbCountry.PlaceholderText = "Country";
             tbCountry.Size = new Size(150, 25);
@@ -795,6 +770,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbStreet
             // 
             tbStreet.Location = new Point(185, 230);
+            tbStreet.MaxLength = 50;
             tbStreet.Name = "tbStreet";
             tbStreet.PlaceholderText = "Street address";
             tbStreet.Size = new Size(150, 25);
@@ -803,6 +779,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbCity
             // 
             tbCity.Location = new Point(60, 230);
+            tbCity.MaxLength = 40;
             tbCity.Name = "tbCity";
             tbCity.PlaceholderText = "City";
             tbCity.Size = new Size(120, 25);
@@ -812,6 +789,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbZip
             // 
             tbZip.Location = new Point(15, 230);
+            tbZip.MaxLength = 10;
             tbZip.Name = "tbZip";
             tbZip.PlaceholderText = "Zip";
             tbZip.Size = new Size(40, 25);
@@ -821,6 +799,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbAddress
             // 
             tbAddress.Location = new Point(15, 230);
+            tbAddress.MaxLength = 100;
             tbAddress.Name = "tbAddress";
             tbAddress.Size = new Size(320, 25);
             tbAddress.TabIndex = 9;
@@ -838,6 +817,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbIdCard
             // 
             tbIdCard.Location = new Point(15, 175);
+            tbIdCard.MaxLength = 20;
             tbIdCard.Name = "tbIdCard";
             tbIdCard.PlaceholderText = "ID123456";
             tbIdCard.Size = new Size(320, 25);
@@ -856,6 +836,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbEmail
             // 
             tbEmail.Location = new Point(15, 120);
+            tbEmail.MaxLength = 64;
             tbEmail.Name = "tbEmail";
             tbEmail.PlaceholderText = "example@gmail.com";
             tbEmail.Size = new Size(320, 25);
@@ -874,6 +855,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbLname
             // 
             tbLname.Location = new Point(180, 65);
+            tbLname.MaxLength = 50;
             tbLname.Name = "tbLname";
             tbLname.PlaceholderText = "Last name";
             tbLname.Size = new Size(155, 25);
@@ -883,6 +865,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbFname
             // 
             tbFname.Location = new Point(15, 65);
+            tbFname.MaxLength = 50;
             tbFname.Name = "tbFname";
             tbFname.PlaceholderText = "First name";
             tbFname.Size = new Size(155, 25);
@@ -892,6 +875,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbFullName
             // 
             tbFullName.Location = new Point(15, 65);
+            tbFullName.MaxLength = 100;
             tbFullName.Name = "tbFullName";
             tbFullName.Size = new Size(320, 25);
             tbFullName.TabIndex = 6;
@@ -1001,8 +985,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private TextBox tbAddress;
         private Label lbCategoryTitle;
         private ComboBox cbCategory;
-        private Label lbNotesTitle;
-        private TextBox tbNotes;
         private Button btnSaveGuest;
         private DataGridViewTextBoxColumn colGuestId;
         private DataGridViewTextBoxColumn colFirstName;

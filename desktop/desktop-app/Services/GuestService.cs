@@ -42,6 +42,7 @@ namespace Hotel_erp_Winforms_App.Services
         {
             List<Guest> guests = new List<Guest>();
             int loyaltyLevel = GetLoyaltyLevelBySelectedCategory(loyalty);
+            search = (search ?? string.Empty).Trim();
 
             string query = @"
                 SELECT * 
@@ -82,13 +83,59 @@ namespace Hotel_erp_Winforms_App.Services
             return guests;
         }
 
+        public async Task<bool> IsEmailAlreadyUsedAsync(string email, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return false;
+
+            string query = "SELECT COUNT(1) FROM guests WHERE LOWER(email) = LOWER(@email)"
+                           + (excludeId.HasValue ? " AND id != @id;" : ";");
+
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", email.Trim());
+                    if (excludeId.HasValue)
+                    {
+                        cmd.Parameters.AddWithValue("@id", excludeId.Value);
+                    }
+                    long count = Convert.ToInt64(await cmd.ExecuteScalarAsync());
+                    return count > 0;
+                }
+            }
+        }
+
+        public async Task<bool> IsIdCardAlreadyUsedAsync(string idCardNumber, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(idCardNumber)) return false;
+
+            string query = "SELECT COUNT(1) FROM guests WHERE LOWER(id_card_number) = LOWER(@idCard)"
+                           + (excludeId.HasValue ? " AND id != @id;" : ";");
+
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@idCard", idCardNumber.Trim());
+                    if (excludeId.HasValue)
+                    {
+                        cmd.Parameters.AddWithValue("@id", excludeId.Value);
+                    }
+                    long count = Convert.ToInt64(await cmd.ExecuteScalarAsync());
+                    return count > 0;
+                }
+            }
+        }
+
         public async Task SaveGuestToDatabaseAsync(Guest g)
         {
             string query = @"
                 INSERT INTO guests
                     (email, id_card_number, fname, lname, date_of_birth, country, zip_code, city, street, car_plate_number)
                 VALUES
-                    (@email, @id_card_number, @fname, @lname, @birthDate, @country, @zip, @city, @street, @carPlate)
+                    (@email, @id_card_number, @fname, @lname, @birthDate, @country, @zip, @city, @street, @carPlate);
             ";
 
             await using (MySqlConnection conn = new MySqlConnection(_connectionString))
@@ -97,16 +144,16 @@ namespace Hotel_erp_Winforms_App.Services
 
                 await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@email", g.Email);
-                    cmd.Parameters.AddWithValue("@id_card_number", g.IdCardNumber ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@fname", g.FName);
-                    cmd.Parameters.AddWithValue("@lname", g.LName);
+                    cmd.Parameters.AddWithValue("@email", g.Email.Trim());
+                    cmd.Parameters.AddWithValue("@id_card_number", string.IsNullOrWhiteSpace(g.IdCardNumber) ? (object)DBNull.Value : g.IdCardNumber.Trim());
+                    cmd.Parameters.AddWithValue("@fname", g.FName.Trim());
+                    cmd.Parameters.AddWithValue("@lname", g.LName.Trim());
                     cmd.Parameters.AddWithValue("@birthDate", g.DateOfBirth == null ? DBNull.Value : g.DateOfBirth);
-                    cmd.Parameters.AddWithValue("@country", g.Country);
-                    cmd.Parameters.AddWithValue("@zip", g.ZipCode);
-                    cmd.Parameters.AddWithValue("@city", g.City);
-                    cmd.Parameters.AddWithValue("@street", g.Street);
-                    cmd.Parameters.AddWithValue("@carPlate", g.CarPlateNumber ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@country", g.Country.Trim());
+                    cmd.Parameters.AddWithValue("@zip", g.ZipCode.Trim());
+                    cmd.Parameters.AddWithValue("@city", g.City.Trim());
+                    cmd.Parameters.AddWithValue("@street", g.Street.Trim());
+                    cmd.Parameters.AddWithValue("@carPlate", string.IsNullOrWhiteSpace(g.CarPlateNumber) ? (object)DBNull.Value : g.CarPlateNumber.Trim());
 
                     await cmd.ExecuteNonQueryAsync();
                 }

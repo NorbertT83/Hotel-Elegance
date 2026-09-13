@@ -20,9 +20,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private List<Guest> guests = new List<Guest>();
         private List<Service> services = new List<Service>();
-        private readonly List<Service> allServices = new List<Service>();
-
-        private FrmCheckin _frmCheckin = new FrmCheckin();
 
         private int nightsCount = 1;
         private int guestCount = 1;
@@ -33,8 +30,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             Child,
             Adult
         }
-
-        private StringBuilder subSelectedRoomString = new StringBuilder();
 
         #endregion
 

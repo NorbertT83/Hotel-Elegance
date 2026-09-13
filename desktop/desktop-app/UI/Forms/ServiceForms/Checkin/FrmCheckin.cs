@@ -29,6 +29,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         public List<BillingItem> billingItems = new List<BillingItem>();
         public List<Room> selectedRooms;
         public List<Guest> guestsOfBooking = new List<Guest>();
+        public List<Guest> dbGuestsOfBooking = new List<Guest>();
 
         private bool _isRequestInitialized = false;
 
@@ -57,6 +58,34 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             #region Personal Data
 
+            var gs = new GuestService();
+
+            if(selectedBooking != null)
+            {
+                var list = await gs.GetAllGuestsFromDbAsync();
+
+                int?[] guestIds = new int?[]
+                {
+                    selectedBooking.GuestId,
+                    selectedBooking.GuestId2,
+                    selectedBooking.GuestId3,
+                    selectedBooking.GuestId4
+                };
+
+                foreach (var guestId in guestIds)
+                {
+                    if (guestId.HasValue && guestId.Value != 0)
+                    {
+                        var matchingGuest = list.FirstOrDefault(g => g.Id == guestId.Value);
+
+                        if (matchingGuest != null)
+                        {
+                            dbGuestsOfBooking.Add(matchingGuest);
+                        }
+                    }
+                }
+            }
+
             lbCurrentPage.Text = "1/5";
             cbGuests.Visible = false;
 
@@ -76,10 +105,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             tbDocumentNumber.ReadOnly = !string.IsNullOrEmpty(tbDocumentNumber.Text);
 
             #endregion
-
-            // FOR TESTING!!!
-            tbDocumentNumber.Text = "adsv";
-            // --------------
 
             #region Error Handler
             using (var ms = new System.IO.MemoryStream(Properties.Resources.error))
@@ -178,168 +203,153 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void ckbEditData_CheckedChanged(object sender, EventArgs e)
         {
-            if (!ckbEditData.Checked)
-            {
-                tbFirstName.ReadOnly = (tbFirstName.Text != "");
-                tbLastName.ReadOnly = (tbLastName.Text != "");
-                tbEmail.ReadOnly = (tbEmail.Text != "");
-                tbCarPlateNumber.ReadOnly = (tbCarPlateNumber.Text != "");
-                tbZipCode.ReadOnly = (tbZipCode.Text != "");
-                tbCity.ReadOnly = tbCity.Text != "";
-                tbStreet.ReadOnly = tbStreet.Text != "";
-                tbDocumentNumber.ReadOnly = tbDocumentNumber.Text != "";
-            }
+            bool isEditing = ckbEditData.Checked;
 
-            else
-            {
-                tbFirstName.ReadOnly = false;
-                tbLastName.ReadOnly = false;
-                tbEmail.ReadOnly = false;
-                tbCarPlateNumber.ReadOnly = false;
-                tbZipCode.ReadOnly = false;
-                tbCity.ReadOnly = false;
-                tbStreet.ReadOnly = false;
-                tbDocumentNumber.ReadOnly = false;
-            }
+            tbFirstName.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbFirstName.Text);
+            tbLastName.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbLastName.Text);
+            tbEmail.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbEmail.Text);
+            tbCarPlateNumber.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbCarPlateNumber.Text);
+            tbZipCode.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbZipCode.Text);
+            tbCity.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbCity.Text);
+            tbStreet.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbStreet.Text);
+            tbDocumentNumber.ReadOnly = !isEditing && !string.IsNullOrEmpty(tbDocumentNumber.Text);
         }
 
-        // TODO: TOTAL_NIGHTS & LOYALTY LEVEL KEZELÉS, KELLENE PHONE NUMBER A DB-BA
-        int guestCount = 0;
+        private bool guestIsSaved = true;
+        private bool dataModified = false;
+
         private void btnAddGuest_Click(object sender, EventArgs e)
         {
             if (!guestIsSaved)
             {
-                MessageBox.Show("Please save the Guest details before adding a new Guest.",
-                        "Save Required",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                MessageBox.Show("Please save the current guest details before adding a new guest.",
+                    "Save Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            ckbEditData.Checked = true;
+            cbGuests.SelectedIndex = -1;
 
-            guestCount += 1;
-            cbGuests.Items.Add($"Guest {guestCount}");
-            cbGuests.SelectedIndex = guestCount - 1;
+            ClearInputFields();
 
-            tbEmail.Clear();
-            tbDocumentNumber.Clear();
-            tbFirstName.Clear();
-            tbLastName.Clear();
-            dtpBirthdate.Value = DateTime.Today;
-            cbNationality.SelectedItem = "Hungary";
-            tbZipCode.Clear();
-            tbCity.Clear();
-            tbStreet.Clear();
-            tbCarPlateNumber.Clear();
-            ckbEditData.Checked = true;
+            if (guestsOfBooking.Count > 0)
+            {
+                tbEmail.Text = guestsOfBooking[0].Email;
+            }
+
+            dataModified = false;
             guestIsSaved = false;
+            ckbEditData.Checked = true;
         }
 
-        bool dataModified = false;
-        int modifiedGuestIndex;
         private void btnEditGuestData_Click(object sender, EventArgs e)
         {
-            modifiedGuestIndex = cbGuests.SelectedIndex;
+            if (cbGuests.SelectedIndex < 0) return;
+
             dataModified = true;
             guestIsSaved = false;
             ckbEditData.Checked = true;
         }
 
-        bool guestIsSaved = false;
         private async void btnSaveGuest_Click(object sender, EventArgs e)
         {
-            Guest guest;
-
             if (!PersonalDataValidationConfirm()) return;
 
-            DialogResult result = MessageBox.Show("Are you sure the details are correct?",
-               "Confirmation",
-               MessageBoxButtons.YesNo,
-               MessageBoxIcon.Question);
-
-            if (cbGuests.Visible == false) cbGuests.Visible = true;
-
-            if (result == DialogResult.Yes)
+            if (guestIsSaved && !dataModified && cbGuests.SelectedIndex >= 0)
             {
-                if (dataModified)
-                {
-                    guest = GetGuestFromInput();
-
-                    if (guestsOfBooking.Count > modifiedGuestIndex)
-                    {
-                        guestsOfBooking[modifiedGuestIndex] = guest;
-                    }
-                    else
-                    {
-                        guestsOfBooking.Add(guest);
-                        guestCount++;
-                        cbGuests.Items.Add($"Guest {guestCount}");
-                        cbGuests.SelectedIndex = guestCount - 1;
-                    }
-
-                    tcGuests.TabPages.Clear();
-                    foreach (var g in guestsOfBooking)
-                    {
-                        await _bookingService.AddGuestTabToSummaryAsync(g, guestsOfBooking, tcGuests);
-                    }
-
-                    dataModified = false;
-                    guestIsSaved = true;
-                    ckbEditData.Checked = false;
-                }
-
-                else if (!guestsOfBooking.Any(g => g.IdCardNumber == tbDocumentNumber.Text.Trim()))
-                {
-                    _editingGuestId = 0;
-
-                    guest = GetGuestFromInput();
-
-                    guestsOfBooking.Add(guest);
-                    await _bookingService.AddGuestTabToSummaryAsync(guest, guestsOfBooking, tcGuests);
-                    ckbEditData.Checked = false;
-
-                    guestIsSaved = true;
-
-                    if (guestCount == 0)
-                    {
-                        guestCount++;
-                        cbGuests.Items.Add($"Guest {guestCount}");
-                    }
-                    cbGuests.SelectedIndex = guestCount - 1;
-                }
-                else { MessageBox.Show("This ID card number is already saved!", "Already exists", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                MessageBox.Show("No changes detected to save.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
+
+            DialogResult result = MessageBox.Show("Are you sure the details are correct?",
+                "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result != DialogResult.Yes) return;
+
+            int selectedIndex = cbGuests.SelectedIndex;
+
+            // MEGLÉVŐ VENDÉG MÓDOSÍTÁSA
+            if (selectedIndex >= 0 && selectedIndex < guestsOfBooking.Count)
+            {
+                UpdateGuestFromInput(guestsOfBooking[selectedIndex]);
+            }
+            // ÚJ VENDÉG MENTÉSE
+            else
+            {
+                var gs = new GuestService();
+                var allGuestsFromDb = await gs.GetAllGuestsFromDbAsync();
+
+                bool idExistsInDb = allGuestsFromDb.Any(g =>
+                    !string.IsNullOrWhiteSpace(g.IdCardNumber) &&
+                    g.IdCardNumber.Trim().Equals(tbDocumentNumber.Text.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                    !dbGuestsOfBooking.Any(dbG =>
+                        !string.IsNullOrWhiteSpace(dbG.IdCardNumber) &&
+                        dbG.IdCardNumber.Trim().Equals(g.IdCardNumber.Trim(), StringComparison.OrdinalIgnoreCase))
+                );
+
+                if (idExistsInDb)
+                {
+                    MessageBox.Show("This ID card number is already registered in the system!",
+                        "Already Exists", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var newGuest = GetGuestFromInput();
+                guestsOfBooking.Add(newGuest);
+
+                int nextGuestNumber = guestsOfBooking.Count;
+                cbGuests.Items.Add($"Guest {nextGuestNumber}");
+                cbGuests.SelectedIndex = cbGuests.Items.Count - 1;
+            }
+
+            tcGuests.TabPages.Clear();
+            foreach (var g in guestsOfBooking)
+            {
+                await _bookingService.AddGuestTabToSummaryAsync(g, guestsOfBooking, tcGuests);
+            }
+
+            dataModified = false;
+            guestIsSaved = true;
+            ckbEditData.Checked = false;
+            cbGuests.Visible = true;
+
+            MessageBox.Show("Guest details saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void cbGuests_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbGuests.SelectedIndex >= 0)
+            int index = cbGuests.SelectedIndex;
+
+            btnFillData.Visible = index > 0;
+            tbEmail.Enabled = index == 0;
+
+            if (index >= 0 && index < guestsOfBooking.Count)
             {
-                FillGuestPersonalData(cbGuests.SelectedIndex);
+                FillGuestPersonalData(index);
+                guestIsSaved = true;
+                dataModified = false;
+                ckbEditData.Checked = false;
             }
         }
 
         public void FillGuestPersonalData(int i)
         {
-            if (guestsOfBooking.Count() > i) tbFirstName.Text = guestsOfBooking[i].FName;
-            else { tbFirstName.Text = ""; }
-            if (guestsOfBooking.Count() > i) tbLastName.Text = guestsOfBooking[i].LName;
-            else { tbLastName.Text = ""; }
-            if (guestsOfBooking.Count() > i) tbEmail.Text = guestsOfBooking[i].Email;
-            else { tbEmail.Text = ""; }
-            if (guestsOfBooking.Count() > i) dtpBirthdate.Value = Convert.ToDateTime(guestsOfBooking[i].DateOfBirth);
-            else { dtpBirthdate.Value = DateTime.Today; }
-            if (guestsOfBooking.Count() > i) cbNationality.SelectedItem = guestsOfBooking[i].Country;
-            else { cbNationality.SelectedItem = "Hungary"; }
-            if (guestsOfBooking.Count() > i) tbZipCode.Text = guestsOfBooking[i].ZipCode;
-            else { tbZipCode.Text = ""; }
-            if (guestsOfBooking.Count() > i) tbCity.Text = guestsOfBooking[i].City;
-            else { tbCity.Text = ""; }
-            if (guestsOfBooking.Count() > i) tbStreet.Text = guestsOfBooking[i].Street;
-            else { tbStreet.Text = ""; }
-            if (guestsOfBooking.Count() > i) tbDocumentNumber.Text = guestsOfBooking[i].IdCardNumber;
-            else { tbDocumentNumber.Text = ""; }
+            if (i < 0 || i >= guestsOfBooking.Count)
+            {
+                ClearInputFields();
+                return;
+            }
+
+            var guest = guestsOfBooking[i];
+
+            tbFirstName.Text = guest.FName ?? "";
+            tbLastName.Text = guest.LName ?? "";
+            tbEmail.Text = guestsOfBooking.Count > 0 ? guestsOfBooking[0].Email : "";
+            dtpBirthdate.Value = guest.DateOfBirth ?? DateTime.Today.AddYears(-18);
+            cbNationality.SelectedItem = string.IsNullOrEmpty(guest.Country) ? "Hungary" : guest.Country;
+            tbZipCode.Text = guest.ZipCode ?? "";
+            tbCity.Text = guest.City ?? "";
+            tbStreet.Text = guest.Street ?? "";
+            tbDocumentNumber.Text = guest.IdCardNumber ?? "";
+            tbCarPlateNumber.Text = guest.CarPlateNumber ?? "";
         }
 
         private Guest GetGuestFromInput()
@@ -363,7 +373,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private async void LoadGuestDataToUI()
         {
-            dtpBirthdate.MaxDate = DateTime.Now;
+            dtpBirthdate.MinDate = DateTime.Today.AddYears(-120);
+            dtpBirthdate.MaxDate = DateTime.Today.AddYears(-18);
+
             Guest? existingGuest = selectedBooking is not null
                 ? await _bookingService.FillPersonalDataAsync(selectedBooking)
                 : null;
@@ -830,6 +842,39 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         {
             CommonHelper.InputValidationService.BlockDigits(e);
         }
+
+        #endregion
+
+        #region helpers
+
+        private void ClearInputFields()
+        {
+            tbFirstName.Clear();
+            tbLastName.Clear();
+            tbDocumentNumber.Clear();
+            tbEmail.Clear();
+            tbZipCode.Clear();
+            tbCity.Clear();
+            tbStreet.Clear();
+            tbCarPlateNumber.Clear();
+            dtpBirthdate.Value = DateTime.Today.AddYears(-18);
+            cbNationality.SelectedItem = "Hungary";
+        }
+
+        private void UpdateGuestFromInput(Guest guest)
+        {
+            guest.FName = tbFirstName.Text.Trim();
+            guest.LName = tbLastName.Text.Trim();
+            guest.IdCardNumber = tbDocumentNumber.Text.Trim();
+            guest.Email = tbEmail.Text.Trim();
+            guest.DateOfBirth = dtpBirthdate.Value;
+            guest.Country = cbNationality.SelectedItem?.ToString() ?? "Hungary";
+            guest.ZipCode = tbZipCode.Text.Trim();
+            guest.City = tbCity.Text.Trim();
+            guest.Street = tbStreet.Text.Trim();
+            guest.CarPlateNumber = tbCarPlateNumber.Text.Trim();
+        }
+
         #endregion
     }
 }
