@@ -1,8 +1,5 @@
 ﻿using Hotel_erp_Winforms_App.Models;
 using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Asn1.BC;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Hotel_erp_Winforms_App.Services
@@ -22,17 +19,8 @@ namespace Hotel_erp_Winforms_App.Services
 
         #endregion
 
-        #region INFO
-        /*
-         * 1.: gets every room from database
-         * 2.: returns a list of filtered rooms by parameters
-         * 3.: returns the number of cleaners from employees
-         * 4.: returns a list of rooms where an associated guests loyalty level = 2, or the associated booking has early check in
-        */
-        #endregion
-        #region database actions
+        #region Database Actions
 
-        // 1.
         public async Task<List<Room>> GetAllRoomsFromDbAsync()
         {
             List<Room> rooms = new List<Room>();
@@ -45,11 +33,11 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 await conn.OpenAsync();
 
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
-                    await using(var reader = await cmd.ExecuteReaderAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        while(await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
                             rooms.Add(MakeNewRoom(reader));
                         }
@@ -60,14 +48,12 @@ namespace Hotel_erp_Winforms_App.Services
             return rooms;
         }
 
-        // 2.
         public async Task<List<Room>> GetFilteredRoomsAsync(string search = "", int cleanStatus = 0, int floor = 0)
         {
             List<Room> filteredRooms = new List<Room>();
 
             StringBuilder queryBuilder = new StringBuilder("SELECT * FROM rooms WHERE 1 = 1 ");
 
-            // Emelet
             switch (floor)
             {
                 case 1: queryBuilder.Append("AND room_number < 200 "); break;
@@ -76,7 +62,6 @@ namespace Hotel_erp_Winforms_App.Services
                 case 4: queryBuilder.Append("AND room_number >= 400 "); break;
             }
 
-            // Tisztasági státusz
             switch (cleanStatus)
             {
                 case 1: queryBuilder.Append("AND needs_cleaning = 1 "); break;
@@ -84,7 +69,6 @@ namespace Hotel_erp_Winforms_App.Services
                 case 3: queryBuilder.Append("AND needs_cleaning = 0 "); break;
             }
 
-            // Szobaszám keresés
             bool isNumericSearch = int.TryParse(search, out int roomNumber);
 
             if (isNumericSearch)
@@ -117,7 +101,6 @@ namespace Hotel_erp_Winforms_App.Services
             return filteredRooms;
         }
 
-        // 3.
         public async Task<List<string>> GetAllCleanersAsync()
         {
             List<string> employees = new List<string>();
@@ -128,14 +111,13 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 await conn.OpenAsync();
 
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     await using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
                             string employee = $"{reader["lname"]} {reader["fname"]}".Trim();
-
                             employees.Add(employee);
                         }
                     }
@@ -145,7 +127,6 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // 4.
         public async Task<List<Room>> GetHighPriorityRooms()
         {
             List<Room> rooms = new List<Room>();
@@ -160,18 +141,17 @@ namespace Hotel_erp_Winforms_App.Services
                 WHERE s.name_hu = 'Korai bejelentkezés'
                    OR g.loyalty_level = 2;";
 
-            await using(MySqlConnection conn = new MySqlConnection(_connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
 
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     await using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
                             Room room = MakeNewRoom(reader);
-
                             rooms.Add(room);
                         }
                     }
@@ -181,7 +161,6 @@ namespace Hotel_erp_Winforms_App.Services
             return rooms;
         }
 
-        // 5.
         public async Task UpdateCleanStatusInDbAsync(CleanStatus status, int roomNumber)
         {
             StringBuilder querySb = new StringBuilder("UPDATE rooms SET ");
@@ -203,13 +182,14 @@ namespace Hotel_erp_Winforms_App.Services
                 await using (MySqlCommand cmd = new MySqlCommand(querySb.ToString(), conn))
                 {
                     cmd.Parameters.AddWithValue("@roomNumber", roomNumber);
-
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
 
-        #region helpers
+        #endregion
+
+        #region Helpers
 
         private Room MakeNewRoom(System.Data.Common.DbDataReader reader)
         {
@@ -246,9 +226,7 @@ namespace Hotel_erp_Winforms_App.Services
                 if (dgvRooms.Rows[i].IsNewRow) continue;
 
                 int roomNumber = Convert.ToInt32(dgvRooms.Rows[i].Cells["colRoomNumber"].Value);
-
                 List<int> list = roomList.Select(r => r.Room_number).ToList();
-
                 bool stateDefine = list.Contains(roomNumber);
 
                 if (stateDefine)
@@ -260,17 +238,8 @@ namespace Hotel_erp_Winforms_App.Services
 
         #endregion
 
-        #endregion
-
-        #region INFO
-        /*
-         * 1.: formatting dgv cells
-         * 2.: color code
-         * 3.: setting dgv row colors to default
-        */
-        #endregion
         #region UI
-        // 1.
+
         public void FormatRoomCell(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (sender is not DataGridView dgv || e.Value == null || e.Value == DBNull.Value)
@@ -321,40 +290,35 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // 2.
         public async void ColorCoding(DataGridView dgvRooms, List<Room> needsCleaning, List<Room> isCleaning, List<Room> cleans)
         {
             List<Room> highPrioRooms = await GetHighPriorityRooms();
 
-            // Clean color
             ColorCodingHelper(dgvRooms, cleans, Color.Honeydew);
-
-            // Needs Cleaning color
             ColorCodingHelper(dgvRooms, needsCleaning, Color.PapayaWhip);
-
-            // Is Cleaning color
             ColorCodingHelper(dgvRooms, isCleaning, Color.PaleTurquoise);
-
-            // High prio color
             ColorCodingHelper(dgvRooms, highPrioRooms, Color.FromArgb(236, 163, 163));
         }
 
-        // 3.
         public void ResetDataGridViewRowColors(DataGridView dgvRooms)
         {
-            DataGridViewCellStyle altStyle = new DataGridViewCellStyle();
-            altStyle.BackColor = Color.FromArgb(245, 248, 253);
-            altStyle.SelectionBackColor = SystemColors.Highlight;
-            altStyle.SelectionForeColor = SystemColors.HighlightText;
+            DataGridViewCellStyle altStyle = new DataGridViewCellStyle
+            {
+                BackColor = Color.FromArgb(245, 248, 253),
+                SelectionBackColor = SystemColors.Highlight,
+                SelectionForeColor = SystemColors.HighlightText
+            };
 
-            DataGridViewCellStyle defaultStyle = new DataGridViewCellStyle();
-            defaultStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            defaultStyle.BackColor = SystemColors.Window;
-            defaultStyle.Font = new Font("Segoe UI", 9.75F);
-            defaultStyle.ForeColor = SystemColors.ControlText;
-            defaultStyle.SelectionBackColor = SystemColors.Highlight;
-            defaultStyle.SelectionForeColor = SystemColors.HighlightText;
-            defaultStyle.WrapMode = DataGridViewTriState.False;
+            DataGridViewCellStyle defaultStyle = new DataGridViewCellStyle
+            {
+                Alignment = DataGridViewContentAlignment.MiddleCenter,
+                BackColor = SystemColors.Window,
+                Font = new Font("Segoe UI", 9.75F),
+                ForeColor = SystemColors.ControlText,
+                SelectionBackColor = SystemColors.Highlight,
+                SelectionForeColor = SystemColors.HighlightText,
+                WrapMode = DataGridViewTriState.False
+            };
 
             dgvRooms.AlternatingRowsDefaultCellStyle = altStyle;
             dgvRooms.DefaultCellStyle = defaultStyle;
@@ -364,6 +328,7 @@ namespace Hotel_erp_Winforms_App.Services
                 row.DefaultCellStyle.BackColor = Color.Empty;
             }
         }
+
         #endregion
     }
 }

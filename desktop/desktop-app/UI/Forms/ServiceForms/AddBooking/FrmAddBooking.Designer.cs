@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle16 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle15 = new DataGridViewCellStyle();
             pnlMain = new Panel();
             pnlMainBottom = new Panel();
             lbCurrentPage = new Label();
@@ -1197,10 +1197,10 @@
             // 
             // tbCarPlateNumber
             // 
+            tbCarPlateNumber.Enabled = false;
             tbCarPlateNumber.Font = new Font("Segoe UI", 12F);
             tbCarPlateNumber.Location = new Point(44, 257);
             tbCarPlateNumber.Name = "tbCarPlateNumber";
-            tbCarPlateNumber.ReadOnly = true;
             tbCarPlateNumber.Size = new Size(215, 29);
             tbCarPlateNumber.TabIndex = 26;
             tbCarPlateNumber.TextAlign = HorizontalAlignment.Right;
@@ -1438,24 +1438,24 @@
             dgvPaymentSum.BackgroundColor = Color.White;
             dgvPaymentSum.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             dgvPaymentSum.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(239, 246, 255);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvPaymentSum.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.BackColor = Color.FromArgb(239, 246, 255);
+            dataGridViewCellStyle9.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            dataGridViewCellStyle9.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = DataGridViewTriState.True;
+            dgvPaymentSum.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             dgvPaymentSum.ColumnHeadersHeight = 30;
             dgvPaymentSum.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvPaymentSum.Columns.AddRange(new DataGridViewColumn[] { colDate, colNameOfService, colUnitPrice, colQuantity, colTax, colTotal });
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = SystemColors.Window;
-            dataGridViewCellStyle8.Font = new Font("Segoe UI", 9.5F);
-            dataGridViewCellStyle8.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = Color.FromArgb(220, 235, 252);
-            dataGridViewCellStyle8.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
-            dgvPaymentSum.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle16.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = SystemColors.Window;
+            dataGridViewCellStyle16.Font = new Font("Segoe UI", 9.5F);
+            dataGridViewCellStyle16.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle16.SelectionBackColor = Color.FromArgb(220, 235, 252);
+            dataGridViewCellStyle16.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle16.WrapMode = DataGridViewTriState.False;
+            dgvPaymentSum.DefaultCellStyle = dataGridViewCellStyle16;
             dgvPaymentSum.EnableHeadersVisualStyles = false;
             dgvPaymentSum.GridColor = Color.FromArgb(230, 230, 230);
             dgvPaymentSum.Location = new Point(10, 10);
@@ -1474,10 +1474,10 @@
             // colDate
             // 
             colDate.DataPropertyName = "Date";
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.Format = "d";
-            dataGridViewCellStyle2.NullValue = null;
-            colDate.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.Format = "d";
+            dataGridViewCellStyle10.NullValue = null;
+            colDate.DefaultCellStyle = dataGridViewCellStyle10;
             colDate.FillWeight = 85F;
             colDate.HeaderText = "Date";
             colDate.Name = "colDate";
@@ -1487,8 +1487,8 @@
             // colNameOfService
             // 
             colNameOfService.DataPropertyName = "Description";
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colNameOfService.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colNameOfService.DefaultCellStyle = dataGridViewCellStyle11;
             colNameOfService.FillWeight = 150F;
             colNameOfService.HeaderText = "Description";
             colNameOfService.Name = "colNameOfService";
@@ -1497,10 +1497,10 @@
             // colUnitPrice
             // 
             colUnitPrice.DataPropertyName = "UnitPrice";
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.Format = "C0";
-            dataGridViewCellStyle4.NullValue = null;
-            colUnitPrice.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle12.Format = "C0";
+            dataGridViewCellStyle12.NullValue = null;
+            colUnitPrice.DefaultCellStyle = dataGridViewCellStyle12;
             colUnitPrice.FillWeight = 85F;
             colUnitPrice.HeaderText = "Unit Price";
             colUnitPrice.Name = "colUnitPrice";
@@ -1509,8 +1509,8 @@
             // colQuantity
             // 
             colQuantity.DataPropertyName = "Quantity";
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colQuantity.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle13.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colQuantity.DefaultCellStyle = dataGridViewCellStyle13;
             colQuantity.FillWeight = 45F;
             colQuantity.HeaderText = "Qty";
             colQuantity.Name = "colQuantity";
@@ -1519,8 +1519,8 @@
             // colTax
             // 
             colTax.DataPropertyName = "Tax";
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colTax.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle14.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colTax.DefaultCellStyle = dataGridViewCellStyle14;
             colTax.FillWeight = 55F;
             colTax.HeaderText = "TAX";
             colTax.Name = "colTax";
@@ -1529,10 +1529,10 @@
             // colTotal
             // 
             colTotal.DataPropertyName = "Total";
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C0";
-            dataGridViewCellStyle7.NullValue = "0";
-            colTotal.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle15.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle15.Format = "C0";
+            dataGridViewCellStyle15.NullValue = "0";
+            colTotal.DefaultCellStyle = dataGridViewCellStyle15;
             colTotal.HeaderText = "Total";
             colTotal.Name = "colTotal";
             colTotal.ReadOnly = true;
@@ -2021,7 +2021,6 @@
         private TableLayoutPanel tableLayoutPanel4;
         private Label lbUI11;
         private TableLayoutPanel tableLayoutPanel5;
-        private Label label1;
         private TabPage tpPaymentSum;
         private TabPage tpSummary;
         private Panel pnlUI06;

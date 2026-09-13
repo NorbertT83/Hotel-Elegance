@@ -72,6 +72,18 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             try
             {
+                if (!string.IsNullOrWhiteSpace(txtSearch.Text) && cbFieldFilter.SelectedIndex <= 0)
+                {
+                    MessageBox.Show(
+                        "Please select a search field from the 'Field' dropdown list before searching!",
+                        "Field Not Selected",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    cbFieldFilter.Focus();
+                    return;
+                }
+
                 Cursor.Current = Cursors.WaitCursor;
 
                 List<Booking> results = await bookingService.SearchBookings(
@@ -278,14 +290,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         }
 
         // 2.
-        private void RowSelection(int rowIndex)
+        private async void RowSelection(int rowIndex)
         {
             if (rowIndex < 0 || rowIndex >= dgvBookings.Rows.Count) return;
 
             selectedBooking = dgvBookings.Rows[rowIndex].DataBoundItem as Booking;
             if (selectedBooking == null) return;
 
-            Guest? guest = bookingService.FillPersonalData(selectedBooking);
+            Guest? guest = await bookingService.FillPersonalDataAsync(selectedBooking);
             if (guest != null)
             {
                 tbGuestName.Text = $"{guest.LName} {guest.FName}";

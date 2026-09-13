@@ -161,7 +161,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
                 return;
             }
 
-            if (await _employeeService.IsEmailAlreadyUsed(email, _employeeService) && email != _employee.Email)
+            if (await _employeeService.IsEmailAlreadyUsedAsync(email) && email != _employee.Email)
             {
                 MessageBox.Show(
                     "This email address is already in use. Please enter a different one.",

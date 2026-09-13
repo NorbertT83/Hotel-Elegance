@@ -1,28 +1,27 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.IO;
 
-namespace Hotel_erp_Winforms_App.Services
+namespace Hotel_erp_Winforms_App
 {
     public static class DbConfig
     {
-        public static string ConnectionString { get; }
-
-        static DbConfig()
+        public static string ConnectionString
         {
-            try
+            get
             {
-                var config = new ConfigurationBuilder()
-                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .Build();
+                try
+                {
+                    var config = new ConfigurationBuilder()
+                        .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                        .Build();
 
-                ConnectionString = config.GetConnectionString("DefaultConnection")
-                    ?? "Server=localhost;Database=hotelelegancedb;uid=root;pwd=;";
-            }
-            catch
-            {
-                ConnectionString = "Server=localhost;Database=hotelelegancedb;uid=root;pwd=;";
+                    return config.GetConnectionString("DefaultConnection")
+                        ?? "Server=localhost;Database=hotel_erp;Uid=root;Pwd=;";
+                }
+                catch
+                {
+                    return "Server=localhost;Database=hotel_erp;Uid=root;Pwd=;";
+                }
             }
         }
     }

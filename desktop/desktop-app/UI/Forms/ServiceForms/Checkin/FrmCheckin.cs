@@ -1,19 +1,9 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Hotel_erp_Winforms_App.Helpers;
+﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
-using Hotel_erp_Winforms_App.UI.Controls.GuestsDataSumControl;
 using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.PerformanceData;
-using System.Drawing;
 using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Windows.Forms;
 
 namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 {
@@ -58,7 +48,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             selectedBooking = booking;
         }
 
-        private void FrmCheckin_Load(object sender, EventArgs e)
+        private async void FrmCheckin_Load(object sender, EventArgs e)
         {
             tcCheckin.SelectedIndex = 0;
             btnBack.Visible = false;
@@ -105,7 +95,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
             if (selectedBooking is not null)
             {
-                selectedRooms = _bookingService.SelectedRoomsByBooking(selectedBooking);
+                selectedRooms = await _bookingService.SelectedRoomsByBookingAsync(selectedBooking);
             }
 
             flpCardHolder.Controls.Clear();
@@ -113,7 +103,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             cardControl = new RoomCardUserControl();
             if (selectedBooking is not null)
             {
-                cardControl.LoadSelectedRoomCardData(selectedBooking);
+                await cardControl.LoadSelectedRoomCardDataAsync(selectedBooking);
             }
             cardControl.Dock = DockStyle.Fill;
             cardControl.CardSelected += CardControl_CardSelected;
@@ -131,19 +121,19 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             #region Special Requests
             tbCarPlateNumber.ReadOnly = true;
 
-            if(selectedBooking is not null)
+            if (selectedBooking is not null)
             {
-                if (_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Transzfer")) { cbAirportTransfer.SelectedIndex = 0; }
+                if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Transzfer")) { cbAirportTransfer.SelectedIndex = 0; }
                 else { cbAirportTransfer.SelectedIndex = 1; }
 
-                if (_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Pótágy")) { cbExtraBed.SelectedIndex = 1; }
-                else if (_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Kiságy")) { cbExtraBed.SelectedIndex = 2; }
+                if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Pótágy")) { cbExtraBed.SelectedIndex = 1; }
+                else if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Kiságy")) { cbExtraBed.SelectedIndex = 2; }
                 else { cbExtraBed.SelectedIndex = 0; }
 
-                if (_bookingService.GetSpecialRequestsFromDb(selectedBooking, "Parkolás"))
-                { ckbParking.Checked = true; tbCarPlateNumber.Text = _bookingService.GetCarPlateNumberByBooking(selectedBooking); }
+                if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Parkolás"))
+                { ckbParking.Checked = true; tbCarPlateNumber.Text = await _bookingService.GetCarPlateNumberByBookingAsync(selectedBooking); }
 
-                if (_bookingService.IsChampagneOrdered(selectedBooking)) { cbChampagne.SelectedIndex = 0; }
+                if (await _bookingService.IsChampagneOrderedAsync(selectedBooking)) { cbChampagne.SelectedIndex = 0; }
                 else { cbChampagne.SelectedIndex = 1; }
             }
             #endregion
@@ -257,7 +247,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         }
 
         bool guestIsSaved = false;
-        private void btnSaveGuest_Click(object sender, EventArgs e)
+        private async void btnSaveGuest_Click(object sender, EventArgs e)
         {
             Guest guest;
 
@@ -291,7 +281,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     tcGuests.TabPages.Clear();
                     foreach (var g in guestsOfBooking)
                     {
-                        _bookingService.AddGuestTabToSummary(g, guestsOfBooking, tcGuests);
+                        await _bookingService.AddGuestTabToSummaryAsync(g, guestsOfBooking, tcGuests);
                     }
 
                     dataModified = false;
@@ -306,7 +296,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     guest = GetGuestFromInput();
 
                     guestsOfBooking.Add(guest);
-                    _bookingService.AddGuestTabToSummary(guest, guestsOfBooking, tcGuests);
+                    await _bookingService.AddGuestTabToSummaryAsync(guest, guestsOfBooking, tcGuests);
                     ckbEditData.Checked = false;
 
                     guestIsSaved = true;
@@ -324,7 +314,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private void cbGuests_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cbGuests.SelectedIndex >= 0)
+            if (cbGuests.SelectedIndex >= 0)
             {
                 FillGuestPersonalData(cbGuests.SelectedIndex);
             }
@@ -375,7 +365,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         {
             dtpBirthdate.MaxDate = DateTime.Now;
             Guest? existingGuest = selectedBooking is not null
-                ? _bookingService.FillPersonalData(selectedBooking)
+                ? await _bookingService.FillPersonalDataAsync(selectedBooking)
                 : null;
 
             if (existingGuest != null)
@@ -413,12 +403,21 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         #region Room selections UI actions
         bool cardIsSelected = false;
+        private RoomCardUserControl? _activeRoomCard = null;
+
         public void CardControl_CardSelected(object? sender, EventArgs e)
         {
-            if (sender is RoomCardUserControl selectedCard)
+            if (sender is RoomCardUserControl clickedCard)
             {
-                Room room = selectedCard.SelectedRoom;
+                if (_activeRoomCard != null)
+                {
+                    _activeRoomCard.SetSelected(false);
+                }
 
+                _activeRoomCard = clickedCard;
+                _activeRoomCard.SetSelected(true);
+
+                Room room = clickedCard.SelectedRoom;
                 if (selectedBooking != null)
                 {
                     selectedBooking.RoomNumber = room.Room_number;
@@ -462,7 +461,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             FilterRoomsBySpecialRequests();
         }
 
-        private void FilterRoomsBySpecialRequests()
+        private async void FilterRoomsBySpecialRequests()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -482,9 +481,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             }
 
             selectedRooms.Clear();
-            if(selectedBooking is not null)
+            if (selectedBooking is not null)
             {
-                selectedRooms = _bookingService.SelectedRoomsByBooking(selectedBooking, sb.ToString());
+                selectedRooms = await _bookingService.SelectedRoomsByBookingAsync(selectedBooking, sb.ToString());
             }
 
             RefreshRoomCards();
@@ -505,6 +504,10 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             _bookingService.RefreshPageCount(tcCheckin, lbCurrentPage);
             billingItems = await _bookingService.MakeListOfBillsAsync(services, selectedBooking);
 
+            int netAmount;
+            int taxAmount;
+            int grossAmount;
+
             switch (tcCheckin.SelectedIndex)
             {
                 case 2:
@@ -516,7 +519,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
                         _isRequestInitialized = true;
                     }
-                break;
+                    break;
 
                 case 3:
                     colNameOfService.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -525,16 +528,31 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     colTax.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     colTotal.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
 
+                    colNameOfService.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colQuantity.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colUnitPrice.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    colUnitPrice.DefaultCellStyle.Format = "C0";
+                    colTax.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colTax.DefaultCellStyle.Format = "P0";
+                    colTotal.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    colTotal.DefaultCellStyle.Format = "C0";
+
                     await _bookingService.LoadBillItemsAsync(dgvPaymentSum, services, selectedBooking);
 
-                    lbNetAmount.Text = _bookingService.CalculateNetAmount(billingItems).ToString("C0");
-                    lbTaxAmount.Text = _bookingService.CalculateTaxAmount(billingItems).ToString("C0");
-                    lbGrossAmount.Text = _bookingService.CalculateGrossAmount(billingItems).ToString("C0");
-                break;
+                    netAmount = await _bookingService.CalculateNetAmountAsync(billingItems);
+                    taxAmount = await _bookingService.CalculateTaxAmountAsync(billingItems);
+                    grossAmount = await _bookingService.CalculateGrossAmountAsync(billingItems);
+
+                    lbNetAmount.Text = netAmount.ToString("C0");
+                    lbTaxAmount.Text = taxAmount.ToString("C0");
+                    lbGrossAmount.Text = grossAmount.ToString("C0");
+
+                    break;
 
                 case 4:
                     lbSumRoomDetails.Text = sumSelectedRoomString.ToString();
                     _bookingService.FillSumSpecialRequests(services, lbSumExtras);
+                    grossAmount = await _bookingService.CalculateGrossAmountAsync(billingItems);
 
                     tcGuests.TabPages.Clear();
 
@@ -545,15 +563,16 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
                     foreach (var g in guestsOfBooking)
                     {
-                        _bookingService.AddGuestTabToSummary(g, guestsOfBooking, tcGuests);
+                        await _bookingService.AddGuestTabToSummaryAsync(g, guestsOfBooking, tcGuests);
                     }
 
                     lbSumRoomDetails.Text = _bookingService.BuildSelectedRoomDetailsString(selectedRoom);
-                    lbSumRemaining.Text = $"{_bookingService.CalculateGrossAmount(billingItems) - Convert.ToInt32(lbSumPaid.Text):C0}";
-                    lbSumTotal.Text = $"{_bookingService.CalculateGrossAmount(billingItems):C0}";
+                    lbSumRemaining.Text = $"{grossAmount - Convert.ToInt32(lbSumPaid.Text):C0}";
+                    lbSumTotal.Text = $"{grossAmount:C0}";
                     lbSumPaid.Text = $"{Convert.ToInt32(lbSumPaid.Text)}";
-                break;
-            } 
+
+                    break;
+            }
         }
         // -------------------------
 
@@ -589,7 +608,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     lbSumCatering.Text = "Fullboard";
                 }
 
-                else 
+                else
                 {
                     lbSumCatering.Text = "Breakfast";
                     selectedBooking.SelectedCateringLevel = System.Enum.Parse<CateringLevel>("breakfast", ignoreCase: true);
@@ -618,17 +637,19 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         {
             if (ckbParking.Checked)
             {
-                tbCarPlateNumber.ReadOnly = false;
-                parkingChecked = true;
+                tbCarPlateNumber.Enabled = true;
+                tbCarPlateNumber.Focus();
 
                 services.RemoveAll(s => s.NameHu == "Parkolás");
-
-                int days = (selectedBooking.EndOfStay - selectedBooking.BeginningOfStay).Days;
-
-                _bookingService.CreateNewService("Parkolás", services, days);
+                _bookingService.CreateNewService("Parkolás", services);
             }
+            else
+            {
+                tbCarPlateNumber.Clear();
+                tbCarPlateNumber.Enabled = false;
 
-            else { tbCarPlateNumber.ReadOnly = true; tbCarPlateNumber.Clear(); }
+                services.RemoveAll(s => s.NameHu == "Parkolás");
+            }
         }
 
         private void cbExtraBed_SelectedIndexChanged(object sender, EventArgs e)
@@ -697,7 +718,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     }
 
                     if (dataModified && !guestIsSaved) return;
-                break;
+                    break;
 
                 case 1:
                     if (!cardIsSelected)
@@ -705,7 +726,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                         MessageBox.Show("You must select a Room first!", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-                break;
+                    break;
             }
 
             _bookingService.NextButtonClick(tcCheckin, btnNext, btnBack, btnConfirm);
@@ -724,8 +745,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question
             );
-            
-            if(dr == DialogResult.Yes)
+
+            if (dr == DialogResult.Yes)
             {
                 try
                 {
@@ -746,21 +767,44 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             else { return; }
         }
 
+        private void btnFillData_Click(object sender, EventArgs e)
+        {
+            if (guestsOfBooking.Count > 0)
+            {
+                tbZipCode.Text = guestsOfBooking[0].ZipCode;
+                tbCity.Text = guestsOfBooking[0].City;
+                tbStreet.Text = guestsOfBooking[0].Street;
+                cbNationality.Text = guestsOfBooking[0].Country;
+            }
+        }
+
+        #endregion
+
+        #region Foolproofing
+
         private bool PersonalDataValidationConfirm()
         {
             bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
             bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
-            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider);
+            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider)
+                        && !string.IsNullOrWhiteSpace(tbEmail.Text)
+                        && tbEmail.Text.Contains("@");
+
+            if (!isEmailValid)
+            {
+                _errorProvider.SetError(tbEmail, "Invalid email address (must contain '@')");
+            }
+            else
+            {
+                _errorProvider.SetError(tbEmail, "");
+            }
+
             bool isZipValid = !_commonHelper.HasValidationError(tbZipCode, _errorProvider);
             bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
             bool isDocValid = !_commonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
 
             return isFirstNameValid && isLastNameValid && isEmailValid && isZipValid && isCityValid && isDocValid;
         }
-
-        #endregion
-
-        #region Foolproofing
 
         private void tbFirstName_KeyPress(object sender, KeyPressEventArgs e)
         {

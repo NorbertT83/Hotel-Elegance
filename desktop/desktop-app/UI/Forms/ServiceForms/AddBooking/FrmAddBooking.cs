@@ -9,27 +9,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 {
     public partial class FrmAddBooking : Form
     {
-        //TODO:
-        // hasvalidationerror-t kijavítani, personalDataValidationConfirmot is
-        // special requests műveleteket egységesíteni az frmCheckin-ével (ln117)
-        // ha már létezik az adatbázisban a vendég, akkor ki lehessen választani
-        // Airport transfer oda, vissza vagy oda-vissza
-        // a payment summnál a szoba ne egyesével jelenjen meg a táblázatban hanem csak egyszer, rosszul is van kiszámolva az ára
-        // personal data-ban még mindig nem lehet kiválasztani nationalityt
-        // document type-nak egyelőre semmi értelme
-        // A birthdate - re legyen valami kiemelés
-        // personal data edit még nincs kidolgozva
-        // phone number format ellenőzés
-        // email legyen textbox + @ + textbox
-        // car plate number format ellenorzes
-        // other fullel kezdeni valamit
-        // pezsgő bekészítés service kezelése
-        // departure notes service kezelése
-        // egy vendéget ne lehesse többször menteni
-        // a price_at_booking az egységár vagy összeg?
-
-        // a selected Room a buttons->OnCardSelected-ben mentődik és a variables-ben van tárolva
-
         #region variables
 
         private readonly BookingService bookingService = new BookingService();
@@ -228,15 +207,20 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         {
             if (ckbParking.Checked)
             {
-                tbCarPlateNumber.Enabled = false;
-                parkingChecked = true;
+                tbCarPlateNumber.Enabled = true;
+                tbCarPlateNumber.Focus();
 
                 services.RemoveAll(s => s.NameHu == "Parkolás");
-
-                bookingService.CreateNewService("Parkolás", services, nightsCount);
+                bookingService.CreateNewService("Parkolás", services);
             }
 
-            else { tbCarPlateNumber.Enabled = true; tbCarPlateNumber.Clear(); }
+            else
+            {
+                tbCarPlateNumber.Clear();
+                tbCarPlateNumber.Enabled = false;
+
+                services.RemoveAll(s => s.NameHu == "Parkolás");
+            }
         }
 
         private void cbExtraBed_SelectedIndexChanged(object sender, EventArgs e)
@@ -342,44 +326,46 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         // 2.
         private void btnBack_Click(object sender, EventArgs e)
-                {
-                    bookingService.BackButtonClick(tcAddBooking, btnNext, btnBack, btnConfirm);
-                }
+        {
+            bookingService.BackButtonClick(tcAddBooking, btnNext, btnBack, btnConfirm);
+        }
 
         // 3.
         private async void btnShowRooms_Click(object sender, EventArgs e)
-                {
-                    btnShowRooms.Enabled = false;
-                    this.UseWaitCursor = true;
+        {
+            btnShowRooms.Enabled = false;
+            this.UseWaitCursor = true;
 
-                    try
-                    {
-                        selectedCard = null;
-                        selectedRoom = null;
-                        lbSelectedRoomNumber.Text = "-";
+            try
+            {
+                selectedCard = null;
+                selectedRoom = null;
+                lbSelectedRoomNumber.Text = "-";
 
-                        List<Room> rooms = await bookingService.FilterAvailableRoomsAsync(
-                            Convert.ToDateTime(tbDateOfArrival.Text),
-                            dtpDeparture.Value, Convert.ToInt32(lbNumberOfGuests.Text),
-                            cbSuite.Text);
+                List<Room> rooms = await bookingService.FilterAvailableRoomsAsync(
+                    Convert.ToDateTime(tbDateOfArrival.Text),
+                    dtpDeparture.Value, Convert.ToInt32(lbNumberOfGuests.Text),
+                    cbSuite.Text);
 
-                        bookingService.FillAvailableRooms(rooms, flpSelectRoom, OnCardSelected);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Database error: {ex.Message}");
-                    }
-                    finally
-                    {
-                        btnShowRooms.Enabled = true;
-                        this.UseWaitCursor = false;
-                    }
-                }
+                await bookingService.FillAvailableRoomsAsync(rooms, flpSelectRoom, OnCardSelected);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Database error: {ex.Message}");
+            }
+            finally
+            {
+                btnShowRooms.Enabled = true;
+                this.UseWaitCursor = false;
+            }
+        }
 
         // 4.
         private void OnCardSelected(RoomCardUserControl clickedCard)
         {
-            if (selectedCard != null)
+            if (clickedCard == null || clickedCard.SelectedRoom == null) return;
+
+            if (selectedCard != null && selectedCard != clickedCard)
             {
                 selectedCard.SetSelected(false);
             }
@@ -435,6 +421,12 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 {
                     cbGuests.SelectedIndex++;
                     ClearBoxes();
+
+                    if(guests.Count > 0)
+                    {
+                        tbEmail.Text = guests[0].Email;
+                        tbEmail.Enabled = false;
+                    }
                 }
                 else
                 {
@@ -448,65 +440,65 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         // 6.
         private async void btnConfirm_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "Are you sure all the details are correct?",
+                "Confirmation",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                try
                 {
-                    DialogResult result = MessageBox.Show(
-                        "Are you sure all the details are correct?",
-                        "Confirmation",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question
+                    btnConfirm.Enabled = false;
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    await bookingService.ConfirmNewBookingAsync(
+                        selectedRoom,
+                        guests,
+                        services,
+                        dtpDeparture.Value,
+                        selectedCatering,
+                        nightsCount
                     );
 
-                    if (result == DialogResult.Yes)
-                    {
-                        try
-                        {
-                            btnConfirm.Enabled = false;
-                            Cursor.Current = Cursors.WaitCursor;
-
-                            await bookingService.ConfirmNewBookingAsync(
-                                selectedRoom,
-                                guests,
-                                services,
-                                dtpDeparture.Value,
-                                selectedCatering,
-                                nightsCount
-                            );
-
-                            this.DialogResult = DialogResult.OK;
-                            this.Close();
-                        }
-
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(
-                                "An unexpected error occured: " + ex.Message,
-                                "Error",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error
-                            );
-                        }
-
-                        finally
-                        {
-                            btnConfirm.Enabled = true;
-                            Cursor.Current = Cursors.Default;
-                        }
-                    }
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "An unexpected error occured: " + ex.Message,
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                }
+
+                finally
+                {
+                    btnConfirm.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+        }
 
         // 7.
         private void btnFillData_Click(object sender, EventArgs e)
-                {
-                    int i = cbGuests.SelectedIndex;
+        {
+            int i = cbGuests.SelectedIndex;
 
-                    if (guests.Count > 0)
-                    {
-                        tbZipCode.Text = guests[0].ZipCode;
-                        tbCity.Text = guests[0].City;
-                        tbStreet.Text = guests[0].Street;
-                        cbNationality.Text = guests[0].Country;
-                    }
-                }
+            if (guests.Count > 0)
+            {
+                tbZipCode.Text = guests[0].ZipCode;
+                tbCity.Text = guests[0].City;
+                tbStreet.Text = guests[0].Street;
+                cbNationality.Text = guests[0].Country;
+            }
+        }
 
         // 8.
         private void btnEditGuestData_Click(object sender, EventArgs e)
@@ -531,7 +523,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         private async void tcAddBooking_SelectedIndexChanged(object sender, EventArgs e)
         {
             List<BillingItem> billingItems = await bookingService.MakeListOfBillsAsync(services, null, nightsCount, guestCount);
-
+            int grossAmount;
             bookingService.RefreshPageCount(tcAddBooking, lbCurrentPage);
 
             switch (tcAddBooking.SelectedIndex)
@@ -542,33 +534,45 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                     break;
 
                 case 3:
+                    colNameOfService.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colQuantity.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colUnitPrice.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    colUnitPrice.DefaultCellStyle.Format = "C0";
+                    colTax.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    colTax.DefaultCellStyle.Format = "P0";
+                    colTotal.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    colTotal.DefaultCellStyle.Format = "C0";
+
                     await bookingService.LoadBillItemsAsync(dgvPaymentSum, services, null, nightsCount, guestCount);
 
-                    dgvPaymentSum.Columns["colTax"]?.DefaultCellStyle.Format = "P0";
+                    int netAmount = await bookingService.CalculateNetAmountAsync(billingItems);
+                    int taxAmount = await bookingService.CalculateTaxAmountAsync(billingItems);
+                    grossAmount = await bookingService.CalculateGrossAmountAsync(billingItems);
 
-                    lbNetAmount.Text = bookingService.CalculateNetAmount(billingItems).ToString("C0");
-                    lbTaxAmount.Text = bookingService.CalculateTaxAmount(billingItems).ToString("C0");
-                    lbGrossAmount.Text = bookingService.CalculateGrossAmount(billingItems).ToString("C0");
+                    lbNetAmount.Text = netAmount.ToString("C0");
+                    lbTaxAmount.Text = taxAmount.ToString("C0");
+                    lbGrossAmount.Text = grossAmount.ToString("C0");
                     break;
 
                 case 4:
                     bookingService.FillSumSpecialRequests(services, lbSumExtras);
+                    grossAmount = await bookingService.CalculateGrossAmountAsync(billingItems);
 
                     tcGuests.TabPages.Clear();
 
-                    if (ckbParking.Checked && guests.Count > 0)
+                    if (guests.Count > 0 && !string.IsNullOrWhiteSpace(tbCarPlateNumber.Text))
                     {
                         guests[0].CarPlateNumber = tbCarPlateNumber.Text.Trim();
                     }
 
                     foreach (var g in guests)
                     {
-                        bookingService.AddGuestTabToSummary(g, guests, tcGuests);
+                        await bookingService.AddGuestTabToSummaryAsync(g, guests, tcGuests);
                     }
 
                     lbSumRoomDetails.Text = bookingService.BuildSelectedRoomDetailsString(selectedRoom);
-                    lbSumRemaining.Text = $"{bookingService.CalculateGrossAmount(billingItems) - Convert.ToInt32(lbSumPaid.Text):C0}";
-                    lbSumTotal.Text = $"{bookingService.CalculateGrossAmount(billingItems):C0}";
+                    lbSumRemaining.Text = $"{grossAmount - Convert.ToInt32(lbSumPaid.Text):C0}";
+                    lbSumTotal.Text = $"{grossAmount:C0}";
                     lbSumPaid.Text = $"{Convert.ToInt32(lbSumPaid.Text)}";
 
                     break;
@@ -576,12 +580,23 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         }
         // -----------------
 
-        private void RefreshCountOfNights()
+        private async void RefreshCountOfNights()
         {
             DateTime arrivalDate = Convert.ToDateTime(tbDateOfArrival.Text);
             nightsCount = Convert.ToInt32((dtpDeparture.Value - arrivalDate).TotalDays);
 
             lbNumberOfNights.Text = nightsCount.ToString();
+
+            if (selectedRoom != null)
+            {
+                services.RemoveAll(s => s.NameHu == "Szoba");
+                bookingService.CreateNewService("Szoba", services, nightsCount, selectedRoom);
+            }
+
+            if (tcAddBooking.SelectedIndex == 3)
+            {
+                await UpdatePaymentSummaryAsync();
+            }
         }
 
         private void RefreshCountOfGuests()
@@ -670,7 +685,18 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         {
             bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
             bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
-            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider);
+            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider)
+                        && tbEmail.Text.Contains("@");
+
+            if (!isEmailValid)
+            {
+                _errorProvider.SetError(tbEmail, "Invalid email address (must contain '@')");
+            }
+            else
+            {
+                _errorProvider.SetError(tbEmail, "");
+            }
+
             bool isZipValid = !_commonHelper.HasValidationError(tbZipCode, _errorProvider);
             bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
             bool isDocValid = !_commonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
@@ -794,6 +820,31 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 tbCity.Enabled = true;
                 tbStreet.Enabled = true;
             }
+        }
+
+        // 3.
+        private async Task UpdatePaymentSummaryAsync()
+        {
+            List<BillingItem> billingItems = await bookingService.MakeListOfBillsAsync(services, null, nightsCount, guestCount);
+
+            colNameOfService.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colQuantity.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colUnitPrice.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            colUnitPrice.DefaultCellStyle.Format = "C0";
+            colTax.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colTax.DefaultCellStyle.Format = "P0";
+            colTotal.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            colTotal.DefaultCellStyle.Format = "C0";
+
+            await bookingService.LoadBillItemsAsync(dgvPaymentSum, services, null, nightsCount, guestCount);
+
+            int netAmount = await bookingService.CalculateNetAmountAsync(billingItems);
+            int taxAmount = await bookingService.CalculateTaxAmountAsync(billingItems);
+            int grossAmount = await bookingService.CalculateGrossAmountAsync(billingItems);
+
+            lbNetAmount.Text = netAmount.ToString("C0");
+            lbTaxAmount.Text = taxAmount.ToString("C0");
+            lbGrossAmount.Text = grossAmount.ToString("C0");
         }
         #endregion
     }

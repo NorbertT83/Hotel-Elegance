@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hotel_erp_Winforms_App.Models
+﻿namespace Hotel_erp_Winforms_App.Models
 {
     public class BillingItem
     {

@@ -102,16 +102,17 @@
             // 
             // lbPrice
             // 
+            lbPrice.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbPrice.Font = new Font("Segoe UI", 10F);
             lbPrice.ForeColor = Color.Black;
             lbPrice.Image = Properties.Resources.money;
             lbPrice.ImageAlign = ContentAlignment.MiddleLeft;
-            lbPrice.Location = new Point(367, 17);
+            lbPrice.Location = new Point(353, 17);
             lbPrice.Margin = new Padding(3, 0, 3, 14);
             lbPrice.Name = "lbPrice";
-            lbPrice.Size = new Size(71, 19);
+            lbPrice.Size = new Size(93, 19);
             lbPrice.TabIndex = 5;
-            lbPrice.Text = "22000";
+            lbPrice.Text = "122 000 Ft";
             lbPrice.TextAlign = ContentAlignment.MiddleRight;
             lbPrice.Click += RoomCard_Click;
             lbPrice.MouseLeave += RoomCard_MouseLeave;
@@ -119,6 +120,7 @@
             // 
             // lbRoomType
             // 
+            lbRoomType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lbRoomType.AutoSize = true;
             lbRoomType.Font = new Font("Segoe UI", 10F);
             lbRoomType.ForeColor = Color.Black;
@@ -134,11 +136,12 @@
             // 
             // lbCapacity
             // 
+            lbCapacity.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbCapacity.Font = new Font("Segoe UI", 10F);
             lbCapacity.ForeColor = Color.Black;
             lbCapacity.Image = Properties.Resources.persons;
             lbCapacity.ImageAlign = ContentAlignment.MiddleLeft;
-            lbCapacity.Location = new Point(319, 17);
+            lbCapacity.Location = new Point(316, 17);
             lbCapacity.Margin = new Padding(3, 0, 3, 14);
             lbCapacity.Name = "lbCapacity";
             lbCapacity.Size = new Size(41, 19);
@@ -151,11 +154,12 @@
             // 
             // lbBedType
             // 
+            lbBedType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lbBedType.Font = new Font("Segoe UI", 10F);
             lbBedType.ForeColor = Color.Black;
             lbBedType.Image = Properties.Resources.bed;
             lbBedType.ImageAlign = ContentAlignment.MiddleLeft;
-            lbBedType.Location = new Point(150, 17);
+            lbBedType.Location = new Point(149, 17);
             lbBedType.Margin = new Padding(3, 0, 3, 14);
             lbBedType.Name = "lbBedType";
             lbBedType.Size = new Size(77, 19);
@@ -168,10 +172,11 @@
             // 
             // lbHasView
             // 
+            lbHasView.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbHasView.AutoSize = true;
             lbHasView.Font = new Font("Segoe UI", 10F);
             lbHasView.ForeColor = Color.Black;
-            lbHasView.Location = new Point(234, 17);
+            lbHasView.Location = new Point(223, 17);
             lbHasView.Margin = new Padding(3, 0, 3, 14);
             lbHasView.Name = "lbHasView";
             lbHasView.Size = new Size(78, 19);

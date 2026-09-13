@@ -1,53 +1,37 @@
 ﻿using Hotel_erp_Winforms_App.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.IO.Packaging;
-using System.Text;
 
 namespace Hotel_erp_Winforms_App.Services
 {
     internal class CheckoutService
     {
-        #region variables
+        private readonly string _connectionString = DbConfig.ConnectionString;
 
-        string _connectionString = DbConfig.ConnectionString;
-
-        #endregion
-
-        #region INFO
-        /*
-         * 1.: gets all servicebookings from db
-        */
-        #endregion
-        #region database actions
-
-        // 1.
         public async Task<List<CheckoutSumHelper>> GetServiceItemsAsync(string bookingId)
         {
-            List<CheckoutSumHelper> serviceItems = new List<CheckoutSumHelper>();
+            var serviceItems = new List<CheckoutSumHelper>();
 
-            string query = @"
-                SELECT s.name_en as name, sb.quantity as qty, s.price as price, sb.price_at_booking as priceAtB
+            const string query = @"
+                SELECT s.name_en AS name, sb.quantity AS qty, s.price AS price, sb.price_at_booking AS priceAtB
                 FROM servicebookings sb
                 INNER JOIN services s ON s.id = sb.service_id
                 INNER JOIN bookings b ON sb.booking_id = b.id
                 WHERE b.id = @id;";
 
-            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            await using (var conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
 
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (var cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", bookingId);
 
-                    await using(var reader = await cmd.ExecuteReaderAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        while(await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
-                            CheckoutSumHelper item = new CheckoutSumHelper(
-                                reader["name"]?.ToString(),
+                            var item = new CheckoutSumHelper(
+                                reader["name"]?.ToString() ?? string.Empty,
                                 Convert.ToInt32(reader["qty"]),
                                 Convert.ToInt32(reader["price"]),
                                 Convert.ToInt32(reader["priceAtB"])
@@ -62,29 +46,45 @@ namespace Hotel_erp_Winforms_App.Services
             return serviceItems;
         }
 
-        // 2.
-        public async Task CheckoutBookingAsync(Booking booking)
+        public async Task CheckoutBookingAsync(Booking booking, int nights)
         {
-            string query = @"
+            const string query = @"
                 UPDATE bookings b
                 JOIN rooms r ON b.room_number = r.room_number
                 SET b.checkout = NOW(), 
                     r.status = 'under_maintenance', 
                     r.needs_cleaning = 1
-                WHERE b.id = @id";
+                WHERE b.id = @id;
 
-            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                UPDATE guests g
+                JOIN bookings b ON (g.id = b.guest1_id OR g.id = b.guest2_id OR g.id = b.guest3_id OR g.id = b.guest4_id)
+                SET g.total_nights = g.total_nights + @nights
+                WHERE b.id = @id;";
+
+            await using (var conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (var transaction = await conn.BeginTransactionAsync())
                 {
-                    cmd.Parameters.AddWithValue("@id", booking.Id);
+                    try
+                    {
+                        await using (var cmd = new MySqlCommand(query, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@id", booking.Id);
+                            cmd.Parameters.AddWithValue("@nights", nights);
 
-                    await cmd.ExecuteNonQueryAsync();
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+
+                        await transaction.CommitAsync();
+                    }
+                    catch
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
                 }
             }
         }
-        #endregion
     }
 }

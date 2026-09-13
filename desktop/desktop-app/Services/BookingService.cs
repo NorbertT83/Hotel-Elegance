@@ -2,22 +2,17 @@
 using Hotel_erp_Winforms_App.UI.Controls.GuestsDataSumControl;
 using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
 using MySql.Data.MySqlClient;
+using NanoidDotNet;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
-using System.Text;
-using NanoidDotNet;
-using System.Drawing.Text;
 
 namespace Hotel_erp_Winforms_App.Services
 {
     public class BookingService
     {
         #region TODO:
-        /*
-            - a confirm new booking-nál ha már létezik a vendég az adatbázisban akkor azt mentse
-            - a confirm checkin-nél ha már létezik a vendég az adatbázisban, akkor ne mentse újra
-        */
+
         #endregion
 
         #region variables
@@ -540,6 +535,7 @@ namespace Hotel_erp_Winforms_App.Services
                 return $"{prefix}-{year}-{randomSuffix}";
             }
         }
+
         #endregion
 
         #region INFO
@@ -550,6 +546,8 @@ namespace Hotel_erp_Winforms_App.Services
         */
         #endregion
         #region Occupancy
+
+        // 1.
         public int GetTodaysArrivalsCount()
         {
             string query = "SELECT COUNT(*) FROM bookings WHERE beginning_of_stay = CURRENT_DATE AND checkin IS NULL ;";
@@ -564,6 +562,7 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
+        // 2.
         public int GetTodaysDeparturesCount()
         {
             string query = "SELECT COUNT(*) FROM bookings WHERE end_of_stay = CURRENT_DATE();";
@@ -577,6 +576,7 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
+        // 3.
         public int GetOccupancyRate()
         {
             string query = "SELECT " +
@@ -599,129 +599,25 @@ namespace Hotel_erp_Winforms_App.Services
         }
         #endregion
 
+        // ====================
         #region INFO
-        /*
-            1.: returns a booking by the parameter booking ID
-            2.: returns a room by the parameter booking ID
-            3.: returns a guest associated to the parameter booking
-            4.: returns a list of the available rooms with the parameters of the booking
-            5.: returns a list of billingItems out of the parameter service list
-            6.: returns true if the serviceName parameter is associated to the parameter booking
-            7.: returns true if the champage service is associated to the parameter booking
-            8.: returns the car plate number associated to the parameter booking
-            9.: returns the number of guests associated to the parameter booking
-            10.: returns the net total of the items in the parameter list
-            11.: returns the tax total of the items in the parameter list
-            12.: returns the total of the items in the parameter list
-            13.: returns the id card number associated to the parameter booking
-            14.: fills the parameter dgv with the items of the parameter list
-            15.: loads the parameter desciption into the parameter dgv
-        */
+        // 1. Foglaláshoz tartozó vendég adatainak lekérése
+        // 2. Foglaláshoz tartozó személyi igazolvány szám lekérése
+        // 3. Foglaláshoz tartozó autó rendszámának lekérése
+        // 4. Foglalásban szereplő vendégek számának meghatározása
+        // 5. Elérhető szobák listázása a foglalási feltételek alapján
+        // 6. Egyedi kérés / szolgáltatás létezésének ellenőrzése a foglaláshoz
+        // 7. Pezsgő rendelés létezésének ellenőrzése a foglaláshoz
+        // 8. Számlatételek (BillingItem) listájának összeállítása szolgáltatásokból
+        // 9. Számlatételek nettó összegének kiszámítása
+        // 10. Számlatételek adótartalmának (ÁFA) kiszámítása
+        // 11. Számlatételek bruttó összegének kiszámítása
+        // 12. Számlatételek betöltése és megjelenítése a DataGridView felületén
         #endregion
-        #region Check-in
+        #region Vendég és Foglalási Adatok (SQL)
 
         // 1.
-        public Booking? GetBookingById(string id)
-        {
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                string query = "SELECT * FROM bookings WHERE id = @id";
-
-                using (MySqlCommand cmd = new MySqlCommand(query, connection))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    connection.Open();
-
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            Enum.TryParse<Hotel_erp_Winforms_App.Models.RoomType>
-                                (reader["room_type"]?.ToString(), true, out var roomType);
-
-                            Enum.TryParse<CateringLevel>
-                                (reader["catering_level"]?.ToString(), true, out var cateringLevel);
-
-                            return new Booking(
-                                reader["id"]?.ToString() ?? string.Empty,
-                                Convert.ToInt32(reader["room_number"]),
-                                roomType,
-                                Convert.ToInt32(reader["guest1_id"]),
-                                Convert.ToDateTime(reader["beginning_of_stay"]),
-                                Convert.ToDateTime(reader["end_of_stay"]),
-                                reader["checkin"] is DBNull or null ? null : Convert.ToDateTime(reader["checkin"]),
-                                reader["checkout"] is DBNull or null ? null : Convert.ToDateTime(reader["checkout"]),
-                                reader["guest2_id"] is DBNull or null ? null : Convert.ToInt32(reader["guest2_id"]),
-                                reader["guest3_id"] is DBNull or null ? null : Convert.ToInt32(reader["guest3_id"]),
-                                reader["guest4_id"] is DBNull or null ? null : Convert.ToInt32(reader["guest4_id"]),
-                                cateringLevel,
-                                Convert.ToDateTime(reader["created_at"])
-                            );
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        // 2.
-        public Room? GetRoomByBookingId(Booking? booking)
-        {
-            if (booking is null)
-            {
-                return null;
-            }
-
-            string query = "SELECT rooms.room_number, rooms.room_type, floorspace, bed_type, has_balcony, has_view, " +
-                "max_adults, extras, status, price_per_night, door_locked, needs_cleaning, dont_disturb, is_cleaning, ac_temp " +
-                "FROM rooms " +
-                "INNER JOIN bookings ON rooms.room_number = bookings.room_number " +
-                "WHERE bookings.id = @bookingID;";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@bookingID", booking.Id);
-                    conn.Open();
-
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            Enum.TryParse<Room.RoomType>(reader["room_type"]?.ToString(), true, out var roomType);
-                            Enum.TryParse<Room.BedType>(reader["bed_type"]?.ToString(), true, out var bedType);
-                            Enum.TryParse<Room.HasView>(reader["has_view"]?.ToString(), true, out var hasView);
-                            Enum.TryParse<Room.Status>(reader["status"]?.ToString(), true, out var status);
-
-                            return new Room
-                            (
-                                Convert.ToInt32(reader["room_number"]),
-                                roomType,
-                                Convert.ToInt32(reader["floorspace"]),
-                                bedType,
-                                Convert.ToInt32(reader["has_balcony"]),
-                                hasView,
-                                Convert.ToInt32(reader["max_adults"]),
-                                reader["extras"] is DBNull or null ? string.Empty : reader["extras"].ToString()!,
-                                status,
-                                Convert.ToInt32(reader["price_per_night"]),
-                                Convert.ToInt32(reader["door_locked"]),
-                                Convert.ToInt32(reader["needs_cleaning"]),
-                                Convert.ToInt32(reader["dont_disturb"]),
-                                Convert.ToInt32(reader["is_cleaning"]),
-                                Convert.ToInt32(reader["ac_temp"])
-                            );
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        // 3.
-        public Guest? FillPersonalData(Booking selectedBooking)
+        public async Task<Guest?> FillPersonalDataAsync(Booking selectedBooking)
         {
             string query = "SELECT guests.id, fname, lname, email, date_of_birth, country, zip_code, city, street, id_card_number, car_plate_number, total_nights, loyalty_level " +
                 "FROM guests " +
@@ -732,12 +628,12 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
-                    conn.Open();
+                    await conn.OpenAsync();
                     cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
 
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    using (DbDataReader reader = await cmd.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             return new Guest
                             (
@@ -763,31 +659,100 @@ namespace Hotel_erp_Winforms_App.Services
             return null;
         }
 
+        // 2.
+        public async Task<string> GetIdCardNumberAsync(Booking? booking)
+        {
+            if (booking is null)
+            {
+                return string.Empty;
+            }
+
+            string query = "SELECT guests.id_card_number " +
+                "FROM guests " +
+                "INNER JOIN bookings ON bookings.guest1_id = guests.id " +
+                "WHERE bookings.id = @bookingId";
+
+            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", booking.Id);
+                    await conn.OpenAsync();
+
+                    object? result = await cmd.ExecuteScalarAsync();
+                    return result is not null and not DBNull ? result.ToString()! : string.Empty;
+                }
+            }
+        }
+
+        // 3.
+        public async Task<string> GetCarPlateNumberByBookingAsync(Booking selectedBooking)
+        {
+            string query = "SELECT car_plate_number FROM guests INNER JOIN bookings ON bookings.guest1_id = guests.id WHERE bookings.id = @bookingId;";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+
+                    await conn.OpenAsync();
+
+                    object? result = await cmd.ExecuteScalarAsync();
+                    return result?.ToString() ?? "";
+                }
+            }
+        }
+
         // 4.
-        public List<Room> SelectedRoomsByBooking(Booking booking, string request = "")
+        public async Task<int> GetNumberOfGuestsAsync(Booking selectedBooking)
+        {
+            string query = "SELECT (" +
+                                "(guest1_id IS NOT NULL) + " +
+                                "(guest2_id IS NOT NULL) + " +
+                                "(guest3_id IS NOT NULL) + " +
+                                "(guest4_id IS NOT NULL)) as vendegek_szama " +
+                           "FROM bookings " +
+                           "WHERE bookings.id = @bookingId";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+
+                    await conn.OpenAsync();
+
+                    object? result = await cmd.ExecuteScalarAsync();
+                    return result != null ? Convert.ToInt32(result) : 0;
+                }
+            }
+        }
+
+        // 5.
+        public async Task<List<Room>> SelectedRoomsByBookingAsync(Booking booking, string additionalWhereClause = "")
         {
             List<Room> rooms = new List<Room>();
+
             string query = "SELECT * " +
                            "FROM rooms " +
                            "WHERE rooms.status = 'available' " +
                                "AND rooms.needs_cleaning = 0 " +
                                "AND rooms.is_cleaning = 0 " +
                                "AND rooms.room_type = @roomType " +
-                               "AND room_number NOT IN(SELECT bookings.room_number " +
-                                                      "FROM bookings) ";
-            query += request;
-            query += ";";
+                               "AND room_number NOT IN (SELECT bookings.room_number FROM bookings) " +
+                           additionalWhereClause + ";";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@roomType", booking.SelectedRoomType.ToString());
-                    conn.Open();
+                    await conn.OpenAsync();
 
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    using (DbDataReader reader = await cmd.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Room room = new Room
                             (
@@ -810,7 +775,6 @@ namespace Hotel_erp_Winforms_App.Services
 
                             rooms.Add(room);
                         }
-                        conn.Close();
                     }
                 }
             }
@@ -818,7 +782,65 @@ namespace Hotel_erp_Winforms_App.Services
             return rooms;
         }
 
-        // 5.
+        #endregion
+
+        #region Szolgáltatások és Kérések (SQL)
+
+        // 6.
+        public async Task<bool> GetSpecialRequestsFromDbAsync(Booking selectedBooking, string serviceNameHu)
+        {
+            string query = "SELECT EXISTS " +
+                " (SELECT 1 " +
+                " FROM services " +
+                " JOIN servicebookings ON services.id = servicebookings.service_id " +
+                " JOIN bookings ON bookings.id = servicebookings.booking_id " +
+                " WHERE bookings.id = @bookingId " +
+                "   AND services.name_hu = @serviceName);";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+                    cmd.Parameters.AddWithValue("@serviceName", serviceNameHu);
+
+                    await conn.OpenAsync();
+
+                    object? result = await cmd.ExecuteScalarAsync();
+                    return result != null && Convert.ToBoolean(result);
+                }
+            }
+        }
+
+        // 7.
+        public async Task<bool> IsChampagneOrderedAsync(Booking selectedBooking)
+        {
+            string query = "SELECT EXISTS " +
+                " (SELECT 1 " +
+                " FROM servicebookings " +
+                " JOIN bookings ON bookings.id = servicebookings.booking_id " +
+                " WHERE bookings.id = @bookingId " +
+                "   AND servicebookings.price_at_booking = 37000);";
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
+
+                    await conn.OpenAsync();
+
+                    object? result = await cmd.ExecuteScalarAsync();
+                    return result != null && Convert.ToBoolean(result);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Számlázás és Számítások
+
+        // 8.
         public async Task<List<BillingItem>> MakeListOfBillsAsync(List<Service> servicesList, Booking? selectedBooking = null, int days = 1, int guestCount = 1)
         {
             List<BillingItem> billingItems = new List<BillingItem>();
@@ -828,7 +850,7 @@ namespace Hotel_erp_Winforms_App.Services
                 : days;
 
             guestCount = selectedBooking != null
-                ? GetNumberOfGuests(selectedBooking)
+                ? await GetNumberOfGuestsAsync(selectedBooking)
                 : guestCount;
 
             // SZOLGÁLTATÁS ÁRAK KISZÁMÍTÁSA
@@ -839,7 +861,7 @@ namespace Hotel_erp_Winforms_App.Services
                 if (service.NameHu == "Szoba")
                 {
                     decimal unitNetPrice = (service.Price / (days > 0 ? days : 1)) / 1.05m;
-                    decimal grossTotal = service.Price;
+                    decimal calculatedTotal = (service.Price / (days > 0 ? days : 1)) * days;
 
                     BillingItem roomItem = new BillingItem
                     (
@@ -849,7 +871,7 @@ namespace Hotel_erp_Winforms_App.Services
                         unitNetPrice,
                         days,
                         0.05m,
-                        grossTotal
+                        calculatedTotal
                     );
                     billingItems.Add(roomItem);
                 }
@@ -861,7 +883,7 @@ namespace Hotel_erp_Winforms_App.Services
                         DateTime.Now,
                         service.NameHu,
                         netPrice,
-                        days,
+                        1,
                         0.27m,
                         service.Price
                     );
@@ -959,176 +981,54 @@ namespace Hotel_erp_Winforms_App.Services
 
             return billingItems;
         }
-        
-        // 6.
-        public bool GetSpecialRequestsFromDb(Booking selectedBooking, string serviceNameHu)
-        {
-            string query = "SELECT EXISTS " +
-                " (SELECT 1 " +
-                " FROM services " +
-                " JOIN servicebookings ON services.id = servicebookings.service_id " +
-                " JOIN bookings ON bookings.id = servicebookings.booking_id " +
-                " WHERE bookings.id = @bookingId " +
-                "   AND services.name_hu = @serviceName);";
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
-                    cmd.Parameters.AddWithValue("@serviceName", serviceNameHu);
-
-                    conn.Open();
-
-                    return Convert.ToBoolean(cmd.ExecuteScalar());
-                }
-            }
-        }
-        
-        // 7.
-        public bool IsChampagneOrdered(Booking selectedBooking)
-        {
-            string query = "SELECT EXISTS " +
-                " (SELECT 1 " +
-                " FROM servicebookings " +
-                " JOIN bookings ON bookings.id = servicebookings.booking_id " +
-                " WHERE bookings.id = @bookingId " +
-                "   AND servicebookings.price_at_booking = 37000);";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
-
-                    conn.Open();
-
-                    return Convert.ToBoolean(cmd.ExecuteScalar());
-                }
-            }
-        }
-       
-        // 8.
-        public string GetCarPlateNumberByBooking(Booking selectedBooking)
-        {
-            string query = "SELECT car_plate_number FROM guests INNER JOIN bookings ON bookings.guest1_id = guests.id WHERE bookings.id = @bookingId;";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
-                    conn.Open();
-
-                    return cmd.ExecuteScalar()?.ToString() ?? "";
-                }
-            }
-        }
-        
         // 9.
-        public int GetNumberOfGuests(Booking selectedBooking)
-        {
-            string query = "SELECT (" +
-                                "(guest1_id IS NOT NULL) + " +
-                                "(guest2_id IS NOT NULL) + " +
-                                "(guest3_id IS NOT NULL) + " +
-                                "(guest4_id IS NOT NULL)) as vendegek_szama " +
-                           "FROM bookings " +
-                           "WHERE bookings.id = @bookingId";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@bookingId", selectedBooking.Id);
-                    conn.Open();
-
-                    return Convert.ToInt32(cmd.ExecuteScalar());
-                }
-            }
-        }
-        
-        // 10.
-        public int CalculateNetAmount(List<BillingItem> billingItems)
+        public async Task<int> CalculateNetAmountAsync(List<BillingItem> billingItems)
         {
             decimal netAmount = 0m;
 
             foreach (BillingItem item in billingItems)
             {
-                decimal rate = (item.Description == "Szoba ár") ? 1.05m : 1.27m;
+                decimal rate = 1m + item.Tax;
                 netAmount += item.Total / rate;
             }
 
-            return Convert.ToInt32(Math.Round(netAmount, MidpointRounding.AwayFromZero));
+            int result = Convert.ToInt32(Math.Round(netAmount, MidpointRounding.AwayFromZero));
+
+            return await Task.FromResult(result);
         }
-        
-        // 11.
-        public int CalculateTaxAmount(List<BillingItem> billingItems)
+
+        // 10.
+        public async Task<int> CalculateTaxAmountAsync(List<BillingItem> billingItems)
         {
-            int tax = 0;
+            decimal tax = 0m;
             foreach (BillingItem billingItem in billingItems)
             {
-                if (billingItem.Description == "Szoba ár")
-                {
-                    tax += Convert.ToInt32(billingItem.Total / 105m * 5m);
-                }
-
-                else
-                {
-                    tax += Convert.ToInt32(billingItem.Total / 127m * 27m);
-                }
+                decimal rate = 1m + billingItem.Tax;
+                tax += billingItem.Total - (billingItem.Total / rate);
             }
 
-            return tax;
+            int result = Convert.ToInt32(Math.Round(tax, MidpointRounding.AwayFromZero));
+            return await Task.FromResult(result);
         }
-        
-        // 12.
-        public int CalculateGrossAmount(List<BillingItem> billingItems)
+
+        // 11.
+        public async Task<int> CalculateGrossAmountAsync(List<BillingItem> billingItems)
         {
             int grossAmount = 0;
             foreach (BillingItem billingItem in billingItems)
             {
-                if (billingItem.Description == "Szoba ár")
-                {
-                    grossAmount += Convert.ToInt32(billingItem.Total);
-                }
-
-                else
-                {
-                    grossAmount += Convert.ToInt32(billingItem.Total);
-                }
+                grossAmount += Convert.ToInt32(billingItem.Total);
             }
 
-            return grossAmount;
+            return await Task.FromResult(grossAmount);
         }
-        
-        // 13.
-        public async Task<string> GetIdCardNumberAsync(Booking? booking)
-        {
-            if (booking is null)
-            {
-                return string.Empty;
-            }
 
-            string query = "SELECT guests.id_card_number " +
-                "FROM guests " +
-                "INNER JOIN bookings ON bookings.guest1_id = guests.id " +
-                "WHERE bookings.id = @bookingId";
+        #endregion
 
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@bookingId", booking.Id);
-                    await conn.OpenAsync();
+        #region Felületi (UI) Műveletek
 
-                    object? result = await cmd.ExecuteScalarAsync();
-                    return result is not null and not DBNull ? result.ToString()! : string.Empty;
-                }
-            }
-        }
-       
-        // 14.
+        // 12.
         public async Task LoadBillItemsAsync(DataGridView dgvPaymentSum, List<Service> services, Booking? selectedBooking = null, int days = 1, int guestCount = 1)
         {
             List<BillingItem> billingItems = await MakeListOfBillsAsync(services, selectedBooking, days, guestCount);
@@ -1141,228 +1041,230 @@ namespace Hotel_erp_Winforms_App.Services
             dgvPaymentSum.DataSource = null;
             dgvPaymentSum.DataSource = bindingList;
         }
-        #endregion
 
-        #region INFO
-        /*
-            1.: returns a list rooms filtered by the parameters
-            2.: fills the parameter flowLayoutPanel by the parameter list of rooms, with the parameter RoomCards
-        */
         #endregion
+        // =====================
+
         #region Add Booking
 
-        public async Task<List<Room>> FilterAvailableRoomsAsync(DateTime arrival, DateTime departure, int numberOfGuests, string suite)
+        // 1. Szobák szűrése és aszinkron lekérése
+        public async Task<List<Room>> FilterAvailableRoomsAsync(DateTime arrival, DateTime departure, int numberOfGuests, string suite, CancellationToken cancellationToken = default)
         {
-            List<Room> selectedRooms = new List<Room>();
-            string query =
-                "SELECT r.* " +
-                "FROM rooms r " +
-                "WHERE r.max_adults >= @guests " +
-                    "AND r.room_type = @suite " +
-                    "AND NOT EXISTS (" +
-                        "SELECT 1 " +
-                        "FROM bookings b " +
-                        "WHERE b.room_number = r.room_number " +
-                            "AND b.beginning_of_stay < @departure " +
-                            "AND b.end_of_stay > @arrival);";
+            var selectedRooms = new List<Room>();
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            const string query = @"
+        SELECT r.* 
+        FROM rooms r 
+        WHERE r.max_adults >= @guests 
+          AND r.room_type = @suite 
+          AND NOT EXISTS (
+              SELECT 1 
+              FROM bookings b 
+              WHERE b.room_number = r.room_number 
+                AND b.beginning_of_stay < @departure 
+                AND b.end_of_stay > @arrival
+          );";
+
+            await using var conn = new MySqlConnection(connectionString);
+            await using var cmd = new MySqlCommand(query, conn);
+
+            cmd.Parameters.AddWithValue("@guests", numberOfGuests);
+            cmd.Parameters.AddWithValue("@arrival", arrival.ToString("yyyy-MM-dd"));
+            cmd.Parameters.AddWithValue("@departure", departure.ToString("yyyy-MM-dd"));
+            cmd.Parameters.AddWithValue("@suite", suite);
+
+            await conn.OpenAsync(cancellationToken);
+
+            await using var rd = await cmd.ExecuteReaderAsync(cancellationToken);
+            while (await rd.ReadAsync(cancellationToken))
             {
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@guests", numberOfGuests);
-                    cmd.Parameters.AddWithValue("@arrival", arrival.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@departure", departure.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@suite", suite);
-
-                    await conn.OpenAsync();
-
-                    using (DbDataReader rd = await cmd.ExecuteReaderAsync())
-                    {
-                        while (await rd.ReadAsync())
-                        {
-                            Room room = new Room
-                            (
-                                Convert.ToInt32(rd["room_number"]),
-                                Enum.TryParse<Room.RoomType>(rd["room_type"]?.ToString(), true, out var roomType) ? roomType : default,
-                                Convert.ToInt32(rd["floorspace"]),
-                                Enum.TryParse<Room.BedType>(rd["bed_type"]?.ToString(), true, out var bedType) ? bedType : default,
-                                Convert.ToInt32(rd["has_balcony"]),
-                                Enum.TryParse<Room.HasView>(rd["has_view"]?.ToString(), true, out var hasView) ? hasView : default,
-                                Convert.ToInt32(rd["max_adults"]),
-                                rd["extras"] is DBNull or null ? string.Empty : rd["extras"].ToString()!,
-                                Enum.TryParse<Room.Status>(rd["status"]?.ToString(), true, out var status) ? status : default,
-                                Convert.ToInt32(rd["price_per_night"]),
-                                Convert.ToInt32(rd["door_locked"]),
-                                Convert.ToInt32(rd["needs_cleaning"]),
-                                Convert.ToInt32(rd["dont_disturb"]),
-                                Convert.ToInt32(rd["is_cleaning"]),
-                                Convert.ToInt32(rd["ac_temp"])
-                            );
-                            selectedRooms.Add(room);
-                        }
-                    }
-                }
+                var room = MapRoomFromDataReader(rd);
+                selectedRooms.Add(room);
             }
 
             return selectedRooms;
         }
 
-        public void FillAvailableRooms(List<Room> rooms, FlowLayoutPanel flp, Action<RoomCardUserControl> OnCardSelected)
+        // Segédmetódus az adatkiolvasás tisztább kezeléséhez
+        private static Room MapRoomFromDataReader(DbDataReader rd)
         {
-            flp.Controls.Clear();
+            return new Room
+            (
+                Convert.ToInt32(rd["room_number"]),
+                Enum.TryParse<Room.RoomType>(rd["room_type"]?.ToString(), true, out var roomType) ? roomType : default,
+                Convert.ToInt32(rd["floorspace"]),
+                Enum.TryParse<Room.BedType>(rd["bed_type"]?.ToString(), true, out var bedType) ? bedType : default,
+                Convert.ToInt32(rd["has_balcony"]),
+                Enum.TryParse<Room.HasView>(rd["has_view"]?.ToString(), true, out var hasView) ? hasView : default,
+                Convert.ToInt32(rd["max_adults"]),
+                rd["extras"] is DBNull or null ? string.Empty : rd["extras"].ToString()!,
+                Enum.TryParse<Room.Status>(rd["status"]?.ToString(), true, out var status) ? status : default,
+                Convert.ToInt32(rd["price_per_night"]),
+                Convert.ToInt32(rd["door_locked"]),
+                Convert.ToInt32(rd["needs_cleaning"]),
+                Convert.ToInt32(rd["dont_disturb"]),
+                Convert.ToInt32(rd["is_cleaning"]),
+                Convert.ToInt32(rd["ac_temp"])
+            );
+        }
 
-            foreach (var room in rooms)
+        // 2. Szobakártyák aszinkron feltöltése a felületre (UI freeze elkerülése)
+        public async Task FillAvailableRoomsAsync(List<Room> rooms, FlowLayoutPanel flp, Action<RoomCardUserControl> onCardSelected)
+        {
+            flp.SuspendLayout();
+            try
             {
-                RoomCardUserControl roomCard = new RoomCardUserControl();
-                roomCard.LoadCardData(room);
-
-                roomCard.CardSelected += (sender, e) =>
+                // Korábbi elemek törlése és felszabadítása
+                foreach (Control control in flp.Controls)
                 {
-                    OnCardSelected(roomCard);
-                };
+                    control.Dispose();
+                }
+                flp.Controls.Clear();
 
-                flp.Controls.Add(roomCard);
+                foreach (var room in rooms)
+                {
+                    var roomCard = new RoomCardUserControl();
+                    roomCard.LoadCardData(room);
+
+                    roomCard.CardSelected += (sender, e) => onCardSelected(roomCard);
+
+                    flp.Controls.Add(roomCard);
+
+                    // Rövid várakozás a UI szál folyamatosságáért nagy adatmennyiségnél
+                    await Task.Yield();
+                }
+            }
+            finally
+            {
+                flp.ResumeLayout(true);
             }
         }
 
         #endregion
 
-        #region INFO
-        /*
-            1.: Next Button
-            2.: Back Button
-            3.: Sets the button visibility true or false
-        */
-        #endregion
-        #region Buttons
+        #region UI Navigation
 
         public void NextButtonClick(TabControl tc, System.Windows.Forms.Button next, System.Windows.Forms.Button back, System.Windows.Forms.Button confirm)
         {
-            if (tc.SelectedIndex < 4)
+            if (tc.SelectedIndex < tc.TabCount - 1)
             {
-                tc.SelectedIndex += 1;
+                tc.SelectedIndex++;
             }
 
-            ButtonVisibility(tc, next, back, confirm);
+            UpdateButtonVisibility(tc, next, back, confirm);
         }
 
         public void BackButtonClick(TabControl tc, System.Windows.Forms.Button next, System.Windows.Forms.Button back, System.Windows.Forms.Button confirm)
         {
             if (tc.SelectedIndex > 0)
             {
-                tc.SelectedIndex -= 1;
+                tc.SelectedIndex--;
             }
 
-            ButtonVisibility(tc, next, back, confirm);
+            UpdateButtonVisibility(tc, next, back, confirm);
         }
 
-        private void ButtonVisibility(TabControl tc, System.Windows.Forms.Button next, System.Windows.Forms.Button back, System.Windows.Forms.Button confirm)
+        private void UpdateButtonVisibility(TabControl tc, System.Windows.Forms.Button next, System.Windows.Forms.Button back, System.Windows.Forms.Button confirm)
         {
-            back.Visible = (tc.SelectedIndex > 0);
-            next.Visible = (tc.SelectedIndex < 4);
-            confirm.Visible = (tc.SelectedIndex == 4);
+            int lastIndex = tc.TabCount - 1;
+            back.Visible = tc.SelectedIndex > 0;
+            next.Visible = tc.SelectedIndex < lastIndex;
+            confirm.Visible = tc.SelectedIndex == lastIndex;
         }
-
-        #endregion
-
-        #region INFO
-        /*
-            1.: Refreshes the page count on the bottom of the page
-        */
-        #endregion
-        #region UI refreshing
 
         public void RefreshPageCount(TabControl tc, System.Windows.Forms.Label lb)
         {
-            switch (tc.SelectedIndex)
-            {
-                case 0: lb.Text = "1/5"; return;
-                case 1: lb.Text = "2/5"; return;
-                case 2: lb.Text = "3/5"; return;
-                case 3: lb.Text = "4/5"; return;
-                case 4: lb.Text = "5/5"; return;
-            }
+            lb.Text = $"{tc.SelectedIndex + 1}/{tc.TabCount}";
         }
 
         #endregion
 
-        #region INFO
-        /*
-            3.: creates a service of the parameter serviceName, adds to the parameter list
-            4.: replaces the parameter label with the names of the items in the parameter list
-            5.: adds the parameter guest as a control to the parameter tabControl
-            6.: returns a string of the parameter rooms details
-        */
-        #endregion
         #region Common
-        // 3.
+
+        // 3. Szolgáltatások dinamikus kezelése szótár (Dictionary) alapú gyárral
+        private static readonly Dictionary<string, Func<int, Service>> ServiceRegistry = new()
+        {
+            ["Halfboard"] = _ => new Service(19, "Félpanzió", "Félpanziós ellátás reggelivel és vacsorával", ServiceTypeHu.Logisztika, 17000, "Half board", "Half-board service including breakfast and dinner.", ServiceTypeEn.Logistics),
+            ["Fullboard"] = _ => new Service(20, "Teljes ellátás", "Teljes ellátás reggelivel, ebéddel és vacsorával.", ServiceTypeHu.Logisztika, 28000, "Full board", "Full-board service including breakfast, lunch and dinner.", ServiceTypeEn.Logistics),
+            ["Transzfer"] = _ => new Service(3, "Transzfer", "Reptéri transzfer egy irányba", ServiceTypeHu.Logisztika, 10000, "Transfer", "Airport transfer one way", ServiceTypeEn.Logistics),
+            ["Parkolás"] = days => new Service(2, "Parkolás", "Zárt parkoló napidíj", ServiceTypeHu.Logisztika, 3000 * days, "Parking", "Gated parking daily fee", ServiceTypeEn.Logistics),
+            ["Pótágy"] = _ => new Service(9, "Pótágy", "Extra ágy biztosítása", ServiceTypeHu.Extrák, 7000, "Extra bed", "Provision of an extra bed", ServiceTypeEn.Extras),
+            ["Kiságy"] = _ => new Service(10, "Kiságy", "Babaágy biztosítása", ServiceTypeHu.Extrák, 3000, "Baby cot", "Provision of a baby cot", ServiceTypeEn.Extras),
+            ["Késői kijelentkezés"] = _ => new Service(22, "Késői kijelentkezés", "Fizetős szobahosszabbítás a távozás napján.", ServiceTypeHu.Logisztika, 20000, "Late check-out", "Paid room extension upon departure.", ServiceTypeEn.Logistics),
+            ["Korai távozás"] = _ => new Service(23, "Korai távozás", "Tervezettnél korábbi elutazás a szállodából.", ServiceTypeHu.Logisztika, 30000, "Early departure", "Leaving the hotel before schedule.", ServiceTypeEn.Logistics),
+            ["Pezsgő bekészítés"] = _ => new Service(21, "Pezsgő bekészítés", "A világ legikonikusabb champagne-ja...", ServiceTypeHu.Extrák, 37000, "Champagne", "The world's most iconic champagne...", ServiceTypeEn.Extras)
+        };
+
         public void CreateNewService(string serviceName, List<Service> serviceList, int days = 1, Room? room = null)
         {
-            var service = serviceName switch
-            {
-                "Szoba" when room != null => new Service(0, "Szoba", "Szoba ára éjszakánként", ServiceTypeHu.Logisztika, room.Price * days, "Room", "Price of room per night", ServiceTypeEn.Logistics),
-                "Halfboard" => new Service(19, "Félpanzió", "Félpanziós ellátás reggelivel és vacsorával", ServiceTypeHu.Logisztika, 17000, "Half board", "Half-board service including breakfast and dinner.", ServiceTypeEn.Logistics),
-                "Fullboard" => new Service(20, "Teljes ellátás", "Teljes ellátás reggelivel, ebéddel és vacsorával.", ServiceTypeHu.Logisztika, 28000, "Full board", "Full-board service including breakfast, lunch and dinner.", ServiceTypeEn.Logistics),
-                "Transzfer" => new Service(3, "Transzfer", "Reptéri transzfer egy irányba", ServiceTypeHu.Logisztika, 10000, "Transfer", "Airport transfer one way", ServiceTypeEn.Logistics),
-                "Parkolás" => new Service(2, "Parkolás", "Zárt parkoló napidíj", ServiceTypeHu.Logisztika, 3000 * days, "Parking", "Gated parking daily fee", ServiceTypeEn.Logistics),
-                "Pótágy" => new Service(9, "Pótágy", "Extra ágy biztosítása", ServiceTypeHu.Extrák, 7000, "Extra bed", "Provision of an extra bed", ServiceTypeEn.Extras),
-                "Kiságy" => new Service(10, "Kiságy", "Babaágy biztosítása", ServiceTypeHu.Extrák, 3000, "Baby cot", "Provision of a baby cot", ServiceTypeEn.Extras),
-                "Késői kijelentkezés" => new Service(22, "Késői kijelentkezés", "Fizetős szobahosszabbítás a távozás napján.", ServiceTypeHu.Logisztika, 20000, "Late check-out", "Paid room extension upon departure.", ServiceTypeEn.Logistics),
-                "Korai távozás" => new Service(23, "Korai távozás", "Tervezettnél korábbi elutazás a szállodából.", ServiceTypeHu.Logisztika, 30000, "Early departure", "Leaving the hotel before schedule.", ServiceTypeEn.Logistics),
-                "Pezsgő bekészítés" => new Service(21, "Pezsgő bekészítés", "A világ legikonikusabb champagne-ja...", ServiceTypeHu.Extrák, 37000, "Champagne", "The world's most iconic champagne...", ServiceTypeEn.Extras),
-                _ => null
-            };
+            if (serviceList == null) return;
 
-            if (service != null)
+            if (serviceName == "Szoba")
             {
-                if(service.NameHu == "Szoba")
+                serviceList.RemoveAll(s => s.NameHu == "Szoba" || s.NameEn == "Room" || s.Id == 0);
+
+                if (room != null)
                 {
-                    serviceList.RemoveAll(s => s.NameHu == "Szoba");
+                    int calculatedDays = days > 0 ? days : 1;
+                    var roomSvc = new Service(
+                        0,
+                        "Szoba",
+                        "Szoba ára éjszakánként",
+                        ServiceTypeHu.Logisztika,
+                        room.Price * calculatedDays,
+                        "Room",
+                        "Price of room per night",
+                        ServiceTypeEn.Logistics
+                    );
+                    serviceList.Add(roomSvc);
                 }
+                return;
+            }
 
-                serviceList.Add(service);
+            if (ServiceRegistry.TryGetValue(serviceName, out var serviceFactory))
+            {
+                serviceList.Add(serviceFactory(days));
             }
         }
-        // 4.
+
+        // 4. Kérések összefűzése
         public void FillSumSpecialRequests(List<Service> services, System.Windows.Forms.Label lbSumExtras)
         {
-            string sumRequests = string.Join(" | ", services.Where(s => s.NameHu != "Szoba").Select(s => s.NameHu));
+            var extraServices = services.Where(s => s.NameHu != "Szoba").Select(s => s.NameHu).ToList();
 
-            lbSumExtras.Text = services.Count() > 1
-                ? sumRequests
+            lbSumExtras.Text = extraServices.Count > 0
+                ? string.Join(" | ", extraServices)
                 : "No special requests";
         }
-        // 5.
-        public void AddGuestTabToSummary(Guest g, List<Guest> guests, TabControl tcGuests)
+
+        // 5. Vendég fülek hozzáadása aszinkron módon
+        public async Task AddGuestTabToSummaryAsync(Guest g, List<Guest> guests, TabControl tcGuests)
         {
             int index = guests.IndexOf(g);
 
-            GuestDataSumControl guestTab = new GuestDataSumControl();
-            TabPage tp = new TabPage($"tpGuest{index}");
+            var guestTab = new GuestDataSumControl();
+            var tp = new TabPage($"tpGuest{index}")
+            {
+                Text = $"Guest {index + 1}"
+            };
 
-            tp.Text = $"Guest {index + 1}";
             tp.Controls.Add(guestTab);
-
             guestTab.FillGuestTabData(g);
 
             tcGuests.TabPages.Add(tp);
+
+            await Task.Yield();
         }
-        // 6.
-        public string BuildSelectedRoomDetailsString(Room room)
+
+        // 6. Szobainformációs szöveg összeállítása
+        public string BuildSelectedRoomDetailsString(Room? room)
         {
-            StringBuilder sb = new StringBuilder();
+            if (room == null) return "No room selected";
 
-            sb.Clear();
             string hasBalcony = room.HasBalcony == 1 ? "Balcony" : "No Balcony";
-            sb.Append($"{room.Room_number.ToString()}  |  ");
-            sb.Append($"{room.RoomsRoomtype.ToString()}  |  ");
-            sb.Append($"{room.RoomsBedType.ToString()}  |  ");
-            sb.Append($"{hasBalcony}  |  ");
-            sb.Append($"{room.RoomsView.ToString()}");
-
-            return sb.ToString();
+            return $"{room.Room_number}  |  {room.RoomsRoomtype}  |  {room.RoomsBedType}  |  {hasBalcony}  |  {room.RoomsView}";
         }
+
         #endregion
     }
 }

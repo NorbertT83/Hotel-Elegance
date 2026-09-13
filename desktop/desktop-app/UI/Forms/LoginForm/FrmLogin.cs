@@ -38,15 +38,19 @@ namespace Hotel_erp_Winforms_App.Forms
             {
                 CurrentUser.Id = loggedInEmployee.Id;
                 CurrentUser.Name = loggedInEmployee.FName ?? "User";
-                CurrentUser.Role = loggedInEmployee.JobTitle.ToString() switch
+
+                if(!string.IsNullOrEmpty(loggedInEmployee.JobTitle))
                 {
-                    "HK Manager" => UserRole.HKManager,
-                    "Receptionist" => UserRole.Receptionist,
-                    "Front Office Manager" => UserRole.FrontOffMan,
-                    "Hotel Manager" => UserRole.Manager,
-                    "Admin" => UserRole.Admin,
-                    _ => UserRole.Guest
-                };
+                    CurrentUser.Role = loggedInEmployee.JobTitle.ToString() switch
+                    {
+                        "HK Manager" => UserRole.HKManager,
+                        "Receptionist" => UserRole.Receptionist,
+                        "Front Office Manager" => UserRole.FrontOffMan,
+                        "Hotel Manager" => UserRole.Manager,
+                        "Admin" => UserRole.Admin,
+                        _ => UserRole.Guest
+                    };
+                }
 
                 string password = tbPassword.Text.Trim();
 

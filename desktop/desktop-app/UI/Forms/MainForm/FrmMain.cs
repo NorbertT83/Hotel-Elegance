@@ -5,15 +5,13 @@ using Hotel_erp_Winforms_App.UI.Controls;
 using Hotel_erp_Winforms_App.UI.Controls.Dashboard;
 using Hotel_erp_Winforms_App.UI.Controls.EmployeeControl;
 using Hotel_erp_Winforms_App.UI.Controls.Rooms;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace Hotel_erp_Winforms_App
 {
     public partial class FrmMain : Form
     {
         public readonly Employee currentuser;
+        private List<Button> _menuButtons = new List<Button>();
 
         public FrmMain(Employee loggedInEmployee)
         {
@@ -31,15 +29,44 @@ namespace Hotel_erp_Winforms_App
             panelHeader.BackColor = feher;
             panelMainContent.BackColor = feher;
 
-            FormatMenuButton(btnBookings, sotetKek, elenkKek, feher);
-            FormatMenuButton(btnGuests, sotetKek, elenkKek, feher);
-            FormatMenuButton(btnRooms, sotetKek, elenkKek, feher);
-            FormatMenuButton(btnHousekeeping, sotetKek, elenkKek, feher);
-            FormatMenuButton(btnServices, sotetKek, elenkKek, feher);
-            FormatMenuButton(btnEmployees, sotetKek, elenkKek, feher);
+            _menuButtons = new List<Button>
+            {
+                btnDashBoard,
+                btnBookings,
+                btnGuests,
+                btnRooms,
+                btnHousekeeping,
+                btnServices,
+                btnEmployees
+            };
+
+            foreach (var btn in _menuButtons)
+            {
+                FormatMenuButton(btn, sotetKek, elenkKek, feher);
+            }
 
             ShowDashboard();
             PermissionManager.ApplyPermissions(this);
+        }
+
+        private void SetActiveMenuButton(Button activeButton)
+        {
+            Color inaktivHatter = Color.Transparent;
+            Color aktivHatter = Color.FromArgb(59, 130, 246);
+
+            foreach (var btn in _menuButtons)
+            {
+                if (btn == activeButton)
+                {
+                    btn.BackColor = aktivHatter;
+                    btn.Font = new Font(btn.Font, FontStyle.Bold);
+                }
+                else
+                {
+                    btn.BackColor = inaktivHatter;
+                    btn.Font = new Font(btn.Font, FontStyle.Regular);
+                }
+            }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -59,36 +86,42 @@ namespace Hotel_erp_Winforms_App
         #region Menu buttons
         private void btnBookings_Click(object sender, EventArgs e)
         {
+            SetActiveMenuButton(btnBookings);
             ShowControl(new BookingControl());
             lbControlTitle.Text = "Bookings";
         }
 
         private void btnGuests_Click(object sender, EventArgs e)
         {
+            SetActiveMenuButton(btnGuests);
             ShowControl(new GuestsControl());
             lbControlTitle.Text = "Guests";
         }
 
         private void btnRooms_Click(object sender, EventArgs e)
         {
+            SetActiveMenuButton(btnRooms);
             ShowControl(new RoomsControl());
             lbControlTitle.Text = "Rooms Management";
         }
 
         private void btnHousekeeping_Click(object sender, EventArgs e)
         {
+            SetActiveMenuButton(btnHousekeeping);
             ShowControl(new HousekeepingControl());
             lbControlTitle.Text = "Housekeeping";
         }
 
         private void btnServices_Click(object sender, EventArgs e)
         {
+            SetActiveMenuButton(btnServices);
             ShowControl(new ProductContol());
             lbControlTitle.Text = "Services";
         }
 
         private void btnEmployees_Click(object sender, EventArgs e)
         {
+            SetActiveMenuButton(btnEmployees);
             ShowControl(new EmployeeControl());
             lbControlTitle.Text = "Employees";
         }
@@ -131,6 +164,7 @@ namespace Hotel_erp_Winforms_App
 
         public void ShowDashboard()
         {
+            SetActiveMenuButton(btnDashBoard);
             ShowControl(new DashboardControl(currentuser));
             lbControlTitle.Text = "Dashboard";
         }

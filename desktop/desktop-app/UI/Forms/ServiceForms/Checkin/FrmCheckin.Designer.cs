@@ -38,6 +38,7 @@
             DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             tcCheckin = new TabControl();
             tpPersonalData = new TabPage();
+            btnFillData = new Button();
             cbGuests = new ComboBox();
             btnEditGuestData = new Button();
             btnSaveGuest = new Button();
@@ -119,6 +120,12 @@
             label39 = new Label();
             label38 = new Label();
             dgvPaymentSum = new DataGridView();
+            colDate = new DataGridViewTextBoxColumn();
+            colNameOfService = new DataGridViewTextBoxColumn();
+            colUnitPrice = new DataGridViewTextBoxColumn();
+            colQuantity = new DataGridViewTextBoxColumn();
+            colTax = new DataGridViewTextBoxColumn();
+            colTotal = new DataGridViewTextBoxColumn();
             panel4 = new Panel();
             tableLayoutPanel3 = new TableLayoutPanel();
             label35 = new Label();
@@ -156,12 +163,6 @@
             btnBack = new Button();
             btnConfirm = new Button();
             btnNext = new Button();
-            colDate = new DataGridViewTextBoxColumn();
-            colNameOfService = new DataGridViewTextBoxColumn();
-            colUnitPrice = new DataGridViewTextBoxColumn();
-            colQuantity = new DataGridViewTextBoxColumn();
-            colTax = new DataGridViewTextBoxColumn();
-            colTotal = new DataGridViewTextBoxColumn();
             tcCheckin.SuspendLayout();
             tpPersonalData.SuspendLayout();
             pnlTop.SuspendLayout();
@@ -210,6 +211,7 @@
             // tpPersonalData
             // 
             tpPersonalData.BackColor = Color.White;
+            tpPersonalData.Controls.Add(btnFillData);
             tpPersonalData.Controls.Add(cbGuests);
             tpPersonalData.Controls.Add(btnEditGuestData);
             tpPersonalData.Controls.Add(btnSaveGuest);
@@ -244,6 +246,18 @@
             tpPersonalData.Size = new Size(535, 588);
             tpPersonalData.TabIndex = 0;
             tpPersonalData.Text = "Personal Data";
+            // 
+            // btnFillData
+            // 
+            btnFillData.FlatStyle = FlatStyle.Flat;
+            btnFillData.Location = new Point(460, 478);
+            btnFillData.Name = "btnFillData";
+            btnFillData.Size = new Size(47, 23);
+            btnFillData.TabIndex = 54;
+            btnFillData.Text = "Fill";
+            btnFillData.UseVisualStyleBackColor = true;
+            btnFillData.Visible = false;
+            btnFillData.Click += btnFillData_Click;
             // 
             // cbGuests
             // 
@@ -327,9 +341,11 @@
             // 
             // cbNationality
             // 
-            cbNationality.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbNationality.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cbNationality.DropDownHeight = 150;
             cbNationality.Font = new Font("Segoe UI", 12F);
             cbNationality.FormattingEnabled = true;
+            cbNationality.IntegralHeight = false;
             cbNationality.Location = new Point(19, 429);
             cbNationality.Name = "cbNationality";
             cbNationality.Size = new Size(488, 29);
@@ -1167,6 +1183,74 @@
             dgvPaymentSum.TabIndex = 2;
             dgvPaymentSum.SelectionChanged += dgvPaymentSum_SelectionChanged;
             // 
+            // colDate
+            // 
+            colDate.DataPropertyName = "Date";
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Format = "d";
+            dataGridViewCellStyle2.NullValue = null;
+            colDate.DefaultCellStyle = dataGridViewCellStyle2;
+            colDate.FillWeight = 92F;
+            colDate.HeaderText = "Date";
+            colDate.Name = "colDate";
+            colDate.ReadOnly = true;
+            colDate.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colNameOfService
+            // 
+            colNameOfService.DataPropertyName = "Description";
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colNameOfService.DefaultCellStyle = dataGridViewCellStyle3;
+            colNameOfService.FillWeight = 120F;
+            colNameOfService.HeaderText = "Item";
+            colNameOfService.Name = "colNameOfService";
+            colNameOfService.ReadOnly = true;
+            // 
+            // colUnitPrice
+            // 
+            colUnitPrice.DataPropertyName = "UnitPrice";
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.Format = "C0";
+            dataGridViewCellStyle4.NullValue = null;
+            colUnitPrice.DefaultCellStyle = dataGridViewCellStyle4;
+            colUnitPrice.FillWeight = 70F;
+            colUnitPrice.HeaderText = "Unit Pr.";
+            colUnitPrice.Name = "colUnitPrice";
+            colUnitPrice.ReadOnly = true;
+            // 
+            // colQuantity
+            // 
+            colQuantity.DataPropertyName = "Quantity";
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colQuantity.DefaultCellStyle = dataGridViewCellStyle5;
+            colQuantity.FillWeight = 55F;
+            colQuantity.HeaderText = "Qty";
+            colQuantity.Name = "colQuantity";
+            colQuantity.ReadOnly = true;
+            // 
+            // colTax
+            // 
+            colTax.DataPropertyName = "Tax";
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colTax.DefaultCellStyle = dataGridViewCellStyle6;
+            colTax.FillWeight = 65F;
+            colTax.HeaderText = "TAX";
+            colTax.Name = "colTax";
+            colTax.ReadOnly = true;
+            // 
+            // colTotal
+            // 
+            colTotal.DataPropertyName = "Total";
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "C2";
+            dataGridViewCellStyle7.NullValue = "0";
+            colTotal.DefaultCellStyle = dataGridViewCellStyle7;
+            colTotal.FillWeight = 65F;
+            colTotal.HeaderText = "Total";
+            colTotal.Name = "colTotal";
+            colTotal.ReadOnly = true;
+            colTotal.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
             // panel4
             // 
             panel4.Controls.Add(tableLayoutPanel3);
@@ -1601,74 +1685,6 @@
             btnNext.UseVisualStyleBackColor = false;
             btnNext.Click += btnNext_Click;
             // 
-            // colDate
-            // 
-            colDate.DataPropertyName = "Date";
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.Format = "d";
-            dataGridViewCellStyle2.NullValue = null;
-            colDate.DefaultCellStyle = dataGridViewCellStyle2;
-            colDate.FillWeight = 92F;
-            colDate.HeaderText = "Date";
-            colDate.Name = "colDate";
-            colDate.ReadOnly = true;
-            colDate.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colNameOfService
-            // 
-            colNameOfService.DataPropertyName = "Description";
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colNameOfService.DefaultCellStyle = dataGridViewCellStyle3;
-            colNameOfService.FillWeight = 120F;
-            colNameOfService.HeaderText = "Item";
-            colNameOfService.Name = "colNameOfService";
-            colNameOfService.ReadOnly = true;
-            // 
-            // colUnitPrice
-            // 
-            colUnitPrice.DataPropertyName = "UnitPrice";
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.Format = "C0";
-            dataGridViewCellStyle4.NullValue = null;
-            colUnitPrice.DefaultCellStyle = dataGridViewCellStyle4;
-            colUnitPrice.FillWeight = 70F;
-            colUnitPrice.HeaderText = "Unit Pr.";
-            colUnitPrice.Name = "colUnitPrice";
-            colUnitPrice.ReadOnly = true;
-            // 
-            // colQuantity
-            // 
-            colQuantity.DataPropertyName = "Quantity";
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colQuantity.DefaultCellStyle = dataGridViewCellStyle5;
-            colQuantity.FillWeight = 55F;
-            colQuantity.HeaderText = "Qty";
-            colQuantity.Name = "colQuantity";
-            colQuantity.ReadOnly = true;
-            // 
-            // colTax
-            // 
-            colTax.DataPropertyName = "Tax";
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colTax.DefaultCellStyle = dataGridViewCellStyle6;
-            colTax.FillWeight = 65F;
-            colTax.HeaderText = "TAX";
-            colTax.Name = "colTax";
-            colTax.ReadOnly = true;
-            // 
-            // colTotal
-            // 
-            colTotal.DataPropertyName = "Total";
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C2";
-            dataGridViewCellStyle7.NullValue = "0";
-            colTotal.DefaultCellStyle = dataGridViewCellStyle7;
-            colTotal.FillWeight = 65F;
-            colTotal.HeaderText = "Total";
-            colTotal.Name = "colTotal";
-            colTotal.ReadOnly = true;
-            colTotal.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
             // FrmCheckin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1825,7 +1841,6 @@
         private Label label54;
         private TabControl tcGuests;
         private TabPage tpGuest1;
-        private TextBox textBox4;
         private Label label63;
         private Label lbSumRemaining;
         private Label label80;
@@ -1852,5 +1867,6 @@
         private DataGridViewTextBoxColumn colQuantity;
         private DataGridViewTextBoxColumn colTax;
         private DataGridViewTextBoxColumn colTotal;
+        private Button btnFillData;
     }
 }

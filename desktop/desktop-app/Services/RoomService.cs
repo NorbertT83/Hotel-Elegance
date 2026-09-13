@@ -1,16 +1,19 @@
 ﻿using Hotel_erp_Winforms_App.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Hotel_erp_Winforms_App.Services
 {
     public class RoomService
     {
+        #region variables
+
         private readonly string _connectionString = "server=localhost;port=3306;database=hotelelegancedb;uid=root;pwd=";
+
+        #endregion
+
+        #region Database Actions
 
         public async Task<List<Room>> GetAllRoomsAsync()
         {
@@ -151,6 +154,10 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
+        #endregion
+
+        #region Helpers
+
         private Room MapRoomFromReader(DbDataReader reader)
         {
             return new Room(
@@ -171,5 +178,7 @@ namespace Hotel_erp_Winforms_App.Services
                 reader["ac_temp"] != DBNull.Value ? Convert.ToInt32(reader["ac_temp"]) : 22
             );
         }
+
+        #endregion
     }
 }

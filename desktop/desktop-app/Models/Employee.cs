@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-
-namespace Hotel_erp_Winforms_App.Models
+﻿namespace Hotel_erp_Winforms_App.Models
 {
     public class Employee
     {
@@ -36,7 +31,7 @@ namespace Hotel_erp_Winforms_App.Models
         public string? Address { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfHiring { get; set; }
-        public string? JobTitle { get; set; } //enum?
+        public string? JobTitle { get; set; }
         public int Salary { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

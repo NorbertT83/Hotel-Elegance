@@ -1,11 +1,5 @@
 ﻿using Hotel_erp_Winforms_App.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography;
-using System.Security.Permissions;
-using System.Text;
 
 namespace Hotel_erp_Winforms_App.Services
 {
@@ -17,15 +11,8 @@ namespace Hotel_erp_Winforms_App.Services
 
         #endregion
 
-        #region INFO
-        /*
-            1.: returns a list of all the guests in the database
-            2.: returns a list of guests by the parameter name and loyalty category
-            3.: uploads the parameter guest to database
-        */
-        #endregion
-        #region database actions
-        // 1.
+        #region Database Operations
+
         public async Task<List<Guest>> GetAllGuestsFromDbAsync()
         {
             string query = "SELECT * FROM guests;";
@@ -51,7 +38,6 @@ namespace Hotel_erp_Winforms_App.Services
             return guests;
         }
 
-        // 2.
         public async Task<List<Guest>> GetFilteredGuestListAsync(string search, string loyalty)
         {
             List<Guest> guests = new List<Guest>();
@@ -77,12 +63,12 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 await conn.OpenAsync();
 
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@search", $"%{search}%");
                     cmd.Parameters.AddWithValue("@loyalty", loyaltyLevel);
 
-                    await using(var reader = await cmd.ExecuteReaderAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
@@ -96,7 +82,6 @@ namespace Hotel_erp_Winforms_App.Services
             return guests;
         }
 
-        // 3.
         public async Task SaveGuestToDatabaseAsync(Guest g)
         {
             string query = @"
@@ -128,7 +113,6 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // 4.
         public async Task DeleteGuestFromDbAsync(Guest g)
         {
             string query = @"
@@ -140,7 +124,7 @@ namespace Hotel_erp_Winforms_App.Services
             {
                 await conn.OpenAsync();
 
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", g.Id);
 
@@ -149,7 +133,10 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // ---- HELPERS ----
+        #endregion
+
+        #region Helper Methods
+
         private string? GetStringOrNull(object dbValue)
         {
             return dbValue is DBNull ? null : dbValue.ToString();
@@ -175,64 +162,44 @@ namespace Hotel_erp_Winforms_App.Services
             );
             return g;
         }
+
         #endregion
 
-        #region INFO
-        /*
-            1.: returns the number of guests with loyalty level: 2
-            2.: returns the number of currently staying guests
-            3.: returns the number of guests with more than one booking in the database
-        */
-        #endregion
-        #region Counters
+        #region Metrics & Counters
 
-        // 1.
         public int GetNumberOfVipGuests(List<Guest> guests)
         {
-            int count = guests.Count(g => g.LoyaltyLevel == 2);
-
-            return count;
+            return guests.Count(g => g.LoyaltyLevel == 2);
         }
 
-        // 2.
         public int GetNumberOfCurrentlyStayers(List<Booking>? bookings)
         {
             if (bookings == null) return 0;
 
-            int count = bookings
+            return bookings
                 .Where(b => b.Checkin != null && b.Checkout == null)
                 .Sum(b => (b.GuestId == 0 ? 1 : 0) +
                           (b.GuestId2 == 0 ? 1 : 0) +
                           (b.GuestId3 == 0 ? 1 : 0) +
                           (b.GuestId4 == 0 ? 1 : 0));
-
-            return count;
         }
 
-        // 3.
         public int GetNumberOfReturningGuests(List<Booking> bookings)
         {
             if (bookings == null) return 0;
 
-            int returningCount = bookings
+            return bookings
                 .SelectMany(b => new[] { b.GuestId, b.GuestId2, b.GuestId3, b.GuestId4 })
                 .Where(id => id.HasValue)
                 .Select(id => id!.Value)
                 .GroupBy(id => id)
                 .Count(g => g.Count() > 1);
-
-            return returningCount;
         }
 
         #endregion
 
-        #region INFO
-        /*
-            1.: returns the loyalty level number by the selected category
-        */
-        #endregion
-        #region filtering methods
-        // 1.
+        #region Business Logic & Filtering
+
         public int GetLoyaltyLevelBySelectedCategory(string category)
         {
             if (string.IsNullOrWhiteSpace(category)) return 0;

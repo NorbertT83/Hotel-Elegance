@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hotel_erp_Winforms_App.Models
+﻿namespace Hotel_erp_Winforms_App.Models
 {
     public enum RoomType { standard, deluxe, suite }
     public enum CateringLevel { breakfast, halfboard, fullboard }
@@ -39,11 +35,6 @@ namespace Hotel_erp_Winforms_App.Models
         public int? GuestId2 { get; set; }
         public int? GuestId3 { get; set; }
         public int? GuestId4 { get; set; }
-
-        //public Guest MainGuest { get; set; }
-        //public Guest Guest2 { get; set; }
-        //public Guest Guest3 { get; set; }
-        //public Guest Guest4 { get; set; }
 
         public DateTime BeginningOfStay { get; set; }
         public DateTime EndOfStay { get; set; }

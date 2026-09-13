@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.Common;
 using System.Text;
 using Hotel_erp_Winforms_App.Models;
 using MySql.Data.MySqlClient;
@@ -14,40 +13,24 @@ namespace Hotel_erp_Winforms_App.Services
 
         #endregion
 
-        #region INFO
-        /*
-         * 1.: get all services from database
-         * 2.: returns a list of services filtered by the paramteres
-         * 3.: returns a list of active or inactive services
-         * 4.: saves a new service to db
-         * 5.: updates the parameter service in db
-         * 6.: deletes the parameter service from db
-         * 7.: gets all service bookings from db
-        */
-        #endregion
-        #region database actions
-        // 1.
+        #region Database Actions
+
+        // 1. Get all services
         public async Task<List<Service>> GetAllServicesFromDbAsync()
         {
             List<Service> services = new List<Service>();
-
-            string query = @"
-                SELECT *
-                FROM services;";
+            string query = "SELECT * FROM services;";
 
             await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     await using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
-                            Service service = MakeNewService(reader);
-
-                            services.Add(service);
+                            services.Add(MakeNewService(reader));
                         }
                     }
                 }
@@ -56,49 +39,55 @@ namespace Hotel_erp_Winforms_App.Services
             return services;
         }
 
-        // 2.
+        // 2. Get filtered services
         public async Task<List<Service>> GetFilteredSerivicesAsync(int type, string search)
         {
             List<Service> filteredServices = new List<Service>();
-
             StringBuilder queryBuilder = new StringBuilder("SELECT * FROM services WHERE 1 = 1 ");
+            var parameters = new Dictionary<string, object>();
 
-            // Típus
+            // Type filter
             switch (type)
             {
-                case 0: queryBuilder.Append(""); break;
-                case 1: queryBuilder.Append("AND service_type_en = 'Wellness' "); break;
-                case 2: queryBuilder.Append("AND service_type_en = 'Extras' "); break;
-                case 3: queryBuilder.Append("AND service_type_en = 'Logistics' "); break;
+                case 1:
+                    queryBuilder.Append("AND service_type_en = 'Wellness' ");
+                    break;
+                case 2:
+                    queryBuilder.Append("AND service_type_en = 'Extras' ");
+                    break;
+                case 3:
+                    queryBuilder.Append("AND service_type_en = 'Logistics' ");
+                    break;
             }
 
-            // Search box
-            if (!string.IsNullOrEmpty(search))
+            // Search filter
+            if (!string.IsNullOrWhiteSpace(search))
             {
-                queryBuilder.Append($"AND (name_hu LIKE @search " +
-                                        $"OR description_hu LIKE @search " +
-                                        $"OR price LIKE @search " +
-                                        $"OR service_type_hu LIKE @search " +
-                                        $"OR name_en LIKE @search " +
-                                        $"OR description_en LIKE @search " +
-                                        $"OR service_type_en LIKE @search);");
-
+                queryBuilder.Append(@"AND (name_hu LIKE @search 
+                                        OR description_hu LIKE @search 
+                                        OR price LIKE @search 
+                                        OR service_type_hu LIKE @search 
+                                        OR name_en LIKE @search 
+                                        OR description_en LIKE @search 
+                                        OR service_type_en LIKE @search) ");
+                parameters.Add("@search", $"%{search}%");
             }
 
             await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
                 await using (MySqlCommand cmd = new MySqlCommand(queryBuilder.ToString(), conn))
                 {
-                    cmd.Parameters.AddWithValue("@search", search + "%");
+                    foreach (var p in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(p.Key, p.Value);
+                    }
 
                     await using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
-                            Service s = MakeNewService(reader);
-                            filteredServices.Add(s);
+                            filteredServices.Add(MakeNewService(reader));
                         }
                     }
                 }
@@ -107,7 +96,7 @@ namespace Hotel_erp_Winforms_App.Services
             return filteredServices;
         }
 
-        // 3.
+        // 3. Get active or inactive services
         public async Task<List<Service>> GetActiveOrInactiveServicesAsync(string active)
         {
             List<Service> services = new List<Service>();
@@ -117,8 +106,7 @@ namespace Hotel_erp_Winforms_App.Services
                 FROM services s
                 WHERE s.id IN (SELECT service_id 
                                FROM servicebookings
-                               WHERE status = 'created'
-                                   OR status = 'pending');";
+                               WHERE status = 'created' OR status = 'pending');";
 
             string inactiveQuery = @"
                 SELECT *
@@ -130,7 +118,7 @@ namespace Hotel_erp_Winforms_App.Services
                 SELECT *
                 FROM services
                 WHERE id NOT IN (SELECT service_id
-                                FROM servicebookings);";
+                                 FROM servicebookings);";
 
             string query = active switch
             {
@@ -140,18 +128,21 @@ namespace Hotel_erp_Winforms_App.Services
                 _ => string.Empty
             };
 
-            await using(MySqlConnection conn = new MySqlConnection(_connectionString))
+            if (string.IsNullOrEmpty(query))
+            {
+                return services;
+            }
+
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
-                    await using(var reader = await cmd.ExecuteReaderAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        while(await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
-                            Service s = MakeNewService(reader);
-                            services.Add(s);
+                            services.Add(MakeNewService(reader));
                         }
                     }
                 }
@@ -160,7 +151,7 @@ namespace Hotel_erp_Winforms_App.Services
             return services;
         }
 
-        // 4.
+        // 4. Save new service
         public async Task SaveNewServiceToDbAsync(Service service)
         {
             string query = @"
@@ -172,16 +163,14 @@ namespace Hotel_erp_Winforms_App.Services
             await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
                 await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@nameHu", service.NameHu);
-                    cmd.Parameters.AddWithValue("@descriptionHu", (object)service.DescriptionHu ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@descriptionHu", string.IsNullOrWhiteSpace(service.DescriptionHu) ? DBNull.Value : service.DescriptionHu);
                     cmd.Parameters.AddWithValue("@price", service.Price);
                     cmd.Parameters.AddWithValue("@serviceTypeHu", service.SelectedServiceTypeHu.ToString());
-
-                    cmd.Parameters.AddWithValue("@nameEn", (object)service.NameEn ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@descriptionEn", (object)service.DescriptionEn ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@nameEn", string.IsNullOrWhiteSpace(service.NameEn) ? DBNull.Value : service.NameEn);
+                    cmd.Parameters.AddWithValue("@descriptionEn", string.IsNullOrWhiteSpace(service.DescriptionEn) ? DBNull.Value : service.DescriptionEn);
                     cmd.Parameters.AddWithValue("@serviceTypeEn", service.SelectedServiceTypeEn.ToString());
 
                     await cmd.ExecuteNonQueryAsync();
@@ -189,7 +178,7 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // 5.
+        // 5. Update existing service
         public async Task UpdateSelectedServiceAsync(Service service)
         {
             string query = @"
@@ -203,11 +192,10 @@ namespace Hotel_erp_Winforms_App.Services
                     service_type_en = @serviceTypeEn 
                 WHERE id = @id;";
 
-            await using(MySqlConnection conn = new MySqlConnection(_connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", service.Id);
                     cmd.Parameters.AddWithValue("@nameHu", service.NameHu);
@@ -223,7 +211,7 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // 6.
+        // 6. Delete service
         public async Task DeleteSelectedServiceFromDbAsync(Service service)
         {
             string query = "DELETE FROM services WHERE id = @id;";
@@ -231,47 +219,42 @@ namespace Hotel_erp_Winforms_App.Services
             await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
                 await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", service.Id);
-
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
 
-        // 7.
+        // 7. Get service bookings
         public async Task<List<RequestedService>> GetServiceDataByServicebookingAsync(bool all = false)
         {
             List<RequestedService> reqServices = new List<RequestedService>();
 
             string query = @"
-                SELECT sb.id as id, b.room_number AS room_number, sb.status AS status, sb.requested_at, s.name_en AS name, s.service_type_en AS service_type,sb.quantity AS quantity, sb.price_at_booking AS price
+                SELECT sb.id AS id, b.room_number AS room_number, sb.status AS status, sb.requested_at, s.name_en AS name, s.service_type_en AS service_type, sb.quantity AS quantity, sb.price_at_booking AS price
                 FROM servicebookings sb
                 INNER JOIN bookings b ON sb.booking_id = b.id
                 INNER JOIN services s ON sb.service_id = s.id ";
 
             if (!all)
             {
-                query += "WHERE status IN('created', 'pending')";
+                query += "WHERE sb.status IN ('created', 'pending') ";
             }
 
-            query += "ORDER BY requested_at DESC;";
+            query += "ORDER BY sb.requested_at DESC;";
 
-            await using(MySqlConnection conn = new MySqlConnection(_connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
-                    await using(var reader = await cmd.ExecuteReaderAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        while(await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
-                            RequestedService service = MakeNewRequestedService(reader);
-
-                            reqServices.Add(service);
+                            reqServices.Add(MakeNewRequestedService(reader));
                         }
                     }
                 }
@@ -280,18 +263,17 @@ namespace Hotel_erp_Winforms_App.Services
             return reqServices;
         }
 
-        // 8.
+        // 8. Update service booking status
         public async Task UpdateServiceBookingStatusAsync(RequestedService serviceBooking)
         {
             string query = @"
                 UPDATE servicebookings
                 SET updated_at = NOW(), status = @status
-                WHERE id = @id";
+                WHERE id = @id;";
 
-            await using(MySqlConnection conn = new MySqlConnection(_connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
                 await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", serviceBooking.Id);
@@ -302,28 +284,26 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // 9.
+        // 9. Save new service booking
         public async Task SaveNewServiceBookingAsync(ServiceBooking sb)
         {
             string query = @"
                 INSERT INTO servicebookings
                     (booking_id, service_id, requested_at, updated_at, quantity, status, price_at_booking)
                 VALUES
-                    (@bookingId, @serviceId, @requested, @updated, @quan, @state, @price)";
+                    (@bookingId, @serviceId, @requested, @updated, @quan, @state, @price);";
 
-            await using(MySqlConnection conn = new MySqlConnection(_connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@bookingId", sb.BookingId);
                     cmd.Parameters.AddWithValue("@serviceId", sb.ServiceId);
                     cmd.Parameters.AddWithValue("@requested", sb.RequestedAt);
                     cmd.Parameters.AddWithValue("@updated", sb.UpdatedAt);
                     cmd.Parameters.AddWithValue("@quan", sb.Quantity);
-                    cmd.Parameters.AddWithValue("@state", sb.CurrentStatus.ToString());
-                    cmd.Parameters.AddWithValue("@quantity", sb.Quantity);
+                    cmd.Parameters.AddWithValue("@state", sb.CurrentStatus.ToString().ToLower());
                     cmd.Parameters.AddWithValue("@price", sb.Price);
 
                     await cmd.ExecuteNonQueryAsync();
@@ -331,22 +311,20 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        // 10.
+        // 10. Delete service booking (soft delete)
         public async Task SetServiceBookingStatusToDeletedAsync(int id)
         {
             string query = @"
                 UPDATE servicebookings
-                SET status = 'deleted'
-                WHERE id = @id";
+                SET status = 'deleted', updated_at = NOW()
+                WHERE id = @id;";
 
-            await using(MySqlConnection conn = new MySqlConnection(_connectionString))
+            await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", id);
-
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
@@ -354,38 +332,23 @@ namespace Hotel_erp_Winforms_App.Services
 
         #endregion
 
-        #region INFO
-        /*
-         * 1.: creates a service from database reader
-        */
-        #endregion
-        #region helpers
-        // 1.
-        private Service MakeNewService(System.Data.Common.DbDataReader reader)
+        #region Helpers
+
+        private Service MakeNewService(DbDataReader reader)
         {
-            Service service = new Service(
+            return new Service(
                 Convert.ToInt32(reader["id"]),
                 reader["name_hu"]?.ToString() ?? string.Empty,
                 reader["description_hu"] is DBNull or null ? string.Empty : reader["description_hu"].ToString()!,
-
-                Enum.TryParse<ServiceTypeHu>(reader["service_type_hu"]?.ToString(), true, out var serviceTypeHu)
-                    ? serviceTypeHu
-                    : ServiceTypeHu.Wellness,
-
+                Enum.TryParse<ServiceTypeHu>(reader["service_type_hu"]?.ToString(), true, out var serviceTypeHu) ? serviceTypeHu : ServiceTypeHu.Wellness,
                 Convert.ToDecimal(reader["price"]),
-                Convert.ToString(reader["name_en"]) ?? string.Empty,
-                Convert.ToString(reader["description_en"]) ?? string.Empty,
-
-                Enum.TryParse<ServiceTypeEn>(reader["service_type_en"]?.ToString(), true, out var serviceTypeEn)
-                    ? serviceTypeEn
-                    : ServiceTypeEn.Wellness
+                reader["name_en"]?.ToString() ?? string.Empty,
+                reader["description_en"] is DBNull or null ? string.Empty : reader["description_en"].ToString()!,
+                Enum.TryParse<ServiceTypeEn>(reader["service_type_en"]?.ToString(), true, out var serviceTypeEn) ? serviceTypeEn : ServiceTypeEn.Wellness
             );
-
-            return service;
         }
 
-        // 2.
-        private RequestedService MakeNewRequestedService(System.Data.Common.DbDataReader reader)
+        private RequestedService MakeNewRequestedService(DbDataReader reader)
         {
             string statusRaw = reader["status"] != DBNull.Value ? reader["status"].ToString()! : string.Empty;
             if (!Enum.TryParse(statusRaw, ignoreCase: true, out ServiceStatus status))

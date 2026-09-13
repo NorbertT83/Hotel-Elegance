@@ -15,15 +15,12 @@
         // MENÜ GOMBOK
         private static readonly Dictionary<string, List<UserRole>> Rules = new Dictionary<string, List<UserRole>>
         {
-            { "btnBookings", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
-            { "btnGuests", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
-            { "btnHousekeeping", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.HKManager, UserRole.Receptionist, UserRole.FrontOffMan } },
-            { "btnServices", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.HKManager, UserRole.Receptionist, UserRole.FrontOffMan } },
-            { "btnBilling", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
-            { "btnRooms", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
-            { "btnEmployees", new List<UserRole> { UserRole.Admin, UserRole.Manager} },
-            { "btnStatistics", new List<UserRole> { UserRole.Admin, UserRole.Manager } },
-            { "btnSettings", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.HKManager, UserRole.Receptionist, UserRole.FrontOffMan } }
+            /* BOOKINGS */{ "btnBookings", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
+            /* GUESTS */{ "btnGuests", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
+            /* HOUSEKEEPING */{ "btnHousekeeping", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.HKManager, UserRole.Receptionist, UserRole.FrontOffMan } },
+            /* SERVICES */{ "btnServices", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.HKManager, UserRole.Receptionist, UserRole.FrontOffMan } },
+            /* ROOMS */{ "btnRooms", new List<UserRole> { UserRole.Admin, UserRole.Manager, UserRole.Receptionist, UserRole.FrontOffMan } },
+            /* EMPLOYEES */{ "btnEmployees", new List<UserRole> { UserRole.Admin, UserRole.Manager} },
         };
 
         // ENABLED = FALSE / USER ROLE

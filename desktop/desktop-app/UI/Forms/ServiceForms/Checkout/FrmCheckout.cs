@@ -1,5 +1,4 @@
-﻿
-using Hotel_erp_Winforms_App.Helpers;
+﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using QuestPDF.Fluent;
@@ -156,8 +155,12 @@ namespace Hotel_erp_Winforms_App.UI.Forms
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
+                    DateTime checkInDate = _booking.Checkin ?? _booking.BeginningOfStay;
+                    int days = (DateTime.Today.Date - checkInDate.Date).Days;
+                    if (days <= 0) days = 1;
+
                     await GenerateAndOpenInvoiceAsync(_booking);
-                    await checkoutService.CheckoutBookingAsync(_booking);
+                    await checkoutService.CheckoutBookingAsync(_booking, days);
 
                     MessageBox.Show(
                         $"The checkout of booking ({_booking.Id}) was successful.",
@@ -174,19 +177,16 @@ namespace Hotel_erp_Winforms_App.UI.Forms
                 finally
                 {
                     this.Close();
-
                     Cursor.Current = Cursors.Default;
                 }
             }
-
             else
             {
                 MessageBox.Show(
-                    $"Please select a payment method first!",
+                    "Please select a payment method first!",
                     "Selection Required",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
-
                 return;
             }
         }

@@ -1,14 +1,6 @@
 ﻿using Hotel_erp_Winforms_App.Models;
-using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using System;
-using System.Web;
+using System.Data.Common;
 
 namespace Hotel_erp_Winforms_App.Services
 {
@@ -20,181 +12,68 @@ namespace Hotel_erp_Winforms_App.Services
 
     public class EmployeeService
     {
-        private readonly string connectionString = DbConfig.ConnectionString;
+        #region variables
+
+        private readonly string _connectionString = DbConfig.ConnectionString;
+
+        #endregion
+
+        #region Read Operations
 
         public async Task<List<Employee>> LoadDgvAsync(string query, Dictionary<string, object>? parameters = null)
         {
-            List<Employee> employees = new List<Employee>();
+            var employees = new List<Employee>();
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            await using (var conn = new MySqlConnection(_connectionString))
             {
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                await conn.OpenAsync();
 
-                if (parameters != null)
+                await using (var cmd = new MySqlCommand(query, conn))
                 {
-                    foreach (var param in parameters)
+                    if (parameters != null)
                     {
-                        cmd.Parameters.AddWithValue(param.Key, param.Value);
+                        foreach (var param in parameters)
+                        {
+                            cmd.Parameters.AddWithValue(param.Key, param.Value);
+                        }
                     }
-                }
 
-                await connection.OpenAsync();
-
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        Employee employee = new Employee
-                        (
-                            Convert.ToInt32(reader["id"]),
-                            reader["fname"]?.ToString() ?? string.Empty,
-                            reader["lname"]?.ToString() ?? string.Empty,
-                            reader["tax_number"]?.ToString() ?? string.Empty,
-                            Convert.ToInt32(reader["paid_holidays_left"]),
-                            reader["address"]?.ToString() ?? string.Empty,
-                            Convert.ToDateTime(reader["date_of_birth"]),
-                            Convert.ToDateTime(reader["date_of_hiring"]),
-                            reader["role"]?.ToString() ?? string.Empty,
-                            Convert.ToInt32(reader["salary"]),
-                            Convert.ToDateTime(reader["created_at"]),
-                            Convert.ToDateTime(reader["updated_at"]),
-                            reader["email"]?.ToString() ?? string.Empty,
-                            reader["password"]?.ToString() ?? string.Empty
-                        );
-                        employees.Add(employee);
+                        while (await reader.ReadAsync())
+                        {
+                            var employee = MapReaderToEmployee(reader);
+                            employees.Add(employee);
+                        }
                     }
                 }
             }
+
             return employees;
         }
 
-        public List<Employee> GetSortedEmployees(List<Employee> employees, string sortBy)
-        {
-
-            if (employees == null || !employees.Any()) return new List<Employee>();
-
-            switch (sortBy)
-            {
-                case "Name": return employees.OrderBy(emp => emp.LName).ToList();
-                case "JobTitle": return employees.OrderBy(emp => emp.JobTitle).ToList();
-                default: return employees;
-            }
-        }
-
-        // jelszó kezelés -- BackOffice profilok kezelése
-
-            // save new BackOffice profile
-        public async Task SaveNewBackofficeProfileAsync(string hashedPassword, string email, int id)
-        {
-            string query = @"
-                UPDATE employees
-                SET email = @email, password = @password
-                WHERE id = @id";
-
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                await conn.OpenAsync();
-
-                await using(MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@email", email);
-                    cmd.Parameters.AddWithValue("@password", hashedPassword);
-                    cmd.Parameters.AddWithValue("@id", id);
-
-                    await cmd.ExecuteNonQueryAsync();
-                }
-            }
-        }
-
-            // update employees password
-        public async Task SaveEmployeesNewPasswordAsync(Employee emp, string password)
-        {
-            string query = @"
-                UPDATE employees
-                SET password = @password
-                WHERE id = @id";
-
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                await conn.OpenAsync();
-
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@password", password);
-                    cmd.Parameters.AddWithValue("@id", emp.Id);
-
-                    await cmd.ExecuteNonQueryAsync();
-                }
-            }
-        }
-
-            // delete BackOffice profile
-        public async Task DeleteBackOfficeProfileAsync(Employee emp)
-        {
-            string query = @"
-                UPDATE employees
-                SET password = NULL
-                WHERE id = @id;";
-
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                await conn.OpenAsync();
-
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@id", emp.Id);
-
-                    await cmd.ExecuteNonQueryAsync();
-                }
-            }
-        }
-
-        // --------------
-
-        // RETURN EMPLYOEE BY EMAIL
         public async Task<Employee?> GetEmployeeByEmailAsync(string email)
         {
-            string query = "SELECT id, fname, lname, tax_number, paid_holidays_left, address, date_of_birth, date_of_hiring, " +
-                "role, salary, created_at, updated_at, email, password " +
-                "FROM employees " +
-                "WHERE email = @email";
+            const string query = @"
+                SELECT id, fname, lname, tax_number, paid_holidays_left, address, date_of_birth, 
+                       date_of_hiring, role, salary, created_at, updated_at, email, password
+                FROM employees
+                WHERE email = @email;";
 
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            await using (var conn = new MySqlConnection(_connectionString))
             {
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                await conn.OpenAsync();
+
+                await using (var cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@email", email);
 
-                    try
+                    await using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        conn.Open();
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        if (await reader.ReadAsync())
                         {
-                            if (reader.Read())
-                            {
-                                return new Employee
-                                (
-                                    Convert.ToInt32(reader["id"]),
-                                    reader["fname"]?.ToString() ?? string.Empty,
-                                    reader["lname"]?.ToString() ?? string.Empty,
-                                    reader["tax_number"]?.ToString() ?? string.Empty,
-                                    Convert.ToInt32(reader["paid_holidays_left"]),
-                                    reader["address"]?.ToString() ?? string.Empty,
-                                    Convert.ToDateTime(reader["date_of_birth"]),
-                                    Convert.ToDateTime(reader["date_of_hiring"]),
-                                    reader["role"]?.ToString() ?? string.Empty,
-                                    Convert.ToInt32(reader["salary"]),
-                                    Convert.ToDateTime(reader["created_at"]),
-                                    Convert.ToDateTime(reader["updated_at"]),
-                                    reader["email"]?.ToString() ?? string.Empty,
-                                    reader["password"]?.ToString() ?? string.Empty
-                                );
-                            }
+                            return MapReaderToEmployee(reader);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Adatbázis hiba: " + ex.Message);
                     }
                 }
             }
@@ -202,87 +81,59 @@ namespace Hotel_erp_Winforms_App.Services
             return null;
         }
 
-        // UPDATE EMAIL
-        public async Task UpdateEmailAsync(Employee employee, string email)
-        {
-            string query = @"
-                UPDATE employees
-                SET email = @email
-                WHERE id = @id";
-
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                await conn.OpenAsync();
-
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@email", email);
-                    cmd.Parameters.AddWithValue("id", employee.Id);
-
-                    await cmd.ExecuteNonQueryAsync();
-                }
-            }
-        }
-
-        // DELTE EMPLYOEE FROM DB
-        public async Task DeleteEmployeeAsync(Employee employee)
-        {
-            string query = "DELETE FROM employees WHERE tax_number = @taxNumber";
-            try
-            {
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
-                {
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@taxNumber", employee.TaxNumber);
-                        await conn.OpenAsync();
-                        await cmd.ExecuteNonQueryAsync();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred while trying to delete from database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // GET EMAIL OF EMPLOYEE
         public async Task<string> GetEmployeesEmailAsync(Employee employee)
         {
-            string query = @"
+            const string query = @"
                 SELECT email
                 FROM employees
-                WHERE id = @id";
+                WHERE id = @id;";
 
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            await using (var conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
 
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (var cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", employee.Id);
 
                     object? result = await cmd.ExecuteScalarAsync();
-
-                    return result != null ? result.ToString() : string.Empty;
+                    return result?.ToString() ?? string.Empty;
                 }
             }
         }
 
-        // SAVE EMPLYOEE
+        public async Task<bool> IsEmailAlreadyUsedAsync(string email)
+        {
+            const string query = "SELECT COUNT(1) FROM employees WHERE email = @email;";
+
+            await using (var conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", email.Trim());
+                    long count = Convert.ToInt64(await cmd.ExecuteScalarAsync());
+                    return count > 0;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Write / Update / Delete Operations
+
         public async Task SaveEmployeeToDbAsync(Employee emp, SaveOrUpdate saveOrUpdate)
         {
-            string saveQuery = @"
+            const string saveQuery = @"
                 INSERT INTO employees
                     (id, fname, lname, email, password, tax_number, paid_holidays_left, address, date_of_birth, date_of_hiring, role, salary, created_at, updated_at)
                 VALUES
-                    (@id, @fname, @lname, @email, @password, @tax_number, @holidays, @address, @date_of_birth, @date_of_hiring, @role, @salary, @created_at, @updated_at);
-                ";
+                    (@id, @fname, @lname, @email, @password, @tax_number, @holidays, @address, @date_of_birth, @date_of_hiring, @role, @salary, @created_at, @updated_at);";
 
-            string updateQuery = @"
+            const string updateQuery = @"
                 UPDATE employees
                 SET 
-                    id = @id, 
                     fname = @fname, 
                     lname = @lname, 
                     email = @email, 
@@ -296,22 +147,21 @@ namespace Hotel_erp_Winforms_App.Services
                     salary = @salary, 
                     created_at = @created_at, 
                     updated_at = @updated_at
-                WHERE id = @id;
-                ";
+                WHERE id = @id;";
 
             string query = saveOrUpdate == SaveOrUpdate.Save ? saveQuery : updateQuery;
 
-            await using (MySqlConnection conn = new MySqlConnection(connectionString))
+            await using (var conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
 
-                await using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                await using (var cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", emp.Id);
                     cmd.Parameters.AddWithValue("@fname", emp.FName);
                     cmd.Parameters.AddWithValue("@lname", emp.LName);
-                    cmd.Parameters.AddWithValue("@email", (object)emp.Email ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@password", (object)emp.Password ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@email", (object?)emp.Email ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@password", (object?)emp.Password ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@tax_number", emp.TaxNumber);
                     cmd.Parameters.AddWithValue("@holidays", emp.PaidHolidaysLeft);
                     cmd.Parameters.AddWithValue("@address", emp.Address);
@@ -327,20 +177,140 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-
-        #region helpers
-
-        public async Task<bool> IsEmailAlreadyUsed(string email, EmployeeService _employeeService)
+        public async Task SaveNewBackofficeProfileAsync(string hashedPassword, string email, int id)
         {
-            string query = "SELECT * FROM employees WHERE email = @email";
-            var parameters = new Dictionary<string, object>
+            const string query = @"
+                UPDATE employees
+                SET email = @email, password = @password
+                WHERE id = @id;";
+
+            await using (var conn = new MySqlConnection(_connectionString))
             {
-                { "@email", email.Trim() }
+                await conn.OpenAsync();
+
+                await using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@password", hashedPassword);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task SaveEmployeesNewPasswordAsync(Employee emp, string password)
+        {
+            const string query = @"
+                UPDATE employees
+                SET password = @password
+                WHERE id = @id;";
+
+            await using (var conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@password", password);
+                    cmd.Parameters.AddWithValue("@id", emp.Id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task UpdateEmailAsync(Employee employee, string email)
+        {
+            const string query = @"
+                UPDATE employees
+                SET email = @email
+                WHERE id = @id;";
+
+            await using (var conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@id", employee.Id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task DeleteBackOfficeProfileAsync(Employee emp)
+        {
+            const string query = @"
+                UPDATE employees
+                SET password = NULL
+                WHERE id = @id;";
+
+            await using (var conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", emp.Id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task DeleteEmployeeAsync(Employee employee)
+        {
+            const string query = "DELETE FROM employees WHERE tax_number = @taxNumber;";
+
+            await using (var conn = new MySqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                await using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@taxNumber", employee.TaxNumber);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Business Logic & Helpers
+
+        public List<Employee> GetSortedEmployees(List<Employee> employees, string sortBy)
+        {
+            if (employees == null || !employees.Any()) return new List<Employee>();
+
+            return sortBy switch
+            {
+                "Name" => employees.OrderBy(emp => emp.LName).ToList(),
+                "JobTitle" => employees.OrderBy(emp => emp.JobTitle).ToList(),
+                _ => employees
             };
+        }
 
-            List<Employee> list = await _employeeService.LoadDgvAsync(query, parameters);
-
-            return list.Count > 0;
+        private static Employee MapReaderToEmployee(DbDataReader reader)
+        {
+            return new Employee(
+                reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : 0,
+                reader["fname"] != DBNull.Value ? reader["fname"].ToString()! : string.Empty,
+                reader["lname"] != DBNull.Value ? reader["lname"].ToString()! : string.Empty,
+                reader["tax_number"] != DBNull.Value ? reader["tax_number"].ToString()! : string.Empty,
+                reader["paid_holidays_left"] != DBNull.Value ? Convert.ToInt32(reader["paid_holidays_left"]) : 0,
+                reader["address"] != DBNull.Value ? reader["address"].ToString()! : string.Empty,
+                reader["date_of_birth"] != DBNull.Value ? Convert.ToDateTime(reader["date_of_birth"]) : DateTime.MinValue,
+                reader["date_of_hiring"] != DBNull.Value ? Convert.ToDateTime(reader["date_of_hiring"]) : DateTime.MinValue,
+                reader["role"] != DBNull.Value ? reader["role"].ToString()! : string.Empty,
+                reader["salary"] != DBNull.Value ? Convert.ToInt32(reader["salary"]) : 0,
+                reader["created_at"] != DBNull.Value ? Convert.ToDateTime(reader["created_at"]) : DateTime.MinValue,
+                reader["updated_at"] != DBNull.Value ? Convert.ToDateTime(reader["updated_at"]) : DateTime.MinValue,
+                reader["email"] != DBNull.Value ? reader["email"].ToString()! : string.Empty,
+                reader["password"] != DBNull.Value ? reader["password"].ToString()! : string.Empty
+            );
         }
 
         #endregion
