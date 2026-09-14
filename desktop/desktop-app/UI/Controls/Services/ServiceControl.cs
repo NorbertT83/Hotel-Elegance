@@ -33,7 +33,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         Service? _selectedServiceForServiceBooking;
         RequestedService? _selectedRequestedService;
 
-        CommonHelper _commonHelper = new CommonHelper();
         BookingService _bookingService = new BookingService();
         RoomService _roomService = new RoomService();
 
@@ -193,7 +192,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     serviceBookings = await _serviceService.GetServiceDataByServicebookingAsync();
                     List<RequestedService> orderedSBList = serviceBookings.OrderByDescending(s => s.RequestedAt).ToList();
 
-                    _commonHelper.EmptyListMessageBox(orderedSBList.Count, "service bookings");
+                    CommonHelper.EmptyListMessageBox(orderedSBList.Count, "service bookings");
 
                     dgvServices.DataSource = null;
                     dgvServices.DataSource = orderedSBList;
@@ -254,7 +253,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = inActiveServices;
 
-                _commonHelper.EmptyListMessageBox(inActiveServices.Count(), "services");
+                CommonHelper.EmptyListMessageBox(inActiveServices.Count(), "services");
 
                 ClearEditorBoxes();
                 dgvServices.ClearSelection();
@@ -282,7 +281,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = services;
 
-                _commonHelper.EmptyListMessageBox(services.Count(), "services");
+                CommonHelper.EmptyListMessageBox(services.Count(), "services");
 
                 ClearEditorBoxes();
                 dgvServices.ClearSelection();
@@ -632,7 +631,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 }
                 catch (Exception ex)
                 {
-                    _commonHelper.MBErrorMessage(ex);
+                    CommonHelper.MBErrorMessage(ex);
                 }
                 finally
                 {
@@ -693,7 +692,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             }
             catch (Exception ex)
             {
-                _commonHelper.MBErrorMessage(ex);
+                CommonHelper.MBErrorMessage(ex);
             }
             finally
             {
@@ -766,7 +765,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 }
                 catch (Exception ex)
                 {
-                    _commonHelper.MBErrorMessage(ex);
+                    CommonHelper.MBErrorMessage(ex);
                 }
                 finally
                 {
@@ -815,7 +814,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 }
                 catch (Exception ex)
                 {
-                    _commonHelper.MBErrorMessage(ex);
+                    CommonHelper.MBErrorMessage(ex);
                 }
                 finally
                 {
@@ -924,10 +923,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private bool PersonalDataValidationConfirm()
         {
-            bool isNameHuValid = !_commonHelper.HasValidationError(tbNameHu, _errorProvider);
-            bool isNameEnValid = !_commonHelper.HasValidationError(tbNameEn, _errorProvider);
-            bool isDescHuValid = !_commonHelper.HasValidationError(tbDescHu, _errorProvider);
-            bool isDescEnValid = !_commonHelper.HasValidationError(tbDescEn, _errorProvider);
+            bool isNameHuValid = !CommonHelper.HasValidationError(tbNameHu, _errorProvider);
+            bool isNameEnValid = !CommonHelper.HasValidationError(tbNameEn, _errorProvider);
+            bool isDescHuValid = !CommonHelper.HasValidationError(tbDescHu, _errorProvider);
+            bool isDescEnValid = !CommonHelper.HasValidationError(tbDescEn, _errorProvider);
 
             return isNameHuValid && isNameEnValid && isDescHuValid && isDescEnValid;
         }
@@ -965,7 +964,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private Service MakeNewService(int id = 0)
         {
-            if (cbTypeHu.SelectedItem == null ||
+            if ((cbTypeHu.SelectedItem == null || cbTypeHu.SelectedIndex == 0) ||
                 !Enum.TryParse<ServiceTypeHu>(cbTypeHu.SelectedItem.ToString(), true, out var typeHu))
             {
                 throw new InvalidOperationException("Hungarian service type selection is invalid or missing.");
@@ -1060,7 +1059,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 {
                     if (_selectedService == null)
                     {
-                        throw new InvalidOperationException("No service selected to update.");
+                        MessageBox.Show(
+                            "No service selected!",
+                            "Selection Required",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+
+                        return;
                     }
 
                     Service service = MakeNewService(_selectedService.Id);

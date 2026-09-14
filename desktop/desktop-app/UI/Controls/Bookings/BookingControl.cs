@@ -60,6 +60,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             6.: Add booking
             7.: Edit booking
             8.: Cancel booking
+            9.: Delete all archived bookings
         */
         #endregion
         #region buttons
@@ -67,6 +68,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         // 1.
         private async void btnSearch_Click(object sender, EventArgs e)
         {
+            btnDeleteArchivedBookings.Visible = cbStatusFilter.SelectedIndex == cbStatusFilter.Items.Count - 1;
+
             try
             {
                 if (!string.IsNullOrWhiteSpace(txtSearch.Text) && cbFieldFilter.SelectedIndex <= 0)
@@ -250,8 +253,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     }
                     catch (Exception ex)
                     {
-                        var ch = new CommonHelper();
-                        ch.MBErrorMessage(ex);
+                        CommonHelper.MBErrorMessage(ex);
                     }
                     finally
                     {
@@ -264,6 +266,45 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             else
             {
                 MessageBox.Show("Please select a booking first!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        // 9.
+        private async void btnDeleteArchivedBookings_Click(object sender, EventArgs e)
+        {
+            var dr = MessageBox.Show("Are you sure you want to delete all archived bookings?",
+                "Confirm Deletion",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if(dr  == DialogResult.No)
+            {
+                return;
+            }
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                var dBS = new DeletedBookingStorageService();
+
+                await dBS.ClearAllDeletedBookingsAsync();
+
+                MessageBox.Show("Archived bookings deleted successfully.",
+                    "Success",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.MBErrorMessage(ex);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+                LoadBookings();
+                ShowInfo();
+                btnDeleteArchivedBookings.Visible = false;
             }
         }
 

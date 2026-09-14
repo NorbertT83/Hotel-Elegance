@@ -46,5 +46,16 @@ namespace Hotel_erp_Winforms_App.Services
 
             return JsonSerializer.Deserialize<List<Booking>>(json) ?? new List<Booking>();
         }
+
+        public async Task ClearAllDeletedBookingsAsync()
+        {
+            if (File.Exists(_filePath))
+            {
+                var emptyList = new List<Booking>();
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(emptyList, options);
+                await File.WriteAllTextAsync(_filePath, json);
+            }
+        }
     }
 }

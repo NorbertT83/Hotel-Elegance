@@ -1,15 +1,7 @@
 ﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace Hotel_erp_Winforms_App.UI.Controls
 {
@@ -24,7 +16,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private readonly GuestService _guestService = new GuestService();
         private readonly BookingService _bookingService = new BookingService();
-        private readonly CommonHelper _commonHelper = new CommonHelper();
 
         private List<Guest> guests = new List<Guest>();
 
@@ -101,7 +92,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             }
             catch (Exception ex)
             {
-                _commonHelper.MBErrorMessage(ex);
+                CommonHelper.MBErrorMessage(ex);
             }
             finally
             {
@@ -191,7 +182,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             }
             catch (Exception ex)
             {
-                _commonHelper.MBErrorMessage(ex);
+                CommonHelper.MBErrorMessage(ex);
                 return;
             }
             finally
@@ -549,13 +540,13 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             _errorProvider.Clear();
 
-            bool isFirstNameValid = !_commonHelper.HasValidationError(tbFname, _errorProvider);
-            bool isLastNameValid = !_commonHelper.HasValidationError(tbLname, _errorProvider);
-            bool isZipValid = !_commonHelper.HasValidationError(tbZip, _errorProvider);
-            bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
-            bool isStreetValid = !_commonHelper.HasValidationError(tbStreet, _errorProvider);
-            bool isCountryValid = !_commonHelper.HasValidationError(tbCountry, _errorProvider);
-            bool isDocValid = !_commonHelper.HasValidationError(tbIdCard, _errorProvider);
+            bool isFirstNameValid = !CommonHelper.HasValidationError(tbFname, _errorProvider);
+            bool isLastNameValid = !CommonHelper.HasValidationError(tbLname, _errorProvider);
+            bool isZipValid = !CommonHelper.HasValidationError(tbZip, _errorProvider);
+            bool isCityValid = !CommonHelper.HasValidationError(tbCity, _errorProvider);
+            bool isStreetValid = !CommonHelper.HasValidationError(tbStreet, _errorProvider);
+            bool isCountryValid = !CommonHelper.HasValidationError(tbCountry, _errorProvider);
+            bool isDocValid = !CommonHelper.HasValidationError(tbIdCard, _errorProvider);
 
             string email = tbEmail.Text.Trim();
             bool isEmailValid = false;

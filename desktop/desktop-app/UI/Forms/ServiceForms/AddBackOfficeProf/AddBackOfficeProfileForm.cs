@@ -1,7 +1,7 @@
-﻿using Hotel_erp_Winforms_App.Security;
-using Hotel_erp_Winforms_App.Services;
+﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
-using Hotel_erp_Winforms_App.Helpers;
+using Hotel_erp_Winforms_App.Security;
+using Hotel_erp_Winforms_App.Services;
 
 namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
 {
@@ -19,7 +19,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
         #region variables
 
         EmployeeService _employeeService = new EmployeeService();
-        CommonHelper commonHelper = new CommonHelper();
 
         #endregion
 
@@ -197,7 +196,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
 
             catch (Exception ex)
             {
-                commonHelper.MBErrorMessage(ex);
+                CommonHelper.MBErrorMessage(ex);
 
                 return;
             }

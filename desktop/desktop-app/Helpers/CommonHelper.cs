@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hotel_erp_Winforms_App.Helpers
 {
-    public class CommonHelper
+    public static class CommonHelper
     {
         public static Employee? CurrentUser { get; set; }
 
@@ -30,7 +30,7 @@ namespace Hotel_erp_Winforms_App.Helpers
         }
 
         // empty space check for textboxes
-        public bool HasValidationError(System.Windows.Forms.TextBox tb, ErrorProvider ep)
+        public static bool HasValidationError(System.Windows.Forms.TextBox tb, ErrorProvider ep)
         {
             if (string.IsNullOrEmpty(tb.Text.Trim()))
             {
@@ -41,7 +41,7 @@ namespace Hotel_erp_Winforms_App.Helpers
         }
 
         // empty list message box
-        public void EmptyListMessageBox(int listCount, string dataType)
+        public static void EmptyListMessageBox(int listCount, string dataType)
         {
             if (listCount == 0)
             {
@@ -56,7 +56,7 @@ namespace Hotel_erp_Winforms_App.Helpers
         }
 
         // Error message box
-        public void MBErrorMessage(Exception ex)
+        public static void MBErrorMessage(Exception ex)
         {
             MessageBox.Show(
                 "An error occured while trying to execute the process: " + ex.Message,

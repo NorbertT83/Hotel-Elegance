@@ -15,13 +15,13 @@ namespace Hotel_erp_Winforms_App.UI.Forms
         {
             InitializeComponent();
 
-            _booking = booking ?? throw new ArgumentNullException(nameof(booking));
+            if (booking == null) return;
+            _booking = booking;
         }
 
         #region variables
         // SERVICE OSZTÁLYOK
         GuestService guestService = new GuestService();
-        CommonHelper commonHelper = new CommonHelper();
         CheckoutService checkoutService = new CheckoutService();
         RoomService roomService = new RoomService();
         ServiceService serviceService = new ServiceService();
@@ -132,7 +132,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms
             {
                 var ex = new Exception("A vendég adatai nem találhatók.");
 
-                commonHelper.MBErrorMessage(ex);
+                CommonHelper.MBErrorMessage(ex);
             }
         }
 
@@ -172,7 +172,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms
                 }
                 catch (Exception ex)
                 {
-                    commonHelper.MBErrorMessage(ex);
+                    CommonHelper.MBErrorMessage(ex);
                 }
                 finally
                 {

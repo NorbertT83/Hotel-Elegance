@@ -3,7 +3,6 @@ using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.UI.Controls.RoomCardControl;
 using System.Data;
-using System.Text;
 
 namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 {
@@ -13,7 +12,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private readonly BookingService bookingService = new BookingService();
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
-        private readonly CommonHelper _commonHelper = new CommonHelper();
         private RoomCardUserControl? selectedCard = null;
 
         public Room? selectedRoom { get; private set; } = null;
@@ -678,9 +676,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private bool PersonalDataValidationConfirm()
         {
-            bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
-            bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
-            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider)
+            bool isFirstNameValid = !CommonHelper.HasValidationError(tbFirstName, _errorProvider);
+            bool isLastNameValid = !CommonHelper.HasValidationError(tbLastName, _errorProvider);
+            bool isEmailValid = !CommonHelper.HasValidationError(tbEmail, _errorProvider)
                         && tbEmail.Text.Contains("@");
 
             if (!isEmailValid)
@@ -692,9 +690,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 _errorProvider.SetError(tbEmail, "");
             }
 
-            bool isZipValid = !_commonHelper.HasValidationError(tbZipCode, _errorProvider);
-            bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
-            bool isDocValid = !_commonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
+            bool isZipValid = !CommonHelper.HasValidationError(tbZipCode, _errorProvider);
+            bool isCityValid = !CommonHelper.HasValidationError(tbCity, _errorProvider);
+            bool isDocValid = !CommonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
 
             return isFirstNameValid && isLastNameValid && isEmailValid && isZipValid && isCityValid && isDocValid;
         }

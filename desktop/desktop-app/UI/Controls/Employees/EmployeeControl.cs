@@ -1,12 +1,7 @@
 ﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
-using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 {
@@ -20,7 +15,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
         #region variables
 
         private readonly EmployeeService _employeeService = new EmployeeService();
-        private readonly CommonHelper _commonHelper = new CommonHelper();
 
         private List<Employee> _employees = new List<Employee>();
 
@@ -150,8 +144,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
                     }
                     catch (Exception ex)
                     {
-                        var ch = new CommonHelper();
-                        ch.MBErrorMessage(ex);
+                        CommonHelper.MBErrorMessage(ex);
                     }
                     finally
                     {
@@ -250,8 +243,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 
                     catch (Exception ex)
                     {
-                        var ch = new CommonHelper();
-                        ch.MBErrorMessage(ex);
+                        CommonHelper.MBErrorMessage(ex);
                     }
 
                     finally
@@ -329,8 +321,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
 
                 catch (Exception ex)
                 {
-                    var ch = new CommonHelper();
-                    ch.MBErrorMessage(ex);
+                    CommonHelper.MBErrorMessage(ex);
                 }
 
                 finally
@@ -389,7 +380,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             }
             catch (Exception ex)
             {
-                _commonHelper.MBErrorMessage(ex);
+                CommonHelper.MBErrorMessage(ex);
             }
             finally
             {
@@ -552,11 +543,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
         // 3.
         private bool PersonalDataValidationConfirm()
         {
-            bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
-            bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
-            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider);
-            bool isAddressValid = !_commonHelper.HasValidationError(tbAddress, _errorProvider);
-            bool isTaxValid = !_commonHelper.HasValidationError(tbTaxNumber, _errorProvider);
+            bool isFirstNameValid = !CommonHelper.HasValidationError(tbFirstName, _errorProvider);
+            bool isLastNameValid = !CommonHelper.HasValidationError(tbLastName, _errorProvider);
+            bool isEmailValid = !CommonHelper.HasValidationError(tbEmail, _errorProvider);
+            bool isAddressValid = !CommonHelper.HasValidationError(tbAddress, _errorProvider);
+            bool isTaxValid = !CommonHelper.HasValidationError(tbTaxNumber, _errorProvider);
 
             bool isTitleSelected = cbJobTitle.SelectedIndex != -1;
 

@@ -2,14 +2,6 @@
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Security;
 using Hotel_erp_Winforms_App.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using ZstdSharp.Unsafe;
 
 namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.Change_Password
 {
@@ -27,7 +19,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.Change_Password
         #region variables
 
         EmployeeService employeeService = new EmployeeService();
-        CommonHelper commonHelper = new CommonHelper();
 
         #endregion
 
@@ -205,7 +196,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.Change_Password
 
             catch (Exception ex)
             {
-                commonHelper.MBErrorMessage(ex);
+                CommonHelper.MBErrorMessage(ex);
 
                 return;
             }

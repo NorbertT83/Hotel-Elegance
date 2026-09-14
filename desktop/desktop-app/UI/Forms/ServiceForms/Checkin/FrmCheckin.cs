@@ -17,7 +17,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private Booking? selectedBooking;
         private BookingService _bookingService = new BookingService();
-        private CommonHelper _commonHelper = new CommonHelper();
         public Service service;
 
         public List<Service> services = new List<Service>();
@@ -793,9 +792,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private bool PersonalDataValidationConfirm()
         {
-            bool isFirstNameValid = !_commonHelper.HasValidationError(tbFirstName, _errorProvider);
-            bool isLastNameValid = !_commonHelper.HasValidationError(tbLastName, _errorProvider);
-            bool isEmailValid = !_commonHelper.HasValidationError(tbEmail, _errorProvider)
+            bool isFirstNameValid = !CommonHelper.HasValidationError(tbFirstName, _errorProvider);
+            bool isLastNameValid = !CommonHelper.HasValidationError(tbLastName, _errorProvider);
+            bool isEmailValid = !CommonHelper.HasValidationError(tbEmail, _errorProvider)
                         && !string.IsNullOrWhiteSpace(tbEmail.Text)
                         && tbEmail.Text.Contains("@");
 
@@ -808,9 +807,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 _errorProvider.SetError(tbEmail, "");
             }
 
-            bool isZipValid = !_commonHelper.HasValidationError(tbZipCode, _errorProvider);
-            bool isCityValid = !_commonHelper.HasValidationError(tbCity, _errorProvider);
-            bool isDocValid = !_commonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
+            bool isZipValid = !CommonHelper.HasValidationError(tbZipCode, _errorProvider);
+            bool isCityValid = !CommonHelper.HasValidationError(tbCity, _errorProvider);
+            bool isDocValid = !CommonHelper.HasValidationError(tbDocumentNumber, _errorProvider);
 
             return isFirstNameValid && isLastNameValid && isEmailValid && isZipValid && isCityValid && isDocValid;
         }

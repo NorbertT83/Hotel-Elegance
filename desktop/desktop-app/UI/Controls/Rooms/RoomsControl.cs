@@ -1,10 +1,6 @@
 ﻿using Hotel_erp_Winforms_App.Helpers;
 using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
 {
@@ -21,7 +17,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
         private List<Room> _roomsList = new List<Room>();
 
         private RoomService _roomService = new RoomService();
-        private CommonHelper _commonHelper = new CommonHelper();
 
         private Room? _selectedRoom;
         private bool _isAddingNew = false;
@@ -199,6 +194,18 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
                 acTemp
             );
 
+            var rooms = await _roomService.GetAllRoomsAsync();
+
+            if (rooms.Any(r => r.Room_number == room.Room_number))
+            {
+                MessageBox.Show("This room number already exists.",
+                    "Existing Room Number",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                return;
+            }
+
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -209,7 +216,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonHelper.MBErrorMessage(ex);
             }
             finally
             {
@@ -246,11 +253,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
             {
                 MessageBox.Show("Please select a room to delete first!", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-        }
-
-        private void txtSearch_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            CommonHelper.InputValidationService.BlockLetters(e);
         }
 
         #endregion
@@ -294,6 +296,39 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Rooms
             chkBalcony.Checked = _selectedRoom.HasBalcony == 1;
             tbExtras.Text = _selectedRoom.Extras ?? "";
             tbAcTemp.Text = _selectedRoom.AcTemp.ToString();
+        }
+
+        #endregion
+
+        #region Fool Proofing
+        private void tbRoomNumber_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockLetters(e);
+        }
+
+        private void tbFloorSpace_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockLetters(e);
+        }
+
+        private void tbMaxAdults_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockLetters(e);
+        }
+
+        private void tbAcTemp_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockLetters(e);
+        }
+
+        private void tbPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockLetters(e);
+        }
+
+        private void txtSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            CommonHelper.InputValidationService.BlockLetters(e);
         }
 
         #endregion

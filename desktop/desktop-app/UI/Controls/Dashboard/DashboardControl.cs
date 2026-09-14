@@ -3,7 +3,6 @@ using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms;
 using Hotel_erp_Winforms_App.UI.Forms.ServiceForms.Change_Password;
-using System.Net;
 using System.Text;
 
 namespace Hotel_erp_Winforms_App.UI.Controls.Dashboard
@@ -29,7 +28,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Dashboard
         private readonly RoomService _roomService = new RoomService();
         private readonly GuestService _guestService = new GuestService();
         private readonly EmployeeService _employeeService = new EmployeeService();
-        private readonly CommonHelper _commonHelper = new CommonHelper();
 
         private readonly System.Windows.Forms.Timer _clockTimer = new System.Windows.Forms.Timer();
 
@@ -206,7 +204,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Dashboard
                 }
                 catch (Exception ex)
                 {
-                    _commonHelper.MBErrorMessage(ex);
+                    CommonHelper.MBErrorMessage(ex);
                 }
                 finally
                 {
@@ -373,8 +371,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Dashboard
             }
             catch (Exception ex)
             {
-                var ch = new CommonHelper();
-                ch.MBErrorMessage(ex);
+                CommonHelper.MBErrorMessage(ex);
             }
             finally
             {

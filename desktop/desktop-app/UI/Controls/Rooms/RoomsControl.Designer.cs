@@ -671,10 +671,12 @@
             // tbAcTemp
             // 
             tbAcTemp.Location = new Point(180, 395);
+            tbAcTemp.MaxLength = 3;
             tbAcTemp.Name = "tbAcTemp";
             tbAcTemp.PlaceholderText = "22";
             tbAcTemp.Size = new Size(155, 25);
             tbAcTemp.TabIndex = 9;
+            tbAcTemp.KeyPress += tbAcTemp_KeyPress;
             // 
             // lbAcTempTitle
             // 
@@ -760,10 +762,12 @@
             // tbPrice
             // 
             tbPrice.Location = new Point(180, 285);
+            tbPrice.MaxLength = 7;
             tbPrice.Name = "tbPrice";
             tbPrice.PlaceholderText = "25000";
             tbPrice.Size = new Size(155, 25);
             tbPrice.TabIndex = 5;
+            tbPrice.KeyPress += tbPrice_KeyPress;
             // 
             // lbPriceTitle
             // 
@@ -778,10 +782,12 @@
             // tbMaxAdults
             // 
             tbMaxAdults.Location = new Point(15, 285);
+            tbMaxAdults.MaxLength = 2;
             tbMaxAdults.Name = "tbMaxAdults";
             tbMaxAdults.PlaceholderText = "2";
             tbMaxAdults.Size = new Size(155, 25);
             tbMaxAdults.TabIndex = 4;
+            tbMaxAdults.KeyPress += tbMaxAdults_KeyPress;
             // 
             // lbMaxAdultsTitle
             // 
@@ -796,10 +802,12 @@
             // tbFloorSpace
             // 
             tbFloorSpace.Location = new Point(180, 230);
+            tbFloorSpace.MaxLength = 3;
             tbFloorSpace.Name = "tbFloorSpace";
             tbFloorSpace.PlaceholderText = "35";
             tbFloorSpace.Size = new Size(155, 25);
             tbFloorSpace.TabIndex = 3;
+            tbFloorSpace.KeyPress += tbFloorSpace_KeyPress;
             // 
             // lbFloorSpaceTitle
             // 
@@ -855,10 +863,12 @@
             // 
             tbRoomNumber.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             tbRoomNumber.Location = new Point(15, 75);
+            tbRoomNumber.MaxLength = 3;
             tbRoomNumber.Name = "tbRoomNumber";
             tbRoomNumber.PlaceholderText = "101";
             tbRoomNumber.Size = new Size(320, 29);
             tbRoomNumber.TabIndex = 0;
+            tbRoomNumber.KeyPress += tbRoomNumber_KeyPress;
             // 
             // lbRoomNumberTitle
             // 

@@ -29,6 +29,7 @@
             DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
             pnlTop = new Panel();
+            btnDeleteArchivedBookings = new Button();
             btnCancel = new Button();
             btnCheckout = new Button();
             btnCheckin = new Button();
@@ -109,6 +110,7 @@
             pnlTop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlTop.BackColor = Color.FromArgb(245, 245, 248);
             pnlTop.BorderStyle = BorderStyle.FixedSingle;
+            pnlTop.Controls.Add(btnDeleteArchivedBookings);
             pnlTop.Controls.Add(btnCancel);
             pnlTop.Controls.Add(btnCheckout);
             pnlTop.Controls.Add(btnCheckin);
@@ -133,6 +135,22 @@
             pnlTop.Name = "pnlTop";
             pnlTop.Size = new Size(1350, 85);
             pnlTop.TabIndex = 0;
+            // 
+            // btnDeleteArchivedBookings
+            // 
+            btnDeleteArchivedBookings.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnDeleteArchivedBookings.BackColor = SystemColors.ButtonFace;
+            btnDeleteArchivedBookings.FlatStyle = FlatStyle.Flat;
+            btnDeleteArchivedBookings.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnDeleteArchivedBookings.ForeColor = Color.DarkRed;
+            btnDeleteArchivedBookings.Location = new Point(1230, 46);
+            btnDeleteArchivedBookings.Name = "btnDeleteArchivedBookings";
+            btnDeleteArchivedBookings.Size = new Size(105, 28);
+            btnDeleteArchivedBookings.TabIndex = 10;
+            btnDeleteArchivedBookings.Text = "Delete All";
+            btnDeleteArchivedBookings.UseVisualStyleBackColor = false;
+            btnDeleteArchivedBookings.Visible = false;
+            btnDeleteArchivedBookings.Click += btnDeleteArchivedBookings_Click;
             // 
             // btnCancel
             // 
@@ -984,5 +1002,6 @@
         private Label lbFinanceRemaining;
         private Label lbNotesTitle;
         private TextBox txtNotes;
+        private Button btnDeleteArchivedBookings;
     }
 }
