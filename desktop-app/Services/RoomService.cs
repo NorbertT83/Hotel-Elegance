@@ -9,7 +9,7 @@ namespace Hotel_erp_Winforms_App.Services
     {
         #region variables
 
-        private readonly string _connectionString = "server=localhost;port=3306;database=hotelelegancedb;uid=root;pwd=";
+        private readonly string _connectionString = DbConfig.ConnectionString;
 
         #endregion
 
@@ -162,14 +162,22 @@ namespace Hotel_erp_Winforms_App.Services
         {
             return new Room(
                 Convert.ToInt32(reader["room_number"]),
-                Enum.Parse<Room.RoomType>(reader["room_type"].ToString(), true),
+                reader["room_type"] != DBNull.Value
+                    ? Enum.Parse<Room.RoomType>(reader["room_type"].ToString()!, true)
+                    : Room.RoomType.standard,
                 Convert.ToInt32(reader["floorspace"]),
-                Enum.Parse<Room.BedType>(reader["bed_type"].ToString(), true),
+                reader["bed_type"] != DBNull.Value
+                    ? Enum.Parse<Room.BedType>(reader["bed_type"].ToString()!, true)
+                    : Room.BedType.single,
                 Convert.ToInt32(reader["has_balcony"]),
-                reader["has_view"] != DBNull.Value ? Enum.Parse<Room.HasView>(reader["has_view"].ToString(), true) : Room.HasView.city,
+                reader["has_view"] != DBNull.Value
+                    ? Enum.Parse<Room.HasView>(reader["has_view"].ToString()!, true)
+                    : Room.HasView.city,
                 Convert.ToInt32(reader["max_adults"]),
-                reader["extras"] != DBNull.Value ? reader["extras"].ToString() : string.Empty,
-                Enum.Parse<Room.Status>(reader["status"].ToString(), true),
+                reader["extras"] != DBNull.Value ? reader["extras"].ToString() ?? string.Empty : string.Empty,
+                reader["status"] != DBNull.Value
+                    ? Enum.Parse<Room.Status>(reader["status"].ToString()!, true)
+                    : Room.Status.available,
                 reader["price_per_night"] != DBNull.Value ? Convert.ToInt32(reader["price_per_night"]) : 0,
                 reader["door_locked"] != DBNull.Value ? Convert.ToInt32(reader["door_locked"]) : 0,
                 reader["needs_cleaning"] != DBNull.Value ? Convert.ToInt32(reader["needs_cleaning"]) : 0,

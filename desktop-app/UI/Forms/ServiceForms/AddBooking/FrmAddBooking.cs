@@ -150,14 +150,14 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         {
             services.RemoveAll(s => s.NameHu == "Félpanzió" || s.NameHu == "Teljes ellátás");
 
-            if (cbCateringLevel.SelectedItem.ToString() == "Halfboard")
+            if (cbCateringLevel.SelectedItem?.ToString() == "Halfboard")
             {
                 bookingService.CreateNewService("Halfboard", services);
                 selectedCatering = (CateringLevel)System.Enum.Parse(typeof(CateringLevel), "halfboard", ignoreCase: true);
                 lbSumCatering.Text = "Halfboard";
             }
 
-            else if (cbCateringLevel.SelectedItem.ToString() == "Fullboard")
+            else if (cbCateringLevel.SelectedItem?.ToString() == "Fullboard")
             {
                 bookingService.CreateNewService("Fullboard", services);
                 selectedCatering = (CateringLevel)System.Enum.Parse(typeof(CateringLevel), "fullboard", ignoreCase: true);
@@ -182,7 +182,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             }
         }
 
-        bool parkingChecked = false;
         private void ckbParking_CheckedChanged(object sender, EventArgs e)
         {
             if (ckbParking.Checked)
@@ -434,6 +433,15 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 {
                     btnConfirm.Enabled = false;
                     Cursor.Current = Cursors.WaitCursor;
+
+                    if (selectedRoom == null)
+                    {
+                        MessageBox.Show("Please select a valid room before confirming.",
+                            "Validation Error",
+                            MessageBoxButtons.OK, 
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
 
                     await bookingService.ConfirmNewBookingAsync(
                         selectedRoom,

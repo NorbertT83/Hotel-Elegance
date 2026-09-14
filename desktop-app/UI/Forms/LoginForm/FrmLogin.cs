@@ -1,7 +1,6 @@
 ﻿using Hotel_erp_Winforms_App.Models;
 using Hotel_erp_Winforms_App.Services;
 using Hotel_erp_Winforms_App.Helpers;
-using Hotel_erp_Winforms_App.UI.Forms;
 using Hotel_erp_Winforms_App.Security;
 
 namespace Hotel_erp_Winforms_App.Forms
@@ -17,11 +16,6 @@ namespace Hotel_erp_Winforms_App.Forms
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-            // FOR TESTING
-            tbEmail.Text = "kocsis.gergo@ceg.hu";
-            tbPassword.Text = "KocsisGergo1#";
-            // -----------------------------------------------------------------------
-
             System.Diagnostics.Debug.WriteLine($"Employees id = 11 email: kocsis.gergo@ceg.hu // Manager");
             System.Diagnostics.Debug.WriteLine($"Employees id = 1 jelszava: KocsisGergo1# ");
         }

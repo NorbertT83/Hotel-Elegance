@@ -39,7 +39,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private bool resized = false;
 
-        private enum UpdateOrSave
+        public enum UpdateOrSave
         {
             Update,
             Save

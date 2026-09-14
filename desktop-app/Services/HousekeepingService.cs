@@ -240,7 +240,7 @@ namespace Hotel_erp_Winforms_App.Services
 
         #region UI
 
-        public void FormatRoomCell(object sender, DataGridViewCellFormattingEventArgs e)
+        public void FormatRoomCell(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             if (sender is not DataGridView dgv || e.Value == null || e.Value == DBNull.Value)
                 return;

@@ -285,8 +285,8 @@ namespace Hotel_erp_Winforms_App.Services
         {
             // 1.: SAVE GUESTS
             string saveGuestQuery = @"
-                INSERT INTO guests (id, email, id_card_number, fname, lname, date_of_birth, country, zip_code, city, street, car_plate_number, total_nights, loyalty_level)
-                VALUES (@id, @email, @idNumber, @fname, @lname, @dateOfBirth, @country, @zip, @city, @street, @carPlate, @totalNights, @loyalty)
+                INSERT INTO guests (id, email, id_card_number, fname, lname, date_of_birth, country, zip_code, city, street, car_plate_number, total_nights)
+                VALUES (@id, @email, @idNumber, @fname, @lname, @dateOfBirth, @country, @zip, @city, @street, @carPlate, @totalNights)
                 ON DUPLICATE KEY UPDATE
                     id = LAST_INSERT_ID(id),
                     email = VALUES(email),
@@ -299,8 +299,7 @@ namespace Hotel_erp_Winforms_App.Services
                     city = VALUES(city),
                     street = VALUES(street),
                     car_plate_number = VALUES(car_plate_number),
-                    total_nights = VALUES(total_nights),
-                    loyalty_level = VALUES(loyalty_level);
+                    total_nights = VALUES(total_nights);
                 SELECT LAST_INSERT_ID();";
 
             // 2.: UPDATE BOOKING
@@ -336,14 +335,20 @@ namespace Hotel_erp_Winforms_App.Services
                     {
                         List<int> savedGuestsIds = new List<int>();
 
-                        foreach (Guest guest in guestList)
+                        for (int i = 0; i < guestList.Count; i++)
                         {
+                            Guest guest = guestList[i];
+
+                            string guestEmail = (i == 0 && !string.IsNullOrEmpty(guest.Email))
+                                ? guest.Email
+                                : (!string.IsNullOrEmpty(guest.Email) ? guest.Email : $"no-email-{Guid.NewGuid()}@placeholder.local");
+
                             // VENDÉGEK MENTÉSE
                             await using (MySqlCommand cmd = new MySqlCommand(saveGuestQuery, conn, transaction))
                             {
                                 cmd.Parameters.AddWithValue("@id", guest.Id == 0 ? (object)DBNull.Value : guest.Id);
-                                cmd.Parameters.AddWithValue("@email", guest.Email ?? (object)DBNull.Value);
-                                cmd.Parameters.AddWithValue("@idNumber", guest.IdCardNumber);
+                                cmd.Parameters.AddWithValue("@email", guestEmail);
+                                cmd.Parameters.AddWithValue("@idNumber", string.IsNullOrEmpty(guest.IdCardNumber) ? (object)DBNull.Value : guest.IdCardNumber);
                                 cmd.Parameters.AddWithValue("@fname", guest.FName);
                                 cmd.Parameters.AddWithValue("@lname", guest.LName);
                                 cmd.Parameters.AddWithValue("@dateOfBirth", guest.DateOfBirth);
@@ -351,11 +356,8 @@ namespace Hotel_erp_Winforms_App.Services
                                 cmd.Parameters.AddWithValue("@zip", guest.ZipCode);
                                 cmd.Parameters.AddWithValue("@city", guest.City);
                                 cmd.Parameters.AddWithValue("@street", guest.Street);
-                                cmd.Parameters.AddWithValue("@carPlate", string.IsNullOrEmpty(guest.CarPlateNumber)
-                                    ? DBNull.Value
-                                    : guest.CarPlateNumber);
+                                cmd.Parameters.AddWithValue("@carPlate", string.IsNullOrEmpty(guest.CarPlateNumber) ? (object)DBNull.Value : guest.CarPlateNumber);
                                 cmd.Parameters.AddWithValue("@totalNights", guest.TotalNights);
-                                cmd.Parameters.AddWithValue("@loyalty", guest.LoyaltyLevel);
 
                                 object? result = await cmd.ExecuteScalarAsync();
                                 int currentGuestId = 0;
@@ -364,8 +366,10 @@ namespace Hotel_erp_Winforms_App.Services
                                 {
                                     currentGuestId = Convert.ToInt32(result);
                                 }
-                                else { currentGuestId = guest.Id ?? 0; }
-
+                                else
+                                {
+                                    currentGuestId = guest.Id ?? 0;
+                                }
 
                                 savedGuestsIds.Add(currentGuestId);
                             }
@@ -376,8 +380,8 @@ namespace Hotel_erp_Winforms_App.Services
                         {
                             cmd.Parameters.AddWithValue("@bookingId", booking.Id);
                             cmd.Parameters.AddWithValue("@roomNumber", booking.RoomNumber);
-                            cmd.Parameters.AddWithValue("@roomType", booking.SelectedRoomType);
-                            cmd.Parameters.AddWithValue("@cateringLevel", booking.SelectedCateringLevel);
+                            cmd.Parameters.AddWithValue("@roomType", booking.SelectedRoomType.ToString().ToLower());
+                            cmd.Parameters.AddWithValue("@cateringLevel", booking.SelectedCateringLevel.ToString().ToLower());
 
                             cmd.Parameters.AddWithValue("@guestId1", savedGuestsIds.Count > 0 ? savedGuestsIds[0] : (object)DBNull.Value);
                             cmd.Parameters.AddWithValue("@guestId2", savedGuestsIds.Count > 1 ? savedGuestsIds[1] : (object)DBNull.Value);
@@ -394,7 +398,7 @@ namespace Hotel_erp_Winforms_App.Services
                             await cmd.ExecuteNonQueryAsync();
                         }
 
-                        // SZOLGÁLTATLÁSOK
+                        // SZOLGÁLTATÁSOK
                         foreach (var item in serviceItems)
                         {
                             int days = (booking.EndOfStay - booking.BeginningOfStay).Days;
@@ -405,6 +409,7 @@ namespace Hotel_erp_Winforms_App.Services
                                 cmd.Parameters.AddWithValue("@bookingId", booking.Id);
                                 cmd.Parameters.AddWithValue("@requested", DateTime.Now);
                                 cmd.Parameters.AddWithValue("@updated", DateTime.Now);
+
                                 if (item.NameHu == "Parkolás")
                                 {
                                     cmd.Parameters.AddWithValue("@quantity", days);
@@ -428,7 +433,6 @@ namespace Hotel_erp_Winforms_App.Services
 
                         await transaction.CommitAsync();
                     }
-
                     catch (Exception)
                     {
                         await transaction.RollbackAsync();
@@ -441,33 +445,19 @@ namespace Hotel_erp_Winforms_App.Services
         // 4.
         public async Task ConfirmNewBookingAsync(Room room, List<Guest> guestList, List<Service> services, DateTime endDate, CateringLevel catering, int nights)
         {
-            // booking mentése
             string saveBookingQuery = @"
-                INSERT INTO bookings (id, room_number, room_type,guest1_id, beginning_of_stay, end_of_stay,
+                INSERT INTO bookings (id, room_number, room_type, guest1_id, beginning_of_stay, end_of_stay,
                     checkin, checkout, guest2_id, guest3_id, guest4_id, created_at, catering_level)
-                VALUES (@id, @roomNumber, @roomType,@guestId1, @startDate, @endDate, @checkin, @checkout, @guestId2, @guestId3, @guestId4, 
+                VALUES (@id, @roomNumber, @roomType, @guestId1, @startDate, @endDate, @checkin, @checkout, @guestId2, @guestId3, @guestId4, 
                     @createdAt, @cateringLevel);
             ";
 
-            // szoba frissítése
             string updateRoomQuery = @"
                 UPDATE rooms
                 SET status = 'unavailable'
                 WHERE room_number = @roomNumber;
             ";
 
-            // vendégek mentése
-            string saveGuestQuery = @"
-                INSERT INTO guests (email, id_card_number, fname, lname, date_of_birth, country, zip_code, city, street,
-                    car_plate_number, total_nights)
-                VALUES (@email, @id_card_number, @fname, @lname, @date_of_birth, @country, @zip_code, @city, @street,
-                    @carPlate, @totalNights)
-                ON DUPLICATE KEY UPDATE
-                    total_nights = total_nights + VALUES(total_nights),
-                    car_plate_number = VALUES(car_plate_number);
-            ";
-
-            // serviceBookingok létrehozása
             string saveServiceQuery = @"
                 INSERT INTO servicebookings (booking_id, service_id, requested_at, updated_at, quantity, status, price_at_booking)
                 VALUES (@booking_id, @service_id, @requested_at, @updated_at, @quantity, @status, @price);
@@ -488,37 +478,92 @@ namespace Hotel_erp_Winforms_App.Services
                             List<long> guestDbIds = new List<long>();
                             string bookingId = GenerateBookingId();
 
-                            // save Guests
-                            await using (MySqlCommand cmd = new MySqlCommand(saveGuestQuery, conn, transaction))
+                            for (int i = 0; i < guestList.Count; i++)
                             {
-                                foreach (Guest g in guestList)
+                                Guest g = guestList[i];
+                                long guestId = 0;
+
+                                string guestEmail = (i == 0 && !string.IsNullOrEmpty(g.Email))
+                                    ? g.Email
+                                    : $"no-email-{Guid.NewGuid()}@placeholder.local";
+
+                                string checkGuestQuery = @"
+                                    SELECT id FROM guests 
+                                    WHERE id_card_number = @idCard 
+                                       OR email = @email
+                                    LIMIT 1;";
+
+                                using (MySqlCommand checkCmd = new MySqlCommand(checkGuestQuery, conn, transaction))
                                 {
-                                    cmd.Parameters.Clear();
+                                    checkCmd.Parameters.AddWithValue("@idCard", string.IsNullOrEmpty(g.IdCardNumber) ? DBNull.Value : g.IdCardNumber);
+                                    checkCmd.Parameters.AddWithValue("@email", guestEmail);
 
-                                    cmd.Parameters.AddWithValue("@email", g.Email);
-                                    cmd.Parameters.AddWithValue("@id_card_number", g.IdCardNumber);
-                                    cmd.Parameters.AddWithValue("@fname", g.FName);
-                                    cmd.Parameters.AddWithValue("@lname", g.LName);
-                                    cmd.Parameters.AddWithValue("@date_of_birth", g.DateOfBirth);
-                                    cmd.Parameters.AddWithValue("@country", g.Country);
-                                    cmd.Parameters.AddWithValue("@zip_code", g.ZipCode);
-                                    cmd.Parameters.AddWithValue("@city", g.City);
-                                    cmd.Parameters.AddWithValue("@street", g.Street);
-                                    cmd.Parameters.AddWithValue("@carPlate", string.IsNullOrEmpty(g.CarPlateNumber) ? DBNull.Value : g.CarPlateNumber);
-                                    cmd.Parameters.AddWithValue("@totalNights", nights);
+                                    object? result = await checkCmd.ExecuteScalarAsync();
 
-                                    await cmd.ExecuteNonQueryAsync();
-
-                                    using (MySqlCommand idCmd = new MySqlCommand("SELECT id FROM guests WHERE id_card_number = @idCard", conn, transaction))
+                                    if (result != null && result != DBNull.Value)
                                     {
-                                        idCmd.Parameters.AddWithValue("@idCard", g.IdCardNumber);
-                                        object? result = await idCmd.ExecuteScalarAsync();
-                                        guestDbIds.Add(Convert.ToInt64(result));
+                                        guestId = Convert.ToInt64(result);
                                     }
+                                }
+
+                                if (guestId > 0)
+                                {
+                                    string updateGuestQuery = @"
+                                        UPDATE guests 
+                                        SET total_nights = total_nights + @totalNights,
+                                            car_plate_number = COALESCE(@carPlate, car_plate_number),
+                                            id_card_number = COALESCE(@idCard, id_card_number)
+                                        WHERE id = @id;";
+
+                                    using (MySqlCommand updateCmd = new MySqlCommand(updateGuestQuery, conn, transaction))
+                                    {
+                                        updateCmd.Parameters.AddWithValue("@id", guestId);
+                                        updateCmd.Parameters.AddWithValue("@totalNights", nights);
+                                        updateCmd.Parameters.AddWithValue("@carPlate", string.IsNullOrEmpty(g.CarPlateNumber) ? DBNull.Value : g.CarPlateNumber);
+                                        updateCmd.Parameters.AddWithValue("@idCard", string.IsNullOrEmpty(g.IdCardNumber) ? DBNull.Value : g.IdCardNumber);
+
+                                        await updateCmd.ExecuteNonQueryAsync();
+                                    }
+                                }
+                                else
+                                {
+                                    string insertGuestQuery = @"
+                                        INSERT INTO guests (email, id_card_number, fname, lname, date_of_birth, country, zip_code, city, street, car_plate_number, total_nights)
+                                        VALUES (@email, @id_card_number, @fname, @lname, @date_of_birth, @country, @zip_code, @city, @street, @carPlate, @totalNights);
+                                        SELECT LAST_INSERT_ID();";
+
+                                    using (MySqlCommand insertCmd = new MySqlCommand(insertGuestQuery, conn, transaction))
+                                    {
+                                        insertCmd.Parameters.AddWithValue("@email", guestEmail);
+                                        insertCmd.Parameters.AddWithValue("@id_card_number", string.IsNullOrEmpty(g.IdCardNumber) ? DBNull.Value : g.IdCardNumber);
+                                        insertCmd.Parameters.AddWithValue("@fname", g.FName);
+                                        insertCmd.Parameters.AddWithValue("@lname", g.LName);
+                                        insertCmd.Parameters.AddWithValue("@date_of_birth", g.DateOfBirth);
+                                        insertCmd.Parameters.AddWithValue("@country", g.Country);
+                                        insertCmd.Parameters.AddWithValue("@zip_code", g.ZipCode);
+                                        insertCmd.Parameters.AddWithValue("@city", g.City);
+                                        insertCmd.Parameters.AddWithValue("@street", g.Street);
+                                        insertCmd.Parameters.AddWithValue("@carPlate", string.IsNullOrEmpty(g.CarPlateNumber) ? DBNull.Value : g.CarPlateNumber);
+                                        insertCmd.Parameters.AddWithValue("@totalNights", nights);
+
+                                        object? newId = await insertCmd.ExecuteScalarAsync();
+                                        if (newId != null && newId != DBNull.Value)
+                                        {
+                                            guestId = Convert.ToInt64(newId);
+                                        }
+                                    }
+                                }
+
+                                if (guestId > 0)
+                                {
+                                    guestDbIds.Add(guestId);
+                                }
+                                else
+                                {
+                                    throw new Exception($"Guest not found: {g.FName} {g.LName} ({g.IdCardNumber})");
                                 }
                             }
 
-                            // save Booking
                             await using (MySqlCommand cmd = new MySqlCommand(saveBookingQuery, conn, transaction))
                             {
                                 cmd.Parameters.AddWithValue("@id", bookingId);
@@ -526,9 +571,10 @@ namespace Hotel_erp_Winforms_App.Services
                                 cmd.Parameters.AddWithValue("@roomType", room.RoomsRoomtype.ToString().ToLower());
 
                                 cmd.Parameters.AddWithValue("@guestId1", guestDbIds[0]);
-                                cmd.Parameters.AddWithValue("@guestId2", guestDbIds.Count() > 1 ? (object)guestDbIds[1] : DBNull.Value);
-                                cmd.Parameters.AddWithValue("@guestId3", guestDbIds.Count() > 2 ? (object)guestDbIds[2] : DBNull.Value);
-                                cmd.Parameters.AddWithValue("@guestId4", guestDbIds.Count() > 3 ? (object)guestDbIds[3] : DBNull.Value);
+
+                                cmd.Parameters.AddWithValue("@guestId2", guestDbIds.Count > 1 ? (object)guestDbIds[1] : DBNull.Value);
+                                cmd.Parameters.AddWithValue("@guestId3", guestDbIds.Count > 2 ? (object)guestDbIds[2] : DBNull.Value);
+                                cmd.Parameters.AddWithValue("@guestId4", guestDbIds.Count > 3 ? (object)guestDbIds[3] : DBNull.Value);
 
                                 cmd.Parameters.AddWithValue("@startDate", DateTime.Today);
                                 cmd.Parameters.AddWithValue("@endDate", endDate);
@@ -548,7 +594,6 @@ namespace Hotel_erp_Winforms_App.Services
                                 await cmd.ExecuteNonQueryAsync();
                             }
 
-                            // update Room
                             await using (MySqlCommand cmd = new MySqlCommand(updateRoomQuery, conn, transaction))
                             {
                                 cmd.Parameters.AddWithValue("@roomNumber", room.Room_number);
@@ -556,7 +601,6 @@ namespace Hotel_erp_Winforms_App.Services
                                 await cmd.ExecuteNonQueryAsync();
                             }
 
-                            // save Services
                             await using (MySqlCommand cmd = new MySqlCommand(saveServiceQuery, conn, transaction))
                             {
                                 foreach (Service s in services)
@@ -613,7 +657,6 @@ namespace Hotel_erp_Winforms_App.Services
                 return $"{prefix}-{year}-{randomSuffix}";
             }
         }
-
         #endregion
 
         #region INFO

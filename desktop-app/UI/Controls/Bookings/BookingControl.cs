@@ -20,10 +20,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         public Booking? selectedBooking;
 
-        public BookingService bookingService = new BookingService();
-        private RoomService roomService = new RoomService();
-        private CheckoutService checkoutService = new CheckoutService();
-        private ServiceService serviceService = new ServiceService();
+        private readonly BookingService bookingService = new BookingService();
+        private readonly RoomService roomService = new RoomService();
+        private readonly CheckoutService checkoutService = new CheckoutService();
+        private readonly ServiceService serviceService = new ServiceService();
 
         private List<Booking> _bookingsList = new List<Booking>();
 
@@ -33,19 +33,27 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         private void BookingControl_Load(object sender, EventArgs e)
         {
-            #region selectors
+            try
+            {
+                #region selectors
 
-            cbFieldFilter.SelectedIndex = 0;
-            cbStatusFilter.SelectedIndex = 0;
-            cbSpanFilter.SelectedIndex = 0;
-            dtpFrom.Value = DateTime.Today;
-            dtpTo.Value = DateTime.Today.AddMonths(1);
+                cbFieldFilter.SelectedIndex = 0;
+                cbStatusFilter.SelectedIndex = 0;
+                cbSpanFilter.SelectedIndex = 0;
+                dtpFrom.Value = DateTime.Today;
+                dtpTo.Value = DateTime.Today.AddMonths(1);
 
-            #endregion
+                #endregion
 
-            LoadBookings();
-            ShowInfo();
-            dgvBookings.ClearSelection();
+                LoadBookings();
+                ShowInfo();
+                dgvBookings.ClearSelection();
+            }
+            
+            catch(Exception ex)
+            {
+                CommonHelper.MBErrorMessage(ex);
+            }
         }
 
         #endregion
@@ -383,9 +391,9 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 lbKpiDeparturesValue.Text = bookingService.GetTodaysDeparturesCount().ToString();
                 lbKpiOccupancyValue.Text = $"{bookingService.GetOccupancyRate()} %";
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore initial query errors if db is empty
+                CommonHelper.MBErrorMessage(ex);
             }
         }
 
@@ -400,8 +408,8 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // ----- Room price ------
             List<Room> rooms = await roomService.GetAllRoomsAsync();
 
-            Room selectedRoom = rooms.Find(r => r.Room_number == selectedBooking.RoomNumber);
-            int roomPrice = selectedRoom.Price * days;
+            Room? selectedRoom = rooms.Find(r => r.Room_number == selectedBooking.RoomNumber);
+            int roomPrice = (selectedRoom?.Price ?? 0) * days;
 
             // ----- Extras price ----
             int extrasPrice = items?.Sum(item => item.TotalPrice) ?? 0;
@@ -410,7 +418,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             List<Service> services = await serviceService.GetAllServicesFromDbAsync();
 
             int cateringPrice = 0;
-            Service selectedCatering = null;
+            Service? selectedCatering = null;
 
             switch (selectedBooking.SelectedCateringLevel)
             {
@@ -419,11 +427,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     break;
                 case CateringLevel.halfboard:
                     selectedCatering = services.Find(s => s.NameHu == "Félpanzió");
-                    cateringPrice = (int)selectedCatering.Price;
+                    cateringPrice = (int)(selectedCatering?.Price ?? 0);
                     break;
                 case CateringLevel.fullboard:
                     selectedCatering = services.Find(s => s.NameHu == "Teljes ellátás");
-                    cateringPrice = (int)selectedCatering.Price;
+                    cateringPrice = (int)(selectedCatering?.Price ?? 0);
                     break;
             }
 

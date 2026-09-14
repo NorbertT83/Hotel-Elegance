@@ -18,7 +18,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.Change_Password
 
         #region variables
 
-        EmployeeService employeeService = new EmployeeService();
+        private readonly EmployeeService employeeService = new EmployeeService();
 
         #endregion
 

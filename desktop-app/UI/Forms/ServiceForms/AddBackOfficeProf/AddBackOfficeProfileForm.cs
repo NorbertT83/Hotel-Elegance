@@ -18,7 +18,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
 
         #region variables
 
-        EmployeeService _employeeService = new EmployeeService();
+        private readonly EmployeeService _employeeService = new EmployeeService();
 
         #endregion
 

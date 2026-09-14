@@ -9,11 +9,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 {
     public partial class HousekeepingControl : UserControl
     {
-        /* TODO:
-         * reset all buttonnel kezdeni valamit
-         * a high prio akkor is legyen kiirva ha ki van kapcsolva a color code
-        */
-
         public HousekeepingControl()
         {
             InitializeComponent();
@@ -21,7 +16,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         #region variables
 
-        private HousekeepingService _hkService = new HousekeepingService();
+        private readonly HousekeepingService _hkService = new HousekeepingService();
 
         private List<Room> rooms = new List<Room>();
         private List<Room> highPrioRooms = new List<Room>();
@@ -30,6 +25,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private Dictionary<int, string> assignedCleaners = new Dictionary<int, string>();
 
         private Room? _selectedRoom;
+
         #endregion
 
         #region onLoad events

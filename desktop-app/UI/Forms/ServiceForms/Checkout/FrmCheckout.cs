@@ -21,17 +21,17 @@ namespace Hotel_erp_Winforms_App.UI.Forms
 
         #region variables
         // SERVICE OSZTÁLYOK
-        GuestService guestService = new GuestService();
-        CheckoutService checkoutService = new CheckoutService();
-        RoomService roomService = new RoomService();
-        ServiceService serviceService = new ServiceService();
+        private readonly GuestService guestService = new GuestService();
+        private readonly CheckoutService checkoutService = new CheckoutService();
+        private readonly RoomService roomService = new RoomService();
+        private readonly ServiceService serviceService = new ServiceService();
 
         // LISTÁK
         List<Guest> guests = new List<Guest>();
         List<Room> rooms = new List<Room>();
 
         // GLOBÁLIS VÁLTOZÓK
-        Guest selectedGuest;
+        Guest? selectedGuest;
 
         #endregion
 
@@ -64,7 +64,9 @@ namespace Hotel_erp_Winforms_App.UI.Forms
 
                     // FENTI ADATOK
                     txtRoomNumber.Text = _booking.RoomNumber.ToString();
-                    txtGuestName.Text = selectedGuest.LName + " " + selectedGuest.FName;
+                    txtGuestName.Text = selectedGuest != null
+                        ? $"{selectedGuest.LName} {selectedGuest.FName}".Trim()
+                        : "Ismeretlen vendég";
                     dtpCheckInDate.Value = Convert.ToDateTime(_booking.Checkin);
                     dtpCheckOutDate.Value = DateTime.Now;
 
@@ -75,8 +77,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms
                     // ----- Room price ------
                     rooms = await roomService.GetAllRoomsAsync();
 
-                    Room selectedRoom = rooms.Find(r => r.Room_number == _booking.RoomNumber);
-                    int roomPrice = selectedRoom.Price;
+                    Room? selectedRoom = rooms.Find(r => r.Room_number == _booking.RoomNumber);
+                    int roomPrice = selectedRoom?.Price ?? 0;
 
                     lblRoomPrice.Text = $"Room Price (HUF): {(roomPrice * days):n0}";
 
@@ -91,9 +93,8 @@ namespace Hotel_erp_Winforms_App.UI.Forms
 
                     // ---- Catering price ---
                     List<Service> services = await serviceService.GetAllServicesFromDbAsync();
-
                     int cateringPrice = 0;
-                    Service selectedCatering = null;
+                    Service? selectedCatering = null;
 
                     switch (_booking.SelectedCateringLevel)
                     {
@@ -102,11 +103,11 @@ namespace Hotel_erp_Winforms_App.UI.Forms
                             break;
                         case CateringLevel.halfboard:
                             selectedCatering = services.Find(s => s.NameHu == "Félpanzió");
-                            cateringPrice = (int)selectedCatering.Price;
+                            cateringPrice = (int)(selectedCatering?.Price ?? 0);
                             break;
                         case CateringLevel.fullboard:
                             selectedCatering = services.Find(s => s.NameHu == "Teljes ellátás");
-                            cateringPrice = (int)selectedCatering.Price;
+                            cateringPrice = (int)(selectedCatering?.Price ?? 0);
                             break;
                     }
 
