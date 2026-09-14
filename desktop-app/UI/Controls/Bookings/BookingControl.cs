@@ -305,6 +305,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 LoadBookings();
                 ShowInfo();
                 btnDeleteArchivedBookings.Visible = false;
+                cbStatusFilter.SelectedIndex = 0;
             }
         }
 

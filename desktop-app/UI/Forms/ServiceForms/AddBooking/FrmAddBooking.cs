@@ -89,19 +89,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             cbDepartureNotes.SelectedIndex = 0;
             // ----------
 
-            // FOR TESTING
-            tbEmail.Text = "teszt.elek@example.com";
-            tbDocumentNumber.Text = "123456AB";
-            tbFirstName.Text = "Elek";
-            tbLastName.Text = "Teszt";
-            dtpBirthdate.Value = new DateTime(1995, 5, 15);
-            cbNationality.Text = "Hungary";
-            tbZipCode.Text = "1051";
-            tbCity.Text = "Budapest";
-            tbStreet.Text = "Fő utca 1.";
-            tbCarPlateNumber.Text = "ABC-123";
-            // ----------
-
             // DGV PAYMENT SUM
             foreach (DataGridViewColumn col in dgvPaymentSum.Columns)
             {

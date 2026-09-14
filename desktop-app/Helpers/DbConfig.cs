@@ -16,11 +16,11 @@ namespace Hotel_erp_Winforms_App
                         .Build();
 
                     return config.GetConnectionString("DefaultConnection")
-                        ?? "Server=localhost;Database=hotel_erp;Uid=root;Pwd=;";
+                        ?? "Server=localhost;Database=hotelelegancedb;Uid=root;Pwd=;";
                 }
                 catch
                 {
-                    return "Server=localhost;Database=hotel_erp;Uid=root;Pwd=;";
+                    return "Server=localhost;Database=hotelelegancedb;Uid=root;Pwd=;";
                 }
             }
         }

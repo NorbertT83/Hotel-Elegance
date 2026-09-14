@@ -85,13 +85,6 @@ namespace Hotel_erp_Winforms_App.Forms
             }
         }
 
-        private void linkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            FrmRegistration registrationForm = new FrmRegistration();
-            registrationForm.Show();
-            this.Close();
-        }
-
         private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
         {
             bool hidePassword = !chkShowPassword.Checked;
