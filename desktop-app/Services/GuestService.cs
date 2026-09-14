@@ -160,12 +160,20 @@ namespace Hotel_erp_Winforms_App.Services
             }
         }
 
-        public async Task DeleteGuestFromDbAsync(Guest g)
+        public async Task UpdateGuestDataInDbAsync(Guest g)
         {
             string query = @"
-                DELETE FROM guests
-                WHERE id = @id;
-            ";
+                UPDATE guests
+                SET email = @email,
+                    id_card_number = @idNumber,
+                    fname = @fname,
+                    lname = @lname,
+                    date_of_birth = @date_of_birth,
+                    country = @country,
+                    zip_code = @zip,
+                    city = @city,
+                    street = @street
+                WHERE id = @id;";
 
             await using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
@@ -173,6 +181,15 @@ namespace Hotel_erp_Winforms_App.Services
 
                 await using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
+                    cmd.Parameters.AddWithValue("@email", g.Email);
+                    cmd.Parameters.AddWithValue("@idNumber", g.IdCardNumber);
+                    cmd.Parameters.AddWithValue("@fname", g.FName);
+                    cmd.Parameters.AddWithValue("@lname", g.LName);
+                    cmd.Parameters.AddWithValue("@date_of_birth", g.DateOfBirth);
+                    cmd.Parameters.AddWithValue("@country", g.Country);
+                    cmd.Parameters.AddWithValue("@zip", g.ZipCode);
+                    cmd.Parameters.AddWithValue("@city", g.City);
+                    cmd.Parameters.AddWithValue("@street", g.Street);
                     cmd.Parameters.AddWithValue("@id", g.Id);
 
                     await cmd.ExecuteNonQueryAsync();
