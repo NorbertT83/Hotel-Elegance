@@ -24,20 +24,20 @@ namespace Hotel_erp_Winforms_App.UI.Controls
 
         #region variables
 
-        ServiceService _serviceService = new ServiceService();
-        List<Service> services = new List<Service>();
-        List<Service> filteredServices = new List<Service>();
-        List<RequestedService> serviceBookings;
+        private List<Service> services = new List<Service>();
+        private List<Service> filteredServices = new List<Service>();
+        private List<RequestedService> serviceBookings;
+        private Service? _selectedService;
+        private Service? _selectedServiceForServiceBooking;
+        private RequestedService? _selectedRequestedService;
 
-        Service? _selectedService;
-        Service? _selectedServiceForServiceBooking;
-        RequestedService? _selectedRequestedService;
+        private readonly BookingService _bookingService = new BookingService();
+        private readonly RoomService _roomService = new RoomService();
+        private readonly ServiceService _serviceService = new ServiceService();
+        private readonly DeletedServiceStorageService _deletedServiceStorageService = new DeletedServiceStorageService();
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
-        BookingService _bookingService = new BookingService();
-        RoomService _roomService = new RoomService();
-
-        ErrorProvider _errorProvider = new ErrorProvider();
-        bool resized = false;
+        private bool resized = false;
 
         private enum UpdateOrSave
         {
@@ -77,7 +77,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                services = await _serviceService.GetAllServicesFromDbAsync();
+                var allServices = await _serviceService.GetAllServicesFromDbAsync();
+                var deletedServices = await _deletedServiceStorageService.LoadDeletedServicesAsync();
+                var deletedIds = deletedServices.Select(s => s.Id).ToHashSet();
+
+                services = allServices.Where(s => !deletedIds.Contains(s.Id)).ToList();
                 dgvServices.DataSource = services;
 
                 dgvServices.ClearSelection();
@@ -157,8 +161,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 rbStatusAll.Checked = true;
 
                 List<Service> filteredServices = await _serviceService.GetFilteredSerivicesAsync(cbTypeFilter.SelectedIndex, txtSearch.Text);
+                var deletedServices = await _deletedServiceStorageService.LoadDeletedServicesAsync();
+                var deletedIds = deletedServices.Select(s => s.Id).ToHashSet();
 
-                dgvServices.DataSource = filteredServices;
+                filteredServices = filteredServices.Where(s => !deletedIds.Contains(s.Id)).ToList();
 
                 dgvServices.DataSource = null;
                 dgvServices.DataSource = filteredServices;
@@ -249,6 +255,10 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 Cursor.Current = Cursors.WaitCursor;
 
                 List<Service> inActiveServices = await _serviceService.GetActiveOrInactiveServicesAsync("notUsed");
+                var deletedServices = await _deletedServiceStorageService.LoadDeletedServicesAsync();
+                var deletedIds = deletedServices.Select(s => s.Id).ToHashSet();
+
+                inActiveServices = inActiveServices.Where(s => !deletedIds.Contains(s.Id)).ToList();
 
                 dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = inActiveServices;
@@ -276,7 +286,11 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                services = await _serviceService.GetAllServicesFromDbAsync();
+                var allServices = await _serviceService.GetAllServicesFromDbAsync();
+                var deletedServices = await _deletedServiceStorageService.LoadDeletedServicesAsync();
+                var deletedIds = deletedServices.Select(s => s.Id).ToHashSet();
+
+                services = allServices.Where(s => !deletedIds.Contains(s.Id)).ToList();
 
                 dgvServices.AutoGenerateColumns = false;
                 dgvServices.DataSource = services;
@@ -625,9 +639,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    await _serviceService.DeleteSelectedServiceFromDbAsync(_selectedService);
+                    await _deletedServiceStorageService.SaveDeletedServiceAsync(_selectedService);
 
-                    MBSuccessfulDbAction();
+                    MessageBox.Show("Guest archived successfully.",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
@@ -637,11 +654,17 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 {
                     Cursor.Current = Cursors.Default;
 
-                    services = await _serviceService.GetAllServicesFromDbAsync();
-                    dgvServices.AutoGenerateColumns = false;
-                    dgvServices.DataSource = services;
+                    var allServices = await _serviceService.GetAllServicesFromDbAsync();
+
+                    var deletedServices = await _deletedServiceStorageService.LoadDeletedServicesAsync();
+
+                    var deletedIds = deletedServices.Select(s => s.Id).ToHashSet();
+
+                    var activeServices = allServices.Where(s => !deletedIds.Contains(s.Id)).ToList();
 
                     _selectedService = null;
+                    dgvServices.DataSource = null;
+                    dgvServices.DataSource = activeServices;
                     dgvServices.ClearSelection();
                 }
             }
@@ -831,8 +854,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             rbStatusAll.Checked = true;
 
-            services = await _serviceService.GetAllServicesFromDbAsync();
+            var allServices = await _serviceService.GetAllServicesFromDbAsync();
+            var deletedServices = await _deletedServiceStorageService.LoadDeletedServicesAsync();
+            var deletedIds = deletedServices.Select(s => s.Id).ToHashSet();
+
+            services = allServices.Where(s => !deletedIds.Contains(s.Id)).ToList();
+
             dgvServices.AutoGenerateColumns = false;
+            dgvServices.DataSource = null;
             dgvServices.DataSource = services;
             _selectedService = null;
             dgvServices.ClearSelection();
@@ -1084,8 +1113,14 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                     tabControlLang.Height = tabControlLang.Height + 175;
                 }
 
-                services = await _serviceService.GetAllServicesFromDbAsync();
+                var allServices = await _serviceService.GetAllServicesFromDbAsync();
+                var deletedServices = await _deletedServiceStorageService.LoadDeletedServicesAsync();
+                var deletedIds = deletedServices.Select(s => s.Id).ToHashSet();
+
+                services = allServices.Where(s => !deletedIds.Contains(s.Id)).ToList();
+
                 dgvServices.AutoGenerateColumns = false;
+                dgvServices.DataSource = null;
                 dgvServices.DataSource = services;
 
                 dgvServices.ClearSelection();
