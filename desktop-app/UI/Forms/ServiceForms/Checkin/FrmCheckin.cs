@@ -16,7 +16,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         #region variables
 
         private Booking? selectedBooking;
-        private BookingService _bookingService = new BookingService();
+        private readonly BookingService _bookingService = new BookingService();
         public Service service;
 
         public List<Service> services = new List<Service>();
@@ -28,11 +28,11 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         private bool _isRequestInitialized = false;
 
         private int _editingGuestId = 0;
-        private Room selectedRoom;
+        private Room? selectedRoom;
 
         RoomCardUserControl cardControl;
-        ErrorProvider _errorProvider = new ErrorProvider();
-        private StringBuilder sumSelectedRoomString = new StringBuilder();
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
+        private readonly StringBuilder sumSelectedRoomString = new StringBuilder();
 
         #endregion
 
@@ -45,115 +45,124 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
 
         private async void FrmCheckin_Load(object sender, EventArgs e)
         {
-            tcCheckin.SelectedIndex = 0;
-            btnBack.Visible = false;
-            btnConfirm.Visible = false;
-            ckbEditData.Visible = false;
-            ckbEditData.Checked = true;
-
-            #region Personal Data
-
-            var gs = new GuestService();
-
-            if(selectedBooking != null)
+            try
             {
-                var list = await gs.GetAllGuestsFromDbAsync();
+                tcCheckin.SelectedIndex = 0;
+                btnBack.Visible = false;
+                btnConfirm.Visible = false;
+                ckbEditData.Visible = false;
+                ckbEditData.Checked = true;
 
-                int?[] guestIds = new int?[]
+                #region Personal Data
+
+                var gs = new GuestService();
+
+                if (selectedBooking != null)
                 {
+                    var list = await gs.GetAllGuestsFromDbAsync();
+
+                    int?[] guestIds = new int?[]
+                    {
                     selectedBooking.GuestId,
                     selectedBooking.GuestId2,
                     selectedBooking.GuestId3,
                     selectedBooking.GuestId4
-                };
+                    };
 
-                foreach (var guestId in guestIds)
-                {
-                    if (guestId.HasValue && guestId.Value != 0)
+                    foreach (var guestId in guestIds)
                     {
-                        var matchingGuest = list.FirstOrDefault(g => g.Id == guestId.Value);
-
-                        if (matchingGuest != null)
+                        if (guestId.HasValue && guestId.Value != 0)
                         {
-                            dbGuestsOfBooking.Add(matchingGuest);
+                            var matchingGuest = list.FirstOrDefault(g => g.Id == guestId.Value);
+
+                            if (matchingGuest != null)
+                            {
+                                dbGuestsOfBooking.Add(matchingGuest);
+                            }
                         }
                     }
                 }
+
+                lbCurrentPage.Text = "1/5";
+                cbGuests.Visible = false;
+
+                FillNationalityCb();
+                LoadGuestDataToUI();
+
+                cbNationality.SelectedItem = "Hungary";
+                dtpBirthdate.MaxDate = DateTime.Today;
+
+                #endregion
+
+                #region Error Handler
+                using (var ms = new System.IO.MemoryStream(Properties.Resources.error))
+                {
+                    _errorProvider.Icon = new System.Drawing.Icon(ms);
+                }
+                _errorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink;
+                #endregion
+
+                #region Select Room
+
+                flpCardHolder.Visible = false;
+
+                if (selectedBooking is not null)
+                {
+                    selectedRooms = await _bookingService.SelectedRoomsByBookingAsync(selectedBooking);
+                }
+
+                flpCardHolder.Controls.Clear();
+
+                cardControl = new RoomCardUserControl();
+                if (selectedBooking is not null)
+                {
+                    await cardControl.LoadSelectedRoomCardDataAsync(selectedBooking);
+                }
+                cardControl.Dock = DockStyle.Fill;
+                cardControl.CardSelected += CardControl_CardSelected;
+
+                pnlChosenRoomCardHolder.Controls.Clear();
+                pnlChosenRoomCardHolder.Controls.Add(cardControl);
+
+                ckbBalcony.Visible = false;
+                ckbView.Visible = false;
+                ckbHotTub.Visible = false;
+
+                RefreshRoomCards();
+                #endregion
+
+                #region Special Requests
+                tbCarPlateNumber.ReadOnly = true;
+
+                if (selectedBooking is not null)
+                {
+                    if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Transzfer")) { cbAirportTransfer.SelectedIndex = 0; }
+                    else { cbAirportTransfer.SelectedIndex = 1; }
+
+                    if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Pótágy")) { cbExtraBed.SelectedIndex = 1; }
+                    else if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Kiságy")) { cbExtraBed.SelectedIndex = 2; }
+                    else { cbExtraBed.SelectedIndex = 0; }
+
+                    if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Parkolás"))
+                    { ckbParking.Checked = true; tbCarPlateNumber.Text = await _bookingService.GetCarPlateNumberByBookingAsync(selectedBooking); }
+
+                    if (await _bookingService.IsChampagneOrderedAsync(selectedBooking)) { cbChampagne.SelectedIndex = 0; }
+                    else { cbChampagne.SelectedIndex = 1; }
+                }
+                #endregion
+
+                #region Summary
+
+                tcGuests.TabPages.Clear();
+
+                #endregion
             }
-
-            lbCurrentPage.Text = "1/5";
-            cbGuests.Visible = false;
-
-            FillNationalityCb();
-            LoadGuestDataToUI();
-
-            cbNationality.SelectedItem = "Hungary";
-            dtpBirthdate.MaxDate = DateTime.Today;
-
-            #endregion
-
-            #region Error Handler
-            using (var ms = new System.IO.MemoryStream(Properties.Resources.error))
+            catch (Exception ex)
             {
-                _errorProvider.Icon = new System.Drawing.Icon(ms);
+                CommonHelper.MBErrorMessage(ex);
+
+                this.Close();
             }
-            _errorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink;
-            #endregion
-
-            #region Select Room
-
-            flpCardHolder.Visible = false;
-
-            if (selectedBooking is not null)
-            {
-                selectedRooms = await _bookingService.SelectedRoomsByBookingAsync(selectedBooking);
-            }
-
-            flpCardHolder.Controls.Clear();
-
-            cardControl = new RoomCardUserControl();
-            if (selectedBooking is not null)
-            {
-                await cardControl.LoadSelectedRoomCardDataAsync(selectedBooking);
-            }
-            cardControl.Dock = DockStyle.Fill;
-            cardControl.CardSelected += CardControl_CardSelected;
-
-            pnlChosenRoomCardHolder.Controls.Clear();
-            pnlChosenRoomCardHolder.Controls.Add(cardControl);
-
-            ckbBalcony.Visible = false;
-            ckbView.Visible = false;
-            ckbHotTub.Visible = false;
-
-            RefreshRoomCards();
-            #endregion
-
-            #region Special Requests
-            tbCarPlateNumber.ReadOnly = true;
-
-            if (selectedBooking is not null)
-            {
-                if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Transzfer")) { cbAirportTransfer.SelectedIndex = 0; }
-                else { cbAirportTransfer.SelectedIndex = 1; }
-
-                if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Pótágy")) { cbExtraBed.SelectedIndex = 1; }
-                else if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Kiságy")) { cbExtraBed.SelectedIndex = 2; }
-                else { cbExtraBed.SelectedIndex = 0; }
-
-                if (await _bookingService.GetSpecialRequestsFromDbAsync(selectedBooking, "Parkolás"))
-                { ckbParking.Checked = true; tbCarPlateNumber.Text = await _bookingService.GetCarPlateNumberByBookingAsync(selectedBooking); }
-
-                if (await _bookingService.IsChampagneOrderedAsync(selectedBooking)) { cbChampagne.SelectedIndex = 0; }
-                else { cbChampagne.SelectedIndex = 1; }
-            }
-            #endregion
-
-            #region Summary
-
-            tcGuests.TabPages.Clear();
-
-            #endregion
         }
 
         #region Personal data UI actions
@@ -425,13 +434,12 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 _activeRoomCard = clickedCard;
                 _activeRoomCard.SetSelected(true);
 
-                Room room = clickedCard.SelectedRoom;
-                if (selectedBooking != null)
+                if (selectedBooking != null && clickedCard?.SelectedRoom is Room room)
                 {
                     selectedBooking.RoomNumber = room.Room_number;
+                    selectedRoom = room;
                 }
 
-                selectedRoom = room;
                 cardIsSelected = true;
             }
         }
@@ -521,7 +529,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 case 2:
                     if (!_isRequestInitialized)
                     {
-                        string cateringLevel = selectedBooking.SelectedCateringLevel.ToString();
+                        string cateringLevel = selectedBooking?.SelectedCateringLevel.ToString() ?? string.Empty;
                         cateringLevel = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cateringLevel.ToLower());
                         cbCateringLevel.SelectedItem = cateringLevel;
 
@@ -640,7 +648,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             }
         }
 
-        bool parkingChecked = false;
         private void ckbParking_CheckedChanged(object sender, EventArgs e)
         {
             if (ckbParking.Checked)

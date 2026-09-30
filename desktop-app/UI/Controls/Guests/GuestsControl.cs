@@ -22,13 +22,19 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private Guest? _selectedGuest;
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
+        private enum SaveOrUpdate
+        {
+            Save,
+            Update
+        }
+
         #endregion
 
         #region on load functions, UI defaults
 
         private async void GuestsControl_Load(object sender, EventArgs e)
         {
-            ReadOnlyAndVisibility(false);
+            ReadOnlyAndVisibility(false, true);
 
             cbTypeFilter.SelectedIndex = 0;
             dtpBirthdate.MaxDate = DateTime.Today;
@@ -87,7 +93,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 {
                     _selectedGuest = null;
                     ClearInputBoxes();
-                    ReadOnlyAndVisibility(false);
+                    ReadOnlyAndVisibility(false, true);
                 }
             }
             catch (Exception ex)
@@ -140,7 +146,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private void btnNewGuest_Click(object sender, EventArgs e)
         {
             _selectedGuest = null;
-            ReadOnlyAndVisibility(true);
+            ReadOnlyAndVisibility(true, true);
             tbFname.Focus();
         }
 
@@ -149,172 +155,93 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         {
             if (!PersonalDataValidationConfirm()) return;
 
-            string email = tbEmail.Text.Trim();
-            string idCard = tbIdCard.Text.Trim();
-
-            try
+            if(_selectedGuest == null)
             {
-                Cursor.Current = Cursors.WaitCursor;
-
-                if (await _guestService.IsEmailAlreadyUsedAsync(email))
-                {
-                    _errorProvider.SetError(tbEmail, "This email address is already in use!");
-                    MessageBox.Show(
-                        "This email address is already registered to another guest!",
-                        "Email Already Exists",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    tbEmail.Focus();
-                    return;
-                }
-
-                if (await _guestService.IsIdCardAlreadyUsedAsync(idCard))
-                {
-                    _errorProvider.SetError(tbIdCard, "This ID card number is already in use!");
-                    MessageBox.Show(
-                        "This ID card number is already registered to another guest!",
-                        "ID Card Already Exists",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    tbIdCard.Focus();
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.MBErrorMessage(ex);
-                return;
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
+                SaveOrUpdateGuest(SaveOrUpdate.Save);
             }
 
-            DialogResult result = MessageBox.Show(
-                "Are you sure all the details are correct?",
-                "Confirmation",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-
-            if (result != DialogResult.Yes) return;
-
-            try
+            else
             {
-                Cursor.Current = Cursors.WaitCursor;
-
-                Guest g = new Guest
-                (
-                    0,
-                    email,
-                    idCard,
-                    tbFname.Text.Trim(),
-                    tbLname.Text.Trim(),
-                    dtpBirthdate.Value.Date,
-                    tbCountry.Text.Trim(),
-                    tbZip.Text.Trim(),
-                    tbCity.Text.Trim(),
-                    tbStreet.Text.Trim(),
-                    "",
-                    0,
-                    0
-                );
-
-                await _guestService.SaveGuestToDatabaseAsync(g);
-
-                MessageBox.Show("Guest saved successfully!",
-                    "Success",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                await ReloadGuestsDataAsync();
-
-                ReadOnlyAndVisibility(false);
-
-                int newIndex = guests.FindIndex(x =>
-                    x.IdCardNumber.Equals(idCard, StringComparison.OrdinalIgnoreCase) ||
-                    x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
-
-                if (newIndex >= 0)
-                {
-                    dgvGuests.Rows[newIndex].Selected = true;
-                    RowSelection(newIndex);
-                }
-                else if (dgvGuests.Rows.Count > 0)
-                {
-                    dgvGuests.Rows[0].Selected = true;
-                    RowSelection(0);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occurred while trying to save the Guest into the database: " + ex.Message,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
+                SaveOrUpdateGuest(SaveOrUpdate.Update);
             }
         }
 
         // 6.
-        private async void btnDelete_Click(object sender, EventArgs e)
+        private async void btnUpdate_Click(object sender, EventArgs e)
         {
             if (_selectedGuest == null)
             {
-                MessageBox.Show("Please select a guest to delete!", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Please select a guest to update!", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            DialogResult result = MessageBox.Show(
-                $"Are you sure you wish to delete guest record: {_selectedGuest.FName} {_selectedGuest.LName}?",
-                "Confirmation",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            ReadOnlyAndVisibility(true, false);
+            ClearInputBoxes();
 
-            if (result == DialogResult.Yes)
-            {
-                try
-                {
-                    Cursor.Current = Cursors.WaitCursor;
+            tbFname.Focus();
 
-                    await _guestService.DeleteGuestFromDbAsync(_selectedGuest);
+            tbFname.Text = _selectedGuest.FName;
+            tbLname.Text = _selectedGuest.LName;
+            tbZip.Text = _selectedGuest.ZipCode;
+            tbCity.Text = _selectedGuest.City;
+            tbStreet.Text = _selectedGuest.Street;
+            tbEmail.Text = _selectedGuest.Email;
+            tbIdCard.Text = _selectedGuest.IdCardNumber;
+            tbCountry.Text = _selectedGuest.Country;
+            dtpBirthdate.Value = Convert.ToDateTime(_selectedGuest.DateOfBirth);
 
-                    MessageBox.Show(
-                        "Guest deleted successfully!",
-                        "Success",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+            //lbCategoryTitle.Visible = false;
+            //cbCategory.Visible = false;
 
-                    await ReloadGuestsDataAsync();
+            //btnSaveGuest.Visible = true;
 
-                    if (dgvGuests.Rows.Count > 0)
-                    {
-                        dgvGuests.Rows[0].Selected = true;
-                        RowSelection(0);
-                    }
-                    else
-                    {
-                        _selectedGuest = null;
-                        ClearInputBoxes();
-                        ReadOnlyAndVisibility(false);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(
-                        "An error occurred while trying to delete the Guest from database: " + ex.Message,
-                        "Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    Cursor.Current = Cursors.Default;
-                }
-            }
+            //DialogResult result = MessageBox.Show(
+            //    $"Are you sure you wish to delete guest record: {_selectedGuest.FName} {_selectedGuest.LName}?",
+            //    "Confirmation",
+            //    MessageBoxButtons.YesNo,
+            //    MessageBoxIcon.Question);
+
+            //if (result == DialogResult.Yes)
+            //{
+            //    try
+            //    {
+            //        Cursor.Current = Cursors.WaitCursor;
+
+            //        await _guestService.DeleteGuestFromDbAsync(_selectedGuest);
+
+            //        MessageBox.Show(
+            //            "Guest deleted successfully!",
+            //            "Success",
+            //            MessageBoxButtons.OK,
+            //            MessageBoxIcon.Information);
+
+            //        await ReloadGuestsDataAsync();
+
+            //        if (dgvGuests.Rows.Count > 0)
+            //        {
+            //            dgvGuests.Rows[0].Selected = true;
+            //            RowSelection(0);
+            //        }
+            //        else
+            //        {
+            //            _selectedGuest = null;
+            //            ClearInputBoxes();
+            //            ReadOnlyAndVisibility(false);
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show(
+            //            "An error occurred while trying to delete the Guest from database: " + ex.Message,
+            //            "Error",
+            //            MessageBoxButtons.OK,
+            //            MessageBoxIcon.Error);
+            //    }
+            //    finally
+            //    {
+            //        Cursor.Current = Cursors.Default;
+            //    }
+            //}
         }
 
         #endregion
@@ -324,6 +251,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private async Task ReloadGuestsDataAsync()
         {
             guests = await _guestService.GetAllGuestsFromDbAsync();
+            dgvGuests.AutoGenerateColumns = false;
             dgvGuests.DataSource = null;
             dgvGuests.DataSource = guests;
             dgvGuests.ClearSelection();
@@ -340,9 +268,9 @@ namespace Hotel_erp_Winforms_App.UI.Controls
                 lbKpiInHouseValue.Text = _guestService.GetNumberOfCurrentlyStayers(bookings).ToString();
                 lbKpiReturningValue.Text = _guestService.GetNumberOfReturningGuests(bookings).ToString();
             }
-            catch
+            catch (Exception ex)
             {
-                // Fallback ha a foglalások lekérése nem sikerül
+                CommonHelper.MBErrorMessage(ex);
             }
         }
 
@@ -378,7 +306,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             _selectedGuest = dgvGuests.Rows[rowIndex].DataBoundItem as Guest;
             if (_selectedGuest == null) return;
 
-            ReadOnlyAndVisibility(false);
+            ReadOnlyAndVisibility(false, false);
 
             tbFullName.Text = $"{_selectedGuest.LName} {_selectedGuest.FName}".Trim();
             tbEmail.Text = _selectedGuest.Email ?? "";
@@ -426,11 +354,12 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             _errorProvider.Clear();
         }
 
-        private void ReadOnlyAndVisibility(bool addingNewGuest)
+        private void ReadOnlyAndVisibility(bool addingNewGuest, bool clearSelection)
         {
+            if (clearSelection) dgvGuests.ClearSelection();
+
             if (addingNewGuest)
             {
-                dgvGuests.ClearSelection();
                 ClearInputBoxes();
 
                 tbFullName.Visible = false;
@@ -505,6 +434,210 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             tbFullName.MaxLength = 100;
             tbAddress.MaxLength = 100;
             txtSearch.MaxLength = 64;
+        }
+
+        private async void SaveOrUpdateGuest(SaveOrUpdate saveOrUpdate)
+        {
+            string email = tbEmail.Text.Trim();
+            string idCard = tbIdCard.Text.Trim();
+
+            Guest g = new Guest
+            (
+                0,
+                email,
+                idCard,
+                tbFname.Text.Trim(),
+                tbLname.Text.Trim(),
+                dtpBirthdate.Value.Date,
+                tbCountry.Text.Trim(),
+                tbZip.Text.Trim(),
+                tbCity.Text.Trim(),
+                tbStreet.Text.Trim(),
+                "",
+                0,
+                0
+            );
+
+            if (saveOrUpdate == SaveOrUpdate.Save)
+            {
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    if (await _guestService.IsEmailAlreadyUsedAsync(email))
+                    {
+                        _errorProvider.SetError(tbEmail, "This email address is already in use!");
+                        MessageBox.Show(
+                            "This email address is already registered to another guest!",
+                            "Email Already Exists",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        tbEmail.Focus();
+                        return;
+                    }
+
+                    else if (await _guestService.IsIdCardAlreadyUsedAsync(idCard))
+                    {
+                        _errorProvider.SetError(tbIdCard, "This ID card number is already in use!");
+                        MessageBox.Show(
+                            "This ID card number is already registered to another guest!",
+                            "ID Card Already Exists",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        tbIdCard.Focus();
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    CommonHelper.MBErrorMessage(ex);
+                    return;
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+
+                DialogResult result = MessageBox.Show(
+                    "Are you sure all the details are correct?",
+                    "Confirmation",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (result != DialogResult.Yes) return;
+
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    await _guestService.SaveGuestToDatabaseAsync(g);
+
+                    MessageBox.Show("Guest saved successfully!",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    await ReloadGuestsDataAsync();
+
+                    ReadOnlyAndVisibility(false, true);
+
+                    int newIndex = guests.FindIndex(x =>
+                        x.IdCardNumber.Equals(idCard, StringComparison.OrdinalIgnoreCase) ||
+                        x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+                    if (newIndex >= 0)
+                    {
+                        dgvGuests.Rows[newIndex].Selected = true;
+                        RowSelection(newIndex);
+                    }
+                    else if (dgvGuests.Rows.Count > 0)
+                    {
+                        dgvGuests.Rows[0].Selected = true;
+                        RowSelection(0);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred while trying to save the Guest into the database: " + ex.Message,
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+
+            else if(saveOrUpdate == SaveOrUpdate.Update)
+            {
+                if(_selectedGuest != null)
+                {
+                    g.Id = _selectedGuest.Id;
+
+                    if (g.FName == _selectedGuest.FName &&
+                        g.LName == _selectedGuest.LName &&
+                        g.Email == _selectedGuest.Email &&
+                        g.IdCardNumber == _selectedGuest.IdCardNumber &&
+                        g.ZipCode == _selectedGuest.ZipCode &&
+                        g.City == _selectedGuest.City &&
+                        g.Street == _selectedGuest.Street &&
+                        g.DateOfBirth == _selectedGuest.DateOfBirth &&
+                        g.Country == _selectedGuest.Country)
+                    {
+                        MessageBox.Show("No data changes detected.",
+                            "No Changes",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+
+                        dgvGuests.Rows[0].Selected = true;
+                        RowSelection(0);
+
+                        return;
+                    }
+
+                    else if(await _guestService.IsEmailAlreadyUsedAsync(tbEmail.Text) && tbEmail.Text.Trim() != _selectedGuest.Email)
+                    {
+                        MessageBox.Show("This email address is already registered.",
+                            "Duplicate Email",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        return;
+                    }
+
+                    else if(await _guestService.IsIdCardAlreadyUsedAsync(tbIdCard.Text) && tbIdCard.Text.Trim() != _selectedGuest.IdCardNumber)
+                    {
+                        MessageBox.Show("This ID number is already registered.",
+                            "Duplicate ID Number",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        return;
+                    }
+
+                    else
+                    {
+                        try
+                        {
+                            Cursor.Current = Cursors.WaitCursor;
+
+                            await _guestService.UpdateGuestDataInDbAsync(g);
+
+                            MessageBox.Show("Guest data updated successfully.",
+                                "Success",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            CommonHelper.MBErrorMessage(ex);
+                        }
+                        finally
+                        {
+                            await ReloadGuestsDataAsync();
+
+                            ReadOnlyAndVisibility(false, false);
+
+                            int updatedIndex = guests.FindIndex(x => x.Id == g.Id);
+
+                            if (updatedIndex >= 0)
+                            {
+                                dgvGuests.Rows[updatedIndex].Selected = true;
+                                RowSelection(updatedIndex);
+                            }
+                            else if (dgvGuests.Rows.Count > 0)
+                            {
+                                dgvGuests.Rows[0].Selected = true;
+                                RowSelection(0);
+                            }
+
+                            Cursor.Current = Cursors.Default;
+                        }
+                    }
+                }
+            }
         }
 
         #endregion

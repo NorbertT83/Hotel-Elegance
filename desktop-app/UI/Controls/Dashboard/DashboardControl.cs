@@ -193,7 +193,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.Dashboard
                         return;
                     }
 
-                    await _employeeService.SaveEmployeeToDbAsync(emp, SaveOrUpdate.Update);
+                    await _employeeService.SaveEmployeeToDbAsync(emp, EmployeeService.SaveOrUpdate.Update);
 
                     MessageBox.Show(
                         "Your Profile Data were updated successfully.",

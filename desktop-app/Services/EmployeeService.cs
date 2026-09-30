@@ -4,17 +4,17 @@ using System.Data.Common;
 
 namespace Hotel_erp_Winforms_App.Services
 {
-    public enum SaveOrUpdate
-    {
-        Save,
-        Update
-    }
-
     public class EmployeeService
     {
         #region variables
 
         private readonly string _connectionString = DbConfig.ConnectionString;
+
+        public enum SaveOrUpdate
+        {
+            Save,
+            Update
+        }
 
         #endregion
 

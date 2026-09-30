@@ -49,7 +49,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             pnlTop = new Panel();
             panel1 = new Panel();
-            btnDelete = new Button();
+            btnUpdate = new Button();
             lbUtility = new Label();
             btnNewGuest = new Button();
             btnRefresh = new Button();
@@ -143,7 +143,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // 
             // panel1
             // 
-            panel1.Controls.Add(btnDelete);
+            panel1.Controls.Add(btnUpdate);
             panel1.Controls.Add(lbUtility);
             panel1.Controls.Add(btnNewGuest);
             panel1.Controls.Add(btnRefresh);
@@ -153,20 +153,20 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             panel1.Size = new Size(449, 73);
             panel1.TabIndex = 7;
             // 
-            // btnDelete
+            // btnUpdate
             // 
-            btnDelete.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnDelete.BackColor = SystemColors.ButtonFace;
-            btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnDelete.ForeColor = Color.DarkRed;
-            btnDelete.Location = new Point(305, 33);
-            btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(130, 30);
-            btnDelete.TabIndex = 5;
-            btnDelete.Text = "Delete";
-            btnDelete.UseVisualStyleBackColor = false;
-            btnDelete.Click += btnDelete_Click;
+            btnUpdate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnUpdate.BackColor = SystemColors.ButtonFace;
+            btnUpdate.FlatStyle = FlatStyle.Flat;
+            btnUpdate.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnUpdate.ForeColor = Color.FromArgb(24, 60, 142);
+            btnUpdate.Location = new Point(305, 33);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(130, 30);
+            btnUpdate.TabIndex = 5;
+            btnUpdate.Text = "Update";
+            btnUpdate.UseVisualStyleBackColor = false;
+            btnUpdate.Click += btnUpdate_Click;
             // 
             // lbUtility
             // 
@@ -468,8 +468,6 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             dgvGuests.AllowUserToAddRows = false;
             dgvGuests.AllowUserToDeleteRows = false;
             dgvGuests.AllowUserToOrderColumns = true;
-            dgvGuests.AllowUserToResizeColumns = false;
-            dgvGuests.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.BackColor = Color.FromArgb(245, 248, 253);
             dgvGuests.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvGuests.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -836,7 +834,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
             // tbEmail
             // 
             tbEmail.Location = new Point(15, 120);
-            tbEmail.MaxLength = 64;
+            tbEmail.MaxLength = 255;
             tbEmail.Name = "tbEmail";
             tbEmail.PlaceholderText = "example@gmail.com";
             tbEmail.Size = new Size(320, 25);
@@ -1008,7 +1006,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls
         private DateTimePicker dtpBirthdate;
         private Label lbCountryTitle;
         private TextBox tbCountry;
-        private Button btnDelete;
+        private Button btnUpdate;
         private Label lbNoData;
         private Panel panel1;
     }

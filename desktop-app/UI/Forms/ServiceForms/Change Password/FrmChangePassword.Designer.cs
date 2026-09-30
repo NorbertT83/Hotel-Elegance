@@ -21,6 +21,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.Change_Password
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmChangePassword));
             grpPasswordDetails = new GroupBox();
             lblOldPassword = new Label();
             tbOldPassword = new TextBox();
@@ -193,6 +194,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.Change_Password
             Controls.Add(grpPasswordDetails);
             Controls.Add(pnlActions);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FrmChangePassword";

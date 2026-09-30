@@ -27,7 +27,7 @@
             CreatedAt = createdAt;
         }
 
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public int RoomNumber { get; set; }
         public RoomType SelectedRoomType { get; set; }
 

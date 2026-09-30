@@ -26,11 +26,11 @@
         // ENABLED = FALSE / USER ROLE
         private static readonly Dictionary<string, List<UserRole>> Disables = new Dictionary<string, List<UserRole>>
         {
-            { "pnlEditor", new List<UserRole> { UserRole.Receptionist } },
-            { "btnMarkAllClean", new List<UserRole> { UserRole.Receptionist } },
-            { "btnNewService", new List<UserRole> { UserRole.Receptionist } },
-            { "btnUpdateService", new List<UserRole> { UserRole.Receptionist } },
-            { "btnDeleteService", new List<UserRole> { UserRole.Receptionist } }
+            { "pnlEditor", new List<UserRole> { UserRole.Receptionist, UserRole.HKManager, UserRole.Guest, UserRole.FrontOffMan } },
+            { "btnMarkAllClean", new List<UserRole> { UserRole.Receptionist, UserRole.HKManager, UserRole.Guest, UserRole.FrontOffMan } },
+            { "btnNewService", new List<UserRole> { UserRole.Receptionist, UserRole.HKManager, UserRole.Guest, UserRole.FrontOffMan } },
+            { "btnUpdateService", new List<UserRole> { UserRole.Receptionist, UserRole.HKManager, UserRole.Guest, UserRole.FrontOffMan } },
+            { "btnDeleteService", new List<UserRole> { UserRole.Receptionist, UserRole.HKManager, UserRole.Guest, UserRole.FrontOffMan } }
         };
 
         public static void ApplyPermissions(Control parent)

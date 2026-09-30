@@ -62,7 +62,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
             if (cbJobTitleFilter.SelectedIndex > 0)
             {
                 query += "AND role = @role ";
-                parameters.Add("@role", cbJobTitleFilter.SelectedItem.ToString());
+                parameters.Add("@role", cbJobTitleFilter.SelectedItem?.ToString() ?? string.Empty);
             }
 
             _employees = await _employeeService.LoadDgvAsync(query, parameters);
@@ -230,7 +230,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
                     {
                         Cursor.Current = Cursors.WaitCursor;
 
-                        await _employeeService.SaveEmployeeToDbAsync(emp, SaveOrUpdate.Update);
+                        await _employeeService.SaveEmployeeToDbAsync(emp, EmployeeService.SaveOrUpdate.Update);
 
                         MessageBox.Show("Employee data updated successfully!",
                             "Success",
@@ -305,7 +305,7 @@ namespace Hotel_erp_Winforms_App.UI.Controls.EmployeeControl
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    await _employeeService.SaveEmployeeToDbAsync(emp, SaveOrUpdate.Save);
+                    await _employeeService.SaveEmployeeToDbAsync(emp, EmployeeService.SaveOrUpdate.Save);
 
                     MessageBox.Show("Employee data saved successfully!",
                         "Success",

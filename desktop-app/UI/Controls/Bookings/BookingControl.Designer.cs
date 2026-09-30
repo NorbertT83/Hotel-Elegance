@@ -310,7 +310,7 @@
             // 
             cbStatusFilter.DropDownStyle = ComboBoxStyle.DropDownList;
             cbStatusFilter.FormattingEnabled = true;
-            cbStatusFilter.Items.AddRange(new object[] { "All", "Upcoming", "Current", "Past", "Canceled" });
+            cbStatusFilter.Items.AddRange(new object[] { "All", "Upcoming", "Current", "Past", "Cancelled" });
             cbStatusFilter.Location = new Point(540, 16);
             cbStatusFilter.Name = "cbStatusFilter";
             cbStatusFilter.Size = new Size(140, 25);

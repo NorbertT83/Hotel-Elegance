@@ -714,6 +714,7 @@
             btnSaveRoomStatus.BackColor = SystemColors.ButtonFace;
             btnSaveRoomStatus.FlatStyle = FlatStyle.Flat;
             btnSaveRoomStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnSaveRoomStatus.ForeColor = Color.DarkGreen;
             btnSaveRoomStatus.Location = new Point(15, 550);
             btnSaveRoomStatus.Name = "btnSaveRoomStatus";
             btnSaveRoomStatus.Size = new Size(320, 45);

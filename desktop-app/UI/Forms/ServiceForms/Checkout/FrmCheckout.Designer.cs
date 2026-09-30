@@ -28,6 +28,7 @@ public partial class FrmCheckout : Form
     /// </summary>
     private void InitializeComponent()
     {
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmCheckout));
         grpGuestDetails = new GroupBox();
         dtpCheckOutDate = new DateTimePicker();
         dtpCheckInDate = new DateTimePicker();
@@ -344,6 +345,7 @@ public partial class FrmCheckout : Form
         Controls.Add(grpConsumption);
         Controls.Add(grpGuestDetails);
         FormBorderStyle = FormBorderStyle.FixedDialog;
+        Icon = (Icon)resources.GetObject("$this.Icon");
         MaximizeBox = false;
         MinimizeBox = false;
         Name = "FrmCheckout";

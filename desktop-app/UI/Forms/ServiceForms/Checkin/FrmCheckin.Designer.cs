@@ -36,6 +36,7 @@
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmCheckin));
             tcCheckin = new TabControl();
             tpPersonalData = new TabPage();
             btnFillData = new Button();
@@ -1680,6 +1681,7 @@
             ClientSize = new Size(573, 745);
             Controls.Add(tcCheckin);
             Controls.Add(pnlBottom);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FrmCheckin";
             Padding = new Padding(15);
             StartPosition = FormStartPosition.CenterParent;

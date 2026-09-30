@@ -22,6 +22,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddBackOfficeProfileForm));
             grpProfileDetails = new GroupBox();
             tbEmail = new TextBox();
             lblPassword = new Label();
@@ -193,6 +194,7 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms.AddBackOfficeProf
             Controls.Add(grpProfileDetails);
             Controls.Add(pnlActions);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "AddBackOfficeProfileForm";

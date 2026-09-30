@@ -89,19 +89,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             cbDepartureNotes.SelectedIndex = 0;
             // ----------
 
-            // FOR TESTING
-            tbEmail.Text = "teszt.elek@example.com";
-            tbDocumentNumber.Text = "123456AB";
-            tbFirstName.Text = "Elek";
-            tbLastName.Text = "Teszt";
-            dtpBirthdate.Value = new DateTime(1995, 5, 15);
-            cbNationality.Text = "Hungary";
-            tbZipCode.Text = "1051";
-            tbCity.Text = "Budapest";
-            tbStreet.Text = "Fő utca 1.";
-            tbCarPlateNumber.Text = "ABC-123";
-            // ----------
-
             // DGV PAYMENT SUM
             foreach (DataGridViewColumn col in dgvPaymentSum.Columns)
             {
@@ -163,14 +150,14 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
         {
             services.RemoveAll(s => s.NameHu == "Félpanzió" || s.NameHu == "Teljes ellátás");
 
-            if (cbCateringLevel.SelectedItem.ToString() == "Halfboard")
+            if (cbCateringLevel.SelectedItem?.ToString() == "Halfboard")
             {
                 bookingService.CreateNewService("Halfboard", services);
                 selectedCatering = (CateringLevel)System.Enum.Parse(typeof(CateringLevel), "halfboard", ignoreCase: true);
                 lbSumCatering.Text = "Halfboard";
             }
 
-            else if (cbCateringLevel.SelectedItem.ToString() == "Fullboard")
+            else if (cbCateringLevel.SelectedItem?.ToString() == "Fullboard")
             {
                 bookingService.CreateNewService("Fullboard", services);
                 selectedCatering = (CateringLevel)System.Enum.Parse(typeof(CateringLevel), "fullboard", ignoreCase: true);
@@ -195,7 +182,6 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
             }
         }
 
-        bool parkingChecked = false;
         private void ckbParking_CheckedChanged(object sender, EventArgs e)
         {
             if (ckbParking.Checked)
@@ -447,6 +433,15 @@ namespace Hotel_erp_Winforms_App.UI.Forms.ServiceForms
                 {
                     btnConfirm.Enabled = false;
                     Cursor.Current = Cursors.WaitCursor;
+
+                    if (selectedRoom == null)
+                    {
+                        MessageBox.Show("Please select a valid room before confirming.",
+                            "Validation Error",
+                            MessageBoxButtons.OK, 
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
 
                     await bookingService.ConfirmNewBookingAsync(
                         selectedRoom,
