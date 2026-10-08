@@ -48,12 +48,17 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `room_number`, `room_type`, `guest1_id`, `beginning_of_stay`, `end_of_stay`, `checkin`, `checkout`, `guest2_id`, `guest3_id`, `guest4_id`, `catering_level`, `created_at`) VALUES
-('HE-2026-194A', 303, 'deluxe', 18, '2026-05-28', '2026-05-30', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-28 11:37:01'),
-('HE-2026-194V', 102, 'standard', 19, '2026-05-29', '2026-06-04', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-05-29 05:40:29'),
-('HE-2026-INXI', 302, 'deluxe', 19, '2026-07-02', '2026-07-04', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-07-02 07:20:21'),
-('HE-2026-O2R5', 203, 'deluxe', 19, '2026-06-25', '2026-06-27', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-06-25 08:28:15'),
-('HE-2026-RLM5', 303, 'deluxe', 19, '2026-06-26', '2026-06-28', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-06-26 09:50:43'),
-('HE-2026-UCT4', 403, 'suite', 19, '2026-06-20', '2026-07-04', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-06-03 09:53:43');
+('HE-2026-101S', 101, 'standard', 16, '2026-10-12', '2026-10-14', NULL, NULL, NULL, NULL, NULL, 'breakfast', '2026-10-06 14:20:00'),
+('HE-2026-194V', 102, 'standard', 2, '2026-10-08', '2026-10-11', '2026-10-08 15:10:00', NULL, NULL, NULL, NULL, 'halfboard', '2026-10-02 11:20:00'),
+('HE-2026-8DNG', 103, 'standard', 8, '2026-10-09', '2026-10-12', NULL, NULL, NULL, NULL, NULL, 'breakfast', '2026-10-04 12:10:00'),
+('HE-2026-201M', 201, 'deluxe', 6, '2026-10-08', '2026-10-12', '2026-10-08 13:50:00', NULL, NULL, NULL, NULL, 'fullboard', '2026-10-01 14:05:00'),
+('HE-2026-202G', 202, 'deluxe', 12, '2026-10-09', '2026-10-13', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-10-04 15:45:00'),
+('HE-2026-O2R5', 203, 'deluxe', 5, '2026-10-08', '2026-10-11', '2026-10-08 14:15:00', NULL, NULL, NULL, NULL, 'halfboard', '2026-10-03 16:22:00'),
+('HE-2026-31VR', 301, 'standard', 15, '2026-10-08', '2026-10-10', '2026-10-08 16:45:00', NULL, NULL, NULL, NULL, 'breakfast', '2026-10-03 09:40:00'),
+('HE-2026-INXI', 302, 'deluxe', 13, '2026-10-12', '2026-10-14', NULL, NULL, NULL, NULL, NULL, 'fullboard', '2026-10-06 11:15:00'),
+('HE-2026-RLM5', 303, 'deluxe', 3, '2026-10-08', '2026-10-11', '2026-10-08 17:00:00', NULL, NULL, NULL, NULL, 'halfboard', '2026-10-02 18:30:00'),
+('HE-2026-401B', 401, 'suite', 11, '2026-10-12', '2026-10-14', NULL, NULL, NULL, NULL, NULL, 'halfboard', '2026-10-07 10:05:00'),
+('HE-2026-UCT4', 403, 'suite', 19, '2026-10-08', '2026-10-12', '2026-10-08 14:30:00', NULL, NULL, NULL, NULL, 'fullboard', '2026-10-01 10:15:20');
 
 --
 -- Triggers `bookings`
@@ -106,7 +111,7 @@ INSERT INTO `employees` (`id`, `fname`, `lname`, `email`, `password`, `tax_numbe
 (8, 'Bence', 'Farkas', NULL, NULL, 'TX100008', 11, 'Budapest, Fehérvári út 56.', '1996-08-09', '2020-06-18', 'Room Service', 360000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
 (9, 'Zoltán', 'Balogh', NULL, NULL, 'TX100009', 14, 'Budapest, Hungária körút 88.', '1982-12-05', '2016-01-10', 'Front Office Manager', 910000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
 (10, 'Petra', 'Papp', NULL, NULL, 'TX100010', 7, 'Budapest, Alkotás utca 3.', '1993-04-22', '2021-10-01', 'Cleaner', 410000, '2026-03-30 07:06:55', '2026-03-30 07:06:55'),
-(11, 'Gergő', 'Kocsis', NULL, NULL, 'TX124344', 12, 'Halásztelek Fő utca 14.', '1986-09-22', '2023-04-18', 'Hotel Manager', 999000, '2026-09-07 18:52:31', '2026-09-07 18:53:02');
+(11, 'Gergő', 'Kocsis', 'kocsis.gergo@ceg.hu', '$2a$12$0KqZtVi9e3WDTSnR3qRWQuHISsT78ZqCZo7ZeKLPGKWvA1piJw7Ky', 'TX124344', 12, 'Halásztelek Fő utca 14.', '1986-09-22', '2023-04-18', 'Hotel Manager', 999000, '2026-09-07 18:52:31', '2026-09-07 18:53:02');
 
 --
 -- Triggers `employees`
@@ -310,11 +315,7 @@ CREATE TABLE `refresh_tokens` (
 --
 
 INSERT INTO `refresh_tokens` (`id`, `guest_id`, `token_id`, `expires_at`, `created_at`) VALUES
-(36, 19, '4936eb12e3b61a3769dce7fbe7f2b7a4', '2026-07-01 07:27:28', '2026-06-24 05:27:28'),
-(40, 19, '37b7f0579407c7a2ffa875043e8d559f', '2026-07-02 09:59:16', '2026-06-25 07:59:16'),
-(46, 19, 'e1cfd43dc5d5ce8b71d4a6ddad91d87e', '2026-07-06 07:55:12', '2026-06-29 05:55:12'),
-(48, 19, '53b2e51f3b13d1372060cdfd74780530', '2026-07-09 06:12:51', '2026-07-02 04:12:51'),
-(50, 19, '92cf93bbdb98fa46115b24e55c9f0f97', '2026-07-10 07:39:27', '2026-07-03 05:39:27');
+(1, 19, '4936eb12e3b61a3769dce7fbe7f2b7a4', '2026-10-15 12:00:00', '2026-10-08 12:00:00');
 
 -- --------------------------------------------------------
 
@@ -345,18 +346,18 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_number`, `room_type`, `floorspace`, `bed_type`, `has_balcony`, `has_view`, `max_adults`, `extras`, `status`, `price_per_night`, `door_locked`, `needs_cleaning`, `dont_disturb`, `is_cleaning`, `ac_temp`) VALUES
-(101, 'standard', 18, 'single', 0, 'city', 2, '', 'available', 47000, 1, 0, 0, 0, 0),
-(102, 'standard', 20, 'twin', 1, 'city', 2, '', 'occupied', 42000, 1, 0, 0, 0, 0),
-(103, 'standard', 22, 'twin', 1, 'garden', 2, '', 'unavailable', 48000, 1, 0, 0, 0, 0),
-(201, 'deluxe', 28, 'kingsize', 1, 'garden', 3, '', 'under_maintenance', 76000, 1, 0, 0, 0, 0),
-(202, 'deluxe', 30, 'kingsize', 1, 'city', 3, '', 'occupied', 78000, 1, 0, 0, 0, 0),
-(203, 'deluxe', 27, 'twin', 1, 'panorama', 2, '', 'occupied', 72000, 1, 0, 0, 0, 0),
-(301, 'standard', 28, 'twin', 0, 'garden', 2, '', 'available', 59000, 1, 0, 0, 0, 0),
-(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, 'jacuzzi', 'available', 84000, 1, 0, 0, 0, 0),
-(303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 65000, 1, 0, 0, 0, 0),
-(401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 152000, 1, 0, 0, 0, 0),
-(402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'unavailable', 152000, 1, 0, 0, 0, 0),
-(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'available', 172000, 1, 0, 0, 0, 23);
+(101, 'standard', 18, 'single', 0, 'city', 2, '', 'available', 47000, 1, 0, 0, 0, 21),
+(102, 'standard', 20, 'twin', 1, 'city', 2, '', 'occupied', 42000, 1, 0, 0, 0, 22),
+(103, 'standard', 22, 'twin', 1, 'garden', 2, '', 'available', 48000, 1, 0, 0, 0, 21),
+(201, 'deluxe', 28, 'kingsize', 1, 'garden', 3, '', 'occupied', 76000, 1, 0, 0, 0, 22),
+(202, 'deluxe', 30, 'kingsize', 1, 'city', 3, '', 'available', 78000, 1, 0, 0, 0, 21),
+(203, 'deluxe', 27, 'twin', 1, 'panorama', 2, '', 'occupied', 72000, 1, 0, 0, 0, 23),
+(301, 'standard', 28, 'twin', 0, 'garden', 2, '', 'occupied', 59000, 1, 0, 0, 0, 22),
+(302, 'deluxe', 32, 'kingsize', 1, 'garden', 2, 'jacuzzi', 'available', 84000, 1, 0, 0, 0, 21),
+(303, 'deluxe', 27, 'kingsize', 1, 'city', 2, '', 'occupied', 65000, 1, 0, 0, 0, 22),
+(401, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'jacuzzi', 'available', 152000, 1, 0, 0, 0, 22),
+(402, 'suite', 50, 'kingsize', 1, 'panorama', 3, 'kitchen', 'available', 152000, 1, 0, 0, 0, 21),
+(403, 'suite', 55, 'kingsize', 1, 'panorama', 4, 'jacuzzi, kitchen', 'occupied', 172000, 1, 0, 0, 0, 23);
 
 -- --------------------------------------------------------
 
@@ -380,21 +381,30 @@ CREATE TABLE `servicebookings` (
 --
 
 INSERT INTO `servicebookings` (`id`, `booking_id`, `service_id`, `requested_at`, `updated_at`, `quantity`, `status`, `price_at_booking`) VALUES
-(25, 'HE-2026-UCT4', 3, '2026-06-09 10:39:21', '2026-06-11 10:11:51', 1, 'completed', 10000),
-(33, 'HE-2026-UCT4', 4, '2026-06-11 09:52:17', '2026-06-17 10:51:32', 1, 'completed', 15000),
-(38, 'HE-2026-UCT4', 11, '2026-06-15 06:18:50', '2026-06-18 11:51:08', 1, 'deleted', 13000),
-(43, 'HE-2026-UCT4', 6, '2026-06-16 12:52:29', '2026-06-17 06:46:20', 1, 'pending', 5900),
-(55, 'HE-2026-UCT4', 6, '2026-06-16 14:12:24', '2026-06-17 06:46:29', 1, 'deleted', 11800),
-(56, 'HE-2026-UCT4', 6, '2026-06-18 11:51:30', '2026-06-24 14:21:04', 1, 'deleted', 6900),
-(61, 'HE-2026-UCT4', 18, '2026-06-24 14:04:36', '2026-06-29 07:55:31', 1, 'deleted', 4500),
-(62, 'HE-2026-UCT4', 12, '2026-06-24 14:04:36', '2026-06-29 07:55:26', 2, 'deleted', 30000),
-(63, 'HE-2026-UCT4', 10, '2026-06-24 14:04:41', '2026-06-24 14:04:41', 1, 'created', 3000),
-(64, 'HE-2026-UCT4', 4, '2026-06-24 14:04:46', '2026-06-24 14:04:46', 1, 'created', 15000),
-(65, 'HE-2026-O2R5', 3, '2026-06-25 10:28:15', '2026-06-25 10:28:15', 1, 'created', 0),
-(66, 'HE-2026-RLM5', 3, '2026-06-26 11:50:43', '2026-06-26 11:50:43', 1, 'created', 0),
-(67, 'HE-2026-RLM5', 6, '2026-06-26 11:50:43', '2026-06-26 11:50:43', 1, 'created', 37000),
-(68, 'HE-2026-INXI', 6, '2026-07-02 09:20:21', '2026-07-02 09:20:21', 1, 'created', 37000),
-(69, 'HE-2026-INXI', 3, '2026-07-02 09:20:21', '2026-07-02 09:20:21', 1, 'created', 0);
+(1, 'HE-2026-UCT4', 3, '2026-10-08 10:15:00', '2026-10-08 11:30:00', 1, 'completed', 10000),
+(2, 'HE-2026-UCT4', 6, '2026-10-08 15:30:00', '2026-10-08 16:15:00', 1, 'completed', 37000),
+(3, 'HE-2026-UCT4', 11, '2026-10-08 16:20:00', '2026-10-08 16:20:00', 1, 'pending', 13000),
+(4, 'HE-2026-UCT4', 18, '2026-10-08 17:05:00', '2026-10-08 17:05:00', 2, 'created', 4500),
+(5, 'HE-2026-UCT4', 14, '2026-10-08 17:45:00', '2026-10-08 17:45:00', 1, 'created', 11000),
+(6, 'HE-2026-194V', 2, '2026-10-08 15:15:00', '2026-10-08 15:15:00', 3, 'completed', 3000),
+(7, 'HE-2026-194V', 1, '2026-10-08 16:30:00', '2026-10-08 16:30:00', 1, 'pending', 12000),
+(8, 'HE-2026-31VR', 18, '2026-10-08 17:00:00', '2026-10-08 17:45:00', 2, 'completed', 4500),
+(9, 'HE-2026-31VR', 15, '2026-10-08 17:30:00', '2026-10-08 17:30:00', 1, 'created', 4000),
+(10, 'HE-2026-201M', 3, '2026-10-08 11:20:00', '2026-10-08 12:40:00', 1, 'completed', 10000),
+(11, 'HE-2026-201M', 12, '2026-10-08 14:10:00', '2026-10-08 14:10:00', 1, 'pending', 15000),
+(12, 'HE-2026-201M', 6, '2026-10-08 18:00:00', '2026-10-08 18:35:00', 1, 'completed', 14900),
+(13, 'HE-2026-O2R5', 2, '2026-10-08 14:20:00', '2026-10-08 14:20:00', 3, 'completed', 3000),
+(14, 'HE-2026-O2R5', 17, '2026-10-08 16:00:00', '2026-10-08 16:00:00', 2, 'created', 2500),
+(15, 'HE-2026-RLM5', 3, '2026-10-08 15:00:00', '2026-10-08 16:10:00', 1, 'completed', 10000),
+(16, 'HE-2026-RLM5', 6, '2026-10-08 17:15:00', '2026-10-08 17:50:00', 1, 'completed', 25000),
+(17, 'HE-2026-8DNG', 15, '2026-10-04 12:15:00', '2026-10-04 12:15:00', 1, 'created', 4000),
+(18, 'HE-2026-8DNG', 2, '2026-10-04 12:15:00', '2026-10-04 12:15:00', 3, 'created', 3000),
+(19, 'HE-2026-202G', 4, '2026-10-04 15:50:00', '2026-10-04 15:50:00', 2, 'created', 15000),
+(20, 'HE-2026-202G', 12, '2026-10-04 15:50:00', '2026-10-04 15:50:00', 1, 'created', 15000),
+(23, 'HE-2026-101S', 13, '2026-10-06 14:25:00', '2026-10-06 14:25:00', 1, 'created', 10000),
+(24, 'HE-2026-INXI', 1, '2026-10-06 11:20:00', '2026-10-06 11:20:00', 1, 'created', 12000),
+(25, 'HE-2026-INXI', 18, '2026-10-06 11:20:00', '2026-10-06 11:20:00', 1, 'created', 4500),
+(26, 'HE-2026-401B', 2, '2026-10-07 10:10:00', '2026-10-07 10:10:00', 2, 'created', 3000);
 
 --
 -- Triggers `servicebookings`
@@ -561,13 +571,13 @@ ALTER TABLE `rate_limits`
 -- AUTO_INCREMENT for table `refresh_tokens`
 --
 ALTER TABLE `refresh_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `servicebookings`
 --
 ALTER TABLE `servicebookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `services`
