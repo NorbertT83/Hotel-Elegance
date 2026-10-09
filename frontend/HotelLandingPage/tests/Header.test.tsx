@@ -25,11 +25,11 @@ describe('Header component', () => {
 
   it('renders navigation links and Book Now when not logged in', async () => {
     // mock language and guest hooks
-    vi.mock('../src/context/LanguageContext', () => ({
+    vi.doMock('../src/context/LanguageContext', () => ({
       useLanguage: () => ({ language: 'en' }),
     }));
 
-    vi.mock('../src/context/GuestContext', () => ({
+    vi.doMock('../src/context/GuestContext', () => ({
       useGuest: () => ({ guest: null, logout: vi.fn() }),
     }));
 
@@ -47,7 +47,7 @@ describe('Header component', () => {
   });
 
   it('shows logout controls when a guest is present', async () => {
-    vi.mock('../src/context/LanguageContext', () => ({
+    vi.doMock('../src/context/LanguageContext', () => ({
       useLanguage: () => ({ language: 'en' }),
     }));
 
